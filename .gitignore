@@ -1,0 +1,12 @@
+node_modules/
+dist/
+coverage/
+*.log
+*.tsbuildinfo
+.DS_Store
+.turbo/
+docs/.vitepress/cache/
+docs/.vitepress/dist/
+
+# 生成物(由 pnpm registry 重建)
+registry/manifest.json

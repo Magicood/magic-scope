@@ -1,0 +1,36 @@
+{
+  "name": "magic-scope",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "可发布到 npm 的多框架 UI 组件库 + 自动化收录流水线(主题:魔法)",
+  "packageManager": "pnpm@11.5.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck",
+    "lint": "biome check .",
+    "format": "biome format --write .",
+    "test": "vitest run --passWithNoTests",
+    "new": "tsx scripts/new-component.ts",
+    "registry": "tsx registry/build-index.ts",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "changeset": "changeset",
+    "version": "changeset version",
+    "release": "pnpm build && changeset publish"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.5.0",
+    "@changesets/cli": "^2.31.0",
+    "@types/node": "^26.0.0",
+    "tsup": "^8.5.1",
+    "tsx": "^4.22.4",
+    "typescript": "^6.0.3",
+    "vitepress": "^1.6.4",
+    "vitest": "^3.2.6",
+    "zod": "^4.4.3"
+  }
+}
