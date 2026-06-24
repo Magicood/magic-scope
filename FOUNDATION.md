@@ -211,7 +211,6 @@ git add -A && git commit -m "chore: foundation skeleton"
 ---
 
 ## 9. 待定(Magic 后续补充想法,占位区)
-- 多框架启用时机(`core` / `vue` 何时上)
 - registry 是否升级为真数据库(当前默认 files 为源 + SQLite 索引)
 - 是否引入 Storybook 做交互演示
 - 展示字体的具体选型与授权(随设计语言落地时定)
@@ -229,6 +228,7 @@ git add -A && git commit -m "chore: foundation skeleton"
   - **总原则:魔法名是第一公民(根),标准名是面向外部的官方映射;两者由同一核心契约派生,不各自硬编码(呼应设计哲学第 1 条)。** 详细命名词典与机制见 [`DESIGN.md`](./DESIGN.md)。
 - **token 体系:** 底层「原始调色板」用魔法名(`arcane` / `ember` / `frost` / `void`),上层「语义层」用标准角色名(`primary` / `surface` / `danger`…)映射;CSS 变量前缀 `--ms-`。具体色值 / 数值见 [`DESIGN.md`](./DESIGN.md)(设计语言规范)。
 - **地基技术决策(2026-06-24 定稿):** 17 项已拍板,详见 [`DESIGN.md`](./DESIGN.md) 附录 A.1。要点:核心契约现在补齐常用角色一次定准(`overlay`/`selection`/`link`/`surfaceSunken`);主题引擎先寄居 `@magic-scope/tokens` 的 `./runtime`(Phase 2 迁 `core`);对比度 **WCAG AA + 派生器自愈**;色阶 50–950 全存;**OKLCH** 色彩 + `culori`(build-only),不引 PostCSS;`data-ms-*` 属性 + 8 层 cascade layers。
+- **范围与发布决策(2026-06-24 商定):** 浏览器**仅现代 evergreen**(放手用 OKLCH / 容器查询 / View Transitions / `@property`,降级只保功能);收录输入 = **截图 / 在线 URL / Figma**(Phase 1 据此:读图 + 抓网页 + Figma);溯源**受启发重做、原创优先**(`source.type` 默认 `inspired`/`original`,可公开);组件**按通用库系统化铺**(Input/Select/Checkbox → Card/Dialog/Tooltip…);多框架 **react 先深耕,vue/wc 留 Phase 2**;发布 **攒一批 + 文档再首发 `0.1`**;`@magic-scope` scope **尚未注册**(npm 上为 404,包名可用,发布前注册);远程 **先推 GitHub(私有),CI 后置**;协作走**分支 + PR**,做一步提交一步。
 
 ---
 
