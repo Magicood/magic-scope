@@ -12,6 +12,7 @@
  */
 export * from './contract/contract';
 export * from './contract/roles';
+export * from './derive/index';
 export * from './engine/index';
 export * from './primitive/palette';
 export * from './primitive/scale';
