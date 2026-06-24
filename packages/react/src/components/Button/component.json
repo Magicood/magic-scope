@@ -1,0 +1,17 @@
+{
+  "id": "button",
+  "name": "Button",
+  "description": "主操作按钮:solid / outline / ghost 变体 + 三档尺寸,solid 带奥术发光,完整状态与过渡",
+  "category": "actions",
+  "tags": ["button", "action", "form"],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-24",
+    "requirements": "magic-scope 首个示例组件:验证 @magic-scope/tokens(--ms-* 变量与主题引擎)与收录流水线端到端打通。自研、零依赖,完整覆盖 hover/active/focus-visible/disabled 状态与平滑过渡,solid 变体带发光,尊重 prefers-reduced-motion。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Button.tsx", "Button.css", "index.ts"]
+}

@@ -1,0 +1,95 @@
+.ms-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ms-space-2);
+  border: 1px solid transparent;
+  border-radius: var(--ms-radius-md);
+  font-family: var(--ms-font-sans);
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  transition:
+    background-color var(--ms-duration-fast) var(--ms-ease-standard),
+    border-color var(--ms-duration-fast) var(--ms-ease-standard),
+    color var(--ms-duration-fast) var(--ms-ease-standard),
+    box-shadow var(--ms-duration-base) var(--ms-ease-standard),
+    transform var(--ms-duration-fast) var(--ms-ease-emphasized);
+}
+
+.ms-button:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--ms-color-bg),
+    0 0 0 4px var(--ms-color-focus-ring);
+}
+
+.ms-button:active:not(:disabled) {
+  transform: translateY(1px) scale(0.99);
+}
+
+.ms-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* —— 尺寸 —— */
+.ms-button--sm {
+  height: 2rem;
+  padding-inline: var(--ms-space-3);
+  font-size: 0.833rem;
+}
+.ms-button--md {
+  height: 2.5rem;
+  padding-inline: var(--ms-space-4);
+  font-size: 1rem;
+}
+.ms-button--lg {
+  height: 3rem;
+  padding-inline: var(--ms-space-6);
+  font-size: 1.2rem;
+}
+
+/* —— solid:主色实底,hover 发光 —— */
+.ms-button--solid {
+  background-color: var(--ms-color-primary);
+  color: var(--ms-color-on-primary);
+}
+.ms-button--solid:hover:not(:disabled) {
+  background-color: var(--ms-color-primary-hover);
+  box-shadow: 0 0 20px -2px var(--ms-color-glow);
+}
+.ms-button--solid:active:not(:disabled) {
+  background-color: var(--ms-color-primary-active);
+}
+
+/* —— outline:描边,hover 染主色 + 微光 —— */
+.ms-button--outline {
+  border-color: var(--ms-color-border-strong);
+  color: var(--ms-color-fg);
+}
+.ms-button--outline:hover:not(:disabled) {
+  border-color: var(--ms-color-primary);
+  color: var(--ms-color-primary-hover);
+  box-shadow: 0 0 16px -4px var(--ms-color-glow);
+}
+
+/* —— ghost:无底,hover 浮起表面 —— */
+.ms-button--ghost {
+  color: var(--ms-color-fg);
+}
+.ms-button--ghost:hover:not(:disabled) {
+  background-color: var(--ms-color-surface-raised);
+}
+
+/* —— 尊重 reduced-motion —— */
+@media (prefers-reduced-motion: reduce) {
+  .ms-button {
+    transition-duration: 1ms;
+  }
+  .ms-button:active:not(:disabled) {
+    transform: none;
+  }
+}
