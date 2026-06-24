@@ -1,0 +1,17 @@
+{
+  "id": "input",
+  "name": "Input",
+  "description": "文本输入框:三档尺寸 + invalid 校验态,focus 带发光,完整状态与过渡(逻辑属性,RTL 友好)",
+  "category": "forms",
+  "tags": ["input", "form", "text-field"],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-24",
+    "requirements": "magic-scope 通用库第二个组件:文本输入。自研、消费 tokens,完整 hover/focus-visible(发光)/disabled/invalid 状态,逻辑属性(RTL 友好),尊重 prefers-reduced-motion;覆盖原生 size 为尺寸枚举。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Input.tsx", "Input.css", "index.ts"]
+}
