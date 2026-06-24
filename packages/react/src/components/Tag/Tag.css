@@ -1,0 +1,89 @@
+.ms-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ms-space-1);
+  border-radius: var(--ms-radius-md);
+  padding-block: var(--ms-space-1);
+  padding-inline: var(--ms-space-2);
+  font-family: var(--ms-font-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  background-color: color-mix(in oklch, var(--ms-tag-tone) 18%, transparent);
+  color: var(--ms-tag-tone);
+  transition:
+    background-color var(--ms-duration-fast) var(--ms-ease-standard),
+    color var(--ms-duration-fast) var(--ms-ease-standard);
+}
+
+/* closable 时让出右侧内边距给移除按钮 */
+.ms-tag--closable {
+  padding-inline-end: var(--ms-space-1);
+}
+
+.ms-tag__label {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* —— tone:每个色调注入 --ms-tag-tone 供底色 / 文字复用 —— */
+.ms-tag--primary {
+  --ms-tag-tone: var(--ms-color-primary);
+}
+.ms-tag--accent {
+  --ms-tag-tone: var(--ms-color-accent);
+}
+.ms-tag--success {
+  --ms-tag-tone: var(--ms-color-success);
+}
+.ms-tag--warning {
+  --ms-tag-tone: var(--ms-color-warning);
+}
+.ms-tag--danger {
+  --ms-tag-tone: var(--ms-color-danger);
+}
+.ms-tag--neutral {
+  --ms-tag-tone: var(--ms-color-fg-muted);
+}
+
+/* —— 移除按钮:继承 tone 文字,hover 加深底色,focus-visible 发光环 —— */
+.ms-tag__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 1rem;
+  block-size: 1rem;
+  padding: 0;
+  border: none;
+  border-radius: var(--ms-radius-full);
+  background-color: transparent;
+  color: currentColor;
+  font-family: var(--ms-font-sans);
+  font-size: 0.875rem;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    background-color var(--ms-duration-fast) var(--ms-ease-standard),
+    color var(--ms-duration-fast) var(--ms-ease-standard),
+    box-shadow var(--ms-duration-base) var(--ms-ease-standard);
+}
+
+.ms-tag__close:hover {
+  background-color: color-mix(in oklch, var(--ms-tag-tone) 32%, transparent);
+}
+
+.ms-tag__close:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--ms-color-bg),
+    0 0 0 4px var(--ms-color-focus-ring);
+}
+
+/* —— 尊重 reduced-motion —— */
+@media (prefers-reduced-motion: reduce) {
+  .ms-tag,
+  .ms-tag__close {
+    transition-duration: 1ms;
+  }
+}

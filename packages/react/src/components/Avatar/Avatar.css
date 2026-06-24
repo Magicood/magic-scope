@@ -1,0 +1,67 @@
+.ms-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  overflow: hidden;
+  box-sizing: border-box;
+  border: 1px solid var(--ms-color-border);
+  background-color: var(--ms-color-surface);
+  font-family: var(--ms-font-sans);
+  font-weight: 600;
+  line-height: 1;
+  user-select: none;
+  transition:
+    border-color var(--ms-duration-fast) var(--ms-ease-standard),
+    box-shadow var(--ms-duration-base) var(--ms-ease-standard);
+}
+
+/* —— 图片:铺满容器并裁剪 —— */
+.ms-avatar__img {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* —— 占位:首字母居中 + primary 柔和底/文字 —— */
+.ms-avatar--fallback {
+  border-color: color-mix(in oklch, var(--ms-color-primary) 35%, var(--ms-color-border));
+  background-color: color-mix(in oklch, var(--ms-color-primary) 25%, var(--ms-color-surface));
+  box-shadow: 0 0 8px var(--ms-color-glow);
+}
+.ms-avatar__initials {
+  color: var(--ms-color-primary);
+}
+
+/* —— 形状 —— */
+.ms-avatar--circle {
+  border-radius: var(--ms-radius-full);
+}
+.ms-avatar--square {
+  border-radius: var(--ms-radius-md);
+}
+
+/* —— 尺寸(边长 + 占位字号) —— */
+.ms-avatar--sm {
+  inline-size: 1.5rem;
+  block-size: 1.5rem;
+  font-size: 0.625rem;
+}
+.ms-avatar--md {
+  inline-size: 2.5rem;
+  block-size: 2.5rem;
+  font-size: 0.875rem;
+}
+.ms-avatar--lg {
+  inline-size: 4rem;
+  block-size: 4rem;
+  font-size: 1.375rem;
+}
+
+/* —— 尊重 reduced-motion —— */
+@media (prefers-reduced-motion: reduce) {
+  .ms-avatar {
+    transition-duration: 1ms;
+  }
+}

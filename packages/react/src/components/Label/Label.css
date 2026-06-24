@@ -1,0 +1,25 @@
+.ms-label {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--ms-space-1);
+  color: var(--ms-color-fg);
+  font-family: var(--ms-font-sans);
+  font-size: 0.9rem;
+  font-weight: 500;
+  line-height: 1.4;
+  margin-block-end: var(--ms-space-2);
+  cursor: default;
+  transition: color var(--ms-duration-fast) var(--ms-ease-standard);
+}
+
+.ms-label__required {
+  color: var(--ms-color-danger);
+  font-weight: 600;
+  user-select: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ms-label {
+    transition-duration: 1ms;
+  }
+}

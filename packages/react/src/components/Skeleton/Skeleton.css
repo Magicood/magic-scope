@@ -1,0 +1,66 @@
+.ms-skeleton {
+  display: block;
+  inline-size: 100%;
+  block-size: 1.5rem;
+  border-radius: var(--ms-radius-md);
+  /* surface-raised 底色,叠加一道横向流光高亮 */
+  background-color: var(--ms-color-surface-raised);
+  background-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--ms-color-glow) 50%,
+    transparent 100%
+  );
+  background-repeat: no-repeat;
+  background-size: 50% 100%;
+  background-position: -150% 0;
+  animation: ms-skeleton-shimmer 1.4s var(--ms-ease-standard) infinite;
+  /* 微弱奥术发光,呼应主题 */
+  box-shadow: 0 0 8px -2px var(--ms-color-glow);
+}
+
+/* —— 流光:让高亮从左掠到右 —— */
+@keyframes ms-skeleton-shimmer {
+  from {
+    background-position: -150% 0;
+  }
+  to {
+    background-position: 250% 0;
+  }
+}
+
+/* —— text:较矮的文本行 + 小圆角 —— */
+.ms-skeleton--text {
+  block-size: 0.75rem;
+  border-radius: var(--ms-radius-sm);
+}
+
+/* —— rect:矩形(默认,中圆角) —— */
+.ms-skeleton--rect {
+  border-radius: var(--ms-radius-md);
+}
+
+/* —— circle:等宽高圆形 —— */
+.ms-skeleton--circle {
+  inline-size: 3rem;
+  block-size: 3rem;
+  border-radius: var(--ms-radius-full);
+}
+
+/* —— 尊重 reduced-motion:去掉位移流光,降级为透明度呼吸,保留「加载中」语义,不完全静止 —— */
+@media (prefers-reduced-motion: reduce) {
+  .ms-skeleton {
+    background-image: none;
+    animation: ms-skeleton-breathe 2.4s var(--ms-ease-standard) infinite;
+  }
+
+  @keyframes ms-skeleton-breathe {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.55;
+    }
+  }
+}

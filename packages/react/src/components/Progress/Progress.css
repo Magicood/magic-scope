@@ -1,0 +1,44 @@
+.ms-progress {
+  display: block;
+  inline-size: 100%;
+  block-size: 0.5rem;
+  overflow: hidden;
+  background-color: var(--ms-color-surface-sunken);
+  border-radius: var(--ms-radius-full);
+}
+
+.ms-progress__fill {
+  display: block;
+  block-size: 100%;
+  inline-size: 0%;
+  background-color: var(--ms-color-primary);
+  border-radius: var(--ms-radius-full);
+  box-shadow: 0 0 8px var(--ms-color-glow);
+  transition: inline-size var(--ms-duration-base) var(--ms-ease-emphasized);
+}
+
+/* —— 不确定态:一段填充左右往返流动 —— */
+.ms-progress--indeterminate .ms-progress__fill {
+  inline-size: 40%;
+  transition: none;
+  animation: ms-progress-slide 1.4s var(--ms-ease-standard) infinite;
+}
+
+@keyframes ms-progress-slide {
+  0% {
+    transform: translateX(-110%);
+  }
+  100% {
+    transform: translateX(310%);
+  }
+}
+
+/* —— 尊重 reduced-motion:放慢往返与过渡,保留「进行中」语义,不完全静止 —— */
+@media (prefers-reduced-motion: reduce) {
+  .ms-progress__fill {
+    transition-duration: 1ms;
+  }
+  .ms-progress--indeterminate .ms-progress__fill {
+    animation-duration: 4s;
+  }
+}

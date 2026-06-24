@@ -9,3 +9,9 @@
 @import "./components/Alert/Alert.css";
 @import "./components/Spinner/Spinner.css";
 @import "./components/Divider/Divider.css";
+@import "./components/Avatar/Avatar.css";
+@import "./components/Progress/Progress.css";
+@import "./components/Skeleton/Skeleton.css";
+@import "./components/Tag/Tag.css";
+@import "./components/Kbd/Kbd.css";
+@import "./components/Label/Label.css";

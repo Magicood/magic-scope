@@ -1,0 +1,25 @@
+{
+  "id": "progress",
+  "name": "Progress",
+  "description": "奥术发光的进度条,role=progressbar,支持确定态(value 0-100 驱动填充宽度)与不确定态(填充段左右往返流动),尊重 prefers-reduced-motion。",
+  "category": "feedback",
+  "tags": [
+    "progress",
+    "progressbar",
+    "feedback",
+    "loading",
+    "indicator",
+    "indeterminate",
+    "status"
+  ],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-24",
+    "requirements": "奥术发光的进度条,role=progressbar,支持确定态(value 0-100 驱动填充宽度)与不确定态(填充段左右往返流动),尊重 prefers-reduced-motion。。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-* 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Progress.tsx", "Progress.css", "index.ts"]
+}

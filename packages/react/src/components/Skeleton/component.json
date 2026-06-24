@@ -1,0 +1,17 @@
+{
+  "id": "skeleton",
+  "name": "Skeleton",
+  "description": "加载占位,surface-raised 底叠加奥术流光,支持 text/rect/circle 三形态。",
+  "category": "feedback",
+  "tags": ["skeleton", "loading", "placeholder", "shimmer", "feedback", "react"],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-24",
+    "requirements": "加载占位,surface-raised 底叠加奥术流光,支持 text/rect/circle 三形态。。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-* 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Skeleton.tsx", "Skeleton.css", "index.ts"]
+}
