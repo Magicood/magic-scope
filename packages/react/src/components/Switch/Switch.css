@@ -30,9 +30,9 @@
   border-radius: var(--ms-radius-full);
   background-color: var(--ms-color-surface-sunken);
   transition:
-    background-color var(--ms-duration-base) var(--ms-ease-standard),
-    border-color var(--ms-duration-fast) var(--ms-ease-standard),
-    box-shadow var(--ms-duration-base) var(--ms-ease-standard);
+    background-color var(--ms-dur-base) var(--ms-ease-standard),
+    border-color var(--ms-dur-fast) var(--ms-ease-standard),
+    box-shadow var(--ms-dur-base) var(--ms-ease-standard);
 }
 
 /* —— 滑块 —— */
@@ -42,16 +42,18 @@
   border-radius: var(--ms-radius-full);
   background-color: var(--ms-color-fg-muted);
   transition:
-    transform var(--ms-duration-base) var(--ms-ease-emphasized),
-    background-color var(--ms-duration-base) var(--ms-ease-standard);
+    transform var(--ms-dur-base) var(--ms-ease-emphasized),
+    background-color var(--ms-dur-base) var(--ms-ease-standard),
+    box-shadow var(--ms-dur-base) var(--ms-ease-standard);
 }
 
-/* —— hover:轨道描边变亮 —— */
+/* —— hover:轨道描边变亮 + 轨道内微光预热 —— */
 .ms-switch__input:not(:disabled):hover + .ms-switch__track {
   border-color: var(--ms-color-border-strong);
+  box-shadow: inset 0 0 calc(8px * var(--ms-fx-glow, 1)) -4px var(--ms-color-glow);
 }
 
-/* —— focus-visible:发光环 —— */
+/* —— focus-visible:发光环(可达性,模糊半径不参与开关) —— */
 .ms-switch__input:focus-visible + .ms-switch__track {
   box-shadow:
     0 0 0 2px var(--ms-color-bg),
@@ -59,28 +61,35 @@
 }
 
 /* —— checked:轨道染主色,滑块右移并染 on-primary —— */
+/* idle 微光 + 内层暖辉,营造奥术充能感 */
 .ms-switch__input:checked + .ms-switch__track {
   border-color: var(--ms-color-primary);
   background-color: var(--ms-color-primary);
-  box-shadow: 0 0 20px -2px var(--ms-color-glow);
+  box-shadow:
+    0 0 calc(14px * var(--ms-fx-glow, 1)) -3px var(--ms-color-glow),
+    inset 0 0 calc(6px * var(--ms-fx-glow, 1)) -2px var(--ms-color-glow);
 }
 .ms-switch__input:checked + .ms-switch__track .ms-switch__thumb {
-  transform: translateX(1.25rem);
+  transform: translateX(calc(1.25rem * var(--ms-motion-scale, 1)));
   background-color: var(--ms-color-on-primary);
+  box-shadow: 0 0 calc(6px * var(--ms-fx-glow, 1)) -1px var(--ms-color-glow);
 }
 
-/* checked + hover:加深主色 */
+/* checked + hover:加深主色,发光强化 */
 .ms-switch__input:checked:not(:disabled):hover + .ms-switch__track {
   background-color: var(--ms-color-primary-hover);
   border-color: var(--ms-color-primary-hover);
+  box-shadow:
+    0 0 calc(24px * var(--ms-fx-glow, 1)) -2px var(--ms-color-glow),
+    inset 0 0 calc(8px * var(--ms-fx-glow, 1)) -2px var(--ms-color-glow);
 }
 
-/* checked + focus-visible:发光环叠加主色光 */
+/* checked + focus-visible:发光环(可达性,不参与开关)叠加主色光 */
 .ms-switch__input:checked:focus-visible + .ms-switch__track {
   box-shadow:
     0 0 0 2px var(--ms-color-bg),
     0 0 0 4px var(--ms-color-focus-ring),
-    0 0 20px -2px var(--ms-color-glow);
+    0 0 calc(20px * var(--ms-fx-glow, 1)) -2px var(--ms-color-glow);
 }
 
 /* —— disabled:半透明、禁止指针 —— */
@@ -90,11 +99,4 @@
 }
 .ms-switch:has(.ms-switch__input:disabled) {
   cursor: not-allowed;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .ms-switch__track,
-  .ms-switch__thumb {
-    transition-duration: 1ms;
-  }
 }

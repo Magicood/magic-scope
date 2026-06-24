@@ -9,17 +9,21 @@
   line-height: 1.4;
   margin-block-end: var(--ms-space-2);
   cursor: default;
-  transition: color var(--ms-duration-fast) var(--ms-ease-standard);
+  transition:
+    color var(--ms-dur-fast) var(--ms-ease-standard),
+    text-shadow var(--ms-dur-base) var(--ms-ease-standard);
 }
 
 .ms-label__required {
   color: var(--ms-color-danger);
   font-weight: 600;
   user-select: none;
+  /* 装饰性微光:门控于 --ms-fx-glow,idle 时极克制地点亮必填标记 */
+  text-shadow: 0 0 calc(6px * var(--ms-fx-glow, 1)) var(--ms-color-glow);
+  transition: text-shadow var(--ms-dur-base) var(--ms-ease-standard);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .ms-label {
-    transition-duration: 1ms;
-  }
+/* hover 关联表单时,标签整体略微提亮 + 必填标记发光强化(深色奥术氛围) */
+.ms-label:hover .ms-label__required {
+  text-shadow: 0 0 calc(10px * var(--ms-fx-glow, 1)) var(--ms-color-glow);
 }

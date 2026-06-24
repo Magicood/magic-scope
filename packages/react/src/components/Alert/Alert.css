@@ -1,43 +1,119 @@
 .ms-alert {
+  position: relative;
   display: block;
   border-radius: var(--ms-radius-md);
   border-inline-start: 3px solid var(--ms-color-info);
   padding: var(--ms-space-4);
+  background-image: linear-gradient(
+    135deg,
+    color-mix(in oklch, var(--ms-color-info) 18%, var(--ms-color-surface)),
+    color-mix(in oklch, var(--ms-color-info) 8%, var(--ms-color-surface))
+  );
   background-color: color-mix(in oklch, var(--ms-color-info) 14%, var(--ms-color-surface));
   color: var(--ms-color-fg);
   font-family: var(--ms-font-sans);
   line-height: 1.5;
+  box-shadow:
+    inset 1px 0 0 0 color-mix(in oklch, var(--ms-color-info) 30%, transparent),
+    0 0 calc(10px * var(--ms-fx-glow, 1)) -6px var(--ms-color-glow);
   transition:
-    background-color var(--ms-duration-fast) var(--ms-ease-standard),
-    border-color var(--ms-duration-fast) var(--ms-ease-standard);
+    background-color var(--ms-dur-fast) var(--ms-ease-standard),
+    border-color var(--ms-dur-fast) var(--ms-ease-standard),
+    box-shadow var(--ms-dur-base) var(--ms-ease-standard),
+    transform var(--ms-dur-fast) var(--ms-ease-emphasized);
+}
+
+.ms-alert:hover {
+  transform: translateY(calc(-1px * var(--ms-motion-scale, 1)));
+  box-shadow:
+    inset 1px 0 0 0 color-mix(in oklch, var(--ms-color-info) 45%, transparent),
+    0 0 calc(20px * var(--ms-fx-glow, 1)) -4px var(--ms-color-glow);
 }
 
 /* —— info:信息(默认) —— */
 .ms-alert--info {
   border-inline-start-color: var(--ms-color-info);
+  background-image: linear-gradient(
+    135deg,
+    color-mix(in oklch, var(--ms-color-info) 18%, var(--ms-color-surface)),
+    color-mix(in oklch, var(--ms-color-info) 8%, var(--ms-color-surface))
+  );
   background-color: color-mix(in oklch, var(--ms-color-info) 14%, var(--ms-color-surface));
+  box-shadow:
+    inset 1px 0 0 0 color-mix(in oklch, var(--ms-color-info) 30%, transparent),
+    0 0 calc(10px * var(--ms-fx-glow, 1)) -6px
+    color-mix(in oklch, var(--ms-color-info) 60%, var(--ms-color-glow));
+}
+
+.ms-alert--info:hover {
+  box-shadow:
+    inset 1px 0 0 0 color-mix(in oklch, var(--ms-color-info) 45%, transparent),
+    0 0 calc(20px * var(--ms-fx-glow, 1)) -4px
+    color-mix(in oklch, var(--ms-color-info) 60%, var(--ms-color-glow));
 }
 
 /* —— success:成功 —— */
 .ms-alert--success {
   border-inline-start-color: var(--ms-color-success);
+  background-image: linear-gradient(
+    135deg,
+    color-mix(in oklch, var(--ms-color-success) 18%, var(--ms-color-surface)),
+    color-mix(in oklch, var(--ms-color-success) 8%, var(--ms-color-surface))
+  );
   background-color: color-mix(in oklch, var(--ms-color-success) 14%, var(--ms-color-surface));
+  box-shadow:
+    inset 1px 0 0 0 color-mix(in oklch, var(--ms-color-success) 30%, transparent),
+    0 0 calc(10px * var(--ms-fx-glow, 1)) -6px
+    color-mix(in oklch, var(--ms-color-success) 60%, var(--ms-color-glow));
+}
+
+.ms-alert--success:hover {
+  box-shadow:
+    inset 1px 0 0 0 color-mix(in oklch, var(--ms-color-success) 45%, transparent),
+    0 0 calc(20px * var(--ms-fx-glow, 1)) -4px
+    color-mix(in oklch, var(--ms-color-success) 60%, var(--ms-color-glow));
 }
 
 /* —— warning:警告 —— */
 .ms-alert--warning {
   border-inline-start-color: var(--ms-color-warning);
+  background-image: linear-gradient(
+    135deg,
+    color-mix(in oklch, var(--ms-color-warning) 18%, var(--ms-color-surface)),
+    color-mix(in oklch, var(--ms-color-warning) 8%, var(--ms-color-surface))
+  );
   background-color: color-mix(in oklch, var(--ms-color-warning) 14%, var(--ms-color-surface));
+  box-shadow:
+    inset 1px 0 0 0 color-mix(in oklch, var(--ms-color-warning) 30%, transparent),
+    0 0 calc(10px * var(--ms-fx-glow, 1)) -6px
+    color-mix(in oklch, var(--ms-color-warning) 60%, var(--ms-color-glow));
+}
+
+.ms-alert--warning:hover {
+  box-shadow:
+    inset 1px 0 0 0 color-mix(in oklch, var(--ms-color-warning) 45%, transparent),
+    0 0 calc(20px * var(--ms-fx-glow, 1)) -4px
+    color-mix(in oklch, var(--ms-color-warning) 60%, var(--ms-color-glow));
 }
 
 /* —— danger:危险 —— */
 .ms-alert--danger {
   border-inline-start-color: var(--ms-color-danger);
+  background-image: linear-gradient(
+    135deg,
+    color-mix(in oklch, var(--ms-color-danger) 18%, var(--ms-color-surface)),
+    color-mix(in oklch, var(--ms-color-danger) 8%, var(--ms-color-surface))
+  );
   background-color: color-mix(in oklch, var(--ms-color-danger) 14%, var(--ms-color-surface));
+  box-shadow:
+    inset 1px 0 0 0 color-mix(in oklch, var(--ms-color-danger) 30%, transparent),
+    0 0 calc(10px * var(--ms-fx-glow, 1)) -6px
+    color-mix(in oklch, var(--ms-color-danger) 60%, var(--ms-color-glow));
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .ms-alert {
-    transition-duration: 1ms;
-  }
+.ms-alert--danger:hover {
+  box-shadow:
+    inset 1px 0 0 0 color-mix(in oklch, var(--ms-color-danger) 45%, transparent),
+    0 0 calc(20px * var(--ms-fx-glow, 1)) -4px
+    color-mix(in oklch, var(--ms-color-danger) 60%, var(--ms-color-glow));
 }

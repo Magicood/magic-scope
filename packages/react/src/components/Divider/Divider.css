@@ -1,7 +1,9 @@
 .ms-divider {
   border: 0;
   margin: 0;
-  transition: border-color var(--ms-duration-fast) var(--ms-ease-standard);
+  transition:
+    border-color var(--ms-dur-fast) var(--ms-ease-standard),
+    box-shadow var(--ms-dur-base) var(--ms-ease-standard);
 }
 
 /* —— horizontal:横跨容器,上边框成线 —— */
@@ -9,6 +11,20 @@
   inline-size: 100%;
   block-size: 0;
   border-block-start: 1px solid var(--ms-color-border);
+  /* 奥术微光:沿线方向的渐变点缀,中段微亮、两端隐入 */
+  background-image: linear-gradient(
+    90deg,
+    transparent,
+    var(--ms-color-border) 18%,
+    var(--ms-color-glow) 50%,
+    var(--ms-color-border) 82%,
+    transparent
+  );
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100% 1px;
+  /* idle 微光:由 --ms-fx-glow 控制强度,可整体关闭 */
+  box-shadow: 0 0 calc(6px * var(--ms-fx-glow, 1)) -3px var(--ms-color-glow);
 }
 
 /* —— vertical:行内,贴满高度,起始侧边框成线 —— */
@@ -18,10 +34,18 @@
   inline-size: 0;
   vertical-align: middle;
   border-inline-start: 1px solid var(--ms-color-border);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .ms-divider {
-    transition-duration: 1ms;
-  }
+  /* 奥术微光:沿线方向的渐变点缀,中段微亮、两端隐入 */
+  background-image: linear-gradient(
+    180deg,
+    transparent,
+    var(--ms-color-border) 18%,
+    var(--ms-color-glow) 50%,
+    var(--ms-color-border) 82%,
+    transparent
+  );
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 1px 100%;
+  /* idle 微光:由 --ms-fx-glow 控制强度,可整体关闭 */
+  box-shadow: 0 0 calc(6px * var(--ms-fx-glow, 1)) -3px var(--ms-color-glow);
 }

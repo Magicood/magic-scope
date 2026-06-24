@@ -3,29 +3,36 @@
   inline-size: 100%;
   block-size: 1.5rem;
   border-radius: var(--ms-radius-md);
-  /* surface-raised 底色,叠加一道横向流光高亮 */
+  /* surface-raised 底色 + 一道极淡的纵向奥术渐变点缀,叠加横向流光高亮 */
   background-color: var(--ms-color-surface-raised);
-  background-image: linear-gradient(
-    90deg,
-    transparent 0%,
-    var(--ms-color-glow) 50%,
-    transparent 100%
-  );
+  background-image:
+    linear-gradient(90deg, transparent 0%, var(--ms-color-glow) 50%, transparent 100%),
+    linear-gradient(180deg, var(--ms-color-surface-raised) 0%, var(--ms-color-surface) 100%);
   background-repeat: no-repeat;
-  background-size: 50% 100%;
-  background-position: -150% 0;
+  background-size:
+    50% 100%,
+    100% 100%;
+  background-position:
+    -150% 0,
+    0 0;
   animation: ms-skeleton-shimmer 1.4s var(--ms-ease-standard) infinite;
-  /* 微弱奥术发光,呼应主题 */
-  box-shadow: 0 0 8px -2px var(--ms-color-glow);
+  /* 微弱奥术发光,呼应主题:外层柔光 + 内侧描边微光,模糊半径受 fx-glow 调控 */
+  box-shadow:
+    0 0 calc(8px * var(--ms-fx-glow, 1)) -2px var(--ms-color-glow),
+    inset 0 0 calc(1px * var(--ms-fx-glow, 1)) 0 var(--ms-color-glow);
 }
 
-/* —— 流光:让高亮从左掠到右 —— */
+/* —— 流光:让高亮从左掠到右(仅移动流光层,渐变点缀层保持静止) —— */
 @keyframes ms-skeleton-shimmer {
   from {
-    background-position: -150% 0;
+    background-position:
+      -150% 0,
+      0 0;
   }
   to {
-    background-position: 250% 0;
+    background-position:
+      250% 0,
+      0 0;
   }
 }
 
@@ -47,11 +54,17 @@
   border-radius: var(--ms-radius-full);
 }
 
-/* —— 尊重 reduced-motion:去掉位移流光,降级为透明度呼吸,保留「加载中」语义,不完全静止 —— */
+/* —— 尊重 reduced-motion:持续关键帧动画不受 motion-scale 影响,故保留并降级 —— */
+/* —— 去掉位移流光,放慢为透明度呼吸,保留「加载中」语义,放慢不停止 —— */
 @media (prefers-reduced-motion: reduce) {
   .ms-skeleton {
-    background-image: none;
-    animation: ms-skeleton-breathe 2.4s var(--ms-ease-standard) infinite;
+    background-image: linear-gradient(
+      180deg,
+      var(--ms-color-surface-raised) 0%,
+      var(--ms-color-surface) 100%
+    );
+    background-position: 0 0;
+    animation: ms-skeleton-breathe 3.6s var(--ms-ease-standard) infinite;
   }
 
   @keyframes ms-skeleton-breathe {

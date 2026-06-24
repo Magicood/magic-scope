@@ -5,6 +5,7 @@
   overflow: hidden;
   background-color: var(--ms-color-surface-sunken);
   border-radius: var(--ms-radius-full);
+  box-shadow: inset 0 0 calc(4px * var(--ms-fx-glow, 1)) -1px var(--ms-color-glow);
 }
 
 .ms-progress__fill {
@@ -12,9 +13,14 @@
   block-size: 100%;
   inline-size: 0%;
   background-color: var(--ms-color-primary);
+  background-image: linear-gradient(90deg, var(--ms-color-primary), var(--ms-color-glow));
   border-radius: var(--ms-radius-full);
-  box-shadow: 0 0 8px var(--ms-color-glow);
-  transition: inline-size var(--ms-duration-base) var(--ms-ease-emphasized);
+  box-shadow:
+    0 0 calc(8px * var(--ms-fx-glow, 1)) -1px var(--ms-color-glow),
+    0 0 calc(16px * var(--ms-fx-glow, 1)) -4px var(--ms-color-glow);
+  transition:
+    inline-size var(--ms-dur-base) var(--ms-ease-emphasized),
+    box-shadow var(--ms-dur-base) var(--ms-ease-standard);
 }
 
 /* —— 不确定态:一段填充左右往返流动 —— */
@@ -33,11 +39,8 @@
   }
 }
 
-/* —— 尊重 reduced-motion:放慢往返与过渡,保留「进行中」语义,不完全静止 —— */
+/* —— 尊重 reduced-motion:放慢往返,保留「进行中」语义,不完全静止 —— */
 @media (prefers-reduced-motion: reduce) {
-  .ms-progress__fill {
-    transition-duration: 1ms;
-  }
   .ms-progress--indeterminate .ms-progress__fill {
     animation-duration: 4s;
   }

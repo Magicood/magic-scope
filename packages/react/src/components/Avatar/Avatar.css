@@ -12,8 +12,9 @@
   line-height: 1;
   user-select: none;
   transition:
-    border-color var(--ms-duration-fast) var(--ms-ease-standard),
-    box-shadow var(--ms-duration-base) var(--ms-ease-standard);
+    border-color var(--ms-dur-fast) var(--ms-ease-standard),
+    box-shadow var(--ms-dur-base) var(--ms-ease-standard),
+    transform var(--ms-dur-fast) var(--ms-ease-emphasized);
 }
 
 /* —— 图片:铺满容器并裁剪 —— */
@@ -27,8 +28,21 @@
 /* —— 占位:首字母居中 + primary 柔和底/文字 —— */
 .ms-avatar--fallback {
   border-color: color-mix(in oklch, var(--ms-color-primary) 35%, var(--ms-color-border));
-  background-color: color-mix(in oklch, var(--ms-color-primary) 25%, var(--ms-color-surface));
-  box-shadow: 0 0 8px var(--ms-color-glow);
+  background-image: radial-gradient(
+    circle at 50% 30%,
+    color-mix(in oklch, var(--ms-color-primary) 32%, var(--ms-color-surface)),
+    color-mix(in oklch, var(--ms-color-primary) 18%, var(--ms-color-surface))
+  );
+  box-shadow:
+    0 0 calc(8px * var(--ms-fx-glow, 1)) -1px var(--ms-color-glow),
+    inset 0 0 calc(6px * var(--ms-fx-glow, 1)) -2px var(--ms-color-glow);
+}
+.ms-avatar--fallback:hover {
+  border-color: color-mix(in oklch, var(--ms-color-primary) 55%, var(--ms-color-border));
+  box-shadow:
+    0 0 calc(16px * var(--ms-fx-glow, 1)) -2px var(--ms-color-glow),
+    inset 0 0 calc(8px * var(--ms-fx-glow, 1)) -2px var(--ms-color-glow);
+  transform: scale(calc(1 + 0.02 * var(--ms-motion-scale, 1)));
 }
 .ms-avatar__initials {
   color: var(--ms-color-primary);
@@ -57,11 +71,4 @@
   inline-size: 4rem;
   block-size: 4rem;
   font-size: 1.375rem;
-}
-
-/* —— 尊重 reduced-motion —— */
-@media (prefers-reduced-motion: reduce) {
-  .ms-avatar {
-    transition-duration: 1ms;
-  }
 }

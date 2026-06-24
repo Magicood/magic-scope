@@ -4,12 +4,18 @@
   border: 1px solid var(--ms-color-border);
   border-radius: var(--ms-radius-md);
   background-color: var(--ms-color-surface);
+  background-image: linear-gradient(
+    180deg,
+    color-mix(in oklch, var(--ms-color-glow) 4%, transparent),
+    transparent 60%
+  );
   color: var(--ms-color-fg);
   font-family: var(--ms-font-sans);
+  box-shadow: inset 0 0 calc(12px * var(--ms-fx-glow, 1)) -10px var(--ms-color-glow);
   transition:
-    border-color var(--ms-duration-fast) var(--ms-ease-standard),
-    box-shadow var(--ms-duration-base) var(--ms-ease-standard),
-    background-color var(--ms-duration-fast) var(--ms-ease-standard);
+    border-color var(--ms-dur-fast) var(--ms-ease-standard),
+    box-shadow var(--ms-dur-base) var(--ms-ease-standard),
+    background-color var(--ms-dur-fast) var(--ms-ease-standard);
 }
 
 .ms-input::placeholder {
@@ -18,6 +24,9 @@
 
 .ms-input:hover:not(:disabled) {
   border-color: var(--ms-color-border-strong);
+  box-shadow:
+    inset 0 0 calc(14px * var(--ms-fx-glow, 1)) -10px var(--ms-color-glow),
+    0 0 calc(14px * var(--ms-fx-glow, 1)) -8px var(--ms-color-glow);
 }
 
 .ms-input:focus-visible {
@@ -25,20 +34,26 @@
   border-color: var(--ms-color-primary);
   box-shadow:
     0 0 0 3px color-mix(in oklch, var(--ms-color-focus-ring) 35%, transparent),
-    0 0 16px -6px var(--ms-color-glow);
+    0 0 calc(16px * var(--ms-fx-glow, 1)) -6px var(--ms-color-glow),
+    inset 0 0 calc(18px * var(--ms-fx-glow, 1)) -12px var(--ms-color-primary);
 }
 
 .ms-input:disabled {
   cursor: not-allowed;
   opacity: 0.5;
+  background-image: none;
+  box-shadow: none;
 }
 
 .ms-input--invalid {
   border-color: var(--ms-color-danger);
+  box-shadow: inset 0 0 calc(12px * var(--ms-fx-glow, 1)) -10px var(--ms-color-danger);
 }
 .ms-input--invalid:focus-visible {
   border-color: var(--ms-color-danger);
-  box-shadow: 0 0 0 3px color-mix(in oklch, var(--ms-color-danger) 35%, transparent);
+  box-shadow:
+    0 0 0 3px color-mix(in oklch, var(--ms-color-danger) 35%, transparent),
+    0 0 calc(16px * var(--ms-fx-glow, 1)) -6px var(--ms-color-danger);
 }
 
 /* —— 尺寸(逻辑属性,RTL 友好) —— */
@@ -56,10 +71,4 @@
   block-size: 3rem;
   padding-inline: var(--ms-space-4);
   font-size: 1.2rem;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .ms-input {
-    transition-duration: 1ms;
-  }
 }
