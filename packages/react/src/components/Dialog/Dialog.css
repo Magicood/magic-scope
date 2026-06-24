@@ -1,0 +1,60 @@
+.ms-dialog {
+  margin: auto;
+  padding: 0;
+  border: none;
+  background: transparent;
+  inline-size: 100%;
+  max-inline-size: min(92vw, 32rem);
+  color: var(--ms-color-fg);
+  opacity: 0;
+  transform: translateY(8px) scale(0.97);
+  transition:
+    opacity var(--ms-dur-base) var(--ms-ease-standard),
+    transform var(--ms-dur-base) var(--ms-ease-emphasized),
+    overlay var(--ms-dur-base) allow-discrete,
+    display var(--ms-dur-base) allow-discrete;
+}
+
+.ms-dialog[open] {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* 首次渲染即过渡(现代:@starting-style),不支持的浏览器直接以终态出现 */
+@starting-style {
+  .ms-dialog[open] {
+    opacity: 0;
+    transform: translateY(8px) scale(0.97);
+  }
+}
+
+.ms-dialog::backdrop {
+  background: var(--ms-color-overlay, rgb(10 7 16 / 0.72));
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  transition:
+    opacity var(--ms-dur-base) var(--ms-ease-standard),
+    overlay var(--ms-dur-base) allow-discrete,
+    display var(--ms-dur-base) allow-discrete;
+}
+
+.ms-dialog[open]::backdrop {
+  opacity: 1;
+}
+
+@starting-style {
+  .ms-dialog[open]::backdrop {
+    opacity: 0;
+  }
+}
+
+.ms-dialog__panel {
+  background-color: var(--ms-color-surface-raised);
+  border: 1px solid var(--ms-color-border);
+  border-radius: var(--ms-radius-lg);
+  padding: var(--ms-space-6);
+  font-family: var(--ms-font-sans);
+  box-shadow:
+    0 24px 64px -24px rgb(0 0 0 / 0.7),
+    0 0 calc(40px * var(--ms-fx-glow, 1)) -16px var(--ms-color-glow);
+}

@@ -1,0 +1,17 @@
+{
+  "id": "dialog",
+  "name": "Dialog",
+  "description": "模态对话框,基于原生 <dialog> + showModal:焦点陷阱 / Esc / 遮罩 / top-layer,带入场动画与点遮罩关闭",
+  "category": "overlay",
+  "tags": ["dialog", "modal", "overlay"],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-24",
+    "requirements": "magic-scope overlay 首个组件:模态对话框。用满平台原生能力——原生 <dialog> + showModal() 自带焦点陷阱 / Esc / ::backdrop / top-layer;自研封装受控 open、点遮罩关闭、@starting-style + allow-discrete 入场动画(光影/动效受 fx/motion 开关控制)。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Dialog.tsx", "Dialog.css", "index.ts"]
+}
