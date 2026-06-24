@@ -13,3 +13,6 @@ registry/manifest.json
 
 # 浏览器验证临时产物
 .playwright-mcp/
+
+# docs 生成物(由 pnpm gen:docs-tokens 生成)
+docs/.vitepress/theme/tokens.css

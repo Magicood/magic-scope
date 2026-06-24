@@ -16,8 +16,9 @@
     "test": "vitest run --passWithNoTests",
     "new": "tsx scripts/new-component.ts",
     "registry": "tsx registry/build-index.ts",
-    "docs:dev": "vitepress dev docs",
-    "docs:build": "vitepress build docs",
+    "gen:docs-tokens": "tsx scripts/gen-docs-tokens.ts",
+    "docs:dev": "pnpm gen:docs-tokens && vitepress dev docs",
+    "docs:build": "pnpm gen:docs-tokens && vitepress build docs",
     "changeset": "changeset",
     "version": "changeset version",
     "release": "pnpm build && changeset publish"
