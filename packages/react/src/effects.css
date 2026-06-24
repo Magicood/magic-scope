@@ -1,0 +1,30 @@
+/* —— magic-scope 效果开关(核心驱动 · 一键调控) ——
+ * --ms-motion-scale:动效强度乘子(过渡时长 / 位移);由 data-ms-motion = full | subtle | off 控制
+ * --ms-fx-glow:装饰发光强度乘子(不影响聚焦环,保可达性);由 data-ms-fx = on | off 控制
+ * 组件统一用 var(--ms-dur-fast) / var(--ms-dur-base)(已含 motion-scale)做过渡时长,
+ * 用 calc(<尺寸> * var(--ms-fx-glow)) 门控装饰发光,用 calc(<位移> * var(--ms-motion-scale)) 门控位移。
+ * 在任意祖先(通常 <html> 或主题容器)设 data-ms-motion / data-ms-fx 即全局联动。 */
+:root {
+  --ms-motion-scale: 1;
+  --ms-fx-glow: 1;
+  --ms-dur-fast: calc(var(--ms-duration-fast, 120ms) * var(--ms-motion-scale));
+  --ms-dur-base: calc(var(--ms-duration-base, 200ms) * var(--ms-motion-scale));
+}
+
+[data-ms-motion="subtle"] {
+  --ms-motion-scale: 0.6;
+}
+[data-ms-motion="off"] {
+  --ms-motion-scale: 0;
+}
+
+[data-ms-fx="off"] {
+  --ms-fx-glow: 0;
+}
+
+/* 系统级减弱动效:统一归零 motion-scale(光影 fx-glow 不受影响,属静态视觉) */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --ms-motion-scale: 0;
+  }
+}

@@ -12,11 +12,11 @@
   cursor: pointer;
   user-select: none;
   transition:
-    background-color var(--ms-duration-fast) var(--ms-ease-standard),
-    border-color var(--ms-duration-fast) var(--ms-ease-standard),
-    color var(--ms-duration-fast) var(--ms-ease-standard),
-    box-shadow var(--ms-duration-base) var(--ms-ease-standard),
-    transform var(--ms-duration-fast) var(--ms-ease-emphasized);
+    background-color var(--ms-dur-fast) var(--ms-ease-standard),
+    border-color var(--ms-dur-fast) var(--ms-ease-standard),
+    color var(--ms-dur-fast) var(--ms-ease-standard),
+    box-shadow var(--ms-dur-base) var(--ms-ease-standard),
+    transform var(--ms-dur-fast) var(--ms-ease-emphasized);
 }
 
 .ms-button:focus-visible {
@@ -27,7 +27,8 @@
 }
 
 .ms-button:active:not(:disabled) {
-  transform: translateY(1px) scale(0.99);
+  transform: translateY(calc(1px * var(--ms-motion-scale, 1)))
+    scale(calc(1 - 0.01 * var(--ms-motion-scale, 1)));
 }
 
 .ms-button:disabled {
@@ -52,14 +53,14 @@
   font-size: 1.2rem;
 }
 
-/* —— solid:主色实底,hover 发光 —— */
+/* —— solid:主色实底,hover 发光(受 --ms-fx-glow 门控) —— */
 .ms-button--solid {
   background-color: var(--ms-color-primary);
   color: var(--ms-color-on-primary);
 }
 .ms-button--solid:hover:not(:disabled) {
   background-color: var(--ms-color-primary-hover);
-  box-shadow: 0 0 20px -2px var(--ms-color-glow);
+  box-shadow: 0 0 calc(20px * var(--ms-fx-glow, 1)) -2px var(--ms-color-glow);
 }
 .ms-button--solid:active:not(:disabled) {
   background-color: var(--ms-color-primary-active);
@@ -73,7 +74,7 @@
 .ms-button--outline:hover:not(:disabled) {
   border-color: var(--ms-color-primary);
   color: var(--ms-color-primary-hover);
-  box-shadow: 0 0 16px -4px var(--ms-color-glow);
+  box-shadow: 0 0 calc(16px * var(--ms-fx-glow, 1)) -4px var(--ms-color-glow);
 }
 
 /* —— ghost:无底,hover 浮起表面 —— */
@@ -82,14 +83,4 @@
 }
 .ms-button--ghost:hover:not(:disabled) {
   background-color: var(--ms-color-surface-raised);
-}
-
-/* —— 尊重 reduced-motion —— */
-@media (prefers-reduced-motion: reduce) {
-  .ms-button {
-    transition-duration: 1ms;
-  }
-  .ms-button:active:not(:disabled) {
-    transform: none;
-  }
 }

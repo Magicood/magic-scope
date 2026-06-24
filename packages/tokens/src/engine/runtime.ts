@@ -57,6 +57,13 @@ export function setMotion(motion: MotionPref, target?: HTMLElement): void {
   (target ?? document.documentElement).dataset.msMotion = motion;
 }
 
+export type FxPref = 'on' | 'off';
+
+/** 开关装饰性光影(发光 / 渐变);off 时 --ms-fx-glow 归零,聚焦环不受影响(保可达性)。 */
+export function setFx(fx: FxPref, target?: HTMLElement): void {
+  (target ?? document.documentElement).dataset.msFx = fx;
+}
+
 /** 用 View Transitions 平滑包裹一次切换;不支持或用户偏好 reduce 时直接执行。 */
 export function withViewTransition(mutate: () => void): void {
   const reduce =

@@ -4,6 +4,7 @@ export { getPropertyDefinitions, registerProperties } from './property';
 export {
   type ColorSchemePref,
   type Density,
+  type FxPref,
   getNoFlashScript,
   getTheme,
   type MotionPref,
@@ -12,6 +13,7 @@ export {
   registerThemes,
   resolveScheme,
   setDensity,
+  setFx,
   setMotion,
   setTheme,
   withViewTransition,
