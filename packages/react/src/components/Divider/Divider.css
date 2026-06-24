@@ -1,0 +1,27 @@
+.ms-divider {
+  border: 0;
+  margin: 0;
+  transition: border-color var(--ms-duration-fast) var(--ms-ease-standard);
+}
+
+/* —— horizontal:横跨容器,上边框成线 —— */
+.ms-divider--horizontal {
+  inline-size: 100%;
+  block-size: 0;
+  border-block-start: 1px solid var(--ms-color-border);
+}
+
+/* —— vertical:行内,贴满高度,起始侧边框成线 —— */
+.ms-divider--vertical {
+  display: inline-block;
+  block-size: 100%;
+  inline-size: 0;
+  vertical-align: middle;
+  border-inline-start: 1px solid var(--ms-color-border);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ms-divider {
+    transition-duration: 1ms;
+  }
+}

@@ -1,0 +1,103 @@
+.ms-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ms-space-1);
+  border: 1px solid transparent;
+  border-radius: var(--ms-radius-full);
+  padding-block: var(--ms-space-1);
+  padding-inline: var(--ms-space-2);
+  font-family: var(--ms-font-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  transition:
+    background-color var(--ms-duration-fast) var(--ms-ease-standard),
+    border-color var(--ms-duration-fast) var(--ms-ease-standard),
+    color var(--ms-duration-fast) var(--ms-ease-standard);
+}
+
+/* —— solid:tone 实底 + on-* 文字 —— */
+.ms-badge--solid.ms-badge--primary {
+  background-color: var(--ms-color-primary);
+  color: var(--ms-color-on-primary);
+}
+.ms-badge--solid.ms-badge--accent {
+  background-color: var(--ms-color-accent);
+  color: var(--ms-color-on-accent);
+}
+.ms-badge--solid.ms-badge--success {
+  background-color: var(--ms-color-success);
+  color: var(--ms-color-on-success);
+}
+.ms-badge--solid.ms-badge--warning {
+  background-color: var(--ms-color-warning);
+  color: var(--ms-color-on-warning);
+}
+.ms-badge--solid.ms-badge--danger {
+  background-color: var(--ms-color-danger);
+  color: var(--ms-color-on-danger);
+}
+.ms-badge--solid.ms-badge--neutral {
+  background-color: var(--ms-color-fg-muted);
+  color: var(--ms-color-bg);
+}
+
+/* —— soft:tone 18% 柔和底 + tone 文字 —— */
+.ms-badge--soft.ms-badge--primary {
+  background-color: color-mix(in oklch, var(--ms-color-primary) 18%, transparent);
+  color: var(--ms-color-primary);
+}
+.ms-badge--soft.ms-badge--accent {
+  background-color: color-mix(in oklch, var(--ms-color-accent) 18%, transparent);
+  color: var(--ms-color-accent);
+}
+.ms-badge--soft.ms-badge--success {
+  background-color: color-mix(in oklch, var(--ms-color-success) 18%, transparent);
+  color: var(--ms-color-success);
+}
+.ms-badge--soft.ms-badge--warning {
+  background-color: color-mix(in oklch, var(--ms-color-warning) 18%, transparent);
+  color: var(--ms-color-warning);
+}
+.ms-badge--soft.ms-badge--danger {
+  background-color: color-mix(in oklch, var(--ms-color-danger) 18%, transparent);
+  color: var(--ms-color-danger);
+}
+.ms-badge--soft.ms-badge--neutral {
+  background-color: color-mix(in oklch, var(--ms-color-fg-muted) 18%, transparent);
+  color: var(--ms-color-fg-muted);
+}
+
+/* —— outline:描边 + tone 文字 —— */
+.ms-badge--outline.ms-badge--primary {
+  border-color: var(--ms-color-primary);
+  color: var(--ms-color-primary);
+}
+.ms-badge--outline.ms-badge--accent {
+  border-color: var(--ms-color-accent);
+  color: var(--ms-color-accent);
+}
+.ms-badge--outline.ms-badge--success {
+  border-color: var(--ms-color-success);
+  color: var(--ms-color-success);
+}
+.ms-badge--outline.ms-badge--warning {
+  border-color: var(--ms-color-warning);
+  color: var(--ms-color-warning);
+}
+.ms-badge--outline.ms-badge--danger {
+  border-color: var(--ms-color-danger);
+  color: var(--ms-color-danger);
+}
+.ms-badge--outline.ms-badge--neutral {
+  border-color: var(--ms-color-border);
+  color: var(--ms-color-fg-muted);
+}
+
+/* —— 尊重 reduced-motion —— */
+@media (prefers-reduced-motion: reduce) {
+  .ms-badge {
+    transition-duration: 1ms;
+  }
+}

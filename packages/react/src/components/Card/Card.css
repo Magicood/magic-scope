@@ -1,0 +1,65 @@
+.ms-card {
+  display: block;
+  padding: var(--ms-space-6);
+  border: 1px solid transparent;
+  border-radius: var(--ms-radius-lg);
+  color: var(--ms-color-fg);
+  transition:
+    border-color var(--ms-duration-fast) var(--ms-ease-standard),
+    background-color var(--ms-duration-fast) var(--ms-ease-standard),
+    box-shadow var(--ms-duration-base) var(--ms-ease-standard),
+    transform var(--ms-duration-base) var(--ms-ease-emphasized);
+}
+
+/* —— elevated:surface 底 + 柔和阴影 —— */
+.ms-card--elevated {
+  background-color: var(--ms-color-surface);
+  box-shadow:
+    0 1px 2px -1px rgb(0 0 0 / 0.4),
+    0 4px 16px -8px rgb(0 0 0 / 0.5);
+}
+
+/* —— outline:透明底 + 描边 —— */
+.ms-card--outline {
+  background-color: transparent;
+  border-color: var(--ms-color-border);
+}
+
+/* —— interactive:可聚焦、hover 上浮发光 —— */
+.ms-card--interactive {
+  cursor: pointer;
+}
+
+.ms-card--interactive:hover {
+  transform: translateY(-2px);
+  border-color: var(--ms-color-primary);
+  box-shadow: 0 0 20px -2px var(--ms-color-glow);
+}
+
+.ms-card--interactive.ms-card--elevated:hover {
+  background-color: var(--ms-color-surface-raised);
+}
+
+.ms-card--interactive:focus-visible {
+  outline: none;
+  border-color: var(--ms-color-primary);
+  box-shadow:
+    0 0 0 2px var(--ms-color-bg),
+    0 0 0 4px var(--ms-color-focus-ring),
+    0 0 20px -2px var(--ms-color-glow);
+}
+
+.ms-card--interactive:active {
+  transform: translateY(0);
+}
+
+/* —— 尊重 reduced-motion —— */
+@media (prefers-reduced-motion: reduce) {
+  .ms-card {
+    transition-duration: 1ms;
+  }
+  .ms-card--interactive:hover,
+  .ms-card--interactive:active {
+    transform: none;
+  }
+}

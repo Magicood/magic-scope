@@ -1,0 +1,67 @@
+.ms-textarea {
+  display: block;
+  inline-size: 100%;
+  resize: vertical;
+  border: 1px solid var(--ms-color-border);
+  border-radius: var(--ms-radius-md);
+  background-color: var(--ms-color-surface);
+  color: var(--ms-color-fg);
+  font-family: var(--ms-font-sans);
+  line-height: 1.5;
+  padding-block: var(--ms-space-2);
+  padding-inline: var(--ms-space-4);
+  transition:
+    border-color var(--ms-duration-fast) var(--ms-ease-standard),
+    box-shadow var(--ms-duration-base) var(--ms-ease-standard),
+    background-color var(--ms-duration-fast) var(--ms-ease-standard);
+}
+
+.ms-textarea::placeholder {
+  color: var(--ms-color-fg-subtle);
+}
+
+.ms-textarea:hover:not(:disabled) {
+  border-color: var(--ms-color-border-strong);
+}
+
+.ms-textarea:focus-visible {
+  outline: none;
+  border-color: var(--ms-color-primary);
+  box-shadow:
+    0 0 0 3px color-mix(in oklch, var(--ms-color-focus-ring) 35%, transparent),
+    0 0 16px -6px var(--ms-color-glow);
+}
+
+.ms-textarea:disabled {
+  cursor: not-allowed;
+  resize: none;
+  opacity: 0.5;
+}
+
+.ms-textarea--invalid {
+  border-color: var(--ms-color-danger);
+}
+.ms-textarea--invalid:focus-visible {
+  border-color: var(--ms-color-danger);
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--ms-color-danger) 35%, transparent);
+}
+
+/* —— 尺寸(逻辑属性,RTL 友好) —— */
+.ms-textarea--sm {
+  min-block-size: 4rem;
+  font-size: 0.833rem;
+}
+.ms-textarea--md {
+  min-block-size: 5rem;
+  font-size: 1rem;
+}
+.ms-textarea--lg {
+  min-block-size: 6rem;
+  font-size: 1.2rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ms-textarea {
+    transition-duration: 1ms;
+  }
+}

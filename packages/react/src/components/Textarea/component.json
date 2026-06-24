@@ -1,0 +1,17 @@
+{
+  "id": "textarea",
+  "name": "Textarea",
+  "description": "多行文本输入框,支持 sm/md/lg 尺寸与 invalid 校验态,仅允许垂直调整高度,样式与 Input 一致。",
+  "category": "forms",
+  "tags": ["textarea", "form", "input", "multiline", "field", "validation"],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-24",
+    "requirements": "多行文本输入框,支持 sm/md/lg 尺寸与 invalid 校验态,仅允许垂直调整高度,样式与 Input 一致。。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-* 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Textarea.tsx", "Textarea.css", "index.ts"]
+}

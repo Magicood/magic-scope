@@ -1,0 +1,100 @@
+.ms-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ms-space-2);
+  font-family: var(--ms-font-sans);
+  color: var(--ms-color-fg);
+  cursor: pointer;
+  user-select: none;
+}
+
+/* —— 视觉隐藏的原生 input(保留可聚焦与可访问性) —— */
+.ms-checkbox__input {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* —— 视觉方块 —— */
+.ms-checkbox__box {
+  position: relative;
+  flex: 0 0 auto;
+  inline-size: 1.125rem;
+  block-size: 1.125rem;
+  border: 1px solid var(--ms-color-border-strong);
+  border-radius: var(--ms-radius-sm);
+  background-color: var(--ms-color-surface);
+  transition:
+    border-color var(--ms-duration-fast) var(--ms-ease-standard),
+    background-color var(--ms-duration-fast) var(--ms-ease-standard),
+    box-shadow var(--ms-duration-base) var(--ms-ease-standard);
+}
+
+/* —— 对勾(默认隐藏,checked 时显现) —— */
+.ms-checkbox__box::after {
+  content: "";
+  position: absolute;
+  inset-block-start: 1px;
+  inset-inline-start: 5px;
+  inline-size: 5px;
+  block-size: 9px;
+  border-inline-end: 2px solid var(--ms-color-on-primary);
+  border-block-end: 2px solid var(--ms-color-on-primary);
+  transform: rotate(45deg) scale(0);
+  transform-origin: center;
+  transition: transform var(--ms-duration-fast) var(--ms-ease-emphasized);
+}
+
+/* —— hover:边框加强 —— */
+.ms-checkbox__input:hover:not(:disabled) + .ms-checkbox__box {
+  border-color: var(--ms-color-primary);
+}
+
+/* —— focus-visible:发光聚焦环 —— */
+.ms-checkbox__input:focus-visible + .ms-checkbox__box {
+  border-color: var(--ms-color-primary);
+  box-shadow:
+    0 0 0 2px var(--ms-color-bg),
+    0 0 0 4px var(--ms-color-focus-ring),
+    0 0 16px -4px var(--ms-color-glow);
+}
+
+/* —— checked:染主色底 + 显现对勾 —— */
+.ms-checkbox__input:checked + .ms-checkbox__box {
+  border-color: var(--ms-color-primary);
+  background-color: var(--ms-color-primary);
+}
+.ms-checkbox__input:checked + .ms-checkbox__box::after {
+  transform: rotate(45deg) scale(1);
+}
+
+/* —— disabled —— */
+.ms-checkbox__input:disabled + .ms-checkbox__box {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+.ms-checkbox:has(.ms-checkbox__input:disabled) {
+  cursor: not-allowed;
+  color: var(--ms-color-fg-muted);
+}
+
+.ms-checkbox__label {
+  line-height: 1.4;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ms-checkbox__box,
+  .ms-checkbox__box::after {
+    transition-duration: 1ms;
+  }
+  .ms-checkbox__input:checked + .ms-checkbox__box::after {
+    transform: rotate(45deg);
+  }
+}

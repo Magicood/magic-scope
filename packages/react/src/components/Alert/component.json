@@ -1,0 +1,17 @@
+{
+  "id": "alert",
+  "name": "Alert",
+  "description": "语义化提示框,按 info/success/warning/danger 渲染柔和底色与起始边强调条,role=\"alert\" 向辅助技术播报。",
+  "category": "feedback",
+  "tags": ["alert", "feedback", "notification", "banner", "message", "status"],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-24",
+    "requirements": "语义化提示框,按 info/success/warning/danger 渲染柔和底色与起始边强调条,role=\"alert\" 向辅助技术播报。。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-* 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Alert.tsx", "Alert.css", "index.ts"]
+}

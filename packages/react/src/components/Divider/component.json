@@ -1,0 +1,17 @@
+{
+  "id": "divider",
+  "name": "Divider",
+  "description": "分隔线,支持水平/垂直朝向,带 separator 语义与 aria-orientation。",
+  "category": "layout",
+  "tags": ["divider", "separator", "layout", "horizontal", "vertical", "rule"],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-24",
+    "requirements": "分隔线,支持水平/垂直朝向,带 separator 语义与 aria-orientation。。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-* 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Divider.tsx", "Divider.css", "index.ts"]
+}

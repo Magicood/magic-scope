@@ -1,0 +1,17 @@
+{
+  "id": "switch",
+  "name": "Switch",
+  "description": "开关:基于 input[type=checkbox] 的视觉隐藏切换控件,checked 时轨道染主色、滑块右移并发光,完整 hover/focus-visible(发光环)/disabled 状态(逻辑属性,RTL 友好,尊重 reduced-motion)。",
+  "category": "forms",
+  "tags": ["switch", "toggle", "form", "checkbox"],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-24",
+    "requirements": "开关:基于 input[type=checkbox] 的视觉隐藏切换控件,checked 时轨道染主色、滑块右移并发光,完整 hover/focus-visible(发光环)/disabled 状态(逻辑属性,RTL 友好,尊重 reduced-motion)。。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-* 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Switch.tsx", "Switch.css", "index.ts"]
+}

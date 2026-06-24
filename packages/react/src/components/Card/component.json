@@ -1,0 +1,17 @@
+{
+  "id": "card",
+  "name": "Card",
+  "description": "内容卡片容器,支持 elevated(柔和阴影)与 outline(描边)两种变体,可设为 interactive 时 hover 上浮并奥术发光。",
+  "category": "layout",
+  "tags": ["card", "layout", "container", "surface", "elevated", "outline", "interactive"],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-24",
+    "requirements": "内容卡片容器,支持 elevated(柔和阴影)与 outline(描边)两种变体,可设为 interactive 时 hover 上浮并奥术发光。。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-* 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Card.tsx", "Card.css", "index.ts"]
+}

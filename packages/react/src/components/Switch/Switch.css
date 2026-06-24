@@ -1,0 +1,100 @@
+.ms-switch {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* 视觉隐藏原生 checkbox,但保留可聚焦与可点击 */
+.ms-switch__input {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  opacity: 0;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* —— 轨道 —— */
+.ms-switch__track {
+  display: inline-flex;
+  align-items: center;
+  inline-size: 2.75rem;
+  block-size: 1.5rem;
+  padding-inline: var(--ms-space-1);
+  border: 1px solid var(--ms-color-border);
+  border-radius: var(--ms-radius-full);
+  background-color: var(--ms-color-surface-sunken);
+  transition:
+    background-color var(--ms-duration-base) var(--ms-ease-standard),
+    border-color var(--ms-duration-fast) var(--ms-ease-standard),
+    box-shadow var(--ms-duration-base) var(--ms-ease-standard);
+}
+
+/* —— 滑块 —— */
+.ms-switch__thumb {
+  inline-size: 1rem;
+  block-size: 1rem;
+  border-radius: var(--ms-radius-full);
+  background-color: var(--ms-color-fg-muted);
+  transition:
+    transform var(--ms-duration-base) var(--ms-ease-emphasized),
+    background-color var(--ms-duration-base) var(--ms-ease-standard);
+}
+
+/* —— hover:轨道描边变亮 —— */
+.ms-switch__input:not(:disabled):hover + .ms-switch__track {
+  border-color: var(--ms-color-border-strong);
+}
+
+/* —— focus-visible:发光环 —— */
+.ms-switch__input:focus-visible + .ms-switch__track {
+  box-shadow:
+    0 0 0 2px var(--ms-color-bg),
+    0 0 0 4px var(--ms-color-focus-ring);
+}
+
+/* —— checked:轨道染主色,滑块右移并染 on-primary —— */
+.ms-switch__input:checked + .ms-switch__track {
+  border-color: var(--ms-color-primary);
+  background-color: var(--ms-color-primary);
+  box-shadow: 0 0 20px -2px var(--ms-color-glow);
+}
+.ms-switch__input:checked + .ms-switch__track .ms-switch__thumb {
+  transform: translateX(1.25rem);
+  background-color: var(--ms-color-on-primary);
+}
+
+/* checked + hover:加深主色 */
+.ms-switch__input:checked:not(:disabled):hover + .ms-switch__track {
+  background-color: var(--ms-color-primary-hover);
+  border-color: var(--ms-color-primary-hover);
+}
+
+/* checked + focus-visible:发光环叠加主色光 */
+.ms-switch__input:checked:focus-visible + .ms-switch__track {
+  box-shadow:
+    0 0 0 2px var(--ms-color-bg),
+    0 0 0 4px var(--ms-color-focus-ring),
+    0 0 20px -2px var(--ms-color-glow);
+}
+
+/* —— disabled:半透明、禁止指针 —— */
+.ms-switch__input:disabled + .ms-switch__track {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+.ms-switch:has(.ms-switch__input:disabled) {
+  cursor: not-allowed;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ms-switch__track,
+  .ms-switch__thumb {
+    transition-duration: 1ms;
+  }
+}

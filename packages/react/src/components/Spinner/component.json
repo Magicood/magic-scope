@@ -1,0 +1,17 @@
+{
+  "id": "spinner",
+  "name": "Spinner",
+  "description": "奥术发光的加载旋转器,role=status,提供 sm/md/lg 三档尺寸与无障碍文案。",
+  "category": "feedback",
+  "tags": ["spinner", "loader", "loading", "feedback", "progress", "status", "indicator"],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-24",
+    "requirements": "奥术发光的加载旋转器,role=status,提供 sm/md/lg 三档尺寸与无障碍文案。。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-* 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Spinner.tsx", "Spinner.css", "index.ts"]
+}

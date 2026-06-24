@@ -1,0 +1,17 @@
+{
+  "id": "badge",
+  "name": "Badge",
+  "description": "小标签组件,支持 solid / soft / outline 三种变体与六种语义色调,圆角 full、紧凑内边距,用于状态、计数与分类标记。",
+  "category": "data-display",
+  "tags": ["badge", "tag", "label", "chip", "status", "data-display", "pill"],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-24",
+    "requirements": "小标签组件,支持 solid / soft / outline 三种变体与六种语义色调,圆角 full、紧凑内边距,用于状态、计数与分类标记。。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-* 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Badge.tsx", "Badge.css", "index.ts"]
+}

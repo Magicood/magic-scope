@@ -1,0 +1,41 @@
+.ms-spinner {
+  display: inline-block;
+  box-sizing: border-box;
+  flex: none;
+  border-style: solid;
+  border-color: transparent;
+  border-block-start-color: var(--ms-color-primary);
+  border-radius: var(--ms-radius-full);
+  filter: drop-shadow(0 0 6px var(--ms-color-glow));
+  animation: ms-spin 0.7s linear infinite;
+}
+
+@keyframes ms-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* —— 尺寸(直径 + 边宽) —— */
+.ms-spinner--sm {
+  inline-size: 1rem;
+  block-size: 1rem;
+  border-width: 2px;
+}
+.ms-spinner--md {
+  inline-size: 1.5rem;
+  block-size: 1.5rem;
+  border-width: 3px;
+}
+.ms-spinner--lg {
+  inline-size: 2.5rem;
+  block-size: 2.5rem;
+  border-width: 4px;
+}
+
+/* —— 尊重 reduced-motion:放慢旋转,保留「加载中」语义,不完全静止 —— */
+@media (prefers-reduced-motion: reduce) {
+  .ms-spinner {
+    animation-duration: 3s;
+  }
+}

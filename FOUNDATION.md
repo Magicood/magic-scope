@@ -212,6 +212,7 @@ git add -A && git commit -m "chore: foundation skeleton"
 
 ## 9. 待定(Magic 后续补充想法,占位区)
 - registry 是否升级为真数据库(当前默认 files 为源 + SQLite 索引)
+- **动效 / 光影 / 渐变参数化(下一步重点 —— 用户反馈当前视觉偏死板):** 把发光 / 渐变 / 动效做成**可开关参数**(组件 CSS 接入已有的 `data-ms-motion` full/subtle/off,并新增"视觉强度 / 光效"开关如 `data-ms-fx`),让用户自选是否应用;同时把视觉做得**更丰富**。基础组件铺完后做。
 - 是否引入 Storybook 做交互演示
 - 展示字体的具体选型与授权(随设计语言落地时定)
 - _(后续在此追加)_

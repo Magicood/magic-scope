@@ -1,0 +1,17 @@
+{
+  "id": "checkbox",
+  "name": "Checkbox",
+  "description": "基于原生 input[type=checkbox] 的复选框,选中时方块染主色并以对勾呈现,带发光聚焦环。",
+  "category": "forms",
+  "tags": ["checkbox", "form", "input", "toggle", "selection", "accessible"],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-24",
+    "requirements": "基于原生 input[type=checkbox] 的复选框,选中时方块染主色并以对勾呈现,带发光聚焦环。。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-* 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Checkbox.tsx", "Checkbox.css", "index.ts"]
+}

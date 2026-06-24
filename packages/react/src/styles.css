@@ -1,3 +1,11 @@
 /* magic-scope 组件样式汇总(用 --ms-* 设计 token)。新增组件由 `pnpm new` 追加 @import。 */
 @import "./components/Button/Button.css";
 @import "./components/Input/Input.css";
+@import "./components/Card/Card.css";
+@import "./components/Badge/Badge.css";
+@import "./components/Switch/Switch.css";
+@import "./components/Checkbox/Checkbox.css";
+@import "./components/Textarea/Textarea.css";
+@import "./components/Alert/Alert.css";
+@import "./components/Spinner/Spinner.css";
+@import "./components/Divider/Divider.css";

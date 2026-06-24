@@ -1,0 +1,43 @@
+.ms-alert {
+  display: block;
+  border-radius: var(--ms-radius-md);
+  border-inline-start: 3px solid var(--ms-color-info);
+  padding: var(--ms-space-4);
+  background-color: color-mix(in oklch, var(--ms-color-info) 14%, var(--ms-color-surface));
+  color: var(--ms-color-fg);
+  font-family: var(--ms-font-sans);
+  line-height: 1.5;
+  transition:
+    background-color var(--ms-duration-fast) var(--ms-ease-standard),
+    border-color var(--ms-duration-fast) var(--ms-ease-standard);
+}
+
+/* —— info:信息(默认) —— */
+.ms-alert--info {
+  border-inline-start-color: var(--ms-color-info);
+  background-color: color-mix(in oklch, var(--ms-color-info) 14%, var(--ms-color-surface));
+}
+
+/* —— success:成功 —— */
+.ms-alert--success {
+  border-inline-start-color: var(--ms-color-success);
+  background-color: color-mix(in oklch, var(--ms-color-success) 14%, var(--ms-color-surface));
+}
+
+/* —— warning:警告 —— */
+.ms-alert--warning {
+  border-inline-start-color: var(--ms-color-warning);
+  background-color: color-mix(in oklch, var(--ms-color-warning) 14%, var(--ms-color-surface));
+}
+
+/* —— danger:危险 —— */
+.ms-alert--danger {
+  border-inline-start-color: var(--ms-color-danger);
+  background-color: color-mix(in oklch, var(--ms-color-danger) 14%, var(--ms-color-surface));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ms-alert {
+    transition-duration: 1ms;
+  }
+}
