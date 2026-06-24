@@ -1,0 +1,14 @@
+/* 文档内组件演示容器:自带一套 --ms-* 主题作用域,不污染 VitePress 自身。 */
+.ms-demo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ms-space-4);
+  align-items: center;
+  padding: var(--ms-space-8);
+  margin: var(--ms-space-4) 0;
+  border-radius: var(--ms-radius-lg);
+  border: 1px solid var(--ms-color-border);
+  background: var(--ms-color-bg);
+  color: var(--ms-color-fg);
+  font-family: var(--ms-font-sans);
+}

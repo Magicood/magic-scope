@@ -10,3 +10,6 @@ docs/.vitepress/dist/
 
 # 生成物(由 pnpm registry 重建)
 registry/manifest.json
+
+# 浏览器验证临时产物
+.playwright-mcp/
