@@ -18,7 +18,28 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
-    }
+    },
+    "./contract": {
+      "types": "./dist/contract.d.ts",
+      "import": "./dist/contract.js",
+      "require": "./dist/contract.cjs"
+    },
+    "./engine": {
+      "types": "./dist/engine.d.ts",
+      "import": "./dist/engine.js",
+      "require": "./dist/engine.cjs"
+    },
+    "./themes": {
+      "types": "./dist/themes.d.ts",
+      "import": "./dist/themes.js",
+      "require": "./dist/themes.cjs"
+    },
+    "./derive": {
+      "types": "./dist/derive.d.ts",
+      "import": "./dist/derive.js",
+      "require": "./dist/derive.cjs"
+    },
+    "./css/arcane.css": "./dist/css/arcane.css"
   },
   "scripts": {
     "build": "tsup",
