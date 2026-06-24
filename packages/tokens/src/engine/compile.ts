@@ -11,7 +11,9 @@ export interface CompileOptions {
  * 构建期可把预设主题 compile 成静态 .css(SSR 首屏无闪烁,见 DESIGN.md §7.4)。
  */
 export function compileThemeToCss(theme: ThemeContract, options: CompileOptions = {}): string {
-  const selector = options.selector ?? `[data-ms-theme="${theme.meta.name}"]`;
+  const selector =
+    options.selector ??
+    `[data-ms-theme="${theme.meta.name}"][data-ms-scheme="${theme.meta.colorScheme}"]`;
   const vars = themeToVars(theme);
   const body = Object.entries(vars)
     .map(([k, v]) => `  ${k}: ${v};`)

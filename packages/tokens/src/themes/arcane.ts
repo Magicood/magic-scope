@@ -1,6 +1,6 @@
 import type { ThemeContract } from '../contract/contract';
 import { palette } from '../primitive/palette';
-import { scale } from '../primitive/scale';
+import { sharedDimension, sharedMotion, sharedTypography } from './shared';
 
 /** 暗底实底按钮的文字色(纯白对比不足 → 用最深 ink,见 DESIGN.md §3.4)。 */
 const ink = palette.void[950];
@@ -44,31 +44,7 @@ export const arcaneDark: ThemeContract = {
     focusRing: palette.arcane[400],
     glow: palette.arcane[400],
   },
-  dimension: {
-    radius: {
-      sm: scale.radius.sm,
-      md: scale.radius.md,
-      lg: scale.radius.lg,
-      full: scale.radius.full,
-    },
-    space: {
-      1: scale.space[1],
-      2: scale.space[2],
-      3: scale.space[3],
-      4: scale.space[4],
-      6: scale.space[6],
-      8: scale.space[8],
-    },
-  },
-  typography: {
-    fontSans: "'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif",
-    fontDisplay: "'Cinzel', 'Cormorant Garamond', Georgia, serif",
-    fontMono: "'JetBrains Mono', 'SFMono-Regular', Menlo, Consolas, monospace",
-  },
-  motion: {
-    durationFast: scale.duration.fast,
-    durationBase: scale.duration.base,
-    easingStandard: scale.easing.standard,
-    easingEmphasized: scale.easing.cast,
-  },
+  dimension: sharedDimension,
+  typography: sharedTypography,
+  motion: sharedMotion,
 };
