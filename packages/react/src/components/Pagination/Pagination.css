@@ -5,8 +5,10 @@
 
 .ms-pagination__list {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--ms-space-1);
+  row-gap: var(--ms-space-1);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -109,4 +111,26 @@
 .ms-pagination__chevron--next {
   transform: rotate(45deg);
   margin-inline-end: 0.15rem;
+}
+
+/* —— 触控适配:扩大命中区 + 拉大间距防误触,视觉保持不变 —— */
+@media (pointer: coarse) {
+  .ms-pagination__list {
+    gap: var(--ms-space-2);
+    row-gap: var(--ms-space-2);
+  }
+
+  /* 隐形热区:视觉仍为 36px,命中区扩到 --ms-target-min */
+  .ms-pagination__btn {
+    position: relative;
+  }
+
+  .ms-pagination__btn::before {
+    content: "";
+    position: absolute;
+    inset: 50%;
+    inline-size: max(100%, var(--ms-target-min));
+    block-size: max(100%, var(--ms-target-min));
+    translate: -50% -50%;
+  }
 }

@@ -79,3 +79,23 @@
   color: var(--ms-color-fg);
   box-shadow: inset 2px 0 0 -1px color-mix(in srgb, var(--ms-color-primary) 70%, transparent);
 }
+
+/* —— P0 触控适配:窄屏走横向滚动兜底,不挤垮列;长串内容防撑宽 ——
+   仅 coarse 指针生效,桌面(精确指针)渲染逐像素不变。 */
+@media (pointer: coarse) {
+  /* 阻断横滚的链式滚动,避免误触发页面/祖先滚动 */
+  .ms-table-wrap {
+    overscroll-behavior-x: contain;
+  }
+
+  /* 不再被容器压缩,内容超宽时整体进入横向滚动而非挤列 */
+  .ms-table {
+    min-inline-size: max-content;
+  }
+
+  /* 超长无空格串(URL/哈希等)按需断行,避免单格撑爆布局 */
+  .ms-table__th,
+  .ms-table__td {
+    overflow-wrap: anywhere;
+  }
+}

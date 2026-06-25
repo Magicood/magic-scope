@@ -120,3 +120,15 @@
 .ms-checkbox__label {
   line-height: 1.4;
 }
+
+/* —— 触控指针:视觉方块保持 18px 不变,用隐形 ::before 把命中区扩到目标尺寸 —— */
+@media (pointer: coarse) {
+  .ms-checkbox__box::before {
+    content: "";
+    position: absolute;
+    inset: 50%;
+    inline-size: max(100%, var(--ms-target-min));
+    block-size: max(100%, var(--ms-target-min));
+    translate: -50% -50%;
+  }
+}

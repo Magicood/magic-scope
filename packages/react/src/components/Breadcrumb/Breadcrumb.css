@@ -32,6 +32,8 @@
   color: var(--ms-color-link);
   text-decoration: none;
   cursor: pointer;
+  /* 长标签 / URL 片段可在任意处断行,避免撑破容器导致横向溢出 */
+  overflow-wrap: anywhere;
   transition:
     color var(--ms-dur-fast) var(--ms-ease-standard),
     background-color var(--ms-dur-fast) var(--ms-ease-standard),
@@ -76,4 +78,16 @@
 .ms-breadcrumb__separator {
   color: var(--ms-color-fg-subtle);
   user-select: none;
+}
+
+/* 触屏:链接命中区抬到 --ms-target-min(48px),换行后各行间也加大呼吸感。
+ * 视觉字号/着色不变;桌面(精确指针)逐像素不受影响。 */
+@media (pointer: coarse) {
+  .ms-breadcrumb__list {
+    gap: var(--ms-space-2);
+  }
+
+  .ms-breadcrumb__link {
+    min-block-size: var(--ms-target-min);
+  }
 }

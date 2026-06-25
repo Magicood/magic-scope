@@ -7,7 +7,11 @@
   border: none;
   background: transparent;
   inline-size: max-content;
-  max-inline-size: min(20rem, 92vw);
+  /* 窄屏不溢出:留出两侧间距 + 安全区,再与 20rem 取小 */
+  max-inline-size: min(
+    20rem,
+    calc(100dvw - 2 * var(--ms-space-4) - var(--ms-safe-left) - var(--ms-safe-right))
+  );
   color: var(--ms-color-fg);
   overflow: visible;
 
@@ -26,6 +30,17 @@
     transform var(--ms-dur-base) var(--ms-ease-emphasized),
     overlay var(--ms-dur-base) allow-discrete,
     display var(--ms-dur-base) allow-discrete;
+}
+
+/* 贴边自动翻转 + trigger 不可见时隐藏浮层(渐进增强,治贴边溢出不翻转) */
+@supports (position-try-fallbacks: flip-block) {
+  .ms-popover {
+    position-try-fallbacks:
+      flip-block,
+      flip-inline,
+      flip-block flip-inline;
+    position-visibility: anchors-visible;
+  }
 }
 
 /* 顶/左方位时位移方向相反,统一指向 trigger 外侧的"展开"感 */
@@ -90,6 +105,16 @@
   padding: var(--ms-space-3) var(--ms-space-4);
   font-family: var(--ms-font-sans);
   line-height: 1.5;
+  /* 内容超高时面板内滚动(留出上下间距 + 安全区),滚动不外溢到背景 */
+  max-block-size: calc(
+    var(--ms-viewport-h) -
+    2 *
+    var(--ms-space-4) -
+    var(--ms-safe-top) -
+    var(--ms-safe-bottom)
+  );
+  overflow: auto;
+  overscroll-behavior: contain;
   box-shadow:
     0 18px 48px -20px rgb(0 0 0 / 0.7),
     0 0 calc(28px * var(--ms-fx-glow, 1)) -14px var(--ms-color-glow);
@@ -123,5 +148,12 @@
     .ms-popover:popover-open {
       transform: none;
     }
+  }
+}
+
+/* 触屏(粗指针):面板内可交互元素抬到触控目标基线,桌面渲染不变 */
+@media (pointer: coarse) {
+  .ms-popover__panel :where(button, a, input, select, textarea, [role="button"]) {
+    min-block-size: var(--ms-target-min);
   }
 }

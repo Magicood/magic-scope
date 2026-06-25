@@ -92,6 +92,21 @@
     0 0 calc(20px * var(--ms-fx-glow, 1)) -2px var(--ms-color-glow);
 }
 
+/* —— 触控设备:轨道视觉不变,隐形扩竖直命中区到 target-min(满足触控热区) —— */
+@media (pointer: coarse) {
+  .ms-switch__track {
+    position: relative;
+  }
+  .ms-switch__track::before {
+    content: "";
+    position: absolute;
+    inset-block: 50%;
+    inset-inline: 0;
+    block-size: max(100%, var(--ms-target-min));
+    translate: 0 -50%;
+  }
+}
+
 /* —— disabled:半透明、禁止指针 —— */
 .ms-switch__input:disabled + .ms-switch__track {
   cursor: not-allowed;

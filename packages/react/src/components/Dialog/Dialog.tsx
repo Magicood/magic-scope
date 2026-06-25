@@ -32,6 +32,19 @@ export const Dialog = forwardRef<HTMLDialogElement, DialogProps>(
       }
     }, [open]);
 
+    // open 时锁背景滚动(避免触屏穿透到 body),关闭/卸载时还原原值
+    useEffect(() => {
+      if (!open) {
+        return;
+      }
+      const root = document.documentElement;
+      const prev = root.style.overflow;
+      root.style.overflow = 'hidden';
+      return () => {
+        root.style.overflow = prev;
+      };
+    }, [open]);
+
     const setRef = useCallback(
       (node: HTMLDialogElement | null) => {
         innerRef.current = node;
@@ -57,7 +70,28 @@ export const Dialog = forwardRef<HTMLDialogElement, DialogProps>(
         }}
         {...props}
       >
-        <div className="ms-dialog__panel">{children}</div>
+        <div className="ms-dialog__panel">
+          <button
+            type="button"
+            className="ms-dialog__close"
+            aria-label="关闭"
+            onClick={() => onClose?.()}
+          >
+            <svg
+              viewBox="0 0 24 24"
+              width="20"
+              height="20"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              aria-hidden="true"
+            >
+              <path d="M6 6l12 12M18 6L6 18" />
+            </svg>
+          </button>
+          {children}
+        </div>
       </dialog>
     );
   },

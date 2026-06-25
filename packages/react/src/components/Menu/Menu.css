@@ -8,8 +8,12 @@
   position: fixed;
   margin: 0;
   inset: auto;
-  min-inline-size: 11rem;
-  max-inline-size: min(20rem, 92vw);
+  min-inline-size: min(11rem, 90vw);
+  max-inline-size: min(20rem, calc(100dvw - var(--ms-space-4) * 2));
+  /* 超长菜单可滚动:封顶高度 + 内部滚动,滚动链隔离 */
+  max-block-size: min(60svh, 24rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
   padding: var(--ms-space-1);
   border: 1px solid var(--ms-color-border);
   border-radius: var(--ms-radius-lg);
@@ -58,9 +62,11 @@
 @supports not (anchor-name: --x) {
   .ms-menu {
     position: fixed;
-    inset-block-start: 20vh;
+    inset-block-start: calc(20vh + var(--ms-safe-top));
     inset-inline: 0;
     margin-inline: auto;
+    /* 居顶降级时底部留出安全区,避免被手势条/圆角遮挡 */
+    padding-block-end: calc(var(--ms-space-1) + var(--ms-safe-bottom));
   }
 }
 
@@ -78,7 +84,8 @@
   font: inherit;
   font-size: 0.95rem;
   text-align: start;
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
   cursor: pointer;
   user-select: none;
   transition:
@@ -126,4 +133,12 @@
 .ms-menu__item:disabled {
   cursor: not-allowed;
   opacity: 0.45;
+}
+
+/* —— 触控设备:菜单项达标到最小命中目标,纵向更宽松 —— */
+@media (pointer: coarse) {
+  .ms-menu__item {
+    min-block-size: var(--ms-target-min);
+    padding-block: var(--ms-space-3);
+  }
 }

@@ -15,6 +15,16 @@
   display: flex;
   align-items: stretch;
   gap: var(--ms-space-1);
+  /* 标签多了横向溢出时可滑动到达,而非被裁切不可达。
+   * 桌面未溢出时滚动条不出现、观感不变;隐藏滚动条避免占位。 */
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+.ms-tabs__list::-webkit-scrollbar {
+  display: none;
 }
 
 /* underline 变体:底部一条分隔线,选中条覆盖其上 */
@@ -38,6 +48,9 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  /* 溢出滚动下不被压缩,各自作为滚动吸附点 */
+  flex: 0 0 auto;
+  scroll-snap-align: start;
   padding-block: var(--ms-space-2);
   padding-inline: var(--ms-space-3);
   border: none;
@@ -125,6 +138,13 @@
 .ms-tabs__tab:disabled {
   cursor: not-allowed;
   opacity: 0.45;
+}
+
+/* —— 触屏:抬高单个 tab 到触控目标基线,桌面观感不变 —— */
+@media (pointer: coarse) {
+  .ms-tabs__tab {
+    min-block-size: var(--ms-target-min);
+  }
 }
 
 /* —— tabpanel:与列表留间距,进场淡入上移 —— */

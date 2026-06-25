@@ -5,6 +5,8 @@
   background: transparent;
   inline-size: 100%;
   max-inline-size: min(92vw, 32rem);
+  /* 对话框整体不超过(动态感知的)视口高度,避免长内容把 dialog 撑出屏外 */
+  max-block-size: var(--ms-viewport-h);
   color: var(--ms-color-fg);
   opacity: 0;
   transform: translateY(8px) scale(0.97);
@@ -49,12 +51,54 @@
 }
 
 .ms-dialog__panel {
+  /* 定位上下文:给绝对定位的内建关闭按钮当锚 */
+  position: relative;
   background-color: var(--ms-color-surface-raised);
   border: 1px solid var(--ms-color-border);
   border-radius: var(--ms-radius-lg);
-  padding: var(--ms-space-6);
+  padding-block: var(--ms-space-6) max(var(--ms-space-6), var(--ms-safe-bottom));
+  /* 左右内边距并入横向安全区(横屏刘海 / 圆角),内容不被裁 */
+  padding-inline: calc(var(--ms-space-6) + var(--ms-safe-left))
+    calc(var(--ms-space-6) + var(--ms-safe-right));
+  /* 长内容不再被顶部裁切:面板自身限高并可滚,滚动不链给背景 */
+  max-block-size: min(100%, calc(var(--ms-viewport-h) - var(--ms-space-8)));
+  overflow-y: auto;
+  overscroll-behavior: contain;
   font-family: var(--ms-font-sans);
   box-shadow:
     0 24px 64px -24px rgb(0 0 0 / 0.7),
     0 0 calc(40px * var(--ms-fx-glow, 1)) -16px var(--ms-color-glow);
+}
+
+/* 内建关闭按钮:标准模态全平台可见;触屏此前只能点遮罩关闭,这里给出确定可达的命中点 */
+.ms-dialog__close {
+  position: absolute;
+  inset-block-start: var(--ms-space-3);
+  inset-inline-end: var(--ms-space-3);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: var(--ms-target-min);
+  min-block-size: var(--ms-target-min);
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: var(--ms-radius-md);
+  background: transparent;
+  color: var(--ms-color-fg-muted);
+  cursor: pointer;
+  transition:
+    color var(--ms-dur-fast) var(--ms-ease-standard),
+    border-color var(--ms-dur-base) var(--ms-ease-standard),
+    background-color var(--ms-dur-base) var(--ms-ease-standard);
+}
+
+.ms-dialog__close:hover {
+  color: var(--ms-color-fg);
+  border-color: var(--ms-color-border);
+  background-color: var(--ms-color-surface-sunken);
+}
+
+.ms-dialog__close:focus-visible {
+  outline: 2px solid var(--ms-color-primary);
+  outline-offset: 2px;
 }

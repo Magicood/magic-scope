@@ -97,6 +97,8 @@
   /* 清掉 popover 默认 UA 样式 */
   margin: 0;
   padding: var(--ms-space-1);
+  /* 末项避让底部安全区(刘海/home 指示条) */
+  padding-block-end: calc(var(--ms-space-1) + var(--ms-safe-bottom));
   border: 1px solid var(--ms-color-border);
   border-radius: var(--ms-radius-lg);
   background-color: var(--ms-color-surface-raised);
@@ -104,7 +106,7 @@
   font-family: var(--ms-font-sans);
   inline-size: max-content;
   min-inline-size: 12rem;
-  max-block-size: min(18rem, 60vh);
+  max-block-size: min(18rem, calc(var(--ms-viewport-h) - var(--ms-space-8)));
   overflow-y: auto;
   overscroll-behavior: contain;
   box-shadow:
@@ -131,6 +133,8 @@
     margin-block-start: var(--ms-space-1);
     /* 与 trigger 同宽(下界对齐 anchor 宽度) */
     min-inline-size: anchor-size(inline);
+    /* 上界:不超过视口可用宽,治长 label 右侧出界 */
+    max-inline-size: min(calc(100dvw - var(--ms-space-4) * 2), 24rem);
     /* 空间不足时翻到另一侧 */
     position-try-fallbacks: flip-block, flip-inline;
   }
@@ -242,6 +246,22 @@
 .ms-select__list--lg .ms-select__option {
   font-size: 1.1rem;
   padding-block: var(--ms-space-3);
+}
+
+/* —— 触控设备:抬高热区到目标尺寸(桌面精确指针不受影响) —— */
+@media (pointer: coarse) {
+  /* trigger:固定 block-size 改为下界,确保不低于触控目标 */
+  .ms-select--sm,
+  .ms-select--md {
+    block-size: auto;
+    min-block-size: var(--ms-target-min);
+  }
+
+  /* option:行高达标 + 纵向内边距加大,便于点按 */
+  .ms-select__option {
+    min-block-size: var(--ms-target-min);
+    padding-block: var(--ms-space-3);
+  }
 }
 
 /* 尊重减少动效偏好 */

@@ -103,7 +103,11 @@ export const Tabs = forwardRef<HTMLDivElement, TabsProps>(
           return;
         }
         select(item.value);
-        tabRefs.current[index]?.focus();
+        const node = tabRefs.current[index];
+        node?.focus();
+        // tablist 横向溢出时,让当前 tab 滚入可视区(块向不动,避免页面跳动)。
+        // 用可选调用守卫:jsdom / 老环境无 scrollIntoView 时静默跳过,不抛错。
+        node?.scrollIntoView?.({ block: 'nearest', inline: 'nearest' });
       },
       [items, select],
     );

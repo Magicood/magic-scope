@@ -13,6 +13,8 @@
   white-space: nowrap;
   cursor: pointer;
   user-select: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
   transition:
     background-color var(--ms-dur-fast) var(--ms-ease-standard),
     border-color var(--ms-dur-fast) var(--ms-ease-standard),
@@ -40,19 +42,32 @@
 
 /* —— 尺寸 —— */
 .ms-button--sm {
-  height: 2rem;
+  min-block-size: 2rem;
   padding-inline: var(--ms-space-3);
   font-size: 0.833rem;
 }
 .ms-button--md {
-  height: 2.5rem;
+  min-block-size: 2.5rem;
   padding-inline: var(--ms-space-4);
   font-size: 1rem;
 }
 .ms-button--lg {
-  height: 3rem;
+  min-block-size: 3rem;
   padding-inline: var(--ms-space-6);
   font-size: 1.2rem;
+}
+
+/* —— 触控:抬高各档热区到触控目标尺寸,允许内容换行 —— */
+@media (pointer: coarse) {
+  .ms-button--sm {
+    min-block-size: max(2rem, var(--ms-target-min));
+  }
+  .ms-button--md {
+    min-block-size: max(2.5rem, var(--ms-target-min));
+  }
+  .ms-button--lg {
+    min-block-size: max(3rem, var(--ms-target-min));
+  }
 }
 
 /* —— solid:主色实底,hover 发光(受 --ms-fx-glow 门控) —— */

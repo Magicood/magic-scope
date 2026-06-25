@@ -1,5 +1,6 @@
 .ms-textarea {
   display: block;
+  box-sizing: border-box;
   inline-size: 100%;
   resize: vertical;
   border: 1px solid var(--ms-color-border);
@@ -62,7 +63,7 @@
 /* —— 尺寸(逻辑属性,RTL 友好) —— */
 .ms-textarea--sm {
   min-block-size: 4rem;
-  font-size: 0.833rem;
+  font-size: max(16px, 0.833rem);
 }
 .ms-textarea--md {
   min-block-size: 5rem;
@@ -71,4 +72,17 @@
 .ms-textarea--lg {
   min-block-size: 6rem;
   font-size: 1.2rem;
+}
+
+/* —— 触控:保证最小可输入高度不低于触控目标 —— */
+@media (pointer: coarse) {
+  .ms-textarea--sm {
+    min-block-size: max(4rem, var(--ms-target-min));
+  }
+  .ms-textarea--md {
+    min-block-size: max(5rem, var(--ms-target-min));
+  }
+  .ms-textarea--lg {
+    min-block-size: max(6rem, var(--ms-target-min));
+  }
 }

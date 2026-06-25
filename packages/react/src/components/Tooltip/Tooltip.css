@@ -7,7 +7,7 @@
   inset: auto;
   z-index: 1;
 
-  max-inline-size: min(18rem, 90vw);
+  max-inline-size: min(18rem, 90dvw);
   padding-block: var(--ms-space-1);
   padding-inline: var(--ms-space-2);
 
@@ -78,10 +78,21 @@
 @supports not (anchor-name: --x) {
   .ms-tooltip {
     position: fixed;
-    inset-block-end: var(--ms-space-8);
+    /* 降级到屏底固定:叠加安全区,避免被 home indicator / 圆角遮挡 */
+    inset-block-end: calc(var(--ms-space-8) + var(--ms-safe-bottom));
     inset-inline: 0;
     margin-inline: auto;
     inline-size: max-content;
-    max-inline-size: min(18rem, 90vw);
+    max-inline-size: min(18rem, 90dvw);
+  }
+}
+
+/* —— 降低动态效果:去过渡 / 去位移(覆盖 placement 上的入场微移) —— */
+@media (prefers-reduced-motion: reduce) {
+  .ms-tooltip,
+  .ms-tooltip--top,
+  .ms-tooltip--bottom {
+    transition: none;
+    transform: none;
   }
 }

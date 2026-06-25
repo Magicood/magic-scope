@@ -92,6 +92,7 @@
 
 .ms-accordion__title {
   min-inline-size: 0;
+  overflow-wrap: anywhere;
 }
 
 /* —— 折叠容器:grid-template-rows 0fr → 1fr 过渡(现代、平滑) —— */
@@ -117,8 +118,16 @@
   color: var(--ms-color-fg-muted);
   font-size: 0.875rem;
   line-height: 1.6;
+  overflow-wrap: anywhere;
 }
 
 .ms-accordion__item--disabled {
   opacity: 0.6;
+}
+
+/* —— 触控设备:触发头达到最小可点击高度(桌面精确指针不受影响) —— */
+@media (pointer: coarse) {
+  .ms-accordion__trigger {
+    min-block-size: var(--ms-target-min);
+  }
 }

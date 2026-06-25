@@ -1,6 +1,6 @@
 {
   "name": "@magic-scope/react",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "magic-scope React 组件包(魔法主题)",
   "type": "module",
   "license": "MIT",
@@ -32,6 +32,11 @@
   },
   "dependencies": {
     "@magic-scope/tokens": "workspace:*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Magicood/magic-scope.git",
+    "directory": "packages/react"
   },
   "publishConfig": {
     "access": "public"
