@@ -1,0 +1,17 @@
+{
+  "id": "popconfirm",
+  "name": "Popconfirm",
+  "description": "锚定在元素旁的轻量确认气泡(非全屏模态)。复用 Popover(原生 Popover API + CSS Anchor Positioning,点外/Esc 关闭),内建确认/取消按钮流;支持 title/description、confirmText/cancelText、danger 变体确认染危险色、placement。常用于列表内联删除确认。",
+  "category": "overlay",
+  "tags": ["popconfirm", "confirm", "popover", "overlay", "inline"],
+  "status": "stable",
+  "version": "0.0.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-25",
+    "requirements": "补齐弹窗体系:气泡确认。原创实现,不另造定位——直接包一层已有的 Popover(锚定 + 点外/Esc 关闭),只叠加确认/取消 UI 与回调;区别于全屏的 AlertDialog confirm() 与装任意内容的 Popover。常见于内联删除确认。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Popconfirm.tsx", "Popconfirm.css", "index.ts"]
+}

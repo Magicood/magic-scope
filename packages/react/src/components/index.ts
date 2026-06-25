@@ -18,6 +18,7 @@ export * from './Label';
 export * from './Menu';
 export * from './NumberInput';
 export * from './Pagination';
+export * from './Popconfirm';
 export * from './Popover';
 export * from './Progress';
 export * from './Radio';

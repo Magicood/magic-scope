@@ -20,6 +20,7 @@ import {
   Menu,
   NumberInput,
   Pagination,
+  Popconfirm,
   Popover,
   Progress,
   prompt,
@@ -108,6 +109,14 @@ export function App() {
             { value: 'frost', label: 'Frost 青' },
             { value: 'ember', label: 'Ember 品红' },
           ]}
+        />
+        <Popconfirm
+          trigger={<Button variant="outline">删除(Popconfirm)</Button>}
+          title="确定删除该项?"
+          description="此操作不可撤销。"
+          variant="danger"
+          confirmText="删除"
+          onConfirm={() => toast.success('已删除')}
         />
       </div>
 

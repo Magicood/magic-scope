@@ -50,3 +50,4 @@
 @import "./components/AlertDialog/AlertDialog.css" layer(ms.components);
 @import "./components/Timeline/Timeline.css" layer(ms.components);
 @import "./components/Drawer/Drawer.css" layer(ms.components);
+@import "./components/Popconfirm/Popconfirm.css" layer(ms.components);
