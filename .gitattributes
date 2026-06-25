@@ -1,0 +1,16 @@
+# 文本统一 LF 行尾,消除跨平台 CRLF 噪音
+* text=auto eol=lf
+
+# 二进制(不转行尾 / 不 diff)
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+
+# 生成物 / lockfile:不参与 diff,语言统计里标记为 generated
+pnpm-lock.yaml -diff linguist-generated
+registry/manifest.json linguist-generated
