@@ -1,0 +1,74 @@
+/* —— magic-scope 设备适配地基(P0)——
+ * 多端响应式的横向 token + 密度闭环 + 隐形热区工具,一处定义、全组件复用。
+ * 组件禁止各写魔法 44px,统一引用 var(--ms-target-min) 等。落点对齐 DESIGN.md §5 / §7.2。
+ * 内部按 cascade layer 归位(层序在 styles.css 顶部声明),故本文件以 @layer 块组织。 */
+
+@layer ms.tokens {
+  /* 触控热区、安全区、动态视口、高 DPI 发丝线:全部 :where() 零特异性,便于上层覆盖 */
+  :where(:root) {
+    /* 触控目标基线:WCAG 2.5.5 增强 44px;触屏(粗指针)抬到 48px */
+    --ms-target-min: 2.75rem;
+    /* 刘海 / Home 条安全区(无安全区时回退 0) */
+    --ms-safe-top: env(safe-area-inset-top, 0px);
+    --ms-safe-right: env(safe-area-inset-right, 0px);
+    --ms-safe-bottom: env(safe-area-inset-bottom, 0px);
+    --ms-safe-left: env(safe-area-inset-left, 0px);
+    /* 高 DPI 发丝线:逻辑像素下不小于 1px */
+    --ms-hairline: max(1px, 0.0625rem);
+    /* 视口高度:基线 100vh,支持时升级为动态/稳定视口,治移动端地址栏抽风 */
+    --ms-viewport-h: 100vh;
+    --ms-viewport-h-stable: 100vh;
+  }
+
+  @media (pointer: coarse) {
+    :where(:root) {
+      --ms-target-min: 3rem;
+    }
+  }
+
+  @supports (height: 100svh) {
+    :where(:root) {
+      --ms-viewport-h: 100dvh;
+      --ms-viewport-h-stable: 100svh;
+    }
+  }
+
+  @media (min-resolution: 2dppx) {
+    :where(:root) {
+      --ms-hairline: 0.5px;
+    }
+  }
+}
+
+@layer ms.density {
+  /* 密度闭环:此前 setDensity() 写了 data-ms-density 却无 CSS 消费(空壳),此处补齐。
+   * 组件后续用 var(--ms-density-scale) 缩放间距、用 var(--ms-control-h) 定控件高度。 */
+  :where([data-ms-density="comfortable"], :root) {
+    --ms-density-scale: 1;
+    --ms-control-h: 2.75rem;
+  }
+  [data-ms-density="compact"] {
+    --ms-density-scale: 0.85;
+    --ms-control-h: 2.25rem;
+  }
+  [data-ms-density="spacious"] {
+    --ms-density-scale: 1.15;
+    --ms-control-h: 3.25rem;
+  }
+}
+
+@layer ms.utilities {
+  /* 隐形热区:视觉尺寸不变,把命中区扩到 --ms-target-min(用在小图标 / 关闭钮 / 页码等)。
+   * 宿主需 position: relative(本类已设)。 */
+  .ms-hit-area {
+    position: relative;
+  }
+  .ms-hit-area::before {
+    content: "";
+    position: absolute;
+    inset: 50%;
+    inline-size: max(100%, var(--ms-target-min));
+    block-size: max(100%, var(--ms-target-min));
+    translate: -50% -50%;
+  }
+}

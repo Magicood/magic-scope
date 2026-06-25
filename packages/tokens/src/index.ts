@@ -14,6 +14,7 @@ export * from './contract/contract';
 export * from './contract/roles';
 export * from './derive/index';
 export * from './engine/index';
+export * from './primitive/breakpoints';
 export * from './primitive/palette';
 export * from './primitive/scale';
 export * from './themes/index';

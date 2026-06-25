@@ -73,7 +73,10 @@ writeFileSync(join(dir, 'component.json'), `${JSON.stringify(componentJson, null
 writeFileSync(join(dir, 'index.ts'), `export * from './${Name}';\n`);
 
 appendFileSync(join(REACT_SRC, 'components', 'index.ts'), `export * from './${Name}';\n`);
-appendFileSync(join(REACT_SRC, 'styles.css'), `@import './components/${Name}/${Name}.css';\n`);
+appendFileSync(
+  join(REACT_SRC, 'styles.css'),
+  `@import './components/${Name}/${Name}.css' layer(ms.components);\n`,
+);
 
 console.log(`✓ 已生成组件 ${Name}(${category}) → packages/react/src/components/${Name}/`);
 console.log('  下一步:实现组件、补全 component.json 的 description / source、运行 pnpm registry');

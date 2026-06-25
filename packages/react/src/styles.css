@@ -1,28 +1,45 @@
 /* magic-scope 组件样式汇总(用 --ms-* 设计 token)。新增组件由 `pnpm new` 追加 @import。 */
-@import "./effects.css";
-@import "./components/Button/Button.css";
-@import "./components/Input/Input.css";
-@import "./components/Card/Card.css";
-@import "./components/Badge/Badge.css";
-@import "./components/Switch/Switch.css";
-@import "./components/Checkbox/Checkbox.css";
-@import "./components/Textarea/Textarea.css";
-@import "./components/Alert/Alert.css";
-@import "./components/Spinner/Spinner.css";
-@import "./components/Divider/Divider.css";
-@import "./components/Avatar/Avatar.css";
-@import "./components/Progress/Progress.css";
-@import "./components/Skeleton/Skeleton.css";
-@import "./components/Tag/Tag.css";
-@import "./components/Kbd/Kbd.css";
-@import "./components/Label/Label.css";
-@import "./components/Menu/Menu.css";
-@import "./components/Dialog/Dialog.css";
-@import "./components/Tooltip/Tooltip.css";
-@import "./components/Select/Select.css";
-@import "./components/Popover/Popover.css";
-@import "./components/Tabs/Tabs.css";
-@import "./components/Accordion/Accordion.css";
-@import "./components/Table/Table.css";
-@import "./components/Breadcrumb/Breadcrumb.css";
-@import "./components/Pagination/Pagination.css";
+
+/* cascade layers 层序(DESIGN.md §7.2):靠后者优先级更高。
+ * 组件入 ms.components → 响应式覆盖(@media/@container)天然高于基础值;
+ * 使用方应用层未分层样式天然胜过库样式,避免 specificity 战争。 */
+@layer ms.reset,
+  ms.tokens,
+  ms.theme,
+  ms.density,
+  ms.motion,
+  ms.components,
+  ms.utilities,
+  ms.overrides;
+
+/* 设备适配地基:横向 token + 密度闭环 + 热区工具(文件内部已自带 @layer 归位) */
+@import "./device.css";
+/* 效果开关:动效 / 发光乘子 */
+@import "./effects.css" layer(ms.motion);
+
+@import "./components/Button/Button.css" layer(ms.components);
+@import "./components/Input/Input.css" layer(ms.components);
+@import "./components/Card/Card.css" layer(ms.components);
+@import "./components/Badge/Badge.css" layer(ms.components);
+@import "./components/Switch/Switch.css" layer(ms.components);
+@import "./components/Checkbox/Checkbox.css" layer(ms.components);
+@import "./components/Textarea/Textarea.css" layer(ms.components);
+@import "./components/Alert/Alert.css" layer(ms.components);
+@import "./components/Spinner/Spinner.css" layer(ms.components);
+@import "./components/Divider/Divider.css" layer(ms.components);
+@import "./components/Avatar/Avatar.css" layer(ms.components);
+@import "./components/Progress/Progress.css" layer(ms.components);
+@import "./components/Skeleton/Skeleton.css" layer(ms.components);
+@import "./components/Tag/Tag.css" layer(ms.components);
+@import "./components/Kbd/Kbd.css" layer(ms.components);
+@import "./components/Label/Label.css" layer(ms.components);
+@import "./components/Menu/Menu.css" layer(ms.components);
+@import "./components/Dialog/Dialog.css" layer(ms.components);
+@import "./components/Tooltip/Tooltip.css" layer(ms.components);
+@import "./components/Select/Select.css" layer(ms.components);
+@import "./components/Popover/Popover.css" layer(ms.components);
+@import "./components/Tabs/Tabs.css" layer(ms.components);
+@import "./components/Accordion/Accordion.css" layer(ms.components);
+@import "./components/Table/Table.css" layer(ms.components);
+@import "./components/Breadcrumb/Breadcrumb.css" layer(ms.components);
+@import "./components/Pagination/Pagination.css" layer(ms.components);

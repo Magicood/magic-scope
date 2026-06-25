@@ -44,9 +44,9 @@ export function App() {
   return (
     <main
       style={{
-        maxWidth: '900px',
+        maxWidth: 'min(900px, 100%)',
         margin: '0 auto',
-        padding: '2rem',
+        padding: 'clamp(1rem, 4vw, 2rem)',
         display: 'grid',
         gap: '1.5rem',
         color: 'var(--ms-color-fg)',

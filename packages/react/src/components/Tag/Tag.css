@@ -73,6 +73,7 @@
 
 /* —— 移除按钮:继承 tone 文字,hover 加深底色,focus-visible 发光环 —— */
 .ms-tag__close {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -111,4 +112,17 @@
   box-shadow:
     0 0 0 2px var(--ms-color-bg),
     0 0 0 4px var(--ms-color-focus-ring);
+}
+
+/* 触屏:视觉仍是 16px,但隐形 ::before 把命中区扩到 --ms-target-min(48px),消除误触。
+ * 桌面(精确指针)不受影响。范式同 .ms-hit-area,后续 Checkbox/Switch/Pagination 复用。 */
+@media (pointer: coarse) {
+  .ms-tag__close::before {
+    content: "";
+    position: absolute;
+    inset: 50%;
+    inline-size: max(100%, var(--ms-target-min));
+    block-size: max(100%, var(--ms-target-min));
+    translate: -50% -50%;
+  }
 }
