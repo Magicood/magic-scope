@@ -22,6 +22,7 @@ import {
   Pagination,
   Popover,
   Progress,
+  prompt,
   Radio,
   RadioGroup,
   Select,
@@ -253,6 +254,18 @@ export function App() {
           onClick={() => alert('这是一条命令式 alert 提示。', { title: '提示' })}
         >
           alert
+        </Button>
+        <Button
+          variant="outline"
+          onClick={async () => {
+            const name = await prompt('给它起个名字', {
+              defaultValue: '未命名',
+              placeholder: '输入名称',
+            });
+            if (name) toast.success(`已命名为「${name}」`);
+          }}
+        >
+          prompt
         </Button>
       </div>
 

@@ -1,9 +1,9 @@
 {
   "id": "alert-dialog",
   "name": "AlertDialog",
-  "description": "命令式确认/提示弹窗:confirm(message, options) 返回 Promise<boolean>(确认/取消·Esc·遮罩)、alert(message, options) 返回 Promise<void>;+ <AlertDialogHost /> 渲染容器(模块级队列订阅、基于原生 <dialog> showModal 的焦点陷阱/Esc/top-layer、portal、锁背景滚动)。role=alertdialog + aria-labelledby/describedby;danger 变体确认按钮染危险色且默认焦点落在取消防误触;进出场动画、安全区、窄屏动作纵向排布、尊重 reduced-motion。",
+  "description": "命令式确认/提示/输入弹窗:confirm(message) 返回 Promise<boolean>、alert(message) 返回 Promise<void>、prompt(message) 返回 Promise<string|null>;+ <AlertDialogHost /> 渲染容器(模块级队列订阅、基于原生 <dialog> showModal 的焦点陷阱/Esc/top-layer、portal、锁背景滚动)。role=alertdialog + aria-labelledby/describedby;prompt 内建输入框并默认聚焦、Enter 提交;danger 变体确认按钮染危险色且默认焦点落在取消防误触;进出场动画、安全区、窄屏动作纵向排布、尊重 reduced-motion。",
   "category": "feedback",
-  "tags": ["alert-dialog", "confirm", "alert", "dialog", "imperative", "feedback"],
+  "tags": ["alert-dialog", "confirm", "alert", "prompt", "dialog", "imperative", "feedback"],
   "status": "stable",
   "version": "0.0.0",
   "frameworks": ["react"],

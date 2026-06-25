@@ -20,18 +20,35 @@ export interface AlertOptions {
   confirmText?: ReactNode;
 }
 
+export interface PromptOptions {
+  /** 标题(可选)。 */
+  title?: ReactNode;
+  /** 确认按钮文案。默认「确定」。 */
+  confirmText?: ReactNode;
+  /** 取消按钮文案。默认「取消」。 */
+  cancelText?: ReactNode;
+  /** 输入框占位符。 */
+  placeholder?: string;
+  /** 输入框初始值。 */
+  defaultValue?: string;
+}
+
+type DialogKind = 'confirm' | 'alert' | 'prompt';
+
 interface DialogRequest {
   id: number;
-  kind: 'confirm' | 'alert';
+  kind: DialogKind;
   message: ReactNode;
   title: ReactNode | undefined;
   confirmText: ReactNode;
   cancelText: ReactNode;
   variant: 'default' | 'danger';
-  resolve: (confirmed: boolean) => void;
+  placeholder: string | undefined;
+  defaultValue: string | undefined;
+  onSettle: (confirmed: boolean, value: string) => void;
 }
 
-/* —— 模块级队列:confirm()/alert() 任意处可调,AlertDialogHost 订阅渲染,无需 Provider —— */
+/* —— 模块级队列:confirm()/alert()/prompt() 任意处可调,AlertDialogHost 订阅渲染,无需 Provider —— */
 const EMPTY: DialogRequest[] = [];
 let queue: DialogRequest[] = EMPTY;
 let seq = 0;
@@ -54,10 +71,10 @@ function enqueue(request: DialogRequest) {
   emit();
 }
 
-function settle(confirmed: boolean) {
+function settle(confirmed: boolean, value = '') {
   const active = queue[0];
   if (!active) return;
-  active.resolve(confirmed);
+  active.onSettle(confirmed, value);
   queue = queue.slice(1);
   emit();
 }
@@ -77,7 +94,9 @@ export function confirm(message: ReactNode, options: ConfirmOptions = {}): Promi
       confirmText: options.confirmText ?? '确定',
       cancelText: options.cancelText ?? '取消',
       variant: options.variant ?? 'default',
-      resolve,
+      placeholder: undefined,
+      defaultValue: undefined,
+      onSettle: (confirmed) => resolve(confirmed),
     });
   });
 }
@@ -95,13 +114,36 @@ export function alert(message: ReactNode, options: AlertOptions = {}): Promise<v
       confirmText: options.confirmText ?? '确定',
       cancelText: '',
       variant: 'default',
-      resolve: () => resolve(),
+      placeholder: undefined,
+      defaultValue: undefined,
+      onSettle: () => resolve(),
     });
   });
 }
 
 /**
- * AlertDialogHost —— confirm/alert 的渲染容器。基于原生 <dialog> + showModal()
+ * prompt() —— 命令式输入弹窗,返回 Promise<string | null>(确认返回输入值 / 取消·Esc·遮罩返回 null)。
+ * 例:`const name = await prompt('请输入名称', { defaultValue: '未命名' });`
+ */
+export function prompt(message: ReactNode, options: PromptOptions = {}): Promise<string | null> {
+  return new Promise<string | null>((resolve) => {
+    enqueue({
+      id: ++seq,
+      kind: 'prompt',
+      message,
+      title: options.title,
+      confirmText: options.confirmText ?? '确定',
+      cancelText: options.cancelText ?? '取消',
+      variant: 'default',
+      placeholder: options.placeholder,
+      defaultValue: options.defaultValue,
+      onSettle: (confirmed, value) => resolve(confirmed ? value : null),
+    });
+  });
+}
+
+/**
+ * AlertDialogHost —— confirm/alert/prompt 的渲染容器。基于原生 <dialog> + showModal()
  * (焦点陷阱、Esc、top-layer),portal 到 body,锁背景滚动。在应用根渲染一次即可。
  */
 export function AlertDialogHost() {
@@ -110,11 +152,18 @@ export function AlertDialogHost() {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const confirmRef = useRef<HTMLButtonElement>(null);
   const cancelRef = useRef<HTMLButtonElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const [mounted, setMounted] = useState(false);
+  const [inputValue, setInputValue] = useState('');
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // 进入新请求时:同步 prompt 输入初值
+  useEffect(() => {
+    setInputValue(active?.kind === 'prompt' ? (active.defaultValue ?? '') : '');
+  }, [active]);
 
   useEffect(() => {
     const d = dialogRef.current;
@@ -122,12 +171,17 @@ export function AlertDialogHost() {
     if (active && !d.open) d.showModal();
     else if (!active && d.open) d.close();
     if (active) {
-      // 默认焦点:危险确认落在取消(防误触),其余落在确认
-      const target =
-        active.variant === 'danger' && active.kind === 'confirm'
-          ? cancelRef.current
-          : confirmRef.current;
-      target?.focus();
+      // 默认焦点:prompt 落在输入框;危险确认落在取消(防误触);其余落在确认
+      if (active.kind === 'prompt') {
+        inputRef.current?.focus();
+        inputRef.current?.select();
+      } else {
+        const target =
+          active.variant === 'danger' && active.kind === 'confirm'
+            ? cancelRef.current
+            : confirmRef.current;
+        target?.focus();
+      }
     }
   }, [active]);
 
@@ -142,6 +196,8 @@ export function AlertDialogHost() {
   }, [active]);
 
   if (!mounted || typeof document === 'undefined') return null;
+
+  const hasCancel = active?.kind === 'confirm' || active?.kind === 'prompt';
 
   return createPortal(
     // biome-ignore lint/a11y/useKeyWithClickEvents: 键盘关闭由原生 <dialog> 的 Esc(onCancel)提供;onClick 仅检测点击遮罩
@@ -178,8 +234,23 @@ export function AlertDialogHost() {
           <div id={`ms-ad-msg-${active.id}`} className="ms-alert-dialog__message">
             {active.message}
           </div>
+          {active.kind === 'prompt' && (
+            <input
+              ref={inputRef}
+              className="ms-input ms-input--md ms-alert-dialog__input"
+              value={inputValue}
+              placeholder={active.placeholder}
+              onChange={(event) => setInputValue(event.target.value)}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter') {
+                  event.preventDefault();
+                  settle(true, inputValue);
+                }
+              }}
+            />
+          )}
           <div className="ms-alert-dialog__actions">
-            {active.kind === 'confirm' && (
+            {hasCancel && (
               <button
                 ref={cancelRef}
                 type="button"
@@ -193,7 +264,7 @@ export function AlertDialogHost() {
               ref={confirmRef}
               type="button"
               className="ms-button ms-button--solid ms-button--md ms-alert-dialog__confirm"
-              onClick={() => settle(true)}
+              onClick={() => settle(true, inputValue)}
             >
               {active.confirmText}
             </button>

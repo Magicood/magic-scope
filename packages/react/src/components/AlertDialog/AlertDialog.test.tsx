@@ -2,7 +2,7 @@
 import '@testing-library/jest-dom/vitest';
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { AlertDialogHost, alert, confirm } from './AlertDialog';
+import { AlertDialogHost, alert, confirm, prompt } from './AlertDialog';
 
 // 模块级队列在用例间共享:每个用例后清空残留弹窗
 afterEach(() => {
@@ -128,5 +128,54 @@ describe('confirm / alert + AlertDialogHost', () => {
     expect(r1).toHaveBeenCalledWith(true);
     // 第二个接着出现
     expect(screen.getByText('第二个')).toBeInTheDocument();
+  });
+
+  it('prompt:渲染输入框(defaultValue 填充),输入后确认 resolve(输入值)', async () => {
+    render(<AlertDialogHost />);
+    let result: string | null | undefined;
+    act(() => {
+      prompt('输入名称', { defaultValue: '初始' }).then((r) => {
+        result = r;
+      });
+    });
+    const input = document.querySelector('.ms-alert-dialog__input') as HTMLInputElement;
+    expect(input).toBeInTheDocument();
+    expect(input.value).toBe('初始');
+
+    await act(async () => {
+      fireEvent.change(input, { target: { value: '新名称' } });
+      fireEvent.click(screen.getByRole('button', { name: '确定' }));
+    });
+    expect(result).toBe('新名称');
+  });
+
+  it('prompt:取消 resolve(null)', async () => {
+    render(<AlertDialogHost />);
+    let result: string | null | undefined = '未变';
+    act(() => {
+      prompt('输入').then((r) => {
+        result = r;
+      });
+    });
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: '取消' }));
+    });
+    expect(result).toBeNull();
+  });
+
+  it('prompt:输入框 Enter 提交当前值', async () => {
+    render(<AlertDialogHost />);
+    let result: string | null | undefined;
+    act(() => {
+      prompt('输入').then((r) => {
+        result = r;
+      });
+    });
+    const input = document.querySelector('.ms-alert-dialog__input') as HTMLInputElement;
+    await act(async () => {
+      fireEvent.change(input, { target: { value: 'X' } });
+      fireEvent.keyDown(input, { key: 'Enter' });
+    });
+    expect(result).toBe('X');
   });
 });
