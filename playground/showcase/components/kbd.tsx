@@ -5,7 +5,7 @@ import type { DocEntry } from '../types';
 export const entry: DocEntry = {
   id: 'kbd',
   name: 'Kbd',
-  category: 'data',
+  category: 'typography',
   summary: '键盘按键样式,展示快捷键如 ⌘K、Ctrl + C,键帽立体感。',
   description:
     '自研、零依赖,消费 @magic-scope/tokens 的 --ms-* 变量。\nsurface-raised 底 + 1px 描边 + 加粗底边模拟键帽立体感,radius-sm、font-mono、紧凑内边距。\n组合键用多个 <Kbd> 并以分隔符拼接即可。',

@@ -38,7 +38,7 @@ function Demo({ values }: { values: ControlValues }) {
 export const entry: DocEntry = {
   id: 'popconfirm',
   name: 'Popconfirm',
-  category: 'overlay',
+  category: 'composite',
   summary: '锚定在元素旁的轻量确认气泡,内建确认 / 取消按钮流,常用于内联删除确认。',
   description:
     '复用 Popover(原生 Popover API + CSS Anchor Positioning,自带点外 / 取消 / Esc 关闭),在 trigger 旁弹出确认气泡,而非全屏模态。\ndanger 变体把确认按钮染危险色;点外 / Esc 关闭等同取消(触发 onCancel)。适合列表内联删除等不打断上下文的二次确认。',

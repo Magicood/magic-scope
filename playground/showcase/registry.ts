@@ -9,12 +9,14 @@ export interface Category {
 
 export const CATEGORIES: Category[] = [
   { id: 'actions', label: '操作 Actions', hint: '触发动作' },
+  { id: 'typography', label: '文字排版 Typography', hint: '文字与排印' },
+  { id: 'layout', label: '布局 Layout', hint: '容器与分隔' },
   { id: 'forms', label: '表单 Forms', hint: '录入与选择' },
   { id: 'data', label: '数据展示 Data Display', hint: '呈现信息' },
   { id: 'feedback', label: '反馈 Feedback', hint: '状态与通知' },
-  { id: 'overlay', label: '浮层 Overlay', hint: '弹层与浮窗' },
   { id: 'navigation', label: '导航 Navigation', hint: '结构与跳转' },
-  { id: 'layout', label: '布局 Layout', hint: '容器与分隔' },
+  { id: 'overlay', label: '浮层 Overlay', hint: '弹层与浮窗' },
+  { id: 'composite', label: '复合 Composite', hint: '组合基础件、自成体系' },
 ];
 
 // 同分类内的展示顺序(未列出的按名称排在其后)。
