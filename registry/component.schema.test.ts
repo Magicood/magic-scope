@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { sourceSchema } from './component.schema';
+import { componentSchema, sourceSchema } from './component.schema';
 
 const base = {
   type: 'original' as const,
@@ -43,5 +43,34 @@ describe('sourceSchema 溯源校验', () => {
   it('url 非法格式:拒绝', () => {
     const r = sourceSchema.safeParse({ ...base, type: 'inspired', url: 'not-a-url' });
     expect(r.success).toBe(false);
+  });
+});
+
+const comp = {
+  id: 'x',
+  name: 'X',
+  description: '测试组件',
+  category: 'misc',
+  version: '0.0.0',
+  frameworks: ['react'] as const,
+  source: base,
+};
+
+describe('componentSchema tier / frameworks', () => {
+  it('tier 可选:不给也通过(过渡期用 tag 兜底,现有 26 个组件即此形态)', () => {
+    expect(componentSchema.safeParse(comp).success).toBe(true);
+  });
+
+  it('tier 接受 primitive / composite', () => {
+    expect(componentSchema.safeParse({ ...comp, tier: 'primitive' }).success).toBe(true);
+    expect(componentSchema.safeParse({ ...comp, tier: 'composite' }).success).toBe(true);
+  });
+
+  it('tier 非法值拒绝', () => {
+    expect(componentSchema.safeParse({ ...comp, tier: 'molecule' }).success).toBe(false);
+  });
+
+  it('frameworks 接受 angular(多框架地基已就位)', () => {
+    expect(componentSchema.safeParse({ ...comp, frameworks: ['angular'] }).success).toBe(true);
   });
 });
