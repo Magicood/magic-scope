@@ -1,0 +1,1057 @@
+{
+  "Accordion": [
+    {
+      "name": "type",
+      "type": "\"single\" | \"multiple\"",
+      "default": "single",
+      "description": "single:同时只展开一项;multiple:可同时展开多项。默认 single。",
+      "required": false
+    },
+    {
+      "name": "items",
+      "type": "AccordionItem[]",
+      "default": "—",
+      "description": "面板项列表。",
+      "required": true
+    },
+    {
+      "name": "defaultValue",
+      "type": "string | string[]",
+      "default": "—",
+      "description": "初始展开值。single 取 string,multiple 取 string[];宽松接受任一形态。",
+      "required": false
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "default": "—",
+      "description": "外部类名(作用于根容器)。",
+      "required": false
+    }
+  ],
+  "Alert": [
+    {
+      "name": "variant",
+      "type": "\"info\" | \"success\" | \"warning\" | \"danger\"",
+      "default": "info",
+      "description": "语义变体:信息 / 成功 / 警告 / 危险。默认 info。",
+      "required": false
+    }
+  ],
+  "Avatar": [
+    {
+      "name": "size",
+      "type": "\"sm\" | \"md\" | \"lg\"",
+      "default": "md",
+      "description": "尺寸。默认 md。",
+      "required": false
+    },
+    {
+      "name": "shape",
+      "type": "\"circle\" | \"square\"",
+      "default": "circle",
+      "description": "形状:圆形 / 方形。默认 circle。",
+      "required": false
+    },
+    {
+      "name": "src",
+      "type": "string",
+      "default": "—",
+      "description": "头像图片地址。提供时渲染 <img>,object-fit:cover 填充。",
+      "required": false
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "default": "—",
+      "description": "用户名。无 src 时取首字母(大写,最多 2 字)作为占位;同时用于无障碍标签。",
+      "required": false
+    }
+  ],
+  "Badge": [
+    {
+      "name": "variant",
+      "type": "\"solid\" | \"soft\" | \"outline\"",
+      "default": "soft",
+      "description": "视觉变体:实底 / 柔和底 / 描边。默认 soft。",
+      "required": false
+    },
+    {
+      "name": "tone",
+      "type": "\"success\" | \"warning\" | \"danger\" | \"primary\" | \"accent\" | \"neutral\"",
+      "default": "primary",
+      "description": "语义色调。默认 primary。neutral 走中性的 fg-muted / border。",
+      "required": false
+    }
+  ],
+  "Breadcrumb": [
+    {
+      "name": "items",
+      "type": "BreadcrumbItem[]",
+      "default": "—",
+      "description": "面包屑层级项,自前往后。",
+      "required": true
+    },
+    {
+      "name": "separator",
+      "type": "ReactNode",
+      "default": "/",
+      "description": "项间分隔符,装饰性(aria-hidden)。默认 \"/\"。",
+      "required": false
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "default": "—",
+      "description": "外部类名(作用于 <nav>)。",
+      "required": false
+    }
+  ],
+  "Button": [
+    {
+      "name": "variant",
+      "type": "\"solid\" | \"outline\" | \"ghost\"",
+      "default": "solid",
+      "description": "视觉变体:实底(带奥术发光)/ 描边 / 幽灵。默认 solid。",
+      "required": false
+    },
+    {
+      "name": "size",
+      "type": "\"sm\" | \"md\" | \"lg\"",
+      "default": "md",
+      "description": "尺寸。默认 md。",
+      "required": false
+    }
+  ],
+  "Card": [
+    {
+      "name": "variant",
+      "type": "\"outline\" | \"elevated\"",
+      "default": "elevated",
+      "description": "视觉变体:elevated(surface 底 + 柔和阴影)/ outline(透明底 + 描边)。默认 elevated。",
+      "required": false
+    },
+    {
+      "name": "interactive",
+      "type": "boolean",
+      "default": "false",
+      "description": "可交互:true 时 hover 上浮 + 奥术发光,并暴露键盘聚焦环(tabIndex/focus-visible)。",
+      "required": false
+    }
+  ],
+  "Checkbox": [
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "default": "—",
+      "description": "复选框右侧的文字标签内容。",
+      "required": false
+    },
+    {
+      "name": "indeterminate",
+      "type": "boolean",
+      "default": "false",
+      "description": "半选(部分选中)态:仅视觉,不改变 checked 取值。常用于「全选」框。",
+      "required": false
+    }
+  ],
+  "ContextMenu": [
+    {
+      "name": "items",
+      "type": "MenuItem[]",
+      "default": "—",
+      "description": "菜单项列表(与 Menu 同结构)。",
+      "required": true
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "default": "—",
+      "description": "响应右键的区域内容。",
+      "required": true
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "default": "—",
+      "description": "菜单浮层附加类名。",
+      "required": false
+    }
+  ],
+  "Dialog": [
+    {
+      "name": "open",
+      "type": "boolean",
+      "default": "—",
+      "description": "是否打开(受控)。",
+      "required": true
+    },
+    {
+      "name": "onClose",
+      "type": "(() => void)",
+      "default": "—",
+      "description": "关闭时回调(Esc / 点击遮罩 / 原生 close)。",
+      "required": false
+    },
+    {
+      "name": "dismissable",
+      "type": "boolean",
+      "default": "true",
+      "description": "点击遮罩是否关闭。默认 true。",
+      "required": false
+    }
+  ],
+  "Divider": [
+    {
+      "name": "orientation",
+      "type": "\"horizontal\" | \"vertical\"",
+      "default": "horizontal",
+      "description": "朝向:水平(横跨容器宽度)/ 垂直(贴满容器高度,行内)。默认 horizontal。",
+      "required": false
+    }
+  ],
+  "Drawer": [
+    {
+      "name": "open",
+      "type": "boolean",
+      "default": "—",
+      "description": "是否打开(受控)。",
+      "required": true
+    },
+    {
+      "name": "onClose",
+      "type": "(() => void)",
+      "default": "—",
+      "description": "关闭时回调(Esc / 点击遮罩 / 关闭按钮)。",
+      "required": false
+    },
+    {
+      "name": "side",
+      "type": "\"start\" | \"end\" | \"top\" | \"bottom\"",
+      "default": "end",
+      "description": "滑入边:start(左)/ end(右,默认)/ top / bottom。",
+      "required": false
+    },
+    {
+      "name": "title",
+      "type": "ReactNode",
+      "default": "—",
+      "description": "标题(可选);设置后渲染头部并与抽屉 aria-labelledby 关联。",
+      "required": false
+    },
+    {
+      "name": "dismissable",
+      "type": "boolean",
+      "default": "true",
+      "description": "点击遮罩是否关闭。默认 true。",
+      "required": false
+    }
+  ],
+  "Input": [
+    {
+      "name": "size",
+      "type": "\"sm\" | \"md\" | \"lg\"",
+      "default": "md",
+      "description": "尺寸。默认 md。(覆盖原生 size 数值属性为尺寸枚举)",
+      "required": false
+    },
+    {
+      "name": "invalid",
+      "type": "boolean",
+      "default": "false",
+      "description": "校验失败态:染 danger 色并设 aria-invalid。",
+      "required": false
+    }
+  ],
+  "Kbd": [
+    {
+      "name": "size",
+      "type": "\"sm\" | \"md\"",
+      "default": "md",
+      "description": "尺寸:sm 紧凑 / md 默认。",
+      "required": false
+    }
+  ],
+  "Label": [
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "default": "—",
+      "description": "标签文字内容。",
+      "required": false
+    },
+    {
+      "name": "required",
+      "type": "boolean",
+      "default": "false",
+      "description": "必填标记:在文末追加视觉星号(仅 aria-hidden 装饰;真正的必填语义由表单控件的 aria-required 承担)。",
+      "required": false
+    }
+  ],
+  "Menu": [
+    {
+      "name": "trigger",
+      "type": "ReactElement<unknown, string | JSXElementConstructor<any>>",
+      "default": "—",
+      "description": "触发元素(通常是 Button)。点击展开菜单。",
+      "required": true
+    },
+    {
+      "name": "items",
+      "type": "MenuItem[]",
+      "default": "—",
+      "description": "菜单项列表。",
+      "required": true
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "default": "—",
+      "description": "外部类名(作用于浮层)。",
+      "required": false
+    }
+  ],
+  "NumberInput": [
+    {
+      "name": "value",
+      "type": "number",
+      "default": "—",
+      "description": "受控值。",
+      "required": false
+    },
+    {
+      "name": "defaultValue",
+      "type": "number",
+      "default": "—",
+      "description": "非受控初始值。",
+      "required": false
+    },
+    {
+      "name": "onValueChange",
+      "type": "((value: number | null) => void)",
+      "default": "—",
+      "description": "值变化回调:有效数字时传 number,清空时传 null。",
+      "required": false
+    },
+    {
+      "name": "min",
+      "type": "number",
+      "default": "Number.NEGATIVE_INFINITY",
+      "description": "最小值。默认 -Infinity(不限)。",
+      "required": false
+    },
+    {
+      "name": "max",
+      "type": "number",
+      "default": "Number.POSITIVE_INFINITY",
+      "description": "最大值。默认 Infinity(不限)。",
+      "required": false
+    },
+    {
+      "name": "step",
+      "type": "number",
+      "default": "1",
+      "description": "步进步长(步进按钮与方向键)。默认 1。",
+      "required": false
+    },
+    {
+      "name": "size",
+      "type": "\"sm\" | \"md\" | \"lg\"",
+      "default": "md",
+      "description": "尺寸。默认 md。",
+      "required": false
+    }
+  ],
+  "Pagination": [
+    {
+      "name": "page",
+      "type": "number",
+      "default": "—",
+      "description": "当前页(1 起)。",
+      "required": true
+    },
+    {
+      "name": "total",
+      "type": "number",
+      "default": "—",
+      "description": "总页数。",
+      "required": true
+    },
+    {
+      "name": "onPageChange",
+      "type": "(page: number) => void",
+      "default": "—",
+      "description": "翻页回调,入参为目标页码(1 起)。",
+      "required": true
+    },
+    {
+      "name": "siblingCount",
+      "type": "number",
+      "default": "1",
+      "description": "当前页两侧各显示的页码数。默认 1。",
+      "required": false
+    }
+  ],
+  "Popconfirm": [
+    {
+      "name": "trigger",
+      "type": "ReactElement<unknown, string | JSXElementConstructor<any>>",
+      "default": "—",
+      "description": "触发元素(单个 React 元素),点击弹出确认气泡。",
+      "required": true
+    },
+    {
+      "name": "title",
+      "type": "ReactNode",
+      "default": "—",
+      "description": "确认标题 / 主问题。",
+      "required": false
+    },
+    {
+      "name": "description",
+      "type": "ReactNode",
+      "default": "—",
+      "description": "次级描述。",
+      "required": false
+    },
+    {
+      "name": "onConfirm",
+      "type": "(() => void)",
+      "default": "—",
+      "description": "点击确认时触发(随后自动关闭气泡)。",
+      "required": false
+    },
+    {
+      "name": "onCancel",
+      "type": "(() => void)",
+      "default": "—",
+      "description": "点击取消 / 点外 / Esc 关闭时触发。",
+      "required": false
+    },
+    {
+      "name": "confirmText",
+      "type": "ReactNode",
+      "default": "确定",
+      "description": "确认按钮文案。默认「确定」。",
+      "required": false
+    },
+    {
+      "name": "cancelText",
+      "type": "ReactNode",
+      "default": "取消",
+      "description": "取消按钮文案。默认「取消」。",
+      "required": false
+    },
+    {
+      "name": "variant",
+      "type": "\"danger\" | \"default\"",
+      "default": "default",
+      "description": "danger 时确认按钮染危险色。",
+      "required": false
+    },
+    {
+      "name": "placement",
+      "type": "\"top\" | \"bottom\" | \"left\" | \"right\"",
+      "default": "top",
+      "description": "气泡相对 trigger 的方位。默认 top。",
+      "required": false
+    }
+  ],
+  "Popover": [
+    {
+      "name": "trigger",
+      "type": "ReactElement<unknown, string | JSXElementConstructor<any>>",
+      "default": "—",
+      "description": "触发元素(单个 React 元素)。点击切换浮层显隐;会被注入 anchor / aria 属性。",
+      "required": true
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "default": "—",
+      "description": "浮层内容。",
+      "required": true
+    },
+    {
+      "name": "placement",
+      "type": "\"top\" | \"bottom\" | \"left\" | \"right\"",
+      "default": "bottom",
+      "description": "浮层相对 trigger 的方位。默认 bottom。",
+      "required": false
+    },
+    {
+      "name": "open",
+      "type": "boolean",
+      "default": "—",
+      "description": "受控:是否打开。传入即进入受控模式。",
+      "required": false
+    },
+    {
+      "name": "onOpenChange",
+      "type": "((open: boolean) => void)",
+      "default": "—",
+      "description": "显隐变化回调(受控 / 非受控均触发)。",
+      "required": false
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "default": "—",
+      "description": "浮层附加 className。",
+      "required": false
+    }
+  ],
+  "Progress": [
+    {
+      "name": "value",
+      "type": "number",
+      "default": "—",
+      "description": "进度值,0-100。确定态下设为 aria-valuenow 并驱动填充宽度;省略或 indeterminate 时为不确定态。",
+      "required": false
+    },
+    {
+      "name": "indeterminate",
+      "type": "boolean",
+      "default": "false",
+      "description": "不确定态:不知道具体进度,填充段左右往返流动。默认 false。",
+      "required": false
+    }
+  ],
+  "RadioGroup": [
+    {
+      "name": "value",
+      "type": "string",
+      "default": "—",
+      "description": "受控选中值。",
+      "required": false
+    },
+    {
+      "name": "defaultValue",
+      "type": "string",
+      "default": "—",
+      "description": "非受控初始选中值。",
+      "required": false
+    },
+    {
+      "name": "onValueChange",
+      "type": "((value: string) => void)",
+      "default": "—",
+      "description": "选中变化回调,入参为被选中项的 value。",
+      "required": false
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "default": "—",
+      "description": "同组 radio 的 name;省略时自动生成,保证「同名即单选」的原生语义。",
+      "required": false
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "default": "—",
+      "description": "整组禁用。",
+      "required": false
+    },
+    {
+      "name": "orientation",
+      "type": "\"horizontal\" | \"vertical\"",
+      "default": "vertical",
+      "description": "排布方向,同时映射到 aria-orientation。默认 vertical。",
+      "required": false
+    },
+    {
+      "name": "size",
+      "type": "\"sm\" | \"md\" | \"lg\"",
+      "default": "md",
+      "description": "尺寸,透传给组内 Radio。默认 md。",
+      "required": false
+    }
+  ],
+  "Radio": [
+    {
+      "name": "value",
+      "type": "string",
+      "default": "—",
+      "description": "该选项的值,在 RadioGroup 内唯一。",
+      "required": true
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "default": "—",
+      "description": "选项右侧的文字标签内容。",
+      "required": false
+    },
+    {
+      "name": "size",
+      "type": "\"sm\" | \"md\" | \"lg\"",
+      "default": "md",
+      "description": "尺寸;默认继承所在 RadioGroup,缺省 md。",
+      "required": false
+    }
+  ],
+  "Select": [
+    {
+      "name": "value",
+      "type": "string",
+      "default": "—",
+      "description": "当前选中值(受控)。",
+      "required": false
+    },
+    {
+      "name": "onChange",
+      "type": "((value: string) => void)",
+      "default": "—",
+      "description": "选中变化回调。",
+      "required": false
+    },
+    {
+      "name": "options",
+      "type": "SelectOption[]",
+      "default": "—",
+      "description": "选项列表。",
+      "required": true
+    },
+    {
+      "name": "placeholder",
+      "type": "string",
+      "default": "请选择…",
+      "description": "未选中时的占位文本。",
+      "required": false
+    },
+    {
+      "name": "size",
+      "type": "\"sm\" | \"md\" | \"lg\"",
+      "default": "md",
+      "description": "尺寸。默认 md。",
+      "required": false
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "default": "false",
+      "description": "是否禁用整个选择器。",
+      "required": false
+    },
+    {
+      "name": "aria-label",
+      "type": "string",
+      "default": "—",
+      "description": "trigger 的无障碍名称(无可见 label 时建议提供)。",
+      "required": false
+    },
+    {
+      "name": "aria-labelledby",
+      "type": "string",
+      "default": "—",
+      "description": "关联可见 label 的 id。",
+      "required": false
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "default": "—",
+      "description": "附加类名。",
+      "required": false
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "default": "—",
+      "description": "trigger 的 id。",
+      "required": false
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "default": "—",
+      "description": "trigger 的 name(用于表单语义,非真实表单控件)。",
+      "required": false
+    }
+  ],
+  "Skeleton": [
+    {
+      "name": "variant",
+      "type": "\"circle\" | \"rect\" | \"text\"",
+      "default": "rect",
+      "description": "占位形状。text 为文本行(较矮 + 小圆角),circle 为等宽高圆形,rect 为矩形(默认)。",
+      "required": false
+    }
+  ],
+  "Slider": [
+    {
+      "name": "value",
+      "type": "number",
+      "default": "—",
+      "description": "受控值。",
+      "required": false
+    },
+    {
+      "name": "defaultValue",
+      "type": "number",
+      "default": "—",
+      "description": "非受控初始值。缺省取 min。",
+      "required": false
+    },
+    {
+      "name": "onValueChange",
+      "type": "((value: number) => void)",
+      "default": "—",
+      "description": "值变化回调(拖动 / 键盘),入参为数值。",
+      "required": false
+    },
+    {
+      "name": "min",
+      "type": "number",
+      "default": "0",
+      "description": "最小值。默认 0。",
+      "required": false
+    },
+    {
+      "name": "max",
+      "type": "number",
+      "default": "100",
+      "description": "最大值。默认 100。",
+      "required": false
+    },
+    {
+      "name": "step",
+      "type": "number",
+      "default": "1",
+      "description": "步长。默认 1。",
+      "required": false
+    },
+    {
+      "name": "size",
+      "type": "\"sm\" | \"md\" | \"lg\"",
+      "default": "md",
+      "description": "尺寸:轨道与滑块等比缩放。默认 md。",
+      "required": false
+    },
+    {
+      "name": "showValue",
+      "type": "boolean",
+      "default": "false",
+      "description": "是否在末尾渲染当前值(role=status 的 output)。默认 false。",
+      "required": false
+    },
+    {
+      "name": "formatValue",
+      "type": "((value: number) => ReactNode)",
+      "default": "—",
+      "description": "自定义值的展示(如加单位 / 百分号);仅在 showValue 时生效。",
+      "required": false
+    }
+  ],
+  "Spinner": [
+    {
+      "name": "size",
+      "type": "\"sm\" | \"md\" | \"lg\"",
+      "default": "md",
+      "description": "尺寸(同时决定圆环直径与边宽)。默认 md。",
+      "required": false
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "default": "加载中",
+      "description": "无障碍文案,读屏播报。默认「加载中」。",
+      "required": false
+    }
+  ],
+  "Table": [
+    {
+      "name": "columns",
+      "type": "TableColumn<T>[]",
+      "default": "—",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "data",
+      "type": "T[]",
+      "default": "—",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "stripe",
+      "type": "boolean",
+      "default": "—",
+      "description": "斑马纹。默认 false。",
+      "required": false
+    },
+    {
+      "name": "hoverable",
+      "type": "boolean",
+      "default": "—",
+      "description": "行 hover 高亮。默认 false。",
+      "required": false
+    },
+    {
+      "name": "getRowKey",
+      "type": "((row: T, index: number) => string | number)",
+      "default": "—",
+      "description": "行 key 派生,默认行索引。",
+      "required": false
+    },
+    {
+      "name": "caption",
+      "type": "ReactNode",
+      "default": "—",
+      "description": "无障碍标题。",
+      "required": false
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "default": "—",
+      "description": "",
+      "required": false
+    },
+    {
+      "name": "sortState",
+      "type": "SortState | null",
+      "default": "—",
+      "description": "—— 排序(受控:传 sortState 含 null;非受控:用 defaultSortState)。",
+      "required": false
+    },
+    {
+      "name": "defaultSortState",
+      "type": "SortState | null",
+      "default": "—",
+      "description": "",
+      "required": false
+    },
+    {
+      "name": "onSortChange",
+      "type": "((next: SortState | null) => void)",
+      "default": "—",
+      "description": "",
+      "required": false
+    },
+    {
+      "name": "rowSelection",
+      "type": "RowSelection<T>",
+      "default": "—",
+      "description": "—— 行选择(受控)。",
+      "required": false
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "default": "—",
+      "description": "—— 加载态:覆盖一层 Spinner 遮罩(aria-busy)。",
+      "required": false
+    },
+    {
+      "name": "empty",
+      "type": "ReactNode",
+      "default": "—",
+      "description": "—— 空态内容,缺省「暂无数据」。",
+      "required": false
+    },
+    {
+      "name": "skeletonRows",
+      "type": "number",
+      "default": "—",
+      "description": "—— 空数据 + loading 时渲染 N 行骨架,默认 0(仅遮罩)。",
+      "required": false
+    },
+    {
+      "name": "stickyHeader",
+      "type": "boolean",
+      "default": "—",
+      "description": "—— 粘性表头:开启即限高可滚、表头吸顶。",
+      "required": false
+    },
+    {
+      "name": "maxHeight",
+      "type": "string | number",
+      "default": "—",
+      "description": "配合 stickyHeader 的最大高度;缺省随动态视口。",
+      "required": false
+    },
+    {
+      "name": "ref",
+      "type": "Ref<HTMLTableElement>",
+      "default": "—",
+      "description": "",
+      "required": false
+    }
+  ],
+  "Tabs": [
+    {
+      "name": "items",
+      "type": "TabItem[]",
+      "default": "—",
+      "description": "标签项列表。",
+      "required": true
+    },
+    {
+      "name": "value",
+      "type": "string",
+      "default": "—",
+      "description": "受控选中值。传入则由外部托管,需配合 onChange。",
+      "required": false
+    },
+    {
+      "name": "defaultValue",
+      "type": "string",
+      "default": "—",
+      "description": "非受控初始选中值。缺省取第一个可用项。",
+      "required": false
+    },
+    {
+      "name": "onChange",
+      "type": "((value: string) => void)",
+      "default": "—",
+      "description": "选中变化回调,参数为新选中项的 value。",
+      "required": false
+    },
+    {
+      "name": "variant",
+      "type": "\"underline\" | \"pill\"",
+      "default": "underline",
+      "description": "视觉变体:underline(下划线)| pill(实底胶囊),默认 underline。",
+      "required": false
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "default": "—",
+      "description": "外部类名(作用于最外层容器)。",
+      "required": false
+    }
+  ],
+  "Tag": [
+    {
+      "name": "tone",
+      "type": "\"success\" | \"warning\" | \"danger\" | \"primary\" | \"accent\" | \"neutral\"",
+      "default": "neutral",
+      "description": "语义色调:主色 / 强调 / 成功 / 警告 / 危险 / 中性。默认 neutral。",
+      "required": false
+    },
+    {
+      "name": "closable",
+      "type": "boolean",
+      "default": "false",
+      "description": "是否可关闭:为真时在末尾渲染移除按钮。",
+      "required": false
+    },
+    {
+      "name": "onRemove",
+      "type": "(() => void)",
+      "default": "—",
+      "description": "点击移除按钮时触发。",
+      "required": false
+    }
+  ],
+  "Textarea": [
+    {
+      "name": "size",
+      "type": "\"sm\" | \"md\" | \"lg\"",
+      "default": "md",
+      "description": "尺寸。默认 md。(影响 font-size 与 min-block-size)",
+      "required": false
+    },
+    {
+      "name": "invalid",
+      "type": "boolean",
+      "default": "false",
+      "description": "校验失败态:染 danger 色并设 aria-invalid。",
+      "required": false
+    }
+  ],
+  "TimelineItem": [
+    {
+      "name": "variant",
+      "type": "\"info\" | \"success\" | \"warning\" | \"danger\" | \"primary\" | \"default\"",
+      "default": "default",
+      "description": "节点圆点的语义色。默认 default(中性)。",
+      "required": false
+    },
+    {
+      "name": "icon",
+      "type": "ReactNode",
+      "default": "—",
+      "description": "自定义节点内容(图标等),替代默认圆点。",
+      "required": false
+    },
+    {
+      "name": "time",
+      "type": "ReactNode",
+      "default": "—",
+      "description": "次级元信息(时间 / 日期),渲染为 <time>。",
+      "required": false
+    },
+    {
+      "name": "title",
+      "type": "ReactNode",
+      "default": "—",
+      "description": "条目标题。",
+      "required": false
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "default": "—",
+      "description": "条目正文内容。",
+      "required": false
+    }
+  ],
+  "Toaster": [
+    {
+      "name": "position",
+      "type": "\"top-start\" | \"top-center\" | \"top-end\" | \"bottom-start\" | \"bottom-center\" | \"bottom-end\"",
+      "default": "bottom-end",
+      "description": "弹出位置。默认 bottom-end。",
+      "required": false
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "default": "通知",
+      "description": "可访问的区域标签。默认「通知」。",
+      "required": false
+    }
+  ],
+  "Tooltip": [
+    {
+      "name": "content",
+      "type": "ReactNode",
+      "default": "—",
+      "description": "提示内容。",
+      "required": true
+    },
+    {
+      "name": "children",
+      "type": "ReactElement<unknown, string | JSXElementConstructor<any>>",
+      "default": "—",
+      "description": "单个触发元素(将被克隆以注入事件 / anchor / aria)。",
+      "required": true
+    },
+    {
+      "name": "placement",
+      "type": "\"top\" | \"bottom\"",
+      "default": "top",
+      "description": "气泡相对 trigger 的方位。默认 \"top\"。",
+      "required": false
+    },
+    {
+      "name": "delay",
+      "type": "number",
+      "default": "150",
+      "description": "hover / focus 到显示的延时(毫秒)。默认 150。",
+      "required": false
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "default": "—",
+      "description": "透传到气泡容器的额外 className。",
+      "required": false
+    }
+  ]
+}
