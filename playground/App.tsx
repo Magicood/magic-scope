@@ -13,6 +13,7 @@ import {
   confirm,
   Dialog,
   Divider,
+  Drawer,
   Input,
   Kbd,
   Label,
@@ -52,6 +53,7 @@ export function App() {
   const [sel, setSel] = useState('frost');
   const [page, setPage] = useState(2);
   const [plan, setPlan] = useState('free');
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const [volume, setVolume] = useState(40);
   const [qty, setQty] = useState(3);
 
@@ -74,6 +76,9 @@ export function App() {
       <h2>Overlay(重点实测)</h2>
       <div style={row}>
         <Button onClick={() => setDialogOpen(true)}>打开 Dialog</Button>
+        <Button variant="outline" onClick={() => setDrawerOpen(true)}>
+          打开 Drawer
+        </Button>
         <Tooltip content="奥术提示气泡 ✦">
           <Button variant="outline">悬停看 Tooltip</Button>
         </Tooltip>
@@ -112,6 +117,16 @@ export function App() {
         </p>
         <Button onClick={() => setDialogOpen(false)}>关闭</Button>
       </Dialog>
+
+      <Drawer open={drawerOpen} onClose={() => setDrawerOpen(false)} side="end" title="筛选">
+        <p style={{ color: 'var(--ms-color-fg-muted)', marginBlockStart: 0 }}>
+          右侧抽屉:原生 dialog 焦点陷阱、Esc、点遮罩关闭、滑入动画。
+        </p>
+        <div style={{ display: 'grid', gap: '0.75rem', marginBlockStart: '1rem' }}>
+          <Checkbox defaultChecked>只看 stable</Checkbox>
+          <Checkbox>包含 draft</Checkbox>
+        </div>
+      </Drawer>
 
       <h2>表单 Forms</h2>
       <div style={{ display: 'grid', gap: '0.75rem', maxWidth: '360px' }}>

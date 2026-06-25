@@ -11,6 +11,7 @@ export * from './Card';
 export * from './Checkbox';
 export * from './Dialog';
 export * from './Divider';
+export * from './Drawer';
 export * from './Input';
 export * from './Kbd';
 export * from './Label';

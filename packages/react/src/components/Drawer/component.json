@@ -1,0 +1,17 @@
+{
+  "id": "drawer",
+  "name": "Drawer",
+  "description": "侧边抽屉。基于原生 <dialog> + showModal()(焦点陷阱、Esc、::backdrop、top-layer)。受控 open + onClose,四个方向滑入(start/end/top/bottom),可选 title 头部(aria-labelledby 关联)+ 内建关闭按钮(无标题时浮于右上角),点击遮罩关闭、锁背景滚动、安全区避让、进出场滑动动画、尊重 reduced-motion。",
+  "category": "overlay",
+  "tags": ["drawer", "sidebar", "panel", "overlay", "sheet", "dialog"],
+  "status": "stable",
+  "version": "0.0.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-25",
+    "requirements": "补齐弹窗体系:侧边抽屉。原创实现,与 Dialog 同构(原生 <dialog> showModal 白嫖焦点陷阱/Esc/top-layer),贴边定位 + 四方向滑入,内建头部/关闭、锁滚动、安全区。常用于移动导航、设置、详情面板。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Drawer.tsx", "Drawer.css", "index.ts"]
+}

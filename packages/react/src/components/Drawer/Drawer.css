@@ -1,0 +1,181 @@
+/* —— 原生 <dialog> + showModal:焦点陷阱、Esc、top-layer;贴边定位 + 滑入 —— */
+.ms-drawer {
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  max-block-size: none;
+  max-inline-size: none;
+  color: var(--ms-color-fg);
+  transition:
+    transform var(--ms-dur-base) var(--ms-ease-standard),
+    overlay var(--ms-dur-base) allow-discrete,
+    display var(--ms-dur-base) allow-discrete;
+}
+
+/* —— 方向:贴边 + 尺寸 + 关闭态位移 —— */
+.ms-drawer--end {
+  margin-block: 0;
+  margin-inline: auto 0;
+  inline-size: min(24rem, 100vw);
+  block-size: 100dvh;
+  transform: translateX(100%);
+}
+.ms-drawer--start {
+  margin-block: 0;
+  margin-inline: 0 auto;
+  inline-size: min(24rem, 100vw);
+  block-size: 100dvh;
+  transform: translateX(-100%);
+}
+.ms-drawer--top {
+  margin-block: 0 auto;
+  margin-inline: 0;
+  inline-size: 100vw;
+  max-block-size: 85dvh;
+  transform: translateY(-100%);
+}
+.ms-drawer--bottom {
+  margin-block: auto 0;
+  margin-inline: 0;
+  inline-size: 100vw;
+  max-block-size: 85dvh;
+  transform: translateY(100%);
+}
+.ms-drawer[open] {
+  transform: none;
+}
+@starting-style {
+  .ms-drawer--end[open] {
+    transform: translateX(100%);
+  }
+  .ms-drawer--start[open] {
+    transform: translateX(-100%);
+  }
+  .ms-drawer--top[open] {
+    transform: translateY(-100%);
+  }
+  .ms-drawer--bottom[open] {
+    transform: translateY(100%);
+  }
+}
+
+.ms-drawer::backdrop {
+  background: var(--ms-color-overlay, rgb(10 7 16 / 0.72));
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  transition:
+    opacity var(--ms-dur-base) var(--ms-ease-standard),
+    overlay var(--ms-dur-base) allow-discrete,
+    display var(--ms-dur-base) allow-discrete;
+}
+.ms-drawer[open]::backdrop {
+  opacity: 1;
+}
+@starting-style {
+  .ms-drawer[open]::backdrop {
+    opacity: 0;
+  }
+}
+
+/* —— 面板:满抽屉、纵向布局,body 滚动 —— */
+.ms-drawer__panel {
+  display: flex;
+  flex-direction: column;
+  block-size: 100%;
+  inline-size: 100%;
+  background-color: var(--ms-color-surface-raised);
+  font-family: var(--ms-font-sans);
+  box-shadow: 0 0 calc(40px * var(--ms-fx-glow, 1)) -16px var(--ms-color-glow);
+}
+/* 各方向贴边的那条描边,强调与背景分隔 */
+.ms-drawer--end .ms-drawer__panel {
+  border-inline-start: 1px solid var(--ms-color-border);
+}
+.ms-drawer--start .ms-drawer__panel {
+  border-inline-end: 1px solid var(--ms-color-border);
+}
+.ms-drawer--top .ms-drawer__panel {
+  border-block-end: 1px solid var(--ms-color-border);
+}
+.ms-drawer--bottom .ms-drawer__panel {
+  border-block-start: 1px solid var(--ms-color-border);
+}
+
+/* —— 头部:标题 + 关闭 —— */
+.ms-drawer__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ms-space-3);
+  padding-block: var(--ms-space-4);
+  padding-inline: max(var(--ms-space-5), var(--ms-safe-left, 0px))
+    max(var(--ms-space-5), var(--ms-safe-right, 0px));
+  border-block-end: 1px solid var(--ms-color-border);
+}
+.ms-drawer__title {
+  margin: 0;
+  font-size: 1.0625rem;
+  font-weight: 650;
+  line-height: 1.3;
+}
+
+/* —— 关闭按钮 —— */
+.ms-drawer__close {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: var(--ms-target-min);
+  min-block-size: var(--ms-target-min);
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: var(--ms-radius-md);
+  background: transparent;
+  color: var(--ms-color-fg-muted);
+  cursor: pointer;
+  transition:
+    color var(--ms-dur-fast) var(--ms-ease-standard),
+    border-color var(--ms-dur-base) var(--ms-ease-standard),
+    background-color var(--ms-dur-base) var(--ms-ease-standard);
+}
+/* 无标题时:关闭按钮浮于右上角 */
+.ms-drawer__close--floating {
+  position: absolute;
+  inset-block-start: var(--ms-space-3);
+  inset-inline-end: max(var(--ms-space-3), var(--ms-safe-right, 0px));
+  z-index: 1;
+}
+@media (hover: hover) {
+  .ms-drawer__close:hover {
+    color: var(--ms-color-fg);
+    border-color: var(--ms-color-border);
+    background-color: var(--ms-color-surface-sunken);
+  }
+}
+.ms-drawer__close:focus-visible {
+  outline: 2px solid var(--ms-color-primary);
+  outline-offset: 2px;
+}
+
+/* —— 正文:滚动 + 安全区避让 —— */
+.ms-drawer__body {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-block: var(--ms-space-5);
+  padding-inline: max(var(--ms-space-5), var(--ms-safe-left, 0px))
+    max(var(--ms-space-5), var(--ms-safe-right, 0px));
+  padding-block-end: max(var(--ms-space-5), var(--ms-safe-bottom, 0px));
+  color: var(--ms-color-fg);
+}
+.ms-drawer__panel {
+  position: relative;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ms-drawer,
+  .ms-drawer::backdrop {
+    transition-duration: 0.01ms;
+  }
+}
