@@ -6,6 +6,7 @@
   justify-content: center;
   gap: var(--ms-space-2);
   min-block-size: calc(2.5rem * var(--ms-density-scale, 1));
+  max-inline-size: 100%;
   padding-inline: calc(var(--ms-space-4) * var(--ms-density-scale, 1));
   border: 1px solid transparent;
   border-radius: var(--ms-radius-md);
@@ -30,12 +31,22 @@
   align-items: center;
   justify-content: center;
   gap: var(--ms-space-2);
+  /* 允许在 flex 中收缩,使超长 label 能截断而非撑破按钮 */
+  min-inline-size: 0;
+  max-inline-size: 100%;
 }
 .ms-button__icon {
   display: inline-flex;
   flex: 0 0 auto;
   font-size: 1.15em;
   line-height: 0;
+}
+/* 内容边界:超长文案单行省略号,绝不溢出按钮/容器 */
+.ms-button__label {
+  min-inline-size: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 /* —— 变体:全部只读 tone 槽位(--ms-c / --ms-c-hover / ...),零硬编码配色 —— */
