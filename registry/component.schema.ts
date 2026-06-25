@@ -32,7 +32,9 @@ export const componentSchema = z.object({
   tags: z.array(z.string()).default([]),
   status: z.enum(['draft', 'stable', 'deprecated']).default('draft'),
   version: z.string(),
-  frameworks: z.array(z.enum(['react', 'vue', 'web-component', 'tokens'])),
+  frameworks: z.array(z.enum(['react', 'vue', 'angular', 'web-component', 'tokens'])),
+  /** 复杂度层级:primitive=基础原子件 / composite=多基础件组合的复合件(Form/DataTable…)。可选,过渡期用 tag 兜底。 */
+  tier: z.enum(['primitive', 'composite']).optional(),
   source: sourceSchema,
   dependencies: z.array(z.string()).default([]),
   preview: z.string().optional(),
