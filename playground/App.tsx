@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import {
+  Accordion,
   Alert,
   Avatar,
   Badge,
+  Breadcrumb,
   Button,
   Card,
   Checkbox,
@@ -12,12 +14,15 @@ import {
   Kbd,
   Label,
   Menu,
+  Pagination,
   Popover,
   Progress,
   Select,
   Skeleton,
   Spinner,
   Switch,
+  Table,
+  Tabs,
   Tag,
   Textarea,
   Tooltip,
@@ -34,6 +39,7 @@ export function App() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [popOpen, setPopOpen] = useState(false);
   const [sel, setSel] = useState('frost');
+  const [page, setPage] = useState(2);
 
   return (
     <main
@@ -137,6 +143,54 @@ export function App() {
       <Card variant="elevated" interactive style={{ maxWidth: '16rem' }}>
         交互卡片:hover 上浮发光,Tab 看聚焦环。
       </Card>
+
+      <h2>结构 / 导航</h2>
+      <Breadcrumb
+        items={[
+          { label: '首页', href: '#' },
+          { label: '组件', href: '#' },
+          { label: 'Tabs', current: true },
+        ]}
+      />
+      <Tabs
+        defaultValue="overview"
+        items={[
+          { value: 'overview', label: '概览', content: <p>这是概览面板的内容。</p> },
+          { value: 'specs', label: '规格', content: <p>这是规格面板的内容。</p> },
+          { value: 'usage', label: '用法', content: <p>这是用法面板的内容。</p> },
+        ]}
+      />
+      <Accordion
+        type="single"
+        defaultValue="a"
+        items={[
+          {
+            value: 'a',
+            title: '什么是 magic-scope?',
+            content: <p>一个带溯源的多框架 UI 组件库。</p>,
+          },
+          {
+            value: 'b',
+            title: '如何收录组件?',
+            content: <p>pnpm new → 实现 → 填溯源 → registry。</p>,
+          },
+        ]}
+      />
+      <Table
+        stripe
+        hoverable
+        columns={[
+          { key: 'name', header: '组件' },
+          { key: 'cat', header: '分类' },
+          { key: 'status', header: '状态' },
+        ]}
+        data={[
+          { name: 'Button', cat: 'actions', status: 'stable' },
+          { name: 'Dialog', cat: 'overlay', status: 'stable' },
+          { name: 'Tabs', cat: 'navigation', status: 'stable' },
+        ]}
+      />
+      <Pagination page={page} total={8} onPageChange={setPage} />
     </main>
   );
 }
