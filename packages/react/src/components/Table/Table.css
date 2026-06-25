@@ -1,5 +1,6 @@
-/* —— 外框:圆角 + 描边 + 横向滚动容器,裁掉表头圆角溢出 —— */
+/* —— 外框:圆角 + 描边 + 横向滚动容器,裁掉表头圆角溢出;position 为加载遮罩定位锚 —— */
 .ms-table-wrap {
+  position: relative;
   display: block;
   inline-size: 100%;
   overflow-x: auto;
@@ -68,16 +69,132 @@
   text-align: end;
 }
 
-/* —— 斑马纹:偶数体行加极淡 sunken 底 —— */
-.ms-table-wrap--stripe .ms-table__body .ms-table__row:nth-child(even) .ms-table__td {
+/* —— 斑马纹:偶数「数据行」加极淡 sunken 底(只认 --data,空态/骨架行不染,且为 P2 展开行让路)—— */
+.ms-table-wrap--stripe .ms-table__body .ms-table__row--data:nth-child(even) .ms-table__td {
   background-color: color-mix(in srgb, var(--ms-color-surface-sunken) 55%, transparent);
 }
 
-/* —— 行 hover 高亮:整行换 surface-raised 底 + 主色起始强调条 —— */
-.ms-table-wrap--hoverable .ms-table__body .ms-table__row:hover .ms-table__td {
-  background-color: var(--ms-color-surface-raised);
-  color: var(--ms-color-fg);
-  box-shadow: inset 2px 0 0 -1px color-mix(in srgb, var(--ms-color-primary) 70%, transparent);
+/* —— 行 hover 高亮:整行换 surface-raised 底 + 主色起始强调条(仅 hover 能力的指针) —— */
+@media (hover: hover) {
+  .ms-table-wrap--hoverable .ms-table__body .ms-table__row:hover .ms-table__td {
+    background-color: var(--ms-color-surface-raised);
+    color: var(--ms-color-fg);
+    box-shadow: inset 2px 0 0 -1px color-mix(in srgb, var(--ms-color-primary) 70%, transparent);
+  }
+}
+
+/* —— 选中行高亮:主色起始强调条 + 极淡主色底 —— */
+.ms-table__row--selected .ms-table__td {
+  background-color: color-mix(in oklch, var(--ms-color-primary) 10%, transparent);
+  box-shadow: inset 2px 0 0 -1px var(--ms-color-primary);
+}
+
+/* —— 选择列:收窄、居中,去文字换行 —— */
+.ms-table__th--selection,
+.ms-table__td--selection {
+  inline-size: 1%;
+  white-space: nowrap;
+  text-align: center;
+  vertical-align: middle;
+}
+
+/* —— 排序表头按钮:占满 th、透明、继承对齐,箭头三态 —— */
+.ms-table__sort-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ms-space-2);
+  inline-size: 100%;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: var(--ms-radius-sm);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-align: inherit;
+  cursor: pointer;
+}
+.ms-table__th--center .ms-table__sort-btn {
+  justify-content: center;
+}
+.ms-table__th--end .ms-table__sort-btn {
+  justify-content: flex-end;
+}
+.ms-table__sort-btn:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--ms-color-bg),
+    0 0 0 4px var(--ms-color-focus-ring);
+}
+@media (hover: hover) {
+  .ms-table__sort-btn:hover {
+    color: var(--ms-color-primary-hover);
+  }
+}
+/* 箭头:默认双向弱提示,激活态显当前方向并染主色 */
+.ms-table__sort-arrow {
+  flex: 0 0 auto;
+  inline-size: 0.75rem;
+  block-size: 0.75rem;
+  color: var(--ms-color-fg-subtle);
+  transition:
+    color var(--ms-dur-fast) var(--ms-ease-standard),
+    transform var(--ms-dur-base) var(--ms-ease-emphasized);
+  background: currentcolor;
+  /* 用 mask 画一个上箭头,asc 正向 / desc 翻转 */
+  mask: var(--ms-table-arrow-mask) center / contain no-repeat;
+  -webkit-mask: var(--ms-table-arrow-mask) center / contain no-repeat;
+  --ms-table-arrow-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 5l6 8H6z' fill='black'/%3E%3C/svg%3E");
+  opacity: 0.5;
+}
+.ms-table__sort-btn[data-ms-sort="asc"] .ms-table__sort-arrow {
+  color: var(--ms-color-primary);
+  opacity: 1;
+}
+.ms-table__sort-btn[data-ms-sort="desc"] .ms-table__sort-arrow {
+  color: var(--ms-color-primary);
+  opacity: 1;
+  transform: rotate(180deg);
+}
+
+/* —— 空态行 —— */
+.ms-table__empty {
+  padding-block: var(--ms-space-10);
+  padding-inline: var(--ms-space-4);
+  color: var(--ms-color-fg-muted);
+  text-align: center;
+}
+
+/* —— 加载遮罩:半透明覆盖 + 居中 Spinner —— */
+.ms-table-wrap--loading .ms-table__loading {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: color-mix(in oklch, var(--ms-color-surface) 60%, transparent);
+}
+
+/* —— 粘性表头:限高可滚 + 表头吸顶。border-collapse 下 sticky 会丢边框,故底线改 inset 阴影 —— */
+.ms-table-wrap--sticky-head {
+  max-block-size: var(--ms-table-max-block-size, var(--ms-viewport-h, 100vh));
+  overflow-y: auto;
+}
+.ms-table-wrap--sticky-head .ms-table__th {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 2;
+  border-block-end: none;
+  box-shadow: inset 0 -1px 0 var(--ms-color-border-strong);
+}
+
+/* —— 触控:排序按钮 / 选择列命中区抬到目标尺寸 —— */
+@media (pointer: coarse) {
+  .ms-table__sort-btn {
+    min-block-size: var(--ms-target-min);
+  }
 }
 
 /* —— P0 触控适配:窄屏走横向滚动兜底,不挤垮列;长串内容防撑宽 ——
