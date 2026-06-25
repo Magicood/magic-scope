@@ -3,6 +3,8 @@
   align-items: center;
   justify-content: center;
   gap: var(--ms-space-2);
+  appearance: none;
+  background-color: transparent;
   border: 1px solid transparent;
   border-radius: var(--ms-radius-md);
   font-family: var(--ms-font-sans);
