@@ -1,0 +1,17 @@
+{
+  "id": "slider",
+  "name": "Slider",
+  "description": "滑块,基于原生 input[type=range]:白嫖可访问的 slider 语义(role=slider + aria-valuenow/min/max、方向键/Home/End),appearance:none + 伪元素自绘轨道/填充/发光滑块。支持受控与非受控、min/max/step、sm/md/lg 三档与可选数值显示(output);触控热区达标、hover/focus-visible 发光、尊重 reduced-motion。",
+  "category": "forms",
+  "tags": ["slider", "range", "form", "input", "number"],
+  "status": "stable",
+  "version": "0.0.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-25",
+    "requirements": "补齐表单控件:数值滑块。原创实现,遵循『原生优先 / 不 wrap 第三方』——以原生 input[type=range] 承载键盘与 ARIA slider 语义,仅用 appearance:none + ::-webkit-slider-* / ::-moz-range-* 自绘皮肤(填充用 WebKit 渐变 + Firefox 原生 progress)。延续设备适配契约(触控放大滑块 + --ms-target-min 行高、hover 守卫、focus-visible 发光环、reduced-motion)。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Slider.tsx", "Slider.css", "index.ts"]
+}

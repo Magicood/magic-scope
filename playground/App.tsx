@@ -21,6 +21,7 @@ import {
   RadioGroup,
   Select,
   Skeleton,
+  Slider,
   Spinner,
   Switch,
   Table,
@@ -43,6 +44,7 @@ export function App() {
   const [sel, setSel] = useState('frost');
   const [page, setPage] = useState(2);
   const [plan, setPlan] = useState('free');
+  const [volume, setVolume] = useState(40);
 
   return (
     <main
@@ -123,6 +125,14 @@ export function App() {
           <Radio value="m">中</Radio>
           <Radio value="l">大</Radio>
         </RadioGroup>
+        <Slider
+          value={volume}
+          onValueChange={setVolume}
+          showValue
+          formatValue={(v) => `${v}%`}
+          aria-label="音量"
+        />
+        <Slider defaultValue={3} min={0} max={5} step={1} size="sm" aria-label="评分" />
       </div>
 
       <h2>展示 Data Display</h2>
