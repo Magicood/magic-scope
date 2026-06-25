@@ -103,7 +103,7 @@ export function ComponentDocV2({
   const { meta, react } = doc;
   const { values, set, reset } = useControls(meta.controls);
   const [vp, setVp] = useState<string>('full');
-  const props = getProps(meta.name, meta.alsoProps, meta.spread);
+  const props = getProps(meta.propsName ?? meta.name, meta.alsoProps, meta.spread);
   const width = VIEWPORTS.find((v) => v.id === vp)?.width ?? '100%';
 
   return (

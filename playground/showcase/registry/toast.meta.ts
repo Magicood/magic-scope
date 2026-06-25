@@ -2,7 +2,10 @@ import type { ComponentMeta } from '../core/types';
 
 export const meta: ComponentMeta = {
   id: 'toast',
-  name: 'Toaster',
+  name: 'Toast',
+  // 显示名 Toast;参数表主体来自 toast(message, options) 的 ToastOptions,并并入 <Toaster> 的 props。
+  propsName: 'ToastOptions',
+  alsoProps: ['Toaster'],
   category: 'feedback',
   summary: '命令式轻提示,无需 Provider,任意处调用 toast() 即可弹出。',
   description:

@@ -21,8 +21,13 @@ export interface PropRow {
 export interface ComponentMeta {
   /** kebab id（路由）。 */
   id: string;
-  /** displayName，必须与 props.json 的键一致（如 'Button'）。 */
+  /** 展示名（页头 h1、与侧栏一致），如 'Button' / 'Toast'。 */
   name: string;
+  /**
+   * props 表的主查找键（props.json 的键）。缺省取 name。
+   * 命令式 API 用于把「显示名」与「参数接口名」解耦,如 Toast → 'ToastOptions'。
+   */
+  propsName?: string;
   category: string;
   /** 一句话简介（i18n：将来可换成 LocalizedString）。 */
   summary: string;

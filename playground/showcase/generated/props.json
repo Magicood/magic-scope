@@ -1053,5 +1053,125 @@
       "description": "透传到气泡容器的额外 className。",
       "required": false
     }
+  ],
+  "ConfirmOptions": [
+    {
+      "name": "title",
+      "type": "ReactNode",
+      "default": "—",
+      "description": "标题(可选)。",
+      "required": false
+    },
+    {
+      "name": "confirmText",
+      "type": "ReactNode",
+      "default": "—",
+      "description": "确认按钮文案。默认「确定」。",
+      "required": false
+    },
+    {
+      "name": "cancelText",
+      "type": "ReactNode",
+      "default": "—",
+      "description": "取消按钮文案。默认「取消」。",
+      "required": false
+    },
+    {
+      "name": "variant",
+      "type": "'default' | 'danger'",
+      "default": "—",
+      "description": "danger 时确认按钮染危险色、默认焦点落在取消(防误触销毁性操作)。",
+      "required": false
+    }
+  ],
+  "AlertOptions": [
+    {
+      "name": "title",
+      "type": "ReactNode",
+      "default": "—",
+      "description": "标题(可选)。",
+      "required": false
+    },
+    {
+      "name": "confirmText",
+      "type": "ReactNode",
+      "default": "—",
+      "description": "确认按钮文案。默认「确定」。",
+      "required": false
+    }
+  ],
+  "PromptOptions": [
+    {
+      "name": "title",
+      "type": "ReactNode",
+      "default": "—",
+      "description": "标题(可选)。",
+      "required": false
+    },
+    {
+      "name": "confirmText",
+      "type": "ReactNode",
+      "default": "—",
+      "description": "确认按钮文案。默认「确定」。",
+      "required": false
+    },
+    {
+      "name": "cancelText",
+      "type": "ReactNode",
+      "default": "—",
+      "description": "取消按钮文案。默认「取消」。",
+      "required": false
+    },
+    {
+      "name": "placeholder",
+      "type": "string",
+      "default": "—",
+      "description": "输入框占位符。",
+      "required": false
+    },
+    {
+      "name": "defaultValue",
+      "type": "string",
+      "default": "—",
+      "description": "输入框初始值。",
+      "required": false
+    }
+  ],
+  "ToastOptions": [
+    {
+      "name": "id",
+      "type": "string",
+      "default": "—",
+      "description": "指定 id(重复 id 会替换并重置寿命,用于更新进行中的提示如「上传中→完成」)。默认自动生成。",
+      "required": false
+    },
+    {
+      "name": "variant",
+      "type": "ToastVariant",
+      "default": "—",
+      "description": "语义变体。默认 default。",
+      "required": false
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "default": "—",
+      "description": "自动消失时长(ms)。0 或 Infinity 表示常驻(需手动关闭)。默认 4000。",
+      "required": false
+    },
+    {
+      "name": "description",
+      "type": "ReactNode",
+      "default": "—",
+      "description": "次级描述文字。",
+      "required": false
+    },
+    {
+      "name": "action",
+      "type": "{ label: ReactNode; onClick: () => void }",
+      "default": "—",
+      "description": "行动按钮:点击后执行并关闭。",
+      "required": false
+    }
   ]
 }

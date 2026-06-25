@@ -9,9 +9,17 @@ const DB = generated as Record<string, PropRow[]>;
  * spread：追加一行「…props」表示透传原生元素属性。
  */
 export function getProps(name: string, also: string[] = [], spread?: string): PropRow[] {
-  const rows: PropRow[] = [...(DB[name] ?? [])];
+  const merged: PropRow[] = [...(DB[name] ?? [])];
   for (const a of also) {
-    rows.push(...(DB[a] ?? []));
+    merged.push(...(DB[a] ?? []));
+  }
+  // 多接口合并会有重名(如 ConfirmOptions/PromptOptions 都有 title),按名去重保留首个。
+  const seen = new Set<string>();
+  const rows: PropRow[] = [];
+  for (const r of merged) {
+    if (seen.has(r.name)) continue;
+    seen.add(r.name);
+    rows.push(r);
   }
   if (spread) {
     rows.push({

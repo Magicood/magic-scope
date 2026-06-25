@@ -3,6 +3,9 @@ import type { ComponentMeta } from '../core/types';
 export const meta: ComponentMeta = {
   id: 'alert-dialog',
   name: 'AlertDialog',
+  // 参数表 = confirm/alert/prompt 三个 options 接口合并(按名去重),全自动抽取自真实 TS。
+  propsName: 'ConfirmOptions',
+  alsoProps: ['PromptOptions', 'AlertOptions'],
   category: 'overlay',
   summary: '命令式 confirm / alert / prompt,await 一行拿到用户决策,无需自管 open 状态。',
   description:
