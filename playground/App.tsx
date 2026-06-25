@@ -10,6 +10,7 @@ import {
   Button,
   Card,
   Checkbox,
+  ContextMenu,
   confirm,
   Dialog,
   Divider,
@@ -118,6 +119,24 @@ export function App() {
           confirmText="删除"
           onConfirm={() => toast.success('已删除')}
         />
+        <ContextMenu
+          items={[
+            { label: '编辑', onSelect: () => toast('编辑') },
+            { label: '复制', onSelect: () => toast('复制') },
+            { label: '删除', danger: true, onSelect: () => toast.error('已删除') },
+          ]}
+        >
+          <span
+            style={{
+              padding: '0.5rem 0.875rem',
+              border: '1px dashed var(--ms-color-border)',
+              borderRadius: '8px',
+              color: 'var(--ms-color-fg-muted)',
+            }}
+          >
+            在此处右键(ContextMenu)
+          </span>
+        </ContextMenu>
       </div>
 
       <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>

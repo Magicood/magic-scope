@@ -51,3 +51,4 @@
 @import "./components/Timeline/Timeline.css" layer(ms.components);
 @import "./components/Drawer/Drawer.css" layer(ms.components);
 @import "./components/Popconfirm/Popconfirm.css" layer(ms.components);
+@import "./components/ContextMenu/ContextMenu.css" layer(ms.components);

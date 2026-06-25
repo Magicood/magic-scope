@@ -9,6 +9,7 @@ export * from './Breadcrumb';
 export * from './Button';
 export * from './Card';
 export * from './Checkbox';
+export * from './ContextMenu';
 export * from './Dialog';
 export * from './Divider';
 export * from './Drawer';
