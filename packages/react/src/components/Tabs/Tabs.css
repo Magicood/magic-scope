@@ -78,13 +78,7 @@
   border-radius: var(--ms-radius-full);
 }
 
-/* hover:字色提亮,未选中项预热背景 */
-.ms-tabs__tab:hover:not(:disabled):not(.ms-tabs__tab--selected) {
-  color: var(--ms-color-fg);
-}
-.ms-tabs--pill .ms-tabs__tab:hover:not(:disabled):not(.ms-tabs__tab--selected) {
-  background-color: var(--ms-color-surface);
-}
+/* hover 规则统一收进 @media (hover: hover) 守卫(见文件末尾),消触屏 sticky-hover */
 
 /* —— underline 选中条:用伪元素绘制,主色 + 发光 —— */
 .ms-tabs--underline .ms-tabs__tab::after {
@@ -116,12 +110,7 @@
     0 0 calc(16px * var(--ms-fx-glow, 1)) -4px var(--ms-color-glow),
     inset 0 0 calc(6px * var(--ms-fx-glow, 1)) -2px var(--ms-color-glow);
 }
-.ms-tabs--pill .ms-tabs__tab--selected:hover:not(:disabled) {
-  background-color: var(--ms-color-primary-hover);
-  box-shadow:
-    0 0 calc(22px * var(--ms-fx-glow, 1)) -3px var(--ms-color-glow),
-    inset 0 0 calc(8px * var(--ms-fx-glow, 1)) -2px var(--ms-color-glow);
-}
+/* pill 选中态的 hover 增强收进文件末尾的 @media (hover: hover) 守卫 */
 
 /* —— focus-visible:发光环(可达性,模糊半径不参与开关) —— */
 .ms-tabs__tab:focus-visible {
@@ -175,5 +164,26 @@
 @media (prefers-reduced-motion: reduce) {
   .ms-tabs__panel {
     animation: none;
+  }
+}
+
+/* —— 装饰性 hover 守卫:仅在有 hover 能力的设备生效,
+ * 触屏 (hover: none) 不再触发,消除「点完保持 hover 态」的 sticky-hover。
+ * 桌面有 hover 能力,规则照常生效 → 逐像素不变。 */
+@media (hover: hover) {
+  /* hover:字色提亮,未选中项预热背景 */
+  .ms-tabs__tab:hover:not(:disabled):not(.ms-tabs__tab--selected) {
+    color: var(--ms-color-fg);
+  }
+  .ms-tabs--pill .ms-tabs__tab:hover:not(:disabled):not(.ms-tabs__tab--selected) {
+    background-color: var(--ms-color-surface);
+  }
+
+  /* pill 选中态 hover:加深底色 + 强化发光 */
+  .ms-tabs--pill .ms-tabs__tab--selected:hover:not(:disabled) {
+    background-color: var(--ms-color-primary-hover);
+    box-shadow:
+      0 0 calc(22px * var(--ms-fx-glow, 1)) -3px var(--ms-color-glow),
+      inset 0 0 calc(8px * var(--ms-fx-glow, 1)) -2px var(--ms-color-glow);
   }
 }

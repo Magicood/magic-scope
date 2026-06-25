@@ -95,7 +95,18 @@
 }
 
 /* hover / focus 高亮:浮起表面 + 主色字 + 内侧微光导轨 */
-.ms-menu__item:hover:not(:disabled),
+/* hover 变体进 hover 守卫,消触屏 sticky-hover;桌面有 hover 能力照常生效 */
+@media (hover: hover) {
+  .ms-menu__item:hover:not(:disabled) {
+    outline: none;
+    background-color: var(--ms-color-surface);
+    color: var(--ms-color-primary-hover);
+    box-shadow:
+      inset 2px 0 0 var(--ms-color-primary),
+      0 0 calc(16px * var(--ms-fx-glow, 1)) -8px var(--ms-color-glow);
+  }
+}
+/* focus-visible 变体留在守卫外,键盘聚焦全设备生效 */
 .ms-menu__item:focus-visible {
   outline: none;
   background-color: var(--ms-color-surface);
@@ -116,7 +127,17 @@
 .ms-menu__item--danger {
   color: var(--ms-color-danger);
 }
-.ms-menu__item--danger:hover:not(:disabled),
+/* danger hover 变体进 hover 守卫,消触屏 sticky-hover */
+@media (hover: hover) {
+  .ms-menu__item--danger:hover:not(:disabled) {
+    background-color: color-mix(in oklab, var(--ms-color-danger) 14%, transparent);
+    color: var(--ms-color-danger);
+    box-shadow:
+      inset 2px 0 0 var(--ms-color-danger),
+      0 0 calc(16px * var(--ms-fx-glow, 1)) -8px var(--ms-color-danger);
+  }
+}
+/* danger focus-visible 变体留在守卫外,键盘聚焦全设备生效 */
 .ms-menu__item--danger:focus-visible {
   background-color: color-mix(in oklab, var(--ms-color-danger) 14%, transparent);
   color: var(--ms-color-danger);

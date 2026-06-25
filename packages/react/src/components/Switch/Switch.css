@@ -47,12 +47,6 @@
     box-shadow var(--ms-dur-base) var(--ms-ease-standard);
 }
 
-/* —— hover:轨道描边变亮 + 轨道内微光预热 —— */
-.ms-switch__input:not(:disabled):hover + .ms-switch__track {
-  border-color: var(--ms-color-border-strong);
-  box-shadow: inset 0 0 calc(8px * var(--ms-fx-glow, 1)) -4px var(--ms-color-glow);
-}
-
 /* —— focus-visible:发光环(可达性,模糊半径不参与开关) —— */
 .ms-switch__input:focus-visible + .ms-switch__track {
   box-shadow:
@@ -73,15 +67,6 @@
   transform: translateX(calc(1.25rem * var(--ms-motion-scale, 1)));
   background-color: var(--ms-color-on-primary);
   box-shadow: 0 0 calc(6px * var(--ms-fx-glow, 1)) -1px var(--ms-color-glow);
-}
-
-/* checked + hover:加深主色,发光强化 */
-.ms-switch__input:checked:not(:disabled):hover + .ms-switch__track {
-  background-color: var(--ms-color-primary-hover);
-  border-color: var(--ms-color-primary-hover);
-  box-shadow:
-    0 0 calc(24px * var(--ms-fx-glow, 1)) -2px var(--ms-color-glow),
-    inset 0 0 calc(8px * var(--ms-fx-glow, 1)) -2px var(--ms-color-glow);
 }
 
 /* checked + focus-visible:发光环(可达性,不参与开关)叠加主色光 */
@@ -114,4 +99,22 @@
 }
 .ms-switch:has(.ms-switch__input:disabled) {
   cursor: not-allowed;
+}
+
+/* —— hover 守卫:仅在具备 hover 能力的设备生效,避免触屏点完保持 hover 态(sticky-hover) —— */
+@media (hover: hover) {
+  /* —— hover:轨道描边变亮 + 轨道内微光预热 —— */
+  .ms-switch__input:not(:disabled):hover + .ms-switch__track {
+    border-color: var(--ms-color-border-strong);
+    box-shadow: inset 0 0 calc(8px * var(--ms-fx-glow, 1)) -4px var(--ms-color-glow);
+  }
+
+  /* checked + hover:加深主色,发光强化 */
+  .ms-switch__input:checked:not(:disabled):hover + .ms-switch__track {
+    background-color: var(--ms-color-primary-hover);
+    border-color: var(--ms-color-primary-hover);
+    box-shadow:
+      0 0 calc(24px * var(--ms-fx-glow, 1)) -2px var(--ms-color-glow),
+      inset 0 0 calc(8px * var(--ms-fx-glow, 1)) -2px var(--ms-color-glow);
+  }
 }

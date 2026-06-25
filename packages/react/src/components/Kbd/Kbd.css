@@ -32,10 +32,12 @@
     color var(--ms-dur-fast) var(--ms-ease-standard);
 }
 
-/* —— hover:微光强化,键帽边框点亮 —— */
-.ms-kbd:hover {
-  border-color: var(--ms-color-border-strong);
-  box-shadow: 0 0 calc(14px * var(--ms-fx-glow, 1)) -3px var(--ms-color-glow);
+/* —— hover:微光强化,键帽边框点亮(仅 hover 设备,消触屏 sticky-hover) —— */
+@media (hover: hover) {
+  .ms-kbd:hover {
+    border-color: var(--ms-color-border-strong);
+    box-shadow: 0 0 calc(14px * var(--ms-fx-glow, 1)) -3px var(--ms-color-glow);
+  }
 }
 
 /* —— active:模拟按键下压的触感反馈 —— */

@@ -46,11 +46,6 @@
     transform var(--ms-dur-fast) var(--ms-ease-emphasized);
 }
 
-.ms-pagination__btn:hover:not(:disabled):not(.ms-pagination__btn--current) {
-  background-color: var(--ms-color-surface-raised);
-  color: var(--ms-color-fg);
-}
-
 .ms-pagination__btn:focus-visible {
   outline: none;
   box-shadow:
@@ -75,10 +70,6 @@
   color: var(--ms-color-on-primary);
   box-shadow: 0 0 calc(16px * var(--ms-fx-glow, 1)) -3px var(--ms-color-glow);
   cursor: default;
-}
-
-.ms-pagination__btn--current:hover {
-  background-color: var(--ms-color-primary-hover);
 }
 
 /* —— 省略号 —— */
@@ -132,5 +123,17 @@
     inline-size: max(100%, var(--ms-target-min));
     block-size: max(100%, var(--ms-target-min));
     translate: -50% -50%;
+  }
+}
+
+/* —— 装饰性 hover 仅在有 hover 能力的设备生效,消除触屏 sticky-hover —— */
+@media (hover: hover) {
+  .ms-pagination__btn:hover:not(:disabled):not(.ms-pagination__btn--current) {
+    background-color: var(--ms-color-surface-raised);
+    color: var(--ms-color-fg);
+  }
+
+  .ms-pagination__btn--current:hover {
+    background-color: var(--ms-color-primary-hover);
   }
 }

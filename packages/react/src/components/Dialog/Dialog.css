@@ -92,10 +92,12 @@
     background-color var(--ms-dur-base) var(--ms-ease-standard);
 }
 
-.ms-dialog__close:hover {
-  color: var(--ms-color-fg);
-  border-color: var(--ms-color-border);
-  background-color: var(--ms-color-surface-sunken);
+@media (hover: hover) {
+  .ms-dialog__close:hover {
+    color: var(--ms-color-fg);
+    border-color: var(--ms-color-border);
+    background-color: var(--ms-color-surface-sunken);
+  }
 }
 
 .ms-dialog__close:focus-visible {

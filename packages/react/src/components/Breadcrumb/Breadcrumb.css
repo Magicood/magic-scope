@@ -40,12 +40,16 @@
     box-shadow var(--ms-dur-base) var(--ms-ease-standard);
 }
 
-.ms-breadcrumb__link:hover {
-  color: var(--ms-color-link-hover);
-  background-color: color-mix(in oklch, var(--ms-color-link) 12%, transparent);
-  /* hover 微光,可被 --ms-fx-glow 关闭 */
-  box-shadow: 0 0 calc(10px * var(--ms-fx-glow, 1)) -4px
-    color-mix(in oklch, var(--ms-color-link) 70%, transparent);
+/* 装饰性 hover 仅在具备 hover 能力的设备(精确指针)生效,
+ * 触屏(hover: none)不再触发,消除点完保持 hover 态的 sticky-hover。 */
+@media (hover: hover) {
+  .ms-breadcrumb__link:hover {
+    color: var(--ms-color-link-hover);
+    background-color: color-mix(in oklch, var(--ms-color-link) 12%, transparent);
+    /* hover 微光,可被 --ms-fx-glow 关闭 */
+    box-shadow: 0 0 calc(10px * var(--ms-fx-glow, 1)) -4px
+      color-mix(in oklch, var(--ms-color-link) 70%, transparent);
+  }
 }
 
 .ms-breadcrumb__link:focus-visible {

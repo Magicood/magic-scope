@@ -37,12 +37,14 @@
     0 0 calc(8px * var(--ms-fx-glow, 1)) -1px var(--ms-color-glow),
     inset 0 0 calc(6px * var(--ms-fx-glow, 1)) -2px var(--ms-color-glow);
 }
-.ms-avatar--fallback:hover {
-  border-color: color-mix(in oklch, var(--ms-color-primary) 55%, var(--ms-color-border));
-  box-shadow:
-    0 0 calc(16px * var(--ms-fx-glow, 1)) -2px var(--ms-color-glow),
-    inset 0 0 calc(8px * var(--ms-fx-glow, 1)) -2px var(--ms-color-glow);
-  transform: scale(calc(1 + 0.02 * var(--ms-motion-scale, 1)));
+@media (hover: hover) {
+  .ms-avatar--fallback:hover {
+    border-color: color-mix(in oklch, var(--ms-color-primary) 55%, var(--ms-color-border));
+    box-shadow:
+      0 0 calc(16px * var(--ms-fx-glow, 1)) -2px var(--ms-color-glow),
+      inset 0 0 calc(8px * var(--ms-fx-glow, 1)) -2px var(--ms-color-glow);
+    transform: scale(calc(1 + 0.02 * var(--ms-motion-scale, 1)));
+  }
 }
 .ms-avatar__initials {
   color: var(--ms-color-primary);

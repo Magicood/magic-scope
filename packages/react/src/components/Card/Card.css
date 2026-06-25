@@ -36,16 +36,19 @@
   cursor: pointer;
 }
 
-.ms-card--interactive:hover {
-  transform: translateY(calc(-2px * var(--ms-motion-scale, 1)));
-  border-color: var(--ms-color-primary);
-  box-shadow:
-    0 6px 20px -10px rgb(0 0 0 / 0.55),
-    0 0 calc(24px * var(--ms-fx-glow, 1)) -2px var(--ms-color-glow);
-}
+/* hover 装饰态仅在有 hover 能力的设备生效,消触屏 sticky-hover */
+@media (hover: hover) {
+  .ms-card--interactive:hover {
+    transform: translateY(calc(-2px * var(--ms-motion-scale, 1)));
+    border-color: var(--ms-color-primary);
+    box-shadow:
+      0 6px 20px -10px rgb(0 0 0 / 0.55),
+      0 0 calc(24px * var(--ms-fx-glow, 1)) -2px var(--ms-color-glow);
+  }
 
-.ms-card--interactive.ms-card--elevated:hover {
-  background-color: var(--ms-color-surface-raised);
+  .ms-card--interactive.ms-card--elevated:hover {
+    background-color: var(--ms-color-surface-raised);
+  }
 }
 
 .ms-card--interactive:focus-visible {

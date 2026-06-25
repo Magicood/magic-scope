@@ -24,6 +24,9 @@
 }
 
 /* hover 关联表单时,标签整体略微提亮 + 必填标记发光强化(深色奥术氛围) */
-.ms-label:hover .ms-label__required {
-  text-shadow: 0 0 calc(10px * var(--ms-fx-glow, 1)) var(--ms-color-glow);
+/* 装饰性 hover 包 @media (hover: hover):桌面照常生效;触屏 (hover: none) 不触发,消 sticky-hover */
+@media (hover: hover) {
+  .ms-label:hover .ms-label__required {
+    text-shadow: 0 0 calc(10px * var(--ms-fx-glow, 1)) var(--ms-color-glow);
+  }
 }

@@ -27,11 +27,13 @@
   color: var(--ms-color-fg-subtle);
 }
 
-.ms-textarea:hover:not(:disabled) {
-  border-color: var(--ms-color-border-strong);
-  box-shadow:
-    inset 0 0 calc(12px * var(--ms-fx-glow, 1)) -8px var(--ms-color-glow),
-    0 0 calc(16px * var(--ms-fx-glow, 1)) -6px var(--ms-color-glow);
+@media (hover: hover) {
+  .ms-textarea:hover:not(:disabled) {
+    border-color: var(--ms-color-border-strong);
+    box-shadow:
+      inset 0 0 calc(12px * var(--ms-fx-glow, 1)) -8px var(--ms-color-glow),
+      0 0 calc(16px * var(--ms-fx-glow, 1)) -6px var(--ms-color-glow);
+  }
 }
 
 .ms-textarea:focus-visible {

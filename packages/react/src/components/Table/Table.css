@@ -73,11 +73,14 @@
   background-color: color-mix(in srgb, var(--ms-color-surface-sunken) 55%, transparent);
 }
 
-/* —— 行 hover 高亮:整行换 surface-raised 底 + 主色起始强调条 —— */
-.ms-table-wrap--hoverable .ms-table__body .ms-table__row:hover .ms-table__td {
-  background-color: var(--ms-color-surface-raised);
-  color: var(--ms-color-fg);
-  box-shadow: inset 2px 0 0 -1px color-mix(in srgb, var(--ms-color-primary) 70%, transparent);
+/* —— 行 hover 高亮:整行换 surface-raised 底 + 主色起始强调条 ——
+   仅在有 hover 能力的设备(桌面)生效;触屏 (hover: none) 不触发,消除点完保持 hover 态的 sticky-hover。 */
+@media (hover: hover) {
+  .ms-table-wrap--hoverable .ms-table__body .ms-table__row:hover .ms-table__td {
+    background-color: var(--ms-color-surface-raised);
+    color: var(--ms-color-fg);
+    box-shadow: inset 2px 0 0 -1px color-mix(in srgb, var(--ms-color-primary) 70%, transparent);
+  }
 }
 
 /* —— P0 触控适配:窄屏走横向滚动兜底,不挤垮列;长串内容防撑宽 ——
