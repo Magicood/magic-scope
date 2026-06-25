@@ -156,10 +156,7 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
         const target = e.target as Node | null;
         const trigger = triggerRef.current;
         const bubble = bubbleRef.current;
-        if (
-          target &&
-          ((trigger && trigger.contains(target)) || (bubble && bubble.contains(target)))
-        ) {
+        if (target && (trigger?.contains(target) || bubble?.contains(target))) {
           return;
         }
         hide();

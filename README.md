@@ -96,7 +96,7 @@ pnpm changeset    # 写变更说明(版本级溯源)
 
 ```bash
 pnpm changeset    # 1. 写变更说明
-pnpm version      # 2. 升 semver + 生成 CHANGELOG
+pnpm run version  # 2. 升 semver + 生成 CHANGELOG(用 run,pnpm version 是内置命令)
 pnpm release      # 3. 构建 + changeset publish 到 npm
 ```
 

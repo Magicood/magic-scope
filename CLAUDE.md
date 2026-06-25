@@ -21,7 +21,7 @@ pnpm monorepo · TypeScript (strict) · tsup · Biome · Changesets · VitePress
 - 新组件:`pnpm new`
 - 构建:`pnpm build` ｜ 建索引:`pnpm registry` ｜ 文档:`pnpm docs:dev`
 - 校验:`pnpm lint` ｜ 测试:`pnpm test`
-- 发布:`pnpm changeset` → `pnpm version` → `pnpm release`
+- 发布:`pnpm changeset` → `pnpm run version` → `pnpm release`(注意 `pnpm run version`,`pnpm version` 会撞 pnpm 内置命令)
 
 ## 硬性约定
 1. **每个组件必须有 `component.json`**,且 `source` 段填写溯源(来源 / capturedAt / requirements)。无元数据不得合并。

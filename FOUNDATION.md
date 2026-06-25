@@ -161,7 +161,7 @@ magic-scope/
   - `"publishConfig": { "access": "public" }`(scoped 包公开发布必需)
   - `"repository"` 字段(npm → git 的溯源链接)
 - 在 `.changeset/config.json` 里设 `"access": "public"`
-- 发布流程:改动 → `pnpm changeset`(写变更)→ `pnpm version`(升号 + 生成 `CHANGELOG`)→ `pnpm release`(构建 + 发布)
+- 发布流程:改动 → `pnpm changeset`(写变更)→ `pnpm run version`(升号 + 生成 `CHANGELOG`;注意是 `pnpm run version`,`pnpm version` 撞 pnpm 内置)→ `pnpm release`(构建 + 发布)
 - 首次可先 `npm publish --dry-run` 验证打包产物
 
 ---
