@@ -17,6 +17,7 @@ export * from './Menu';
 export * from './Pagination';
 export * from './Popover';
 export * from './Progress';
+export * from './Radio';
 export * from './Select';
 export * from './Skeleton';
 export * from './Spinner';

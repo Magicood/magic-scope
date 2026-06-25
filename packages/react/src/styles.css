@@ -43,3 +43,4 @@
 @import "./components/Table/Table.css" layer(ms.components);
 @import "./components/Breadcrumb/Breadcrumb.css" layer(ms.components);
 @import "./components/Pagination/Pagination.css" layer(ms.components);
+@import "./components/Radio/Radio.css" layer(ms.components);

@@ -1,0 +1,17 @@
+{
+  "id": "radio",
+  "name": "Radio",
+  "description": "单选控件:RadioGroup(role=radiogroup,context 管 name/选中值,支持受控与非受控)+ Radio(基于原生 input[type=radio],同名自动获得方向键导航与 roving tabindex)。圆点控件 checked 染主色显内点,完整 hover/focus-visible(发光环)/disabled 状态,触控热区达标、尊重 reduced-motion。",
+  "category": "forms",
+  "tags": ["radio", "radio-group", "form", "selection", "single-select", "input"],
+  "status": "stable",
+  "version": "0.0.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-25",
+    "requirements": "补齐表单控件缺口:库内已有 Checkbox/Switch 却无单选(Radio)。原创实现,与 Checkbox 视觉语言一致(圆点 vs 方块对勾),延续设备适配契约(--ms-target-min 触控热区、hover 守卫、focus-visible 发光环、reduced-motion)。RadioGroup + Radio 双导出,基于原生 input[type=radio] 以白嫖原生键盘单选语义。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Radio.tsx", "Radio.css", "index.ts"]
+}

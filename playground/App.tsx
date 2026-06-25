@@ -17,6 +17,8 @@ import {
   Pagination,
   Popover,
   Progress,
+  Radio,
+  RadioGroup,
   Select,
   Skeleton,
   Spinner,
@@ -40,6 +42,7 @@ export function App() {
   const [popOpen, setPopOpen] = useState(false);
   const [sel, setSel] = useState('frost');
   const [page, setPage] = useState(2);
+  const [plan, setPlan] = useState('free');
 
   return (
     <main
@@ -108,6 +111,18 @@ export function App() {
           <Switch defaultChecked />
           <Checkbox defaultChecked>记住我</Checkbox>
         </div>
+        <RadioGroup value={plan} onValueChange={setPlan} aria-label="套餐">
+          <Radio value="free">Free</Radio>
+          <Radio value="pro">Pro</Radio>
+          <Radio value="ent" disabled>
+            Enterprise(禁用)
+          </Radio>
+        </RadioGroup>
+        <RadioGroup defaultValue="m" orientation="horizontal" size="lg" aria-label="尺码">
+          <Radio value="s">小</Radio>
+          <Radio value="m">中</Radio>
+          <Radio value="l">大</Radio>
+        </RadioGroup>
       </div>
 
       <h2>展示 Data Display</h2>
