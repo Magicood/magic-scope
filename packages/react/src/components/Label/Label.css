@@ -9,6 +9,10 @@
   line-height: 1.4;
   margin-block-end: var(--ms-space-2);
   cursor: default;
+  /* 内容边界:超长内容截断/换行,不撑破组件 */
+  max-inline-size: 100%;
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
   transition:
     color var(--ms-dur-fast) var(--ms-ease-standard),
     text-shadow var(--ms-dur-base) var(--ms-ease-standard);

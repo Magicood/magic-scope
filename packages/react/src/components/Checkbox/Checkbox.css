@@ -141,6 +141,9 @@
 
 .ms-checkbox__label {
   line-height: 1.4;
+  /* 内容边界:允许收缩 + 超长串任意处换行,不撑破组件 */
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
 }
 
 /* —— 触控指针:视觉方块保持 18px 不变,用隐形 ::before 把命中区扩到目标尺寸 —— */

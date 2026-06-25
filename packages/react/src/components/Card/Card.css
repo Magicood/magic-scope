@@ -4,6 +4,8 @@
   border: 1px solid transparent;
   border-radius: var(--ms-radius-lg);
   color: var(--ms-color-fg);
+  /* 内容边界:承接任意 children,超长无空格长串也换行,不撑破组件 */
+  overflow-wrap: anywhere;
   transition:
     border-color var(--ms-dur-fast) var(--ms-ease-standard),
     background-color var(--ms-dur-fast) var(--ms-ease-standard),

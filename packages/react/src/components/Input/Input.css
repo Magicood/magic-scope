@@ -4,6 +4,8 @@
   align-items: center;
   gap: var(--ms-space-2);
   inline-size: 100%;
+  /* 内容边界:shrink-to-fit 父容器下不漫出 */
+  max-inline-size: 100%;
   border: 1px solid var(--ms-color-border);
   border-radius: var(--ms-radius-md);
   background-color: var(--ms-color-surface);
@@ -157,9 +159,13 @@
   display: inline-flex;
   align-items: stretch;
   inline-size: 100%;
+  /* 内容边界:shrink-to-fit 父容器下不漫出 */
+  max-inline-size: 100%;
 }
 .ms-input-group > .ms-input {
   border-radius: 0;
+  /* 内容边界:字段列可收缩,长 addon 才不撑破 group */
+  min-inline-size: 0;
 }
 .ms-input-group > .ms-input:focus-within {
   position: relative;
@@ -182,6 +188,11 @@
   border: 1px solid var(--ms-color-border);
   color: var(--ms-color-fg-muted);
   white-space: nowrap;
+  /* 内容边界:超长 addon 段封顶+省略,不撑破 group */
+  min-inline-size: 0;
+  max-inline-size: 40%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .ms-input-group > .ms-input__addon:first-child {
   border-start-start-radius: var(--ms-radius-md);

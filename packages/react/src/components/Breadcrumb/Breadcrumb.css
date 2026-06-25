@@ -63,6 +63,9 @@
   padding-block: var(--ms-space-1);
   padding-inline: var(--ms-space-2);
   color: var(--ms-color-fg-muted);
+  /* 内容边界:超长内容截断/换行,不撑破 */
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
 }
 
 /* 当前页:fg 高对比、不可点,微微加重字重以示落点 */
@@ -72,6 +75,9 @@
   color: var(--ms-color-fg);
   font-weight: 600;
   cursor: default;
+  /* 内容边界:超长内容截断/换行,不撑破 */
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
 }
 
 /* 分隔符:装饰性,subtle 色,不参与可读语义 */

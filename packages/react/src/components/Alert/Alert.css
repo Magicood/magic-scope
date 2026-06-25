@@ -13,6 +13,8 @@
   color: var(--ms-color-fg);
   font-family: var(--ms-font-sans);
   line-height: 1.5;
+  /* 内容边界:超长正文/无空格长串换行,不撑破组件(多行正文不截断丢内容) */
+  overflow-wrap: anywhere;
   box-shadow:
     inset 1px 0 0 0 color-mix(in oklch, var(--ms-color-info) 30%, transparent),
     0 0 calc(10px * var(--ms-fx-glow, 1)) -6px var(--ms-color-glow);

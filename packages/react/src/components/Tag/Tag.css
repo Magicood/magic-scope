@@ -10,6 +10,8 @@
   font-weight: 600;
   line-height: 1;
   white-space: nowrap;
+  /* 内容边界:超长内容不撑破组件 */
+  max-inline-size: 100%;
   /* 微妙渐变点缀:tone 底色叠一层极淡高光,营造奥术质感 */
   background-image: linear-gradient(
     160deg,
@@ -47,8 +49,13 @@
 }
 
 .ms-tag__label {
-  display: inline-flex;
+  /* 内容边界:block 才能让 text-overflow:ellipsis 生效,超长 label 截断出省略号 */
+  display: block;
   align-items: center;
+  min-inline-size: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 /* —— tone:每个色调注入 --ms-tag-tone 供底色 / 文字复用 —— */
@@ -77,6 +84,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  /* 内容边界:防超长 label 把固定尺寸的关闭钮压扁 */
+  flex: none;
   inline-size: 1rem;
   block-size: 1rem;
   padding: 0;

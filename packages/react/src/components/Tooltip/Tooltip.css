@@ -18,6 +18,8 @@
   font-family: var(--ms-font-sans);
   font-size: 0.8125rem;
   line-height: 1.4;
+  /* 内容边界:超长内容/无空格长串换行,不撑破气泡 */
+  overflow-wrap: anywhere;
 
   /* 奥术微光:边缘的 glow,受 fx 开关门控 */
   box-shadow:

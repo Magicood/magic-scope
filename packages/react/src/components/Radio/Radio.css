@@ -134,6 +134,9 @@
 
 .ms-radio__label {
   line-height: 1.4;
+  /* 内容边界:超长内容/无空格长串可换行,不撑破组件 */
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
 }
 
 /* —— 尺寸档:圆点与内点等比,label 字号轻量映射 —— */

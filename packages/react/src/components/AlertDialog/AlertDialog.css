@@ -72,6 +72,7 @@
   font-size: 1.125rem;
   font-weight: 650;
   line-height: 1.3;
+  overflow-wrap: anywhere; /* 内容边界:超长标题/无空格长串换行,不撑破面板 */
 }
 .ms-alert-dialog__message {
   color: var(--ms-color-fg-muted);

@@ -11,6 +11,11 @@
   font-weight: 600;
   line-height: 1;
   white-space: nowrap;
+  /* 内容边界:超长内容截断/不撑破容器 */
+  max-inline-size: 100%;
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
   transition:
     background-color var(--ms-dur-fast) var(--ms-ease-standard),
     border-color var(--ms-dur-fast) var(--ms-ease-standard),
@@ -153,4 +158,12 @@
   box-shadow:
     inset 0 0 calc(8px * var(--ms-fx-glow, 1)) -4px var(--ms-color-glow),
     0 0 calc(8px * var(--ms-fx-glow, 1)) -4px var(--ms-color-glow);
+}
+
+/* 内容边界:纯文本子项截断出省略号,图标等不受影响 */
+.ms-badge > * {
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
