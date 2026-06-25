@@ -14,6 +14,8 @@
 
 /* 设备适配地基:横向 token + 密度闭环 + 热区工具(文件内部已自带 @layer 归位) */
 @import "./device.css";
+/* tone resolver:当前语义色 → 6 槽位(文件内部已自带 @layer ms.theme) */
+@import "./tone.css";
 /* 效果开关:动效 / 发光乘子 */
 @import "./effects.css" layer(ms.motion);
 
