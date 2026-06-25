@@ -1,9 +1,20 @@
 {
   "id": "input",
   "name": "Input",
-  "description": "文本输入框:三档尺寸 + invalid 校验态,focus 带发光,完整状态与过渡(逻辑属性,RTL 友好)",
+  "description": "文本输入框(深度组件):框内 prefix/suffix + 框外 addonBefore/addonAfter 拼接、clearable 一键清除、type=password 明文切换、showCount 字数(配 maxLength)。tone 聚焦发光环(invalid→danger),三档尺寸随 data-ms-density 缩放,受控/非受控皆可。完整 hover/focus-within/disabled 状态,逻辑属性 RTL 友好。",
   "category": "forms",
-  "tags": ["input", "form", "text-field"],
+  "tags": [
+    "input",
+    "form",
+    "text-field",
+    "prefix",
+    "suffix",
+    "addon",
+    "clearable",
+    "password",
+    "count",
+    "tone"
+  ],
   "status": "stable",
   "version": "0.1.0",
   "frameworks": ["react"],
