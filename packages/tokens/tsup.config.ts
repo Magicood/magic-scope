@@ -14,7 +14,9 @@ export default defineConfig({
   format: ['esm', 'cjs'],
   dts: true,
   clean: true,
-  sourcemap: true,
+  // 不随包发布 sourcemap:消费者用编译产物、本仓库 dev 走 src,
+  // 既瘦身 tarball 又避免悬空的 sourceMappingURL 注释。
+  sourcemap: false,
   treeshake: true,
   // 构建后:用引擎把 Arcane 预设 compile 成静态 CSS(含 @property),供 SSR / 纯 CSS 消费。
   async onSuccess() {

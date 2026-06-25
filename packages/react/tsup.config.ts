@@ -5,7 +5,8 @@ export default defineConfig({
   format: ['esm', 'cjs'],
   dts: { entry: 'src/index.ts' },
   clean: true,
-  sourcemap: true,
+  // 同 tokens:不随包发布 sourcemap(瘦身 + 干净 dist),dev 走 src。
+  sourcemap: false,
   treeshake: true,
   external: ['react', 'react-dom', 'react/jsx-runtime'],
 });
