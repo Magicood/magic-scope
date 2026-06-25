@@ -405,3 +405,26 @@
   </div>
 </div>
 
+### AlertDialog(confirm / alert)
+
+命令式调用:`await confirm('确定删除?', { variant: 'danger' })` 返回 `Promise<boolean>`,`alert('提示')` 返回 `Promise<void>`,在应用根挂一个 `<AlertDialogHost />`。下面是面板的静态外观示意(真实弹出见 playground)。
+
+<div class="ms-demo" style="gap: var(--ms-space-4); align-items: flex-start;">
+  <div class="ms-alert-dialog__panel" style="max-inline-size: 22rem;">
+    <h2 class="ms-alert-dialog__title">保存更改?</h2>
+    <div class="ms-alert-dialog__message">你有未保存的更改,离开前是否保存?</div>
+    <div class="ms-alert-dialog__actions">
+      <button type="button" class="ms-button ms-button--ghost ms-button--md">取消</button>
+      <button type="button" class="ms-button ms-button--solid ms-button--md ms-alert-dialog__confirm">保存</button>
+    </div>
+  </div>
+  <div class="ms-alert-dialog__panel ms-alert-dialog__panel--danger" style="max-inline-size: 22rem;">
+    <h2 class="ms-alert-dialog__title">删除该项?</h2>
+    <div class="ms-alert-dialog__message">此操作不可撤销,确定删除吗?</div>
+    <div class="ms-alert-dialog__actions">
+      <button type="button" class="ms-button ms-button--ghost ms-button--md">再想想</button>
+      <button type="button" class="ms-button ms-button--solid ms-button--md ms-alert-dialog__confirm">删除</button>
+    </div>
+  </div>
+</div>
+

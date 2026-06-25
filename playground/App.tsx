@@ -2,12 +2,15 @@ import { useState } from 'react';
 import {
   Accordion,
   Alert,
+  AlertDialogHost,
   Avatar,
+  alert,
   Badge,
   Breadcrumb,
   Button,
   Card,
   Checkbox,
+  confirm,
   Dialog,
   Divider,
   Input,
@@ -202,6 +205,24 @@ export function App() {
         >
           带 action
         </Button>
+        <Button
+          variant="outline"
+          onClick={async () => {
+            const ok = await confirm('确定删除该项?此操作不可撤销。', {
+              variant: 'danger',
+              confirmText: '删除',
+            });
+            if (ok) toast.success('已删除');
+          }}
+        >
+          confirm(danger)
+        </Button>
+        <Button
+          variant="outline"
+          onClick={() => alert('这是一条命令式 alert 提示。', { title: '提示' })}
+        >
+          alert
+        </Button>
       </div>
 
       <h2>操作与布局</h2>
@@ -264,6 +285,7 @@ export function App() {
       <Pagination page={page} total={8} onPageChange={setPage} />
 
       <Toaster position="bottom-end" />
+      <AlertDialogHost />
     </main>
   );
 }

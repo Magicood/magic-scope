@@ -1,0 +1,17 @@
+{
+  "id": "alert-dialog",
+  "name": "AlertDialog",
+  "description": "命令式确认/提示弹窗:confirm(message, options) 返回 Promise<boolean>(确认/取消·Esc·遮罩)、alert(message, options) 返回 Promise<void>;+ <AlertDialogHost /> 渲染容器(模块级队列订阅、基于原生 <dialog> showModal 的焦点陷阱/Esc/top-layer、portal、锁背景滚动)。role=alertdialog + aria-labelledby/describedby;danger 变体确认按钮染危险色且默认焦点落在取消防误触;进出场动画、安全区、窄屏动作纵向排布、尊重 reduced-motion。",
+  "category": "feedback",
+  "tags": ["alert-dialog", "confirm", "alert", "dialog", "imperative", "feedback"],
+  "status": "stable",
+  "version": "0.0.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-25",
+    "requirements": "补齐弹窗提示:命令式确认/提示框。原创实现,与 Toast 同构(模块级队列 + useSyncExternalStore + host),但叠加 Promise 解析(await confirm())。基于原生 <dialog> showModal 白嫖焦点陷阱/Esc/top-layer;复用 ms-button 类保证按钮一致。涵盖 role=alertdialog 语义、danger 默认焦点防误触、安全区/窄屏纵向动作/reduced-motion。区别于已有的通用模态 Dialog(声明式容器)。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["AlertDialog.tsx", "AlertDialog.css", "index.ts"]
+}
