@@ -1,7 +1,18 @@
 .ms-breadcrumb {
+  container-type: inline-size;
   font-family: var(--ms-font-sans);
   font-size: 0.875rem;
   line-height: 1.25;
+}
+
+/* 折叠省略号项:默认(宽容器)隐藏,仅窄容器显形 */
+.ms-breadcrumb__item--ellipsis {
+  display: none;
+}
+.ms-breadcrumb__ellipsis {
+  padding-inline: var(--ms-space-1);
+  color: var(--ms-color-fg-muted);
+  user-select: none;
 }
 
 /* 横向排布,允许换行,各项之间留出与分隔符匹配的呼吸感 */
@@ -93,5 +104,17 @@
 
   .ms-breadcrumb__link {
     min-block-size: var(--ms-target-min);
+  }
+}
+
+/* —— P1 窄容器(≤rune 28rem):折叠中间层级为「…」,只留首项 + 省略号 + 当前项 —— */
+@container (max-inline-size: 28rem) {
+  .ms-breadcrumb__item:not(:first-child):not(:last-child):not(.ms-breadcrumb__item--ellipsis) {
+    display: none;
+  }
+  .ms-breadcrumb__item--ellipsis {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ms-space-1);
   }
 }

@@ -72,6 +72,9 @@ export const Table = forwardRef<HTMLTableElement, TableProps>(
               {columns.map((col) => (
                 <td
                   key={col.key}
+                  // 窄屏卡片模式下用 data-label(列名)作单元格前缀,见 Table.css @container。
+                  // 仅当表头为字符串时可取;非字符串表头的列在卡片模式不显示前缀。
+                  data-label={typeof col.header === 'string' ? col.header : undefined}
                   className={[
                     'ms-table__td',
                     col.align && col.align !== 'start' && `ms-table__td--${col.align}`,

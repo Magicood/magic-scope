@@ -41,12 +41,12 @@ export const Breadcrumb = forwardRef<HTMLElement, BreadcrumbProps>(
         className={['ms-breadcrumb', className].filter(Boolean).join(' ')}
       >
         <ol className="ms-breadcrumb__list">
-          {items.map((item, index) => {
+          {items.flatMap((item, index) => {
             // 显式 current,或未指定时把末项视为当前页。
             const isCurrent = item.current ?? index === lastIndex;
             const isLink = !isCurrent && typeof item.href === 'string';
 
-            return (
+            const li = (
               // biome-ignore lint/suspicious/noArrayIndexKey: items 为静态有序层级,index 即稳定标识
               <li key={index} className="ms-breadcrumb__item">
                 {isLink ? (
@@ -67,6 +67,23 @@ export const Breadcrumb = forwardRef<HTMLElement, BreadcrumbProps>(
                 )}
               </li>
             );
+
+            // 窄容器折叠:在末项前注入「…」项(默认隐藏,仅窄容器显形,见 CSS @container)。
+            // 仅当存在可折叠的中间项(items.length > 3)时注入。
+            if (index === lastIndex && items.length > 3) {
+              return [
+                <li
+                  key="ellipsis"
+                  aria-hidden="true"
+                  className="ms-breadcrumb__item ms-breadcrumb__item--ellipsis"
+                >
+                  <span className="ms-breadcrumb__ellipsis">…</span>
+                  <span className="ms-breadcrumb__separator">{separator}</span>
+                </li>,
+                li,
+              ];
+            }
+            return li;
           })}
         </ol>
       </nav>
