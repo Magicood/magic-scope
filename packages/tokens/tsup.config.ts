@@ -1,5 +1,6 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
+import { pathToFileURL } from 'node:url';
 import { defineConfig } from 'tsup';
 
 export default defineConfig({
@@ -17,9 +18,11 @@ export default defineConfig({
   treeshake: true,
   // 构建后:用引擎把 Arcane 预设 compile 成静态 CSS(含 @property),供 SSR / 纯 CSS 消费。
   async onSuccess() {
-    const { arcaneDark, arcaneLight, compileThemeToCss, getPropertyDefinitions } = await import(
-      './dist/index.js'
-    );
+    // 用运行时解析的绝对 file URL 动态 import 构建产物,避免 esbuild 在编译本 config 时
+    // 就静态解析 './dist/index.js'(此刻 dist 尚未生成 → 干净环境 / CI 首次 build 必败)。
+    const distUrl = pathToFileURL(resolve('dist/index.js')).href;
+    const { arcaneDark, arcaneLight, compileThemeToCss, getPropertyDefinitions } =
+      await import(distUrl);
     const css = [
       '/* @magic-scope/tokens — Arcane 预设静态 CSS(含 @property)。由 tsup 构建生成,勿手改。 */',
       getPropertyDefinitions(),
