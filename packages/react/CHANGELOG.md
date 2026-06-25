@@ -1,5 +1,23 @@
 # @magic-scope/react
 
+## 0.1.1
+
+### Patch Changes
+
+- 设备适配收尾:触屏字号修复门控到 coarse 指针,桌面零变更
+
+  iOS 聚焦自动放大的字号修复(sm 输入框 ≥16px)统一收进 `@media (pointer: coarse)`,使桌面精确指针下 Input / Textarea 的 sm 字号维持原 `0.833rem` 不变,仅触屏抬到 16px。配合 P0 设备适配落地(触控热区 `--ms-target-min`、浮层 `--ms-viewport-h` 限高滚动、Tabs/Pagination/Table 防溢出、Tooltip 触屏 tap-to-toggle 等)。
+
+- 补齐首发质量缺口:
+
+  - 新增 MIT `LICENSE` 文件(根目录与两个发布包各一份),与已声明的 `license: MIT` 对齐
+  - 修正 `exports` 的 `require` 分支类型导出:为 CJS 增加独立的 `.d.cts` types 指向,解决 CJS 消费者类型被当作 ESM 解析(arethetypeswrong 的 "Masquerading as ESM")的问题;publint 现全绿
+  - 各包补 `engines.node >=20`、`keywords`、`homepage`、`bugs` 元数据
+  - 各发布包新增 `README.md`,让 npm 包详情页有安装与用法说明
+
+- Updated dependencies
+  - @magic-scope/tokens@0.1.1
+
 ## 0.1.0
 
 ### Minor Changes

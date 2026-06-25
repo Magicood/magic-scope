@@ -1,5 +1,16 @@
 # @magic-scope/tokens
 
+## 0.1.1
+
+### Patch Changes
+
+- 补齐首发质量缺口:
+
+  - 新增 MIT `LICENSE` 文件(根目录与两个发布包各一份),与已声明的 `license: MIT` 对齐
+  - 修正 `exports` 的 `require` 分支类型导出:为 CJS 增加独立的 `.d.cts` types 指向,解决 CJS 消费者类型被当作 ESM 解析(arethetypeswrong 的 "Masquerading as ESM")的问题;publint 现全绿
+  - 各包补 `engines.node >=20`、`keywords`、`homepage`、`bugs` 元数据
+  - 各发布包新增 `README.md`,让 npm 包详情页有安装与用法说明
+
 ## 0.1.0
 
 ### Minor Changes

@@ -1,12 +1,26 @@
 {
   "name": "@magic-scope/react",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "magic-scope React 组件包(魔法主题)",
   "type": "module",
   "license": "MIT",
   "sideEffects": [
     "**/*.css"
   ],
+  "keywords": [
+    "react",
+    "ui",
+    "components",
+    "component-library",
+    "design-system",
+    "accessible",
+    "css-variables",
+    "magic-scope"
+  ],
+  "homepage": "https://github.com/Magicood/magic-scope/tree/main/packages/react#readme",
+  "bugs": {
+    "url": "https://github.com/Magicood/magic-scope/issues"
+  },
   "files": [
     "dist"
   ],
@@ -15,11 +29,19 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
     },
     "./styles.css": "./dist/styles.css"
+  },
+  "engines": {
+    "node": ">=20"
   },
   "scripts": {
     "build": "tsup",

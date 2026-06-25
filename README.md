@@ -2,7 +2,8 @@
 
 > 可发布到 npm 的**多框架 UI 组件库 + 自动化收录流水线**。每个组件都带溯源元数据,整个库可搜索、可追溯。
 
-![status](https://img.shields.io/badge/status-Phase%200-blue)
+[![@magic-scope/react](https://img.shields.io/npm/v/@magic-scope/react.svg?label=%40magic-scope%2Freact&color=8b5cf6)](https://www.npmjs.com/package/@magic-scope/react)
+[![@magic-scope/tokens](https://img.shields.io/npm/v/@magic-scope/tokens.svg?label=%40magic-scope%2Ftokens&color=8b5cf6)](https://www.npmjs.com/package/@magic-scope/tokens)
 ![pnpm](https://img.shields.io/badge/pnpm-monorepo-f69220)
 ![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6)
 ![license](https://img.shields.io/badge/license-MIT-green)
@@ -24,6 +25,31 @@
 
 完整的设计背景、技术选型理由与路线图见 [`FOUNDATION.md`](./FOUNDATION.md);
 Claude Code 的操作约定见 [`CLAUDE.md`](./CLAUDE.md)。
+
+## 安装使用
+
+作为依赖装进你的项目:
+
+```bash
+pnpm add @magic-scope/react @magic-scope/tokens
+# peer: react >= 18, react-dom >= 18
+```
+
+```tsx
+import { applyTheme, registerProperties } from '@magic-scope/tokens';
+import { arcaneDark } from '@magic-scope/tokens/themes';
+import { Button } from '@magic-scope/react';
+import '@magic-scope/react/styles.css'; // 一次性引入全部组件样式
+
+registerProperties();
+applyTheme(arcaneDark);                  // 注入 --ms-* 主题变量
+
+export function App() {
+  return <Button variant="solid">Cast</Button>;
+}
+```
+
+> 已发布到 npm:[`@magic-scope/react`](https://www.npmjs.com/package/@magic-scope/react)、[`@magic-scope/tokens`](https://www.npmjs.com/package/@magic-scope/tokens)。组件样式(`styles.css`)与主题变量(`applyTheme`)缺一不可,否则组件没有配色。
 
 ## 技术栈
 
@@ -100,12 +126,12 @@ pnpm run version  # 2. 升 semver + 生成 CHANGELOG(用 run,pnpm version 是内
 pnpm release      # 3. 构建 + changeset publish 到 npm
 ```
 
-发布包以 `@magic-scope/*` 命名,走 `exports` map 导出并标注 `sideEffects` 以保证 tree-shaking。首次发布前需 `npm login` 并准备好 `@magic-scope` scope。
+发布包以 `@magic-scope/*` 命名,走 `exports` map 导出并标注 `sideEffects` 以保证 tree-shaking。`@magic-scope` scope 已注册,`@magic-scope/tokens`、`@magic-scope/react` 已首发 `0.1.0`(public);后续发新版本按上面三步走。
 
 ## 路线图
 
-- **Phase 0(现在):** 仓库 + monorepo + `tokens` + `react` 首组件 + registry + 生成器 + VitePress + 发布链路,跑通 `build / registry / docs`。
-- **Phase 1:** 把「脚手架 → 实现 → 元数据 → test → changeset → commit → push → 建索引」包成一条 Claude Code 命令 / skill。
+- **Phase 0(已完成):** 仓库 + monorepo + `tokens` + `react`(26 组件)+ registry + 生成器 + VitePress + 发布链路;`build / registry / docs` 跑通,`0.1.0` 已首发 npm。
+- **Phase 1(现在):** 把「脚手架 → 实现 → 元数据 → test → changeset → commit → push → 建索引」包成一条 Claude Code 命令 / skill。
 - **Phase 2:** Web Component 内核(`packages/core`)+ Vue 封装(`packages/vue`);docs 自动生成;SQLite 索引 + 前台浏览;GitHub Actions CI。
 
 ## License

@@ -152,7 +152,9 @@ magic-scope/
 ---
 
 ## 6. 发布到 npm(要点)
-- 需要 npm 账号 + scope `@magic-scope`(首次发布前在 npmjs.com 注册该 org / 用个人 scope);本机 `npm login`
+> **状态(2026-06):** `@magic-scope` scope 已注册,`@magic-scope/tokens`、`@magic-scope/react` 已首发 `0.1.0`(public)。以下为后续发布的常规要点。
+
+- 需要 npm 账号 + scope `@magic-scope`(已在 npmjs.com 注册);本机 `npm login`(或用 granular token)
 - 每个发布包的 `package.json`:
   - `"name": "@magic-scope/<pkg>"`(如 `@magic-scope/tokens`、`@magic-scope/react`)、`"type": "module"`
   - `"exports"`:区分 `import` / `require` / `types`
@@ -204,8 +206,8 @@ git add -A && git commit -m "chore: foundation skeleton"
 ---
 
 ## 8. 路线图
-- **Phase 0(现在):** 仓库 + monorepo + `tokens` + `react` 首组件(Button)+ registry + 生成器 + VitePress + 发布链路,跑通 `build / registry / docs`。
-- **Phase 1:** 把「脚手架 → 实现 → 元数据 → test → changeset → commit → push → 建索引」包成一条 Claude Code 命令 / skill(收录流水线)。
+- **Phase 0(已完成):** 仓库 + monorepo + `tokens` + `react`(26 组件)+ registry + 生成器 + VitePress + 发布链路;`build / registry / docs` 跑通,`0.1.0` 已首发 npm。
+- **Phase 1(现在):** 把「脚手架 → 实现 → 元数据 → test → changeset → commit → push → 建索引」包成一条 Claude Code 命令 / skill(收录流水线)。
 - **Phase 2:** Web Component 内核(`packages/core`)+ Vue 封装(`packages/vue`);docs 从 TSDoc / manifest 自动生成;SQLite 索引 + AgentDeck 前台;GitHub Actions CI(PR 校验 + 合并自动发布)。
 
 ---
@@ -229,7 +231,7 @@ git add -A && git commit -m "chore: foundation skeleton"
   - **总原则:魔法名是第一公民(根),标准名是面向外部的官方映射;两者由同一核心契约派生,不各自硬编码(呼应设计哲学第 1 条)。** 详细命名词典与机制见 [`DESIGN.md`](./DESIGN.md)。
 - **token 体系:** 底层「原始调色板」用魔法名(`arcane` / `ember` / `frost` / `void`),上层「语义层」用标准角色名(`primary` / `surface` / `danger`…)映射;CSS 变量前缀 `--ms-`。具体色值 / 数值见 [`DESIGN.md`](./DESIGN.md)(设计语言规范)。
 - **地基技术决策(2026-06-24 定稿):** 17 项已拍板,详见 [`DESIGN.md`](./DESIGN.md) 附录 A.1。要点:核心契约现在补齐常用角色一次定准(`overlay`/`selection`/`link`/`surfaceSunken`);主题引擎先寄居 `@magic-scope/tokens` 的 `./runtime`(Phase 2 迁 `core`);对比度 **WCAG AA + 派生器自愈**;色阶 50–950 全存;**OKLCH** 色彩 + `culori`(build-only),不引 PostCSS;`data-ms-*` 属性 + 8 层 cascade layers。
-- **范围与发布决策(2026-06-24 商定):** 浏览器**仅现代 evergreen**(放手用 OKLCH / 容器查询 / View Transitions / `@property`,降级只保功能);收录输入 = **截图 / 在线 URL / Figma**(Phase 1 据此:读图 + 抓网页 + Figma);溯源**受启发重做、原创优先**(`source.type` 默认 `inspired`/`original`,可公开);组件**按通用库系统化铺**(Input/Select/Checkbox → Card/Dialog/Tooltip…);多框架 **react 先深耕,vue/wc 留 Phase 2**;发布 **攒一批 + 文档再首发 `0.1`**;`@magic-scope` scope **尚未注册**(npm 上为 404,包名可用,发布前注册);远程 **先推 GitHub(私有),CI 后置**;协作走**分支 + PR**,做一步提交一步。
+- **范围与发布决策(2026-06-24 商定):** 浏览器**仅现代 evergreen**(放手用 OKLCH / 容器查询 / View Transitions / `@property`,降级只保功能);收录输入 = **截图 / 在线 URL / Figma**(Phase 1 据此:读图 + 抓网页 + Figma);溯源**受启发重做、原创优先**(`source.type` 默认 `inspired`/`original`,可公开);组件**按通用库系统化铺**(Input/Select/Checkbox → Card/Dialog/Tooltip…);多框架 **react 先深耕,vue/wc 留 Phase 2**;发布 **已于 2026-06 首发 `0.1.0`(public)**;`@magic-scope` scope **已注册**;远程 **已推 GitHub,CI 后置**;协作走**分支 + PR**,做一步提交一步。
 
 ---
 

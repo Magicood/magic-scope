@@ -1,12 +1,26 @@
 {
   "name": "@magic-scope/tokens",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "magic-scope 设计 token 与主题引擎(魔法主题,深色奥术默认预设)",
   "type": "module",
   "license": "MIT",
   "sideEffects": [
     "**/*.css"
   ],
+  "keywords": [
+    "design-tokens",
+    "design-system",
+    "theme",
+    "theming",
+    "css-variables",
+    "oklch",
+    "dark-theme",
+    "magic-scope"
+  ],
+  "homepage": "https://github.com/Magicood/magic-scope/tree/main/packages/tokens#readme",
+  "bugs": {
+    "url": "https://github.com/Magicood/magic-scope/issues"
+  },
   "files": [
     "dist"
   ],
@@ -15,31 +29,59 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
     },
     "./contract": {
-      "types": "./dist/contract.d.ts",
-      "import": "./dist/contract.js",
-      "require": "./dist/contract.cjs"
+      "import": {
+        "types": "./dist/contract.d.ts",
+        "default": "./dist/contract.js"
+      },
+      "require": {
+        "types": "./dist/contract.d.cts",
+        "default": "./dist/contract.cjs"
+      }
     },
     "./engine": {
-      "types": "./dist/engine.d.ts",
-      "import": "./dist/engine.js",
-      "require": "./dist/engine.cjs"
+      "import": {
+        "types": "./dist/engine.d.ts",
+        "default": "./dist/engine.js"
+      },
+      "require": {
+        "types": "./dist/engine.d.cts",
+        "default": "./dist/engine.cjs"
+      }
     },
     "./themes": {
-      "types": "./dist/themes.d.ts",
-      "import": "./dist/themes.js",
-      "require": "./dist/themes.cjs"
+      "import": {
+        "types": "./dist/themes.d.ts",
+        "default": "./dist/themes.js"
+      },
+      "require": {
+        "types": "./dist/themes.d.cts",
+        "default": "./dist/themes.cjs"
+      }
     },
     "./derive": {
-      "types": "./dist/derive.d.ts",
-      "import": "./dist/derive.js",
-      "require": "./dist/derive.cjs"
+      "import": {
+        "types": "./dist/derive.d.ts",
+        "default": "./dist/derive.js"
+      },
+      "require": {
+        "types": "./dist/derive.d.cts",
+        "default": "./dist/derive.cjs"
+      }
     },
     "./css/arcane.css": "./dist/css/arcane.css"
+  },
+  "engines": {
+    "node": ">=20"
   },
   "scripts": {
     "build": "tsup",
