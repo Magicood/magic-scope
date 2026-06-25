@@ -1,0 +1,17 @@
+{
+  "id": "timeline",
+  "name": "Timeline",
+  "description": "时间线 / 信息流:语义化 <ol> 的 Timeline + 若干 TimelineItem。竖向轴 + 节点圆点(可换图标)+ 连线;节点按变体 default/primary/success/warning/danger/info 着色并带克制辉光。每条含标题、次级时间(<time>)、正文。适合历史记录、进度、动态流。逻辑属性、overflow-wrap 防长串溢出。",
+  "category": "data-display",
+  "tags": ["timeline", "feed", "activity", "history", "data-display", "list"],
+  "status": "stable",
+  "version": "0.0.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-25",
+    "requirements": "补齐信息流 / 历史记录展示:时间线。原创实现,声明式 Timeline + TimelineItem 组合(语义 <ol>/<li>);节点圆点变体着色 + ::before 连线(末项不画),内容含标题/时间/正文。复用 --ms-* token 与发光语言,逻辑属性 RTL 友好。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Timeline.tsx", "Timeline.css", "index.ts"]
+}

@@ -48,3 +48,4 @@
 @import "./components/NumberInput/NumberInput.css" layer(ms.components);
 @import "./components/Toast/Toast.css" layer(ms.components);
 @import "./components/AlertDialog/AlertDialog.css" layer(ms.components);
+@import "./components/Timeline/Timeline.css" layer(ms.components);

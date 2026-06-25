@@ -32,6 +32,8 @@ import {
   Tabs,
   Tag,
   Textarea,
+  Timeline,
+  TimelineItem,
   Toaster,
   Tooltip,
   toast,
@@ -172,6 +174,20 @@ export function App() {
         <Avatar name="Orin Sael" shape="square" />
         <Kbd>⌘K</Kbd>
       </div>
+      <Timeline aria-label="动态" style={{ maxWidth: '26rem' }}>
+        <TimelineItem variant="success" title="部署上线" time="10:00">
+          已发布到生产环境,健康检查通过。
+        </TimelineItem>
+        <TimelineItem variant="primary" title="合并 PR #128" time="09:42">
+          设备适配 P1:浮层抽屉 + Table 卡片化。
+        </TimelineItem>
+        <TimelineItem variant="warning" title="CI 重试一次" time="09:30" icon="!">
+          flaky 测试触发重跑,第二次通过。
+        </TimelineItem>
+        <TimelineItem title="提交代码" time="09:12">
+          默认变体(中性节点)。
+        </TimelineItem>
+      </Timeline>
 
       <h2>反馈 Feedback</h2>
       <Alert variant="info">这是一条信息提示,用于背景说明。</Alert>
