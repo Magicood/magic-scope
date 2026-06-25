@@ -21,3 +21,8 @@
 @import "./components/Tooltip/Tooltip.css";
 @import "./components/Select/Select.css";
 @import "./components/Popover/Popover.css";
+@import "./components/Tabs/Tabs.css";
+@import "./components/Accordion/Accordion.css";
+@import "./components/Table/Table.css";
+@import "./components/Breadcrumb/Breadcrumb.css";
+@import "./components/Pagination/Pagination.css";

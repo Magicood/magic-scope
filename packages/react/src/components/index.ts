@@ -1,8 +1,10 @@
 /** 组件统一出口。新增组件由 `pnpm new` 在末尾自动追加 export。 */
 
+export * from './Accordion';
 export * from './Alert';
 export * from './Avatar';
 export * from './Badge';
+export * from './Breadcrumb';
 export * from './Button';
 export * from './Card';
 export * from './Checkbox';
@@ -12,12 +14,15 @@ export * from './Input';
 export * from './Kbd';
 export * from './Label';
 export * from './Menu';
+export * from './Pagination';
 export * from './Popover';
 export * from './Progress';
 export * from './Select';
 export * from './Skeleton';
 export * from './Spinner';
 export * from './Switch';
+export * from './Table';
+export * from './Tabs';
 export * from './Tag';
 export * from './Textarea';
 export * from './Tooltip';

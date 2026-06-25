@@ -1,0 +1,17 @@
+{
+  "id": "table",
+  "name": "Table",
+  "description": "基础数据表格:列定义 + 行数据驱动,支持斑马纹与行 hover 高亮,圆角描边外框与横向 overflow,采用逻辑属性。",
+  "category": "data-display",
+  "tags": ["table", "data-display", "data-table", "grid", "stripe", "hoverable", "react", "arcane"],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-25",
+    "requirements": "基础数据表格:列定义 + 行数据驱动,支持斑马纹与行 hover 高亮,圆角描边外框与横向 overflow,采用逻辑属性。。magic-scope 结构/导航组件:自研、消费 tokens,完整状态、键盘可达、fx/motion 开关、逻辑属性。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Table.tsx", "Table.css", "index.ts"]
+}

@@ -1,0 +1,17 @@
+{
+  "id": "pagination",
+  "name": "Pagination",
+  "description": "分页导航:上一页/下一页 + 页码,当前页主色实底发光,过多页用省略号折叠,键盘可达且 focus-visible 显示发光环。",
+  "category": "navigation",
+  "tags": ["navigation", "pagination", "pager", "page", "nav", "dark", "arcane"],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-25",
+    "requirements": "分页导航:上一页/下一页 + 页码,当前页主色实底发光,过多页用省略号折叠,键盘可达且 focus-visible 显示发光环。。magic-scope 结构/导航组件:自研、消费 tokens,完整状态、键盘可达、fx/motion 开关、逻辑属性。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Pagination.tsx", "Pagination.css", "index.ts"]
+}

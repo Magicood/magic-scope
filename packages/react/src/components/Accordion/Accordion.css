@@ -1,0 +1,124 @@
+.ms-accordion {
+  display: flex;
+  flex-direction: column;
+  inline-size: 100%;
+  font-family: var(--ms-font-sans);
+  color: var(--ms-color-fg);
+  border: 1px solid var(--ms-color-border);
+  border-radius: var(--ms-radius-lg);
+  background-color: var(--ms-color-surface);
+  overflow: hidden;
+}
+
+/* —— 单项:相邻项之间用细分隔线 —— */
+.ms-accordion__item + .ms-accordion__item {
+  border-block-start: 1px solid var(--ms-color-border);
+}
+
+.ms-accordion__heading {
+  margin: 0;
+  font: inherit;
+}
+
+/* —— 头部按钮 —— */
+.ms-accordion__trigger {
+  display: flex;
+  align-items: center;
+  gap: var(--ms-space-3);
+  inline-size: 100%;
+  margin: 0;
+  padding-block: var(--ms-space-3);
+  padding-inline: var(--ms-space-4);
+  border: none;
+  background-color: transparent;
+  color: inherit;
+  font-family: inherit;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  text-align: start;
+  cursor: pointer;
+  transition:
+    background-color var(--ms-dur-fast) var(--ms-ease-standard),
+    color var(--ms-dur-fast) var(--ms-ease-standard),
+    box-shadow var(--ms-dur-base) var(--ms-ease-standard);
+}
+
+/* —— hover:面板微亮 + 文字提亮 + 头部内侧暖辉 —— */
+.ms-accordion__trigger:not(:disabled):hover {
+  background-color: var(--ms-color-surface-raised);
+  color: var(--ms-color-primary-hover);
+  box-shadow: inset 0 0 calc(20px * var(--ms-fx-glow, 1)) -14px var(--ms-color-glow);
+}
+
+/* —— focus-visible:发光环(可达性,模糊半径不参与开关) —— */
+.ms-accordion__trigger:focus-visible {
+  outline: none;
+  box-shadow:
+    inset 0 0 0 2px var(--ms-color-focus-ring),
+    inset 0 0 calc(24px * var(--ms-fx-glow, 1)) -10px var(--ms-color-glow);
+}
+
+.ms-accordion__trigger:disabled {
+  cursor: not-allowed;
+  color: var(--ms-color-fg-subtle);
+}
+
+/* —— 展开图标:▸ 旋转,展开时转 90deg(旋转量乘 motion-scale) —— */
+.ms-accordion__icon {
+  flex: none;
+  inline-size: 0.75rem;
+  block-size: 0.75rem;
+  color: var(--ms-color-fg-muted);
+  transition:
+    transform var(--ms-dur-base) var(--ms-ease-emphasized),
+    color var(--ms-dur-fast) var(--ms-ease-standard);
+}
+
+.ms-accordion__icon::before {
+  content: "▸";
+  display: block;
+  line-height: 0.75rem;
+  font-size: 0.75rem;
+}
+
+.ms-accordion__trigger:not(:disabled):hover .ms-accordion__icon {
+  color: var(--ms-color-primary-hover);
+}
+
+.ms-accordion__item--open .ms-accordion__icon {
+  transform: rotate(calc(90deg * var(--ms-motion-scale, 1)));
+  color: var(--ms-color-primary);
+}
+
+.ms-accordion__title {
+  min-inline-size: 0;
+}
+
+/* —— 折叠容器:grid-template-rows 0fr → 1fr 过渡(现代、平滑) —— */
+.ms-accordion__panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--ms-dur-base) var(--ms-ease-emphasized);
+}
+
+.ms-accordion__item--open .ms-accordion__panel {
+  grid-template-rows: 1fr;
+}
+
+/* 1fr 网格行配合 min-block-size: 0 + overflow 才能从 0 平滑撑开 */
+.ms-accordion__panel-inner {
+  min-block-size: 0;
+  overflow: hidden;
+}
+
+.ms-accordion__content {
+  padding-block: var(--ms-space-3) var(--ms-space-4);
+  padding-inline: var(--ms-space-4);
+  color: var(--ms-color-fg-muted);
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.ms-accordion__item--disabled {
+  opacity: 0.6;
+}

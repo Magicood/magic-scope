@@ -1,0 +1,81 @@
+/* —— 外框:圆角 + 描边 + 横向滚动容器,裁掉表头圆角溢出 —— */
+.ms-table-wrap {
+  display: block;
+  inline-size: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--ms-color-border);
+  border-radius: var(--ms-radius-lg);
+  background-color: var(--ms-color-surface);
+  box-shadow: 0 0 calc(16px * var(--ms-fx-glow, 1)) -10px var(--ms-color-glow);
+}
+
+.ms-table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  color: var(--ms-color-fg);
+  font-family: var(--ms-font-sans);
+  font-size: 0.875rem;
+  line-height: 1.4;
+  text-align: start;
+}
+
+/* —— caption:作为无障碍标题,弱化排版 —— */
+.ms-table__caption {
+  padding-block: var(--ms-space-3);
+  padding-inline: var(--ms-space-4);
+  color: var(--ms-color-fg-muted);
+  font-size: 0.8125rem;
+  text-align: start;
+}
+
+/* —— 表头:surface-raised 底 + 加粗 + 底部强描边 —— */
+.ms-table__th {
+  padding-block: var(--ms-space-3);
+  padding-inline: var(--ms-space-4);
+  background-color: var(--ms-color-surface-raised);
+  border-block-end: 1px solid var(--ms-color-border-strong);
+  color: var(--ms-color-fg);
+  font-weight: 650;
+  letter-spacing: 0.02em;
+  text-align: start;
+  white-space: nowrap;
+}
+
+/* —— 单元格:行间分隔线 —— */
+.ms-table__td {
+  padding-block: var(--ms-space-3);
+  padding-inline: var(--ms-space-4);
+  border-block-start: 1px solid var(--ms-color-border);
+  color: var(--ms-color-fg-muted);
+  text-align: start;
+  vertical-align: middle;
+  transition: background-color var(--ms-dur-fast) var(--ms-ease-standard);
+}
+
+/* tbody 首行不需要顶分隔线(thead 已有底边) */
+.ms-table__body .ms-table__row:first-child .ms-table__td {
+  border-block-start: none;
+}
+
+/* —— 列对齐 —— */
+.ms-table__th--center,
+.ms-table__td--center {
+  text-align: center;
+}
+
+.ms-table__th--end,
+.ms-table__td--end {
+  text-align: end;
+}
+
+/* —— 斑马纹:偶数体行加极淡 sunken 底 —— */
+.ms-table-wrap--stripe .ms-table__body .ms-table__row:nth-child(even) .ms-table__td {
+  background-color: color-mix(in srgb, var(--ms-color-surface-sunken) 55%, transparent);
+}
+
+/* —— 行 hover 高亮:整行换 surface-raised 底 + 主色起始强调条 —— */
+.ms-table-wrap--hoverable .ms-table__body .ms-table__row:hover .ms-table__td {
+  background-color: var(--ms-color-surface-raised);
+  color: var(--ms-color-fg);
+  box-shadow: inset 2px 0 0 -1px color-mix(in srgb, var(--ms-color-primary) 70%, transparent);
+}
