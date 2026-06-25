@@ -1,5 +1,6 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 import { forwardRef, useCallback, useRef, useState } from 'react';
+import { useMessages } from '../../i18n';
 
 export type InputSize = 'sm' | 'md' | 'lg';
 export type InputTone = 'primary' | 'accent' | 'success' | 'warning' | 'danger' | 'info';
@@ -69,6 +70,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     },
     ref,
   ) => {
+    const t = useMessages();
     const innerRef = useRef<HTMLInputElement | null>(null);
     const setRef = useCallback(
       (node: HTMLInputElement | null) => {
@@ -140,7 +142,12 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           </span>
         )}
         {showClear && (
-          <button type="button" className="ms-input__action" aria-label="清除" onClick={clear}>
+          <button
+            type="button"
+            className="ms-input__action"
+            aria-label={t('input.clear')}
+            onClick={clear}
+          >
             <span aria-hidden="true">×</span>
           </button>
         )}
@@ -148,7 +155,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           <button
             type="button"
             className="ms-input__action"
-            aria-label={revealed ? '隐藏密码' : '显示密码'}
+            aria-label={t(revealed ? 'input.password.hide' : 'input.password.show')}
             onClick={() => setRevealed((v) => !v)}
           >
             <span aria-hidden="true">{revealed ? '🙈' : '👁'}</span>
