@@ -15,8 +15,15 @@ const REACT_SRC = join(ROOT, 'packages', 'react', 'src');
 
 const rawName = argv[2];
 const category = argv[3] ?? 'misc';
+const sourceType = argv[4] ?? 'original';
 if (!rawName) {
-  console.error('用法: pnpm new <ComponentName> [category]\n例:   pnpm new Button actions');
+  console.error(
+    '用法: pnpm new <ComponentName> [category] [source-type]\n例:   pnpm new Button actions\n      pnpm new Card layout inspired',
+  );
+  exit(1);
+}
+if (sourceType !== 'original' && sourceType !== 'inspired' && sourceType !== 'captured') {
+  console.error(`source.type 非法: "${sourceType}"(应为 original / inspired / captured)`);
   exit(1);
 }
 
@@ -49,6 +56,22 @@ const css = `.ms-${kebab} {
 }
 `;
 
+// 按 source.type 给模板:original 免证据;inspired / captured 预置 app 证据占位
+// (schema 要求至少一项 url / app / screenshot,否则 pnpm registry 校验失败)。
+const source =
+  sourceType === 'original'
+    ? {
+        type: 'original',
+        capturedAt: today,
+        requirements: 'TODO: 自研意图 / 设计目标(写真实内容,勿照抄 description)',
+      }
+    : {
+        type: sourceType,
+        app: 'TODO: 来源应用 / 产品名(或改用 url / screenshot 填证据)',
+        capturedAt: today,
+        requirements: 'TODO: 收录时的需求原文 / 来源描述(写真实内容)',
+      };
+
 const componentJson = {
   id: kebab,
   name: Name,
@@ -58,11 +81,7 @@ const componentJson = {
   status: 'draft',
   version: '0.0.0',
   frameworks: ['react'],
-  source: {
-    type: 'original',
-    capturedAt: today,
-    requirements: 'TODO: 填写收录时的需求原文 / 来源',
-  },
+  source,
   dependencies: ['@magic-scope/tokens'],
   files: [`${Name}.tsx`, `${Name}.css`, 'index.ts'],
 };
@@ -78,5 +97,12 @@ appendFileSync(
   `@import './components/${Name}/${Name}.css' layer(ms.components);\n`,
 );
 
-console.log(`✓ 已生成组件 ${Name}(${category}) → packages/react/src/components/${Name}/`);
-console.log('  下一步:实现组件、补全 component.json 的 description / source、运行 pnpm registry');
+console.log(
+  `✓ 已生成组件 ${Name}(${category}, source.type=${sourceType}) → packages/react/src/components/${Name}/`,
+);
+console.log('  下一步:实现组件、补全 component.json 的 description / source,运行 pnpm registry');
+if (sourceType !== 'original') {
+  console.log(
+    '  ⚠ inspired / captured 需真实溯源证据:把 source.app 换成真实来源(或加 url / screenshot),否则 pnpm registry 校验失败',
+  );
+}
