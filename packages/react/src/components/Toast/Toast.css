@@ -80,7 +80,7 @@
   /* 起始边强调条(inset 阴影)+ 立体投影 + 变体着色的奥术辉光 */
   box-shadow:
     inset 3px 0 0 var(--ms-toast-accent, var(--ms-color-border-strong)),
-    0 12px 32px -16px rgb(0 0 0 / 0.6),
+    0 12px 32px -16px rgb(0 0 0 / 0.4),
     0 0 calc(24px * var(--ms-fx-glow, 1)) -12px var(--ms-toast-glow, var(--ms-color-glow));
   /* 退场用平滑 standard 曲线(非过冲),避免淡出时先回弹进画面 */
   transition:

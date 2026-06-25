@@ -110,7 +110,7 @@
   overflow-y: auto;
   overscroll-behavior: contain;
   box-shadow:
-    0 24px 64px -24px rgb(0 0 0 / 0.7),
+    0 24px 64px -24px rgb(0 0 0 / 0.45),
     0 0 calc(40px * var(--ms-fx-glow, 1)) -16px var(--ms-color-glow);
 
   /* 入场动画初值(收起态) */

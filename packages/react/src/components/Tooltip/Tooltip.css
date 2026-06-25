@@ -21,7 +21,7 @@
 
   /* 奥术微光:边缘的 glow,受 fx 开关门控 */
   box-shadow:
-    0 8px 24px -12px rgb(0 0 0 / 0.6),
+    0 8px 24px -12px rgb(0 0 0 / 0.4),
     0 0 calc(18px * var(--ms-fx-glow, 1)) -8px var(--ms-color-glow);
 
   /* 入场前的终态归零,真正的入场态见各 placement 与 @starting-style */

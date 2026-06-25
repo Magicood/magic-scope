@@ -116,7 +116,7 @@
   overflow: auto;
   overscroll-behavior: contain;
   box-shadow:
-    0 18px 48px -20px rgb(0 0 0 / 0.7),
+    0 18px 48px -20px rgb(0 0 0 / 0.45),
     0 0 calc(28px * var(--ms-fx-glow, 1)) -14px var(--ms-color-glow);
 }
 
@@ -126,7 +126,7 @@
 }
 .ms-popover:focus-visible .ms-popover__panel {
   box-shadow:
-    0 18px 48px -20px rgb(0 0 0 / 0.7),
+    0 18px 48px -20px rgb(0 0 0 / 0.45),
     0 0 calc(28px * var(--ms-fx-glow, 1)) -14px var(--ms-color-glow),
     0 0 0 2px var(--ms-color-bg),
     0 0 0 4px var(--ms-color-focus-ring);

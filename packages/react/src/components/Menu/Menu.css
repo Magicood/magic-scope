@@ -21,7 +21,7 @@
   color: var(--ms-color-fg);
   font-family: var(--ms-font-sans);
   box-shadow:
-    0 24px 64px -24px rgb(0 0 0 / 0.7),
+    0 24px 64px -24px rgb(0 0 0 / 0.45),
     0 0 calc(40px * var(--ms-fx-glow, 1)) -16px var(--ms-color-glow);
 
   /* 入场动画:淡入 + 自顶部展开下滑,位移受 motion-scale 门控 */
