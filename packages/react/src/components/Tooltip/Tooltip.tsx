@@ -1,0 +1,179 @@
+import type { CSSProperties, ReactElement, ReactNode } from 'react';
+import {
+  cloneElement,
+  forwardRef,
+  isValidElement,
+  useCallback,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+} from 'react';
+
+export interface TooltipProps {
+  /** 提示内容。 */
+  content: ReactNode;
+  /** 单个触发元素(将被克隆以注入事件 / anchor / aria)。 */
+  children: ReactElement;
+  /** 气泡相对 trigger 的方位。默认 "top"。 */
+  placement?: 'top' | 'bottom';
+  /** hover / focus 到显示的延时(毫秒)。默认 150。 */
+  delay?: number;
+  /** 透传到气泡容器的额外 className。 */
+  className?: string;
+}
+
+interface TriggerInjectedProps {
+  ref?: React.Ref<HTMLElement>;
+  style?: CSSProperties | undefined;
+  'aria-describedby'?: string | undefined;
+  onPointerEnter?: ((e: React.PointerEvent<HTMLElement>) => void) | undefined;
+  onPointerLeave?: ((e: React.PointerEvent<HTMLElement>) => void) | undefined;
+  onFocus?: ((e: React.FocusEvent<HTMLElement>) => void) | undefined;
+  onBlur?: ((e: React.FocusEvent<HTMLElement>) => void) | undefined;
+}
+
+/**
+ * Tooltip —— 提示气泡。用满平台原生能力、零第三方依赖:
+ * - 气泡进 top-layer:Popover API(popover="manual" 手动控制,showPopover/hidePopover)。
+ * - 定位:CSS Anchor Positioning —— trigger 设 anchor-name(useId 唯一名),
+ *   气泡设 position-anchor + position-area;@supports not 时降级为相对定位(见 .css)。
+ * - trigger 与气泡用 aria-describedby 关联(useId);hover / focus 触发(延时 delay),
+ *   leave / blur 隐藏;Esc 即时隐藏。键盘可达,focus-visible 发光环可见。
+ */
+export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
+  ({ content, children, placement = 'top', delay = 150, className }, ref) => {
+    const bubbleRef = useRef<HTMLDivElement | null>(null);
+    const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const [open, setOpen] = useState(false);
+
+    const reactId = useId();
+    // anchor-name 必须是 dashed-ident;useId 的冒号不合法,替换掉。
+    const anchorName = `--ms-tt-${reactId.replace(/[^a-zA-Z0-9_-]/g, '')}`;
+    const tooltipId = `ms-tt${reactId}`;
+
+    const clearTimer = useCallback(() => {
+      if (timerRef.current !== null) {
+        clearTimeout(timerRef.current);
+        timerRef.current = null;
+      }
+    }, []);
+
+    const show = useCallback(() => {
+      clearTimer();
+      timerRef.current = setTimeout(() => setOpen(true), delay);
+    }, [clearTimer, delay]);
+
+    const hide = useCallback(() => {
+      clearTimer();
+      setOpen(false);
+    }, [clearTimer]);
+
+    // 同步 popover 显隐(showPopover / hidePopover),并兜底不支持 Popover API 的浏览器。
+    useEffect(() => {
+      const el = bubbleRef.current;
+      if (!el) {
+        return;
+      }
+      const supportsPopover =
+        typeof el.showPopover === 'function' && typeof el.hidePopover === 'function';
+      if (open) {
+        el.dataset.open = 'true';
+        if (supportsPopover) {
+          try {
+            el.showPopover();
+          } catch {
+            // 已显示或不支持:忽略,靠 data-open 控制可见性。
+          }
+        }
+      } else {
+        delete el.dataset.open;
+        if (supportsPopover) {
+          try {
+            el.hidePopover();
+          } catch {
+            // 已隐藏:忽略。
+          }
+        }
+      }
+    }, [open]);
+
+    // Esc 即时隐藏(popover="manual" 不自带 light-dismiss)。
+    useEffect(() => {
+      if (!open) {
+        return;
+      }
+      const onKeyDown = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') {
+          hide();
+        }
+      };
+      document.addEventListener('keydown', onKeyDown);
+      return () => document.removeEventListener('keydown', onKeyDown);
+    }, [open, hide]);
+
+    // 卸载时清掉定时器。
+    useEffect(() => clearTimer, [clearTimer]);
+
+    if (!isValidElement(children)) {
+      return null;
+    }
+
+    const child = children as ReactElement<TriggerInjectedProps>;
+    const childProps = child.props;
+
+    const mergeHandler =
+      <E extends React.SyntheticEvent<HTMLElement>>(own: (e: E) => void, theirs?: (e: E) => void) =>
+      (e: E) => {
+        theirs?.(e);
+        own(e);
+      };
+
+    const triggerProps: TriggerInjectedProps = {
+      'aria-describedby': open ? tooltipId : undefined,
+      style: { ...childProps.style, anchorName } as CSSProperties,
+      onPointerEnter: mergeHandler<React.PointerEvent<HTMLElement>>(
+        () => show(),
+        childProps.onPointerEnter,
+      ),
+      onPointerLeave: mergeHandler<React.PointerEvent<HTMLElement>>(
+        () => hide(),
+        childProps.onPointerLeave,
+      ),
+      onFocus: mergeHandler<React.FocusEvent<HTMLElement>>(() => show(), childProps.onFocus),
+      onBlur: mergeHandler<React.FocusEvent<HTMLElement>>(() => hide(), childProps.onBlur),
+    };
+
+    const setBubbleRef = (node: HTMLDivElement | null) => {
+      bubbleRef.current = node;
+      if (typeof ref === 'function') {
+        ref(node);
+      } else if (ref) {
+        (ref as { current: HTMLDivElement | null }).current = node;
+      }
+    };
+
+    const bubbleClassName = ['ms-tooltip', `ms-tooltip--${placement}`, className]
+      .filter(Boolean)
+      .join(' ');
+
+    return (
+      <>
+        {cloneElement(child, triggerProps)}
+        <div
+          ref={setBubbleRef}
+          id={tooltipId}
+          role="tooltip"
+          popover="manual"
+          className={bubbleClassName}
+          style={{ positionAnchor: anchorName } as CSSProperties}
+          onPointerEnter={show}
+          onPointerLeave={hide}
+        >
+          {content}
+        </div>
+      </>
+    );
+  },
+);
+Tooltip.displayName = 'Tooltip';

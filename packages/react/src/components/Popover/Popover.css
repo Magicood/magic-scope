@@ -1,0 +1,127 @@
+/* Popover —— 点击浮层。原生 Popover API(top-layer)+ CSS Anchor Positioning(贴合 trigger)。 */
+
+.ms-popover {
+  /* 重置 popover UA 默认样式,容器仅做定位与动画载体 */
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  inline-size: max-content;
+  max-inline-size: min(20rem, 92vw);
+  color: var(--ms-color-fg);
+  overflow: visible;
+
+  /* —— 锚定定位(现代):贴到 trigger 的 anchor —— */
+  position: absolute;
+  position-area: var(--ms-popover-area, block-end);
+  /* 浮层在 position-area 内的对齐与外边距(逻辑属性,RTL 友好) */
+  margin-block: var(--ms-space-2);
+  margin-inline: var(--ms-space-2);
+
+  /* —— 入场动画:opacity + 轻微位移,允许从 display:none 过渡(allow-discrete) —— */
+  opacity: 0;
+  transform: translateY(calc(-4px * var(--ms-motion-scale, 1))) scale(0.97);
+  transition:
+    opacity var(--ms-dur-base) var(--ms-ease-standard),
+    transform var(--ms-dur-base) var(--ms-ease-emphasized),
+    overlay var(--ms-dur-base) allow-discrete,
+    display var(--ms-dur-base) allow-discrete;
+}
+
+/* 顶/左方位时位移方向相反,统一指向 trigger 外侧的"展开"感 */
+.ms-popover--top {
+  transform: translateY(calc(4px * var(--ms-motion-scale, 1))) scale(0.97);
+}
+.ms-popover--left {
+  transform: translateX(calc(4px * var(--ms-motion-scale, 1))) scale(0.97);
+}
+.ms-popover--right {
+  transform: translateX(calc(-4px * var(--ms-motion-scale, 1))) scale(0.97);
+}
+
+/* 打开态(:popover-open 反映真实 top-layer 状态) */
+.ms-popover:popover-open {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* 首帧即过渡:不支持 @starting-style 的浏览器直接以终态出现 */
+@starting-style {
+  .ms-popover:popover-open {
+    opacity: 0;
+    transform: translateY(calc(-4px * var(--ms-motion-scale, 1))) scale(0.97);
+  }
+  .ms-popover--top:popover-open {
+    transform: translateY(calc(4px * var(--ms-motion-scale, 1))) scale(0.97);
+  }
+  .ms-popover--left:popover-open {
+    transform: translateX(calc(4px * var(--ms-motion-scale, 1))) scale(0.97);
+  }
+  .ms-popover--right:popover-open {
+    transform: translateX(calc(-4px * var(--ms-motion-scale, 1))) scale(0.97);
+  }
+}
+
+/* —— 降级:不支持 CSS Anchor Positioning 时,退化为 fixed 居中,仍可用 —— */
+@supports not (anchor-name: --x) {
+  .ms-popover {
+    position: fixed;
+    inset: auto;
+    inset-block-start: 50%;
+    inset-inline-start: 50%;
+    margin: 0;
+    transform: translate(-50%, -50%) scale(0.97);
+  }
+  .ms-popover:popover-open {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  @starting-style {
+    .ms-popover:popover-open {
+      transform: translate(-50%, -50%) scale(0.97);
+    }
+  }
+}
+
+/* —— 浮层卡:同 Dialog panel,体量更小 —— */
+.ms-popover__panel {
+  background-color: var(--ms-color-surface-raised);
+  border: 1px solid var(--ms-color-border);
+  border-radius: var(--ms-radius-lg);
+  padding: var(--ms-space-3) var(--ms-space-4);
+  font-family: var(--ms-font-sans);
+  line-height: 1.5;
+  box-shadow:
+    0 18px 48px -20px rgb(0 0 0 / 0.7),
+    0 0 calc(28px * var(--ms-fx-glow, 1)) -14px var(--ms-color-glow);
+}
+
+/* focus-visible 发光环:浮层获得焦点时可见 */
+.ms-popover:focus-visible {
+  outline: none;
+}
+.ms-popover:focus-visible .ms-popover__panel {
+  box-shadow:
+    0 18px 48px -20px rgb(0 0 0 / 0.7),
+    0 0 calc(28px * var(--ms-fx-glow, 1)) -14px var(--ms-color-glow),
+    0 0 0 2px var(--ms-color-bg),
+    0 0 0 4px var(--ms-color-focus-ring);
+}
+
+/* 尊重 reduced-motion:去位移,仅留淡入 */
+@media (prefers-reduced-motion: reduce) {
+  .ms-popover,
+  .ms-popover--top,
+  .ms-popover--left,
+  .ms-popover--right {
+    transform: none;
+    transition:
+      opacity var(--ms-dur-fast) var(--ms-ease-standard),
+      overlay var(--ms-dur-fast) allow-discrete,
+      display var(--ms-dur-fast) allow-discrete;
+  }
+  @starting-style {
+    .ms-popover:popover-open {
+      transform: none;
+    }
+  }
+}

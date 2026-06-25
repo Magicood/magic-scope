@@ -1,0 +1,17 @@
+{
+  "id": "select",
+  "name": "Select",
+  "description": "下拉选择:button trigger(combobox)+ Popover API listbox 进 top-layer、CSS Anchor Positioning 定位并优雅降级,完整键盘导航(↑↓/Enter/Space/Esc/Home/End)、aria-selected 与选中打勾 primary 高亮。",
+  "category": "forms",
+  "tags": ["select", "dropdown", "listbox", "combobox", "forms"],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-25",
+    "requirements": "下拉选择:button trigger(combobox)+ Popover API listbox 进 top-layer、CSS Anchor Positioning 定位并优雅降级,完整键盘导航(↑↓/Enter/Space/Esc/Home/End)、aria-selected 与选中打勾 primary 高亮。。magic-scope overlay 组件:用满平台原生能力(Popover API + CSS Anchor Positioning)自研,带降级、键盘可达、fx/motion 开关、入场动画。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Select.tsx", "Select.css", "index.ts"]
+}

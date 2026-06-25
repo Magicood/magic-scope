@@ -1,0 +1,17 @@
+{
+  "id": "menu",
+  "name": "Menu",
+  "description": "下拉菜单:Popover API 进 top-layer + CSS Anchor Positioning 锚定 trigger,支持 ↑↓/Enter/Esc 键盘操作、danger 项与禁用项,带奥术发光入场动画,锚定位不支持时优雅降级。",
+  "category": "overlay",
+  "tags": ["menu", "dropdown", "popover", "overlay", "anchor-positioning"],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-25",
+    "requirements": "下拉菜单:Popover API 进 top-layer + CSS Anchor Positioning 锚定 trigger,支持 ↑↓/Enter/Esc 键盘操作、danger 项与禁用项,带奥术发光入场动画,锚定位不支持时优雅降级。。magic-scope overlay 组件:用满平台原生能力(Popover API + CSS Anchor Positioning)自研,带降级、键盘可达、fx/motion 开关、入场动画。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Menu.tsx", "Menu.css", "index.ts"]
+}

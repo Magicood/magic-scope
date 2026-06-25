@@ -1,0 +1,17 @@
+{
+  "id": "popover",
+  "name": "Popover",
+  "description": "点击浮层,基于原生 Popover API(top-layer / 点外 / Esc 关闭)+ CSS Anchor Positioning 锚定 trigger,支持受控/非受控、四向定位与入场动画,并对不支持锚定的浏览器优雅降级。",
+  "category": "overlay",
+  "tags": ["popover", "overlay", "anchor", "popover-api", "top-layer"],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-25",
+    "requirements": "点击浮层,基于原生 Popover API(top-layer / 点外 / Esc 关闭)+ CSS Anchor Positioning 锚定 trigger,支持受控/非受控、四向定位与入场动画,并对不支持锚定的浏览器优雅降级。。magic-scope overlay 组件:用满平台原生能力(Popover API + CSS Anchor Positioning)自研,带降级、键盘可达、fx/motion 开关、入场动画。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Popover.tsx", "Popover.css", "index.ts"]
+}

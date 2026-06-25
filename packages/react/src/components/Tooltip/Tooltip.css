@@ -1,0 +1,87 @@
+/* —— Tooltip:提示气泡。Popover API(top-layer)+ CSS Anchor Positioning 定位 —— */
+
+.ms-tooltip {
+  /* popover 元素默认 fixed + margin:auto 居中,清零以交给 anchor 定位 */
+  position: fixed;
+  margin: 0;
+  inset: auto;
+  z-index: 1;
+
+  max-inline-size: min(18rem, 90vw);
+  padding-block: var(--ms-space-1);
+  padding-inline: var(--ms-space-2);
+
+  background-color: var(--ms-color-surface-raised);
+  border: 1px solid var(--ms-color-border);
+  border-radius: var(--ms-radius-md);
+  color: var(--ms-color-fg);
+  font-family: var(--ms-font-sans);
+  font-size: 0.8125rem;
+  line-height: 1.4;
+
+  /* 奥术微光:边缘的 glow,受 fx 开关门控 */
+  box-shadow:
+    0 8px 24px -12px rgb(0 0 0 / 0.6),
+    0 0 calc(18px * var(--ms-fx-glow, 1)) -8px var(--ms-color-glow);
+
+  /* 入场前的终态归零,真正的入场态见各 placement 与 @starting-style */
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity var(--ms-dur-base) var(--ms-ease-standard),
+    transform var(--ms-dur-base) var(--ms-ease-emphasized),
+    overlay var(--ms-dur-base) allow-discrete,
+    display var(--ms-dur-base) allow-discrete;
+  transition-behavior: allow-discrete;
+}
+
+/* —— 定位:position-area 把气泡贴到 trigger 上下,并留出间隙 —— */
+.ms-tooltip--top {
+  position-area: block-start;
+  margin-block-end: var(--ms-space-2);
+  transform: translateY(calc(4px * var(--ms-motion-scale, 1)));
+}
+
+.ms-tooltip--bottom {
+  position-area: block-end;
+  margin-block-start: var(--ms-space-2);
+  transform: translateY(calc(-4px * var(--ms-motion-scale, 1)));
+}
+
+/* —— 显示态:popover open 时由原生 :popover-open 命中;
+ *    data-open 兜底(不支持 Popover API 时仍可见) —— */
+.ms-tooltip:popover-open,
+.ms-tooltip[data-open] {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 首次显示即过渡(入场淡入 + 微移);不支持 @starting-style 的浏览器直接以终态出现 */
+@starting-style {
+  .ms-tooltip:popover-open,
+  .ms-tooltip[data-open] {
+    opacity: 0;
+  }
+  .ms-tooltip--top:popover-open,
+  .ms-tooltip--top[data-open] {
+    transform: translateY(calc(4px * var(--ms-motion-scale, 1)));
+  }
+  .ms-tooltip--bottom:popover-open,
+  .ms-tooltip--bottom[data-open] {
+    transform: translateY(calc(-4px * var(--ms-motion-scale, 1)));
+  }
+}
+
+/* —— 降级:不支持 CSS Anchor Positioning 时,position-area 失效。
+ *    退化为相对 trigger 的简单贴近:气泡 absolute 于触发元素附近、水平居中。
+ *    需要 trigger 侧为定位上下文——本组件不强加,故用 fixed 居中兜底保证可见可读。—— */
+@supports not (anchor-name: --x) {
+  .ms-tooltip {
+    position: fixed;
+    inset-block-end: var(--ms-space-8);
+    inset-inline: 0;
+    margin-inline: auto;
+    inline-size: max-content;
+    max-inline-size: min(18rem, 90vw);
+  }
+}

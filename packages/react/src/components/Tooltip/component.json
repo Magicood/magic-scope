@@ -1,0 +1,17 @@
+{
+  "id": "tooltip",
+  "name": "Tooltip",
+  "description": "提示气泡:用 Popover API 进 top-layer + CSS Anchor Positioning 贴位,hover/focus 延时触发、aria-describedby 关联,深色奥术微光入场,零第三方依赖并带锚定降级。",
+  "category": "overlay",
+  "tags": ["tooltip", "popover", "overlay", "hint", "anchor-positioning"],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-25",
+    "requirements": "提示气泡:用 Popover API 进 top-layer + CSS Anchor Positioning 贴位,hover/focus 延时触发、aria-describedby 关联,深色奥术微光入场,零第三方依赖并带锚定降级。。magic-scope overlay 组件:用满平台原生能力(Popover API + CSS Anchor Positioning)自研,带降级、键盘可达、fx/motion 开关、入场动画。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Tooltip.tsx", "Tooltip.css", "index.ts"]
+}
