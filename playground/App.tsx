@@ -29,7 +29,9 @@ import {
   Tabs,
   Tag,
   Textarea,
+  Toaster,
   Tooltip,
+  toast,
 } from '../packages/react/src/index';
 
 const row: React.CSSProperties = {
@@ -176,6 +178,31 @@ export function App() {
         <Progress value={66} style={{ maxWidth: '12rem' }} />
       </div>
       <Skeleton style={{ blockSize: '1rem', maxWidth: '20rem' }} />
+      <div style={row}>
+        <Button variant="outline" onClick={() => toast('已保存 ✦')}>
+          普通 toast
+        </Button>
+        <Button variant="outline" onClick={() => toast.success('操作成功')}>
+          success
+        </Button>
+        <Button
+          variant="outline"
+          onClick={() => toast.error('出错了', { description: '请稍后重试' })}
+        >
+          error
+        </Button>
+        <Button
+          variant="outline"
+          onClick={() =>
+            toast('已删除 1 项', {
+              variant: 'warning',
+              action: { label: '撤销', onClick: () => toast.success('已撤销') },
+            })
+          }
+        >
+          带 action
+        </Button>
+      </div>
 
       <h2>操作与布局</h2>
       <div style={row}>
@@ -235,6 +262,8 @@ export function App() {
         ]}
       />
       <Pagination page={page} total={8} onPageChange={setPage} />
+
+      <Toaster position="bottom-end" />
     </main>
   );
 }

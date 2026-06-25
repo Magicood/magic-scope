@@ -1,0 +1,17 @@
+{
+  "id": "toast",
+  "name": "Toast",
+  "description": "命令式通知:模块级 store + toast() 函数(可在组件外任意处调用,无需 Provider)+ <Toaster /> 渲染容器(useSyncExternalStore 订阅、portal 到 body、6 向定位、安全区避让)。变体 default/success/warning/danger/info(快捷方法 toast.success/error/...),自动消失 + 悬停/聚焦暂停、可手动关闭、可带描述与行动按钮;danger/warning 用 role=alert、其余 role=status;进出场动画(@starting-style + 退场标记),尊重 reduced-motion、触控热区达标。",
+  "category": "feedback",
+  "tags": ["toast", "notification", "toaster", "snackbar", "feedback", "aria-live"],
+  "status": "stable",
+  "version": "0.0.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-25",
+    "requirements": "补齐反馈体系:命令式通知。原创实现,对标 sonner/react-hot-toast 的架构但自研、不 wrap 第三方——模块级 store(useSyncExternalStore 订阅)让 toast() 脱离 React 树调用,<Toaster /> portal 渲染。涵盖自动消失 + 悬停/聚焦暂停、退场动画、aria-live(status/alert 分流)、行动按钮、6 向定位 + 安全区。延续设备适配契约(触控热区、hover 守卫、focus-visible、reduced-motion)。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Toast.tsx", "Toast.css", "index.ts"]
+}
