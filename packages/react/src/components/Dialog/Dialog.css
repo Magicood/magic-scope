@@ -104,3 +104,30 @@
   outline: 2px solid var(--ms-color-primary);
   outline-offset: 2px;
 }
+
+/* —— P1 窄屏(≤sm 30rem):对话框转底部抽屉(bottom sheet)——
+   贴底、满宽、仅上圆角,从底部滑入;桌面 / 宽屏维持居中卡片不变。 */
+@media (max-width: 30rem) {
+  .ms-dialog {
+    margin-block: auto 0;
+    margin-inline: 0;
+    max-inline-size: 100%;
+    /* 关闭态落到屏幕下方,入场上滑(覆盖居中卡片的位移/缩放) */
+    transform: translateY(100%);
+  }
+  .ms-dialog[open] {
+    transform: translateY(0);
+  }
+  @starting-style {
+    .ms-dialog[open] {
+      transform: translateY(100%);
+    }
+  }
+  .ms-dialog__panel {
+    /* 仅上圆角,贴底抽屉观感;底部安全区已并入 padding-block 末端 */
+    border-radius: var(--ms-radius-lg) var(--ms-radius-lg) 0 0;
+    border-block-end: none;
+    /* 抽屉可占更高,顶部留一段露出遮罩 */
+    max-block-size: calc(var(--ms-viewport-h) - var(--ms-space-10));
+  }
+}

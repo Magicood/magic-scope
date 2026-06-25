@@ -163,3 +163,33 @@
     padding-block: var(--ms-space-3);
   }
 }
+
+/* —— P1 窄屏(≤sm 30rem):菜单转底部抽屉(action sheet)——
+   覆盖锚定/降级定位为贴底满宽 sheet、仅上圆角、自底滑入;桌面 / 宽屏维持锚定下拉。
+   放在 @supports 定位块之后,同层同特异性 → 窄屏胜出。 */
+@media (max-width: 30rem) {
+  .ms-menu {
+    position: fixed;
+    position-area: none;
+    inset: auto 0 0 0;
+    margin: 0;
+    inline-size: 100%;
+    min-inline-size: 0;
+    max-inline-size: 100%;
+    max-block-size: min(60svh, calc(var(--ms-viewport-h) - var(--ms-space-10)));
+    padding-block-end: calc(var(--ms-space-1) + var(--ms-safe-bottom));
+    border-radius: var(--ms-radius-lg) var(--ms-radius-lg) 0 0;
+    border-block-end: none;
+    transform-origin: bottom center;
+    /* 收起态落到屏下,入场上滑 */
+    transform: translateY(100%);
+  }
+  .ms-menu:popover-open {
+    transform: translateY(0);
+  }
+  @starting-style {
+    .ms-menu:popover-open {
+      transform: translateY(100%);
+    }
+  }
+}

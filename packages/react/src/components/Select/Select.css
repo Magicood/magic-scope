@@ -267,6 +267,36 @@
   }
 }
 
+/* —— P1 窄屏(≤sm 30rem):下拉转底部抽屉(原生 select 常见形态)——
+   覆盖锚定/降级定位为贴底满宽 sheet、仅上圆角、自底滑入,根治窄屏出界与密集误点。
+   放在 @supports 定位块之后,同层同特异性 → 窄屏胜出;桌面 / 宽屏维持锚定下拉。 */
+@media (max-width: 30rem) {
+  .ms-select__list {
+    position: fixed;
+    position-area: none;
+    inset: auto 0 0 0;
+    margin: 0;
+    inline-size: 100%;
+    min-inline-size: 0;
+    max-inline-size: 100%;
+    max-block-size: calc(var(--ms-viewport-h) - var(--ms-space-10));
+    border-radius: var(--ms-radius-lg) var(--ms-radius-lg) 0 0;
+    border-block-end: none;
+    /* 收起态落到屏下,入场上滑 */
+    transform: translateY(100%);
+  }
+  .ms-select__list:popover-open,
+  .ms-select__list[data-open] {
+    transform: translateY(0);
+  }
+  @starting-style {
+    .ms-select__list:popover-open,
+    .ms-select__list[data-open] {
+      transform: translateY(100%);
+    }
+  }
+}
+
 /* 尊重减少动效偏好 */
 @media (prefers-reduced-motion: reduce) {
   .ms-select,
