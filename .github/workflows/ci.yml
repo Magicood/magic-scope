@@ -63,6 +63,9 @@ jobs:
           npx -y @arethetypeswrong/cli --pack packages/tokens --ignore-rules no-resolution
           npx -y @arethetypeswrong/cli --pack packages/react --ignore-rules no-resolution
 
+      - name: 包体积守卫 (gzip)
+        run: pnpm size
+
       - name: changeset 守卫 (改发布包应有 changeset)
         if: github.event_name == 'pull_request'
         run: |
