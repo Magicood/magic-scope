@@ -30,6 +30,7 @@ pnpm monorepo · TypeScript (strict) · tsup · Biome · Changesets · VitePress
 4. TypeScript strict;通过 `biome check` 才能提交。
 5. 发布包导出走 `exports` map,标好 `sideEffects` 以保证 tree-shaking。
 6. 提交信息结构化(`type(scope): ...`),便于追溯。
+7. **多框架对等(设备适配 / 响应式):当前以 React 为基准落地适配,但适配契约是「框架无关」的——断点 token(`@magic-scope/tokens` 的 `breakpoints`)、横向 token(`--ms-target-min` / `--ms-safe-*` / `--ms-viewport-h` / `--ms-hairline`)、密度与 `data-ms-*` 属性、容器查询语义、pointer/hover 约定,都是唯一真相源。** 后续接入的主流框架(Vue / Web Component 等,见 `FOUNDATION.md` Phase 2)必须**同步对齐同一套适配语义**,不得各框架自行其是、各写一套断点或热区。实际接入放后续做,但新增任何组件 / 能力时,React 已有的适配行为要保证可平移到其它框架。
 
 ## 添加一个组件(标准流程 = 收录流水线的目标形态)
 1. `pnpm new` —— 输入名称 / 分类,生成目录 + `component.json` 模板

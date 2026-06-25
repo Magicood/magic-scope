@@ -63,7 +63,7 @@
 /* —— 尺寸(逻辑属性,RTL 友好) —— */
 .ms-textarea--sm {
   min-block-size: 4rem;
-  font-size: max(16px, 0.833rem);
+  font-size: 0.833rem;
 }
 .ms-textarea--md {
   min-block-size: 5rem;
@@ -74,10 +74,12 @@
   font-size: 1.2rem;
 }
 
-/* —— 触控:保证最小可输入高度不低于触控目标 —— */
+/* —— 触控:保证最小可输入高度不低于触控目标;sm 字号抬到 ≥16px 防 iOS 聚焦缩放
+   (桌面精确指针不受影响,sm 仍是 0.833rem) —— */
 @media (pointer: coarse) {
   .ms-textarea--sm {
     min-block-size: max(4rem, var(--ms-target-min));
+    font-size: max(16px, 0.833rem);
   }
   .ms-textarea--md {
     min-block-size: max(5rem, var(--ms-target-min));
