@@ -14,6 +14,7 @@ import {
   Kbd,
   Label,
   Menu,
+  NumberInput,
   Pagination,
   Popover,
   Progress,
@@ -45,6 +46,7 @@ export function App() {
   const [page, setPage] = useState(2);
   const [plan, setPlan] = useState('free');
   const [volume, setVolume] = useState(40);
+  const [qty, setQty] = useState(3);
 
   return (
     <main
@@ -133,6 +135,23 @@ export function App() {
           aria-label="音量"
         />
         <Slider defaultValue={3} min={0} max={5} step={1} size="sm" aria-label="评分" />
+        <div style={row}>
+          <NumberInput
+            value={qty}
+            onValueChange={(v) => setQty(v ?? 0)}
+            min={0}
+            max={99}
+            aria-label="数量"
+          />
+          <NumberInput
+            defaultValue={1.5}
+            min={0}
+            max={10}
+            step={0.5}
+            size="sm"
+            aria-label="评分(0.5 步)"
+          />
+        </div>
       </div>
 
       <h2>展示 Data Display</h2>

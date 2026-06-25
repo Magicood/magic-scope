@@ -1,0 +1,17 @@
+{
+  "id": "number-input",
+  "name": "NumberInput",
+  "description": "数字步进输入:− / 原生 input[type=number](spinbutton 语义、方向键步进) / ＋ 合为一个描边控件,隐藏原生 spinner。内部以显示文本管理(避免受控数字框打不出小数点/中间态),步进与失焦时夹取到 [min,max]。支持受控与非受控、min/max/step、sm/md/lg;触控热区达标、focus-within 发光、hover 守卫、尊重 reduced-motion。",
+  "category": "forms",
+  "tags": ["number-input", "number", "stepper", "spinbutton", "form", "input"],
+  "status": "stable",
+  "version": "0.0.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-25",
+    "requirements": "补齐表单控件:带步进按钮的数字输入。原创实现,原生优先(input[type=number] 提供 spinbutton 语义与方向键),自绘 − / ＋ 步进与皮肤;内部文本态管理解决受控数字框中间态丢失的经典问题,步进/失焦夹取边界。延续设备适配契约(触控热区、focus-within 发光、hover 守卫、iOS 字号防缩放、reduced-motion)。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["NumberInput.tsx", "NumberInput.css", "index.ts"]
+}

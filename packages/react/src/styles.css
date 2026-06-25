@@ -45,3 +45,4 @@
 @import "./components/Pagination/Pagination.css" layer(ms.components);
 @import "./components/Radio/Radio.css" layer(ms.components);
 @import "./components/Slider/Slider.css" layer(ms.components);
+@import "./components/NumberInput/NumberInput.css" layer(ms.components);
