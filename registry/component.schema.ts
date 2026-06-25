@@ -1,14 +1,27 @@
 import { z } from 'zod';
 
 /** 溯源元数据:component.json 的核心,「有迹可循 + 可落库」的关键。 */
-export const sourceSchema = z.object({
-  type: z.enum(['original', 'inspired', 'captured']),
-  url: z.string().optional(),
-  app: z.string().optional(),
-  screenshot: z.string().optional(),
-  capturedAt: z.string(),
-  requirements: z.string(),
-});
+export const sourceSchema = z
+  .object({
+    /** original=自研原创;inspired=受外部启发重做;captured=按截图 / 页面复刻。 */
+    type: z.enum(['original', 'inspired', 'captured']),
+    /** 来源链接(在线 URL / 设计稿);inspired·captured 至少给一项证据。 */
+    url: z.string().url().optional(),
+    /** 来源应用 / 产品名(如 Linear、Figma 文件)。 */
+    app: z.string().optional(),
+    /** 截图 / 设计稿的相对路径或链接。 */
+    screenshot: z.string().optional(),
+    /** 收录日期,YYYY-MM-DD。 */
+    capturedAt: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'capturedAt 需为 YYYY-MM-DD'),
+    /** 当时的需求原文 / 设计意图 —— 溯源的「为什么」。 */
+    requirements: z.string().min(10, 'requirements 太短,应写真实需求原文 / 设计意图'),
+  })
+  // 受启发 / 复刻的组件必须至少留一项外部证据,否则「可追溯」名存实亡;original 自研免证据。
+  .refine((s) => s.type === 'original' || Boolean(s.url || s.app || s.screenshot), {
+    path: ['type'],
+    message:
+      'source.type 为 inspired / captured 时,需至少提供 url / app / screenshot 之一作为溯源证据',
+  });
 
 /** 每个组件一份 component.json,经此 schema 校验后写入 registry/manifest.json。 */
 export const componentSchema = z.object({

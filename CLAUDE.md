@@ -24,7 +24,7 @@ pnpm monorepo · TypeScript (strict) · tsup · Biome · Changesets · VitePress
 - 发布:`pnpm changeset` → `pnpm run version` → `pnpm release`(注意 `pnpm run version`,`pnpm version` 会撞 pnpm 内置命令)
 
 ## 硬性约定
-1. **每个组件必须有 `component.json`**,且 `source` 段填写溯源(来源 / capturedAt / requirements)。无元数据不得合并。
+1. **每个组件必须有 `component.json`**,且 `source` 段填写溯源(来源 / capturedAt / requirements)。无元数据不得合并。`source.type` 为 `inspired` / `captured` 时**必须**至少给 `url` / `app` / `screenshot` 之一作为证据(schema 已强制,缺则 `pnpm registry` 校验失败);`original` 自研免证据。`requirements` 写真实需求原文 / 设计意图,勿照抄 `description`(`pnpm registry` 会列出疑似模板)。
 2. **每次改动发布包都要 `pnpm changeset`** 写变更说明 —— 这是版本级的"有迹可循"。
 3. 新增组件一律走 `pnpm new` 生成器,**不手工新建目录**,以保证结构与命名统一。
 4. TypeScript strict;通过 `biome check` 才能提交。
