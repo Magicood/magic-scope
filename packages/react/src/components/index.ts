@@ -31,6 +31,7 @@ export * from './Switch';
 export * from './Table';
 export * from './Tabs';
 export * from './Tag';
+export * from './Text';
 export * from './Textarea';
 export * from './Timeline';
 export * from './Toast';

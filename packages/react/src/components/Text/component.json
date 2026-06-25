@@ -1,0 +1,28 @@
+{
+  "id": "text",
+  "name": "Text",
+  "description": "文字排版旗舰核心(typography 分类)。多态 as/asChild 的文字原语,把所有可控文字属性收成 props:字族(sans/serif/mono/display)、流式字号档、字重(语义档+数值)、斜体、tone 着色、对齐、行高、字距、transform、下划线/删除线、单行 truncate(头/尾)+多行 lineClamp、折行 text-wrap(balance/pretty)、空白处理、断词、连字符、方向 dir、数字变体(tabular 等宽)、小型大写,以及魔法文字(渐变/辉光/描边)。留口充分:...rest 透传所有原生属性与事件,className/style 与计算值合并(用户优先),逃生舱走 style/className。兼容性备注见各 prop TSDoc。",
+  "category": "typography",
+  "tags": [
+    "text",
+    "typography",
+    "polymorphic",
+    "as-child",
+    "truncate",
+    "line-clamp",
+    "gradient-text",
+    "tone",
+    "tabular-nums",
+    "rtl"
+  ],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-25",
+    "requirements": "用户 2026-06-25 定:文字排版单独成 typography 分类(与 layout 并列),尽量全覆盖所有可支持文字属性,并给足用户发挥空间(插槽/多态/全事件/可定制)、透明备注兼容性。Text 为该分类旗舰核心:多态文字原语承载全属性矩阵 + 魔法文字差异化(复用 tone/fx/动效档)。共享尺度走 typography.css 的 --ms-type-step-*/--ms-leading-*/--ms-tracking-*(组件内兜底,待架构线接入正式 type scale)。兼容性坑(text-wrap/line-clamp/background-clip:text/hyphens/text-stroke)逐条标注在 prop TSDoc,不藏着。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Text.tsx", "Text.css", "index.ts"]
+}
