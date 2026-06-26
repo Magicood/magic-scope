@@ -1,0 +1,134 @@
+/* —— Anchor:滚动锚点导航(scroll-spy)。墨条经 --ms-anchor-ink-y/-h 平移 + 接 tone 槽位染色 —— */
+.ms-anchor {
+  position: relative;
+  display: block;
+  /* 左侧轨道:墨条与各链接的左对齐基准线 */
+  padding-inline-start: var(--ms-space-3);
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  font-family: var(--ms-font-sans);
+  font-size: calc(0.875rem * var(--ms-anchor-scale, 1));
+  line-height: 1.4;
+}
+
+/* 轨道底线(墨条所在的导轨) */
+.ms-anchor::before {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  inline-size: max(1px, var(--ms-hairline, 1px));
+  background-color: var(--ms-color-border);
+  border-radius: var(--ms-radius-full);
+}
+
+/* —— 墨条指示器:绝对定位,变量驱动平移 + 高度;tone 染色 + 发光 —— */
+.ms-anchor__ink {
+  position: absolute;
+  inset-inline-start: 0;
+  inline-size: 2px;
+  block-size: var(--ms-anchor-ink-h, 0);
+  border-radius: var(--ms-radius-full);
+  background-color: var(--ms-c);
+  box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) -2px var(--ms-c-glow);
+  opacity: 0;
+  translate: 0 var(--ms-anchor-ink-y, 0);
+  transition:
+    translate var(--ms-dur-base) var(--ms-ease-standard),
+    block-size var(--ms-dur-base) var(--ms-ease-standard),
+    opacity var(--ms-dur-fast) var(--ms-ease-standard);
+}
+.ms-anchor__ink[data-visible] {
+  opacity: 1;
+}
+
+/* —— 列表 / 缩进(每层递进一档间距,随密度缩放) —— */
+.ms-anchor__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  min-inline-size: 0;
+}
+/* 子层缩进 */
+.ms-anchor__list[data-depth="1"] {
+  padding-inline-start: calc(var(--ms-space-4) * var(--ms-density-scale, 1));
+}
+.ms-anchor__list[data-depth="2"] {
+  padding-inline-start: calc(var(--ms-space-3) * var(--ms-density-scale, 1));
+}
+
+.ms-anchor__item {
+  min-inline-size: 0;
+}
+
+/* —— 链接 —— */
+.ms-anchor__link {
+  display: block;
+  padding-block: calc(var(--ms-space-1) * var(--ms-density-scale, 1));
+  padding-inline: var(--ms-space-2);
+  color: var(--ms-color-fg-muted);
+  text-decoration: none;
+  border-radius: var(--ms-radius-sm);
+  min-inline-size: 0;
+  cursor: pointer;
+  transition:
+    color var(--ms-dur-fast) var(--ms-ease-standard),
+    background-color var(--ms-dur-fast) var(--ms-ease-standard);
+}
+/* 内容边界:超长标题单行省略,绝不撑破容器 */
+.ms-anchor__link-text {
+  display: block;
+  min-inline-size: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+@media (hover: hover) {
+  .ms-anchor__link:hover {
+    color: var(--ms-color-fg);
+    background-color: var(--ms-c-soft);
+  }
+}
+
+.ms-anchor__link--active {
+  color: var(--ms-c);
+  font-weight: 600;
+}
+
+.ms-anchor__link:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--ms-color-bg),
+    0 0 0 4px var(--ms-color-focus-ring);
+}
+
+/* —— 尺寸档(经 --ms-anchor-scale 统一缩放字号,缩进随密度) —— */
+.ms-anchor--sm {
+  --ms-anchor-scale: 0.92;
+}
+.ms-anchor--md {
+  --ms-anchor-scale: 1;
+}
+.ms-anchor--lg {
+  --ms-anchor-scale: 1.12;
+}
+
+/* —— 触控:链接热区不低于目标尺寸 —— */
+@media (pointer: coarse) {
+  .ms-anchor__link {
+    min-block-size: var(--ms-target-min);
+    display: flex;
+    align-items: center;
+  }
+}
+
+/* —— 动效降级:墨条瞬时移动,不做缓动 —— */
+@media (prefers-reduced-motion: reduce) {
+  .ms-anchor__ink {
+    transition: opacity var(--ms-dur-fast) var(--ms-ease-standard);
+  }
+}
+[data-ms-motion="off"] .ms-anchor__ink {
+  transition: none;
+}

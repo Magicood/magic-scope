@@ -78,3 +78,8 @@
 @import "./components/Form/Form.css" layer(ms.components);
 @import "./components/DatePicker/DatePicker.css" layer(ms.components);
 @import "./components/Tree/Tree.css" layer(ms.components);
+@import "./components/Statistic/Statistic.css" layer(ms.components);
+@import "./components/PinInput/PinInput.css" layer(ms.components);
+@import "./components/Anchor/Anchor.css" layer(ms.components);
+@import "./components/Watermark/Watermark.css" layer(ms.components);
+@import "./components/BackTop/BackTop.css" layer(ms.components);

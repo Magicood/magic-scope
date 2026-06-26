@@ -1,0 +1,24 @@
+{
+  "id": "watermark",
+  "name": "Watermark",
+  "description": "在内容上平铺旋转的文字 / 图片水印覆盖层,不挡交互。",
+  "category": "layout",
+  "tags": ["watermark", "overlay", "layout", "canvas", "branding", "traceability"],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-26",
+    "requirements": "需求:给任意内容区叠加可平铺水印用于溯源/品牌标注。硬约束:(1) 覆盖层 pointer-events:none 绝不挡下层点击/选择/滚动;(2) 高 DPI 必须清晰——离屏 canvas 按 devicePixelRatio 放大后 toDataURL 作为 repeating background 平铺,而非 DOM 文本堆叠;(3) 文字(多行)与图片二选一,旋转/间距/偏移/不透明度/字号字色字体/zIndex 全可配;(4) 降级安全:SSR / 无 2d 上下文 / 图片加载失败时不渲染背景但仍正常包裹 children、不抛错;(5) 覆盖层 aria-hidden 纯装饰不进可访问性树。单元画布的尺寸/中心布局抽为零依赖纯函数 logic.ts 以便单测与跨框架平移。已知取舍:未做 MutationObserver 防删除/防篡改加固(留 TODO),当前面向视觉水印而非对抗恶意 DOM 篡改。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": [
+    "Watermark.tsx",
+    "Watermark.css",
+    "logic.ts",
+    "logic.test.ts",
+    "Watermark.test.tsx",
+    "index.ts"
+  ]
+}

@@ -92,7 +92,9 @@ export type MessageKey =
   | 'datePicker.nextMonth'
   | 'datePicker.prevYear'
   | 'datePicker.nextYear'
-  | 'datePicker.selectMonthYear';
+  | 'datePicker.selectMonthYear'
+  | 'pinInput.label'
+  | 'backTop.label';
 
 /** 完整字典:每个 key 都有值。 */
 export type Messages = Record<MessageKey, Message>;
@@ -181,6 +183,8 @@ export const defaultMessages: Messages = {
   'datePicker.prevYear': '上一年',
   'datePicker.nextYear': '下一年',
   'datePicker.selectMonthYear': '选择年月',
+  'pinInput.label': '验证码输入',
+  'backTop.label': '回到顶部',
 };
 
 const TEMPLATE = /\{(\w+)\}/g;

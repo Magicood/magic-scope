@@ -9,13 +9,13 @@ import { gzipSync } from 'node:zlib';
 
 const ROOT = join(import.meta.dirname, '..');
 
-// 注:react 的两条阈值在 v1「54 组件全深度」落地时上调过(barrel ≈73KB gz / styles ≈36KB gz)。
+// 注:react 阈值随组件数增长分次上调(v1 54 组件 → v2 持续新增 Form/DatePicker/Tree/…)。
 // barrel 是全量入口,库本身 tree-shakeable(sideEffects 已标),用户按需 import 远小于此;
-// 阈值留 ~20% 余量给后续组件增长,仅拦截「误打包依赖 / CSS 失控」级别的暴涨。
+// 阈值留余量给后续组件增长,仅拦截「误打包依赖 / CSS 失控」级别的暴涨(那会是 100KB+ 量级)。
 const CHECKS = [
   { label: '@magic-scope/tokens  index.js', file: 'packages/tokens/dist/index.js', limitKb: 3 },
-  { label: '@magic-scope/react   index.js', file: 'packages/react/dist/index.js', limitKb: 90 },
-  { label: '@magic-scope/react   styles.css', file: 'packages/react/dist/styles.css', limitKb: 45 },
+  { label: '@magic-scope/react   index.js', file: 'packages/react/dist/index.js', limitKb: 135 },
+  { label: '@magic-scope/react   styles.css', file: 'packages/react/dist/styles.css', limitKb: 60 },
   {
     label: '@magic-scope/tokens  arcane.css',
     file: 'packages/tokens/dist/css/arcane.css',

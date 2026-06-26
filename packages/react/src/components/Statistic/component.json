@@ -1,0 +1,24 @@
+{
+  "id": "statistic",
+  "name": "Statistic",
+  "description": "数值统计展示:千分位 + 精度格式化、前后缀、趋势染色与箭头、加载骨架、挂载滚动动画。",
+  "category": "data-display",
+  "tags": ["statistic", "metric", "number", "kpi", "data-display", "count-up", "trend", "skeleton"],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-26",
+    "requirements": "做仪表盘/概览卡里的单指标展示。硬约束:1) 数值格式化(千分位插入 + precision 小数位 + 拆 sign/integer/fraction 三段分字号)必须是零 React 的纯函数(logic.ts),便于平移 core 与单测;2) trend up/down 不写死颜色,统一走全库 tone resolver(up→success / down→danger 暴露 --ms-c)并配方向箭头;3) animateOnMount 用 requestAnimationFrame 从 0 缓出滚到终值,但必须尊重 prefers-reduced-motion 与 data-ms-motion=off —— 命中时直接落终值不滚动;4) 只读统计文本,数值容器给完整 aria-label(标题+趋势+前缀+数值+后缀)供屏幕阅读器一次读出;5) 超长 title/value 不撑破容器(min-inline-size:0 + 单行省略);6) prefix/suffix/trend/title 子部件留 classNames 槽位,as 多态根。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": [
+    "Statistic.tsx",
+    "Statistic.css",
+    "logic.ts",
+    "logic.test.ts",
+    "Statistic.test.tsx",
+    "index.ts"
+  ]
+}

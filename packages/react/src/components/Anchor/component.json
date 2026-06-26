@@ -1,0 +1,17 @@
+{
+  "id": "anchor",
+  "name": "Anchor",
+  "description": "滚动锚点导航(scroll-spy):监听容器滚动高亮当前小节、墨条指示并平滑跳转,支持嵌套缩进。",
+  "category": "navigation",
+  "tags": ["navigation", "scroll-spy", "anchor", "toc", "scrollspy", "in-page-nav"],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-26",
+    "requirements": "页内长文/文档需要一个跟随滚动自动高亮当前小节的目录导航。核心硬约束:把『算哪个高亮』做成零 React 的纯函数 resolveActiveLink(入参为壳层已读好的各锚点 offsetTop 数组 + scrollTop + bounds + offsetTop),DOM 读 offset 与滚动副作用全部留在 React 壳层,保证逻辑可单测、可平移到其它框架。判定线 = scrollTop + offsetTop + bounds,取判定线之上最靠下的锚点为 active,页面顶部时回退首项。点击锚点必须 preventDefault 改走平滑 scrollTo(尊重 prefers-reduced-motion 与 data-ms-motion=off 时瞬时跳转),并支持 targetOffset 顶部留白。滚动容器可由 getContainer 指定(默认 window),滚动监听走 requestAnimationFrame 节流。受控/非受控双模式(activeKey 受控时高亮由外部决定但仍发 onChange)。a11y:nav landmark + 链接列表,active 链接 aria-current=location。墨条用 CSS 变量驱动平移、接 tone 槽位染色发光。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Anchor.tsx", "Anchor.css", "logic.ts", "index.ts"]
+}
