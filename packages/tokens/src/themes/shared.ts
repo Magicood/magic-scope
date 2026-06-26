@@ -12,12 +12,19 @@ export const sharedDimension = {
     full: scale.radius.full,
   },
   space: {
+    0: scale.space[0],
     1: scale.space[1],
     2: scale.space[2],
     3: scale.space[3],
     4: scale.space[4],
+    5: scale.space[5],
     6: scale.space[6],
+    7: scale.space[7],
     8: scale.space[8],
+    9: scale.space[9],
+    10: scale.space[10],
+    12: scale.space[12],
+    16: scale.space[16],
   },
 };
 
