@@ -59,7 +59,22 @@ export interface ThemeContract {
   };
   dimension: {
     radius: { sm: string; md: string; lg: string; full: string };
-    space: { 1: string; 2: string; 3: string; 4: string; 6: string; 8: string };
+    // 连续标尺(N×0.25rem)+ 大档 12/16:组件按 1..10 + 12/16 自由取,缺档会让 padding/gap 塌成 0
+    space: {
+      0: string;
+      1: string;
+      2: string;
+      3: string;
+      4: string;
+      5: string;
+      6: string;
+      7: string;
+      8: string;
+      9: string;
+      10: string;
+      12: string;
+      16: string;
+    };
   };
   typography: {
     fontSans: string;

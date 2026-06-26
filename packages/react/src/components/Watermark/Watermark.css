@@ -1,0 +1,36 @@
+/* —— Watermark 根容器:position:relative 包裹 children + 覆盖层 —— */
+.ms-watermark {
+  position: relative;
+  /* 内容边界:超长子内容不撑破容器,允许内部正常滚动/换行 */
+  min-inline-size: 0;
+  font-family: var(--ms-font-sans);
+}
+
+/*
+ * —— 平铺水印覆盖层 ——
+ * 绝对定位铺满根容器;pointer-events:none 让点击/选择穿透到下层内容;
+ * 背景图(离屏 canvas 绘制的单元 data URL)、background-size / position / opacity / z-index 由内联样式驱动。
+ * aria-hidden(在 TSX 里设)使其不进可访问性树。
+ */
+.ms-watermark__overlay {
+  position: absolute;
+  inset: 0;
+  /* 不挡交互:这是水印组件的核心约束 */
+  pointer-events: none;
+  /* 纯装饰,不可选中 */
+  user-select: none;
+  /* 默认弱前景兜底色(canvas 取不到 token,这里仅作为无背景图时的语义占位,不直接可见) */
+  color: var(--ms-color-fg-subtle);
+  /* 覆盖层自身不应被裁剪外溢影响布局 */
+  background-repeat: repeat;
+}
+
+/* —— 动效降级:本组件无动画(水印静态),此处仅声明意图、与全库一致地尊重偏好 —— */
+@media (prefers-reduced-motion: reduce) {
+  .ms-watermark__overlay {
+    transition: none;
+  }
+}
+[data-ms-motion="off"] .ms-watermark__overlay {
+  transition: none;
+}

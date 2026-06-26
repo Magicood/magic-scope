@@ -1,0 +1,17 @@
+{
+  "id": "tree",
+  "name": "Tree",
+  "description": "树形控件:展开/折叠、单选/多选、级联勾选(含半选态)、节点图标与引导线;完整 ARIA tree 键盘导航(方向键进出层级与展开折叠、Home/End、Enter 选中、Space 勾选)、受控/非受控三态。",
+  "category": "data-display",
+  "tags": ["tree", "hierarchy", "checkbox", "cascade", "a11y", "keyboard"],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-26",
+    "requirements": "做一个生产级树形控件。硬约束:① 所有树操作(可见节点扁平化、后代/祖先收集、勾选级联上下传播、半选派生)纯 TS 进 logic.ts,零 React,可平移 @magic-scope/core;② 勾选用级联模型(非 checkStrictly):checkedKeys 仅存『完全勾选』,半选由 deriveHalfChecked 从中派生,toggle 向下传后代、向上重算祖先(全部非禁用子勾选才勾选),disabled 子树不参与级联;③ 扁平 ARIA tree:li 经 aria-level/posinset/setsize 表达层级(而非 DOM 嵌套),role=tree/treeitem、aria-expanded/selected/checked(mixed 半选)/disabled;④ 完整键盘:↑↓ 移焦、→ 展开或进子、← 折叠或回父、Home/End、Enter 选中、Space 勾选,roving tabindex + 焦点落格;⑤ 受控/非受控三套(expanded/selected/checked)独立;⑥ 单选/多选、节点图标、引导线、blockNode 整行可点、密度缩放、tone 选中高亮。诚实取舍:虚拟滚动(大数据量)与拖拽排序延后;勾选框为自绘轻量元素(非复用 Checkbox)以承载半选态。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Tree.tsx", "logic.ts", "Tree.css", "index.ts"]
+}

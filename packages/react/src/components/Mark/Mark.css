@@ -1,0 +1,29 @@
+/* —— Mark:文本高亮容器 —— */
+/* 容器本身不改文字外观,只兜底内容边界:超长无空格串可断行,不撑破布局。 */
+.ms-mark {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* —— 命中片段:语义化 <mark>,着色走 tone 槽位(.ms-tone-{tone} 注入 --ms-c / --ms-c-glow)。
+   覆盖 UA 默认的黄底黑字,改为「tone 软底 + tone 前景」,随主题/换肤联动。 —— */
+.ms-mark__hit {
+  /* 软底:tone 主色低透明度铺底(亮暗主题各自合成,天然主题感知) */
+  background-color: color-mix(in oklch, var(--ms-c) 22%, transparent);
+  color: var(--ms-c);
+  /* 轻微内缩 + 圆角,让高亮块更柔和(em 单位随字号缩放) */
+  border-radius: var(--ms-radius-xs, 0.125em);
+  padding-inline: 0.12em;
+  /* 抵消 padding 带来的行内基线位移,避免高亮把行高顶开 */
+  margin-inline: -0.04em;
+  /* 高亮辉光:受全局 --ms-fx-glow 调制,fx 关闭时消失 */
+  box-shadow: 0 0 calc(0.4em * var(--ms-fx-glow, 0)) var(--ms-c-glow);
+}
+
+/* fx 总闸开启时给一点点辉光(默认 --ms-fx-glow 为 0 则无,避免噪声) */
+[data-ms-fx="on"] .ms-mark__hit {
+  box-shadow: 0 0 calc(0.35em * var(--ms-fx-glow, 1)) var(--ms-c-glow);
+}
+[data-ms-fx="off"] .ms-mark__hit {
+  box-shadow: none;
+}

@@ -1,0 +1,158 @@
+/**
+ * Tree 树形控件样式 —— 消费 @magic-scope/tokens 的 --ms-* 变量。
+ * 扁平 ARIA tree(li 经 aria-level 表达层级,--ms-tree-level 驱动缩进);展开箭头、级联勾选框(含半选)、
+ * 选中/悬停态、引导线、密度缩放。尊重 prefers-reduced-motion 与 data-ms-motion=off。
+ */
+
+.ms-tree {
+  --ms-tree-indent: calc(1.375rem * var(--ms-density-scale, 1));
+  --ms-tree-row-h: calc(1.75rem * var(--ms-density-scale, 1));
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-family: var(--ms-font-sans);
+  color: var(--ms-color-fg);
+}
+.ms-tree--sm {
+  --ms-tree-row-h: calc(1.5rem * var(--ms-density-scale, 1));
+  font-size: 0.875em;
+}
+.ms-tree--lg {
+  --ms-tree-row-h: calc(2rem * var(--ms-density-scale, 1));
+  font-size: 1.0625em;
+}
+
+.ms-tree__node {
+  display: flex;
+  align-items: center;
+  gap: var(--ms-space-1);
+  min-block-size: var(--ms-tree-row-h);
+  padding-inline-end: var(--ms-space-2);
+  border-radius: var(--ms-radius-sm);
+  cursor: pointer;
+  user-select: none;
+  transition: background var(--ms-dur-fast, 0.12s) var(--ms-ease-standard, ease);
+}
+.ms-tree__node:focus-visible {
+  outline: 2px solid var(--ms-color-focus-ring);
+  outline-offset: -2px;
+}
+.ms-tree--block .ms-tree__node:hover:not(.ms-tree__node--disabled) {
+  background: var(--ms-color-surface-sunken);
+}
+.ms-tree__node--selected {
+  background: color-mix(in oklab, var(--ms-color-primary) 16%, transparent);
+  color: var(--ms-color-primary);
+}
+.ms-tree__node--disabled {
+  color: var(--ms-color-fg-subtle);
+  cursor: not-allowed;
+}
+
+/* 缩进:按 aria-level(--ms-tree-level)留白 */
+.ms-tree__indent {
+  flex: none;
+  inline-size: calc(var(--ms-tree-level, 0) * var(--ms-tree-indent));
+}
+.ms-tree--line .ms-tree__indent {
+  border-inline-start: 1px dashed var(--ms-color-border);
+  margin-inline-start: calc(var(--ms-tree-indent) / 2);
+}
+
+/* 展开箭头 */
+.ms-tree__toggle {
+  flex: none;
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: none;
+  border: none;
+  color: var(--ms-color-fg-muted);
+  cursor: pointer;
+}
+.ms-tree__toggle--leaf {
+  cursor: default;
+}
+.ms-tree__arrow {
+  display: inline-block;
+  font-size: 0.7em;
+  transition: transform var(--ms-dur-fast, 0.15s) var(--ms-ease-standard, ease);
+}
+.ms-tree__arrow--open {
+  transform: rotate(90deg);
+}
+
+/* 勾选框(级联,含半选) */
+.ms-tree__checkbox {
+  flex: none;
+  inline-size: 1rem;
+  block-size: 1rem;
+  border: 1.5px solid var(--ms-color-border-strong);
+  border-radius: var(--ms-radius-sm);
+  background: var(--ms-color-surface);
+  cursor: pointer;
+  position: relative;
+  transition:
+    background var(--ms-dur-fast, 0.12s) var(--ms-ease-standard, ease),
+    border-color var(--ms-dur-fast, 0.12s) var(--ms-ease-standard, ease);
+}
+.ms-tree__checkbox--checked,
+.ms-tree__checkbox--half {
+  background: var(--ms-color-primary);
+  border-color: var(--ms-color-primary);
+  box-shadow: 0 0 calc(6px * var(--ms-fx-glow, 1))
+    color-mix(in oklab, var(--ms-color-primary) 45%, transparent);
+}
+.ms-tree__checkbox--checked::after {
+  content: "";
+  position: absolute;
+  inset-block-start: 1px;
+  inset-inline-start: 4px;
+  inline-size: 4px;
+  block-size: 8px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+.ms-tree__checkbox--half::after {
+  content: "";
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline: 2px;
+  block-size: 2px;
+  background: #fff;
+  transform: translateY(-50%);
+}
+.ms-tree__checkbox--disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.ms-tree__icon {
+  flex: none;
+  display: inline-flex;
+  color: var(--ms-color-fg-muted);
+}
+.ms-tree__label {
+  flex: 1;
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ms-tree__node,
+  .ms-tree__arrow,
+  .ms-tree__checkbox {
+    transition: none;
+  }
+}
+[data-ms-motion="off"] .ms-tree__node,
+[data-ms-motion="off"] .ms-tree__arrow,
+[data-ms-motion="off"] .ms-tree__checkbox {
+  transition: none;
+}

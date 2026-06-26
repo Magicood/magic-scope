@@ -1,0 +1,246 @@
+/* ===========================================================================
+ * Transfer —— 双列穿梭框。两个面板 + 中间方向按钮区。
+ * 全部尺寸随 data-ms-density 缩放(--ms-density-scale);消费 --ms-* 设计 token。
+ * =========================================================================== */
+
+.ms-transfer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: stretch;
+  gap: var(--ms-space-3);
+  font-family: var(--ms-font-sans);
+  color: var(--ms-color-fg);
+  /* 内容边界:整体不撑破父容器 */
+  max-inline-size: 100%;
+}
+
+/* —— 单侧面板:表头 + 搜索 + 列表的纵向堆叠 —— */
+.ms-transfer__panel {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  block-size: 100%;
+  border: 1px solid var(--ms-color-border);
+  border-radius: var(--ms-radius-lg);
+  background-color: var(--ms-color-surface);
+  overflow: hidden;
+}
+
+/* —— 表头:全选框 + 「已选 X/Y」+ 标题 —— */
+.ms-transfer__header {
+  display: flex;
+  align-items: center;
+  gap: var(--ms-space-2);
+  padding: calc(var(--ms-space-2) * var(--ms-density-scale, 1)) var(--ms-space-3);
+  border-block-end: 1px solid var(--ms-color-border);
+  background-color: var(--ms-color-surface-raised);
+  min-inline-size: 0;
+}
+
+.ms-transfer__header-text {
+  display: flex;
+  align-items: baseline;
+  gap: var(--ms-space-2);
+  min-inline-size: 0;
+  font-size: 0.875rem;
+}
+
+.ms-transfer__count {
+  flex: 0 0 auto;
+  color: var(--ms-color-fg-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* —— 标题:超长省略,不撑破表头 —— */
+.ms-transfer__title {
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600;
+  color: var(--ms-color-fg);
+}
+
+/* —— 搜索框 —— */
+.ms-transfer__search {
+  padding: var(--ms-space-2) var(--ms-space-3);
+  border-block-end: 1px solid var(--ms-color-border);
+}
+
+.ms-transfer__search-input {
+  inline-size: 100%;
+  max-inline-size: 100%;
+  box-sizing: border-box;
+  padding: calc(var(--ms-space-1) * var(--ms-density-scale, 1)) var(--ms-space-2);
+  font: inherit;
+  font-size: 0.875rem;
+  color: var(--ms-color-fg);
+  background-color: var(--ms-color-surface-sunken);
+  border: 1px solid var(--ms-color-border);
+  border-radius: var(--ms-radius-md);
+  outline: none;
+  transition:
+    border-color var(--ms-dur-fast) var(--ms-ease-standard),
+    box-shadow var(--ms-dur-fast) var(--ms-ease-standard);
+}
+
+.ms-transfer__search-input::placeholder {
+  color: var(--ms-color-fg-subtle);
+}
+
+.ms-transfer__search-input:focus-visible {
+  border-color: var(--ms-color-primary);
+  box-shadow: 0 0 0 3px var(--ms-color-focus-ring);
+}
+
+.ms-transfer__search-input:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+/* —— 列表:可滚动区,每项是一行 —— */
+.ms-transfer__list {
+  flex: 1 1 auto;
+  margin: 0;
+  padding: var(--ms-space-1);
+  list-style: none;
+  overflow-y: auto;
+  /* 限定高度以便分页式滚动浏览;随密度缩放 */
+  max-block-size: calc(15rem * var(--ms-density-scale, 1));
+  min-block-size: calc(6rem * var(--ms-density-scale, 1));
+}
+
+.ms-transfer__item {
+  display: flex;
+  align-items: center;
+  min-inline-size: 0;
+  padding: calc(var(--ms-space-1) * var(--ms-density-scale, 1)) var(--ms-space-2);
+  border-radius: var(--ms-radius-md);
+  transition: background-color var(--ms-dur-fast) var(--ms-ease-standard);
+}
+
+.ms-transfer__item:hover:not(.ms-transfer__item--disabled) {
+  background-color: var(--ms-color-surface-raised);
+}
+
+.ms-transfer__item--checked {
+  background-color: var(--ms-color-surface-sunken);
+}
+
+.ms-transfer__item--disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Checkbox 占满整行,标签可截断 */
+.ms-transfer__item > .ms-checkbox {
+  inline-size: 100%;
+  min-inline-size: 0;
+}
+
+/* —— 单项标签:超长省略,不撑破列表 —— */
+.ms-transfer__item-label {
+  display: block;
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* —— 空态 —— */
+.ms-transfer__empty {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--ms-space-8) var(--ms-space-3);
+  min-block-size: calc(6rem * var(--ms-density-scale, 1));
+  color: var(--ms-color-fg-subtle);
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+/* —— 中间方向按钮区 —— */
+.ms-transfer__operations {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--ms-space-2);
+  align-self: center;
+}
+
+.ms-transfer__op-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: calc(2.25rem * var(--ms-density-scale, 1));
+  block-size: calc(2.25rem * var(--ms-density-scale, 1));
+  /* 触达热区不小于全库最小命中目标 */
+  min-inline-size: var(--ms-target-min, 2.25rem);
+  min-block-size: var(--ms-target-min, 2.25rem);
+  padding: 0;
+  font: inherit;
+  font-size: 1rem;
+  line-height: 1;
+  color: var(--ms-color-fg);
+  background-color: var(--ms-color-surface);
+  border: 1px solid var(--ms-color-border-strong);
+  border-radius: var(--ms-radius-md);
+  cursor: pointer;
+  transition:
+    background-color var(--ms-dur-fast) var(--ms-ease-standard),
+    border-color var(--ms-dur-fast) var(--ms-ease-standard),
+    box-shadow var(--ms-dur-base) var(--ms-ease-standard),
+    transform var(--ms-dur-fast) var(--ms-ease-standard);
+}
+
+.ms-transfer__op-button:hover:not(:disabled) {
+  border-color: var(--ms-color-primary);
+  color: var(--ms-color-primary);
+  background-color: var(--ms-color-surface-raised);
+}
+
+.ms-transfer__op-button:active:not(:disabled) {
+  transform: scale(calc(0.94 + 0.06 * (1 - var(--ms-motion-scale, 1))));
+}
+
+.ms-transfer__op-button:focus-visible {
+  outline: none;
+  border-color: var(--ms-color-primary);
+  box-shadow:
+    0 0 0 3px var(--ms-color-focus-ring),
+    /* 魔法发光:fx-glow 开时溢出微光,关时为 0 */
+    0 0 calc(10px * var(--ms-fx-glow, 0)) var(--ms-color-glow);
+}
+
+.ms-transfer__op-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+/* —— 整体禁用 —— */
+.ms-transfer--disabled {
+  opacity: 0.7;
+}
+
+/* —— 降级动效:尊重系统偏好与全库 motion 开关 —— */
+@media (prefers-reduced-motion: reduce) {
+  .ms-transfer__op-button,
+  .ms-transfer__item,
+  .ms-transfer__search-input {
+    transition: none;
+  }
+  .ms-transfer__op-button:active:not(:disabled) {
+    transform: none;
+  }
+}
+
+[data-ms-motion="off"] .ms-transfer__op-button,
+[data-ms-motion="off"] .ms-transfer__item,
+[data-ms-motion="off"] .ms-transfer__search-input {
+  transition: none;
+}
+
+[data-ms-motion="off"] .ms-transfer__op-button:active:not(:disabled) {
+  transform: none;
+}

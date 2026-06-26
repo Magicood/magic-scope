@@ -1,0 +1,323 @@
+/* —— FloatButton:悬浮操作钮。tone 槽位驱动配色 + 密度(--ms-density-scale)缩放尺寸 —— */
+.ms-float-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: calc(3rem * var(--ms-density-scale, 1));
+  block-size: calc(3rem * var(--ms-density-scale, 1));
+  padding: 0;
+  border: 1px solid color-mix(in oklch, var(--ms-c) 30%, transparent);
+  border-radius: var(--ms-radius-full);
+  background-color: var(--ms-color-surface);
+  color: var(--ms-c);
+  font-family: var(--ms-font-sans);
+  font-size: 1.25rem;
+  line-height: 0;
+  text-decoration: none;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  box-shadow:
+    0 6px 20px -8px color-mix(in oklch, var(--ms-color-fg) 30%, transparent),
+    0 0 calc(14px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow);
+  transition:
+    background-color var(--ms-dur-fast) var(--ms-ease-standard),
+    border-color var(--ms-dur-fast) var(--ms-ease-standard),
+    color var(--ms-dur-fast) var(--ms-ease-standard),
+    box-shadow var(--ms-dur-base) var(--ms-ease-standard),
+    transform var(--ms-dur-fast) var(--ms-ease-emphasized);
+}
+
+/* —— 形状:方形(圆角) —— */
+.ms-float-button--square {
+  border-radius: var(--ms-radius-md);
+}
+
+/* —— 类型:primary 实底发光(中性面 vs 主色面) —— */
+.ms-float-button--primary {
+  border-color: var(--ms-c);
+  background-color: var(--ms-c);
+  color: var(--ms-on-c);
+  box-shadow:
+    0 6px 20px -8px color-mix(in oklch, var(--ms-color-fg) 32%, transparent),
+    0 0 calc(18px * var(--ms-fx-glow, 1)) -6px var(--ms-c-glow);
+}
+
+/* —— 内容包裹:图标(+ 方形内文字)纵向居中,绝不溢出 —— */
+.ms-float-button__body {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  padding-inline: var(--ms-space-1);
+  overflow: hidden;
+}
+.ms-float-button__icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+}
+/* —— 方形内文字:超长截断不撑破按钮 —— */
+.ms-float-button__description {
+  max-inline-size: 100%;
+  overflow: hidden;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  line-height: 1.1;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+/* 带文字的方钮:略放大热区,文字与图标都容得下 */
+.ms-float-button--with-text {
+  font-size: 1.1rem;
+}
+.ms-float-button--with-text.ms-float-button--square {
+  inline-size: calc(3.5rem * var(--ms-density-scale, 1));
+  block-size: calc(3.5rem * var(--ms-density-scale, 1));
+}
+
+/* —— badge:右上角数字 / 小红点 —— */
+.ms-float-button__badge {
+  position: absolute;
+  inset-block-start: -2px;
+  inset-inline-end: -2px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: 1.125rem;
+  block-size: 1.125rem;
+  padding-inline: 0.3125rem;
+  border-radius: var(--ms-radius-full);
+  background-color: var(--ms-tone-danger-c, #e5484d);
+  color: #fff;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  line-height: 1;
+  /* 数字超长省略,绝不撑破 */
+  max-inline-size: 3rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  box-shadow: 0 0 0 2px var(--ms-color-surface);
+  pointer-events: none;
+}
+.ms-float-button__badge--dot {
+  inset-block-start: 1px;
+  inset-inline-end: 1px;
+  min-inline-size: 0;
+  inline-size: 0.5rem;
+  block-size: 0.5rem;
+  padding-inline: 0;
+}
+
+/* —— hover(仅具备 hover 能力的指针):染主色 / 加亮 + 发光增强 + 上浮 —— */
+@media (hover: hover) {
+  .ms-float-button--default:hover {
+    border-color: var(--ms-c);
+    background-color: var(--ms-c);
+    color: var(--ms-on-c);
+    transform: translateY(-2px);
+    box-shadow:
+      0 10px 26px -10px color-mix(in oklch, var(--ms-color-fg) 36%, transparent),
+      0 0 calc(22px * var(--ms-fx-glow, 1)) -6px var(--ms-c-glow);
+  }
+  .ms-float-button--primary:hover {
+    background-color: var(--ms-c-hover);
+    border-color: var(--ms-c-hover);
+    transform: translateY(-2px);
+    box-shadow:
+      0 10px 26px -10px color-mix(in oklch, var(--ms-color-fg) 38%, transparent),
+      0 0 calc(26px * var(--ms-fx-glow, 1)) -6px var(--ms-c-glow);
+  }
+}
+
+/* —— active:下压触感(接 --ms-motion-scale,reduced 时趋零) —— */
+.ms-float-button:active {
+  transform: scale(calc(1 - 0.04 * var(--ms-motion-scale, 1)));
+}
+
+/* —— focus-visible:tone 发光环 —— */
+.ms-float-button:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--ms-color-bg),
+    0 0 0 4px var(--ms-color-focus-ring),
+    0 0 calc(16px * var(--ms-fx-glow, 1)) -4px var(--ms-c-glow);
+}
+
+/* —— disabled —— */
+.ms-float-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  box-shadow: none;
+  transform: none;
+}
+
+/* —— 触控:热区不低于目标尺寸 —— */
+@media (pointer: coarse) {
+  .ms-float-button {
+    inline-size: max(calc(3rem * var(--ms-density-scale, 1)), var(--ms-target-min));
+    block-size: max(calc(3rem * var(--ms-density-scale, 1)), var(--ms-target-min));
+  }
+}
+
+/* ============================================================
+   FloatButton.Group —— 堆叠 / 可展开菜单。固定定位,触发钮 + 子项面板。
+   ============================================================ */
+.ms-float-button-group {
+  position: fixed;
+  inset-inline-end: calc(var(--ms-float-group-right, 24px) + var(--ms-safe-right, 0px));
+  inset-block-end: calc(var(--ms-float-group-bottom, 24px) + var(--ms-safe-bottom, 0px));
+  z-index: 50;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--ms-space-3);
+}
+
+/* 触发钮恒在「锚点」侧(贴右下),子项往展开方向弹 */
+.ms-float-button-group__group-trigger {
+  order: 2;
+  flex: 0 0 auto;
+}
+
+/* —— 子项面板:展开方向决定 flex 朝向与子项排布 —— */
+.ms-float-button-group__list {
+  order: 1;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  gap: var(--ms-space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ms-float-button-group--down {
+  flex-direction: column-reverse;
+}
+.ms-float-button-group--down .ms-float-button-group__list {
+  flex-direction: column;
+}
+.ms-float-button-group--left,
+.ms-float-button-group--right {
+  flex-direction: row;
+}
+.ms-float-button-group--left .ms-float-button-group__list,
+.ms-float-button-group--right .ms-float-button-group__list {
+  flex-direction: row-reverse;
+}
+.ms-float-button-group--right {
+  flex-direction: row-reverse;
+}
+.ms-float-button-group--right .ms-float-button-group__list {
+  flex-direction: row;
+}
+
+/* —— 子项:收起态隐藏 + 错峰入场;每项延时由实例变量 --ms-float-item-delay 喂入 —— */
+.ms-float-button-group__item {
+  display: inline-flex;
+  opacity: 0;
+  transform: translateY(8px) scale(0.8);
+  transition:
+    opacity var(--ms-dur-base) var(--ms-ease-standard),
+    transform var(--ms-dur-base) var(--ms-ease-emphasized);
+  transition-delay: var(--ms-float-item-delay, 0ms);
+  pointer-events: none;
+}
+.ms-float-button-group--left .ms-float-button-group__item,
+.ms-float-button-group--right .ms-float-button-group__item {
+  transform: translateX(8px) scale(0.8);
+}
+
+/* 展开态:子项淡入到位、可交互 */
+.ms-float-button-group--open .ms-float-button-group__item {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+.ms-float-button-group--open.ms-float-button-group--left .ms-float-button-group__item,
+.ms-float-button-group--open.ms-float-button-group--right .ms-float-button-group__item {
+  transform: translateX(0) scale(1);
+}
+
+/* —— 触发钮图标收/展切换:收起态显 open 图标,展开态显 close 图标(旋转切换) —— */
+.ms-float-button__trigger-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    opacity var(--ms-dur-fast) var(--ms-ease-standard),
+    transform var(--ms-dur-base) var(--ms-ease-emphasized);
+}
+.ms-float-button__trigger-icon--close {
+  position: absolute;
+  opacity: 0;
+  transform: rotate(-90deg) scale(0.6);
+}
+.ms-float-button-group--open .ms-float-button__trigger-icon--open {
+  opacity: 0;
+  transform: rotate(90deg) scale(0.6);
+}
+.ms-float-button-group--open .ms-float-button__trigger-icon--close {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
+}
+
+/* —— 动效降级:reduced-motion 与 data-ms-motion=off 都去位移/缩放/错峰,仅保留可见性切换 —— */
+@media (prefers-reduced-motion: reduce) {
+  .ms-float-button,
+  .ms-float-button:hover,
+  .ms-float-button:active {
+    transform: none;
+  }
+  .ms-float-button-group__item {
+    transition:
+      opacity var(--ms-dur-fast) var(--ms-ease-standard),
+      visibility var(--ms-dur-fast) var(--ms-ease-standard);
+    transition-delay: 0ms;
+    transform: none;
+  }
+  .ms-float-button-group--open .ms-float-button-group__item {
+    transform: none;
+  }
+  .ms-float-button__trigger-icon {
+    transition: opacity var(--ms-dur-fast) var(--ms-ease-standard);
+    transform: none;
+  }
+  .ms-float-button-group--open .ms-float-button__trigger-icon--open,
+  .ms-float-button-group--open .ms-float-button__trigger-icon--close,
+  .ms-float-button__trigger-icon--close {
+    transform: none;
+  }
+}
+[data-ms-motion="off"] .ms-float-button,
+[data-ms-motion="off"] .ms-float-button:hover,
+[data-ms-motion="off"] .ms-float-button:active {
+  transform: none;
+}
+[data-ms-motion="off"] .ms-float-button-group__item {
+  transition:
+    opacity var(--ms-dur-fast) var(--ms-ease-standard),
+    visibility var(--ms-dur-fast) var(--ms-ease-standard);
+  transition-delay: 0ms;
+  transform: none;
+}
+[data-ms-motion="off"] .ms-float-button-group--open .ms-float-button-group__item {
+  transform: none;
+}
+[data-ms-motion="off"] .ms-float-button__trigger-icon {
+  transition: opacity var(--ms-dur-fast) var(--ms-ease-standard);
+  transform: none;
+}
+[data-ms-motion="off"] .ms-float-button-group--open .ms-float-button__trigger-icon--open,
+[data-ms-motion="off"] .ms-float-button-group--open .ms-float-button__trigger-icon--close,
+[data-ms-motion="off"] .ms-float-button__trigger-icon--close {
+  transform: none;
+}

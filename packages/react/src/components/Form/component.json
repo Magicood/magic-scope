@@ -1,0 +1,25 @@
+{
+  "id": "form",
+  "name": "Form",
+  "description": "表单子系统 + 校验引擎:订阅式切片 store(打字只重渲单字段)、双轨校验(内建 rules + Standard Schema 通吃 zod/valibot/arktype)、10 个异形控件显式适配器注入、FieldPath 端到端类型安全、校验态魔法发光。",
+  "category": "forms",
+  "tags": ["form", "validation", "schema", "field", "headless", "standard-schema", "composite"],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-26",
+    "requirements": "做一套对标 react-hook-form DX + antd Form 声明式 + 类型安全三者之长的表单子系统。硬约束:① 校验引擎与字段 store 必须零 React、纯 TS(进 logic.ts),为将来抽 @magic-scope/core 留口;② 大表单打字时表单根与兄弟字段零 re-render(细粒度 path 切片订阅 + useSyncExternalStore);③ 校验双轨可叠加——内建 rules(零依赖、可 i18n)+ Standard Schema v1(不 import zod、零运行时依赖,zod/valibot/arktype 原生兼容);④ 必须优雅注入库内 10 个 value/onChange 形态不统一的现有控件(Checkbox 用 checked、Slider/Rate 用数值、Select ref→button…),用显式适配器表而非 cloneElement 反射;⑤ 异步校验自带 AbortController 竞态取消 + 防抖;⑥ a11y 连线(label↔control、aria-invalid/describedby/required、提交聚焦首错);⑦ 校验态复用全库 tone resolver 发光 + 错误文案 role=alert 滑入不抖布局,作为「魔法」差异化。诚实取舍:Standard Schema v1 无跨厂商字段级 optionality 内省,故必填以显式 required 为准、不假装从 schema 自动推断;JSX 上 Field name 暂为 string,FieldPath 类型安全落在命令式 api(setValue/watch/trigger)。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": [
+    "Form.tsx",
+    "Field.tsx",
+    "Form.parts.tsx",
+    "adapters.ts",
+    "logic.ts",
+    "Form.css",
+    "index.ts"
+  ]
+}

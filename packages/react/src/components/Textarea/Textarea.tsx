@@ -48,9 +48,15 @@ export interface TextareaProps
   autosize?: boolean | AutosizeRange;
   /** 底部追加内容(渲染在 count 同一行的起始侧,如帮助文字 / 工具按钮)。 */
   footer?: ReactNode;
-  /** 按下裸 Enter(无修饰键、非 IME 组合中)时触发。常用于聊天/评论框发送。 */
+  /**
+   * 按下裸 Enter(无修饰键、非 IME 组合中)时触发。常用于聊天/评论框发送。
+   * @param event 触发的键盘事件。
+   */
   onPressEnter?: (event: KeyboardEvent<HTMLTextAreaElement>) => void;
-  /** 按下 Cmd/Ctrl + Enter 时触发。常用于「多行框里也能快捷提交」。 */
+  /**
+   * 按下 Cmd/Ctrl + Enter 时触发。常用于「多行框里也能快捷提交」。
+   * @param event 触发的键盘事件。
+   */
   onSubmitShortcut?: (event: KeyboardEvent<HTMLTextAreaElement>) => void;
   /** 根容器 className。 */
   className?: string;

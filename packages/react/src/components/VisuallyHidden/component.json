@@ -1,0 +1,26 @@
+{
+  "id": "visually-hidden",
+  "name": "VisuallyHidden",
+  "description": "无障碍隐藏工具:把内容视觉隐藏但保留给屏幕阅读器(sr-only),支持 as 多态、asChild 合并、focusable 的 skip-link 聚焦还原。",
+  "category": "utility",
+  "tags": [
+    "accessibility",
+    "a11y",
+    "sr-only",
+    "screen-reader",
+    "skip-link",
+    "utility",
+    "polymorphic",
+    "as-child"
+  ],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-26",
+    "requirements": "需要一个把内容对视觉隐藏、却仍保留在无障碍树里供屏幕阅读器朗读的原语(给纯图标按钮补可读标签、给区块补朗读标题、给表单控件补隐藏说明)。必须走标准 sr-only 技法(absolute + 1px + clip + overflow:hidden),禁止 display:none / visibility:hidden,否则元素被摘出可达性树、SR 也读不到。同时要 focusable 的 skip-link 模式:平时隐身、键盘 Tab 聚焦时浮现还原可见。与全库一致提供 as 多态根、asChild 合并(事件 compose + ref 合并)、className 透传。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["VisuallyHidden.tsx", "VisuallyHidden.css", "VisuallyHidden.test.tsx", "index.ts"]
+}

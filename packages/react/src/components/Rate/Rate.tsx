@@ -46,7 +46,10 @@ export interface RateProps
   value?: number | undefined;
   /** 默认评分(非受控)。 */
   defaultValue?: number | undefined;
-  /** 评分变化回调(单参为最终评分值)。 */
+  /**
+   * 评分变化回调。
+   * @param value 变化后的最终评分值;0..count,allowHalf 时可为 .5 步进。
+   */
   onChange?: (value: number) => void;
   /** 星数。默认 5。 */
   count?: number;
@@ -68,7 +71,10 @@ export interface RateProps
   tooltips?: readonly string[] | undefined;
   /** 在星组右侧渲染评分文案;true 显示数值,或传 (value) => ReactNode 自定义。 */
   showText?: boolean | ((value: number) => ReactNode);
-  /** 悬停预览值变化回调(移出为 -1)。 */
+  /**
+   * 悬停预览值变化回调。
+   * @param value 当前悬停预览的评分值;指针移出星组时为 -1。
+   */
   onHoverChange?: (value: number) => void;
   /** 部件级 className。 */
   classNames?: RateClassNames | undefined;

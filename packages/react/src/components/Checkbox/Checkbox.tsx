@@ -28,7 +28,10 @@ export interface CheckboxGroupProps extends Omit<ComponentPropsWithoutRef<'div'>
   value?: string[] | undefined;
   /** 非受控初始选中值集合。 */
   defaultValue?: string[] | undefined;
-  /** 选中集合变化回调,入参为新的选中 value 数组。 */
+  /**
+   * 选中集合变化回调。
+   * @param value 新的选中 value 数组(组内被勾选的各 Checkbox 的 value 集合)。
+   */
   onChange?: ((value: string[]) => void) | undefined;
   /** 同组 checkbox 的 name(可选);省略不影响表单提交,仅作分组标识。 */
   name?: string | undefined;
@@ -127,9 +130,15 @@ export interface CheckboxProps extends Omit<ComponentPropsWithoutRef<'label'>, '
   defaultChecked?: boolean | undefined;
   /** 禁用;默认继承所在 CheckboxGroup。 */
   disabled?: boolean | undefined;
-  /** 原生 change 回调,透传到内部 input(与组级 onChange 并存)。 */
+  /**
+   * 原生 change 回调,透传到内部 input(与组级 onChange 并存)。
+   * @param event 内部 input 的原生 change 事件。
+   */
   onChange?: ((event: ChangeEvent<HTMLInputElement>) => void) | undefined;
-  /** 只关心布尔的语义回调:勾选/取消勾选时触发,入参为新的 checked。 */
+  /**
+   * 只关心布尔的语义回调:勾选/取消勾选时触发。
+   * @param checked 切换后的选中态。
+   */
   onCheckedChange?: ((checked: boolean) => void) | undefined;
   /** 仅作用于根 label 的额外类名(与 className 叠加,className 也在根)。 */
   labelClassName?: string | undefined;

@@ -26,7 +26,10 @@ export interface NumberInputProps
   value?: number;
   /** 非受控初始值。 */
   defaultValue?: number;
-  /** 值变化回调:有效数字时传 number,清空时传 null。 */
+  /**
+   * 值变化回调。
+   * @param value 当前值:有效数字时为 number,清空时为 null。
+   */
   onValueChange?: (value: number | null) => void;
   /** 最小值。默认 -Infinity(不限)。 */
   min?: number;
@@ -44,13 +47,27 @@ export interface NumberInputProps
   prefix?: ReactNode;
   /** 框内后置内容(单位文字,如 % / kg)。 */
   suffix?: ReactNode;
-  /** 任一方向步进后回调(按钮或方向键),携带新值与方向。 */
+  /**
+   * 任一方向步进后回调(按钮或方向键)。
+   * @param value 步进后的新值。
+   * @param direction 步进方向:'up' 向上 / 'down' 向下。
+   */
   onStep?: (value: number, direction: StepDirection) => void;
-  /** 向上步进后回调。 */
+  /**
+   * 向上步进后回调。
+   * @param value 步进后的新值。
+   */
   onStepUp?: (value: number) => void;
-  /** 向下步进后回调。 */
+  /**
+   * 向下步进后回调。
+   * @param value 步进后的新值。
+   */
   onStepDown?: (value: number) => void;
-  /** 回车回调:clamp 并提交后触发,携带提交值(可能为 null)。 */
+  /**
+   * 回车回调:clamp 并提交后触发。
+   * @param value 提交后的值:有效数字时为 number,空内容时为 null。
+   * @param event 触发提交的键盘事件。
+   */
   onPressEnter?: (value: number | null, event: React.KeyboardEvent<HTMLInputElement>) => void;
   /** 外层容器 className(组件根)。 */
   className?: string;

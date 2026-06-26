@@ -1,0 +1,230 @@
+/* —— Cascader trigger:外观贴近 Select / Input,高亮读 tone 槽位(--ms-c*) —— */
+.ms-cascader {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ms-space-2);
+  inline-size: auto;
+  max-inline-size: 100%;
+  min-inline-size: calc(12rem * var(--ms-density-scale, 1));
+  min-block-size: calc(2.5rem * var(--ms-density-scale, 1));
+  padding-inline: var(--ms-space-3);
+  padding-block: var(--ms-space-2);
+  border: var(--ms-hairline, 1px) solid var(--ms-color-border);
+  border-radius: var(--ms-radius-md);
+  background-color: var(--ms-color-surface);
+  background-image: linear-gradient(
+    180deg,
+    color-mix(in oklch, var(--ms-c-glow, var(--ms-color-glow)) 4%, transparent),
+    transparent 60%
+  );
+  color: var(--ms-color-fg);
+  font-family: var(--ms-font-sans);
+  font-size: var(--ms-font-size-sm);
+  text-align: start;
+  cursor: pointer;
+  box-shadow: inset 0 0 calc(12px * var(--ms-fx-glow, 1)) -10px
+    var(--ms-c-glow, var(--ms-color-glow));
+  transition:
+    border-color var(--ms-dur-fast) var(--ms-ease-standard),
+    box-shadow var(--ms-dur-base) var(--ms-ease-standard),
+    background-color var(--ms-dur-fast) var(--ms-ease-standard);
+}
+
+.ms-cascader--sm {
+  min-block-size: calc(2rem * var(--ms-density-scale, 1));
+  min-inline-size: calc(10rem * var(--ms-density-scale, 1));
+  padding-inline: var(--ms-space-2);
+  font-size: var(--ms-font-size-xs);
+}
+
+.ms-cascader--lg {
+  min-block-size: calc(3rem * var(--ms-density-scale, 1));
+  min-inline-size: calc(14rem * var(--ms-density-scale, 1));
+  font-size: var(--ms-font-size-md);
+}
+
+.ms-cascader--full {
+  inline-size: 100%;
+}
+
+.ms-cascader:hover:not(.ms-cascader--disabled) {
+  border-color: var(--ms-c-soft, var(--ms-color-border-strong, var(--ms-color-border)));
+}
+
+.ms-cascader:focus-visible {
+  outline: none;
+  border-color: var(--ms-c, var(--ms-color-primary));
+  box-shadow:
+    0 0 0 3px
+    var(--ms-c-soft, color-mix(in oklch, var(--ms-c, var(--ms-color-primary)) 24%, transparent)),
+    inset 0 0 calc(14px * var(--ms-fx-glow, 1)) -10px var(--ms-c-glow, var(--ms-color-glow));
+}
+
+.ms-cascader--open {
+  border-color: var(--ms-c, var(--ms-color-primary));
+  box-shadow:
+    0 0 calc(16px * var(--ms-fx-glow, 1)) -6px var(--ms-c-glow, var(--ms-color-glow)),
+    inset 0 0 calc(18px * var(--ms-fx-glow, 1)) -12px var(--ms-c, var(--ms-color-primary));
+}
+
+.ms-cascader--disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.ms-cascader__value {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ms-cascader__value[data-placeholder] {
+  color: var(--ms-color-fg-subtle);
+}
+
+.ms-cascader__arrow {
+  flex: 0 0 auto;
+  display: inline-flex;
+  color: var(--ms-color-fg-muted);
+  transition: transform var(--ms-dur-base) var(--ms-ease-emphasized);
+}
+
+.ms-cascader--open .ms-cascader__arrow {
+  transform: rotate(180deg);
+  color: var(--ms-c, var(--ms-color-primary));
+}
+
+/* —— 多列级联菜单:浮层面板内横排若干列 —— */
+.ms-cascader-menu-panel {
+  padding: 0;
+}
+
+.ms-cascader-menu {
+  display: flex;
+  align-items: stretch;
+  max-inline-size: min(92vw, calc(15rem * var(--ms-cascader-cols, 1)));
+  outline: none;
+}
+
+.ms-cascader__column {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  inline-size: calc(13rem * var(--ms-density-scale, 1));
+  max-inline-size: 15rem;
+  margin: 0;
+  padding: var(--ms-space-1);
+  list-style: none;
+  overflow-y: auto;
+  max-block-size: min(60vh, 18rem);
+}
+
+.ms-cascader__column + .ms-cascader__column {
+  border-inline-start: var(--ms-hairline, 1px) solid var(--ms-color-border);
+}
+
+.ms-cascader[data-ms-size="sm"] .ms-cascader__column,
+.ms-cascader-menu[data-ms-size="sm"] .ms-cascader__column {
+  inline-size: calc(11rem * var(--ms-density-scale, 1));
+}
+
+.ms-cascader__option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ms-space-2);
+  min-block-size: max(calc(2rem * var(--ms-density-scale, 1)), var(--ms-target-min, 2rem));
+  padding-inline: var(--ms-space-2);
+  padding-block: var(--ms-space-1);
+  border-radius: var(--ms-radius-sm);
+  color: var(--ms-color-fg);
+  cursor: pointer;
+  user-select: none;
+  transition:
+    background-color var(--ms-dur-fast) var(--ms-ease-standard),
+    color var(--ms-dur-fast) var(--ms-ease-standard);
+}
+
+.ms-cascader__option-label {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ms-cascader__option-caret {
+  flex: 0 0 auto;
+  display: inline-flex;
+  color: var(--ms-color-fg-muted);
+}
+
+.ms-cascader__option:hover:not(.ms-cascader__option--disabled),
+.ms-cascader__option--active:not(.ms-cascader__option--disabled) {
+  background-color: var(
+    --ms-c-soft,
+    var(
+      --ms-color-surface-hover,
+      color-mix(in oklch, var(--ms-c, var(--ms-color-primary)) 12%, transparent)
+    )
+  );
+  color: var(--ms-c, var(--ms-color-primary));
+}
+
+.ms-cascader__option--expanded:not(.ms-cascader__option--disabled) {
+  background-color: var(
+    --ms-c-soft,
+    color-mix(in oklch, var(--ms-c, var(--ms-color-primary)) 10%, transparent)
+  );
+  color: var(--ms-c, var(--ms-color-primary));
+}
+
+.ms-cascader__option--selected {
+  font-weight: 600;
+  color: var(--ms-c, var(--ms-color-primary));
+  box-shadow: inset 0 0 calc(16px * var(--ms-fx-glow, 1)) -12px var(--ms-c, var(--ms-color-primary));
+}
+
+.ms-cascader__option--disabled {
+  cursor: not-allowed;
+  color: var(--ms-color-fg-subtle);
+}
+
+.ms-cascader__empty {
+  padding: var(--ms-space-3) var(--ms-space-4);
+  color: var(--ms-color-fg-subtle);
+  font-size: var(--ms-font-size-sm);
+  white-space: nowrap;
+}
+
+/* 读屏专用:视觉隐藏但可被 aria-live 读取 */
+.ms-cascader__sr-status {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* —— 降级:reduced-motion / motion=off 关掉过渡(全库统一总闸) —— */
+@media (prefers-reduced-motion: reduce) {
+  .ms-cascader,
+  .ms-cascader__arrow,
+  .ms-cascader__option {
+    transition: none;
+  }
+}
+
+[data-ms-motion="off"] .ms-cascader,
+[data-ms-motion="off"] .ms-cascader__arrow,
+[data-ms-motion="off"] .ms-cascader__option {
+  transition: none;
+}

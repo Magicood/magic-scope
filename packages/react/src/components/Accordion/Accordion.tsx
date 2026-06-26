@@ -73,13 +73,27 @@ export interface AccordionProps
   classNames?: AccordionClassNames;
   /** 外部类名(作用于根容器)。 */
   className?: string;
-  /** 展开值变化(受控/非受控双通道核心回调)。single 回 string、multiple 回 string[]。 */
+  /**
+   * 展开值变化(受控/非受控双通道核心回调)。
+   * @param value 变化后的展开值:single 回展开项的 string、multiple 回展开项的 string[]。
+   */
   onValueChange?: (value: string | string[]) => void;
-  /** 单项展开/收起瞬间(被切换项 value + 切换后是否展开)。 */
+  /**
+   * 单项展开/收起瞬间触发。
+   * @param value 被切换项的 value。
+   * @param open 切换后该项是否展开:true=展开,false=收起。
+   */
   onExpandedChange?: (value: string, open: boolean) => void;
-  /** 任意头部被点击(被点项 value + 原始事件;在内部切换逻辑之前调用)。 */
+  /**
+   * 任意头部被点击(在内部切换逻辑之前调用)。
+   * @param value 被点击项的 value。
+   * @param event 该次点击的原始鼠标事件,可 `preventDefault()` 阻断内部切换。
+   */
   onTriggerClick?: (value: string, event: MouseEvent<HTMLButtonElement>) => void;
-  /** 头部键盘事件外抛/可拦截(在 ↑↓/Home/End 内部导航之前调用;preventDefault 可阻断内部导航)。 */
+  /**
+   * 头部键盘事件外抛/可拦截(在 ↑↓/Home/End 内部导航之前调用)。
+   * @param event 头部触发按钮的原始键盘事件,可 `preventDefault()` 阻断内部导航。
+   */
   onKeyDown?: (event: KeyboardEvent<HTMLButtonElement>) => void;
 }
 

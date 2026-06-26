@@ -1,0 +1,17 @@
+{
+  "id": "carousel",
+  "name": "Carousel",
+  "description": "轮播组件:slide(横/纵)与 fade 双切换效果、loop 环绕、autoplay(间隔 + 悬停暂停)、可点指示点、prev/next 箭头、指针拖拽切换,受控 activeIndex/onChange 与命令式 goTo 双通道,完整 a11y 与动效降级。",
+  "category": "data-display",
+  "tags": ["carousel", "slider", "slideshow", "gallery", "autoplay", "data-display", "magic"],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-26",
+    "requirements": "需要一个内容轮播:用 children 即一屏的直觉 API,支持横/纵滑动与淡入淡出两种切换、循环、自动播放(可悬停暂停)、指示点跳转、箭头翻页与指针拖拽。把索引推进/环绕/夹取/是否自动播放抽成零 React 纯函数(logic.ts)以便平移其它框架。无障碍要做到位:role=region + aria-roledescription=carousel、非活动 slide 隐藏且不可聚焦、指示点与箭头有清晰 aria-label 并接 i18n。诚实备注:v1 用 index 取模环绕 + 单条 track transform 位移,不做首尾克隆的无缝无限滚动(留待 v2)。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Carousel.tsx", "Carousel.css", "logic.ts", "index.ts"]
+}

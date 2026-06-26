@@ -1,0 +1,201 @@
+/**
+ * Form 表单子系统样式 —— 消费 @magic-scope/tokens 的 --ms-* 变量。
+ * layout 三档(vertical / horizontal / inline)、校验态发光、错误进出过渡(不抖布局)、
+ * validating 旋转符文、密度缩放、超长 label/错误内容边界加固。尊重 prefers-reduced-motion 与 data-ms-motion=off。
+ */
+
+.ms-form {
+  --ms-form-label-w: 8rem;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ms-space-5);
+  font-family: var(--ms-font-sans);
+  min-inline-size: 0;
+}
+
+/* inline:表单项横排(筛选条),错误换行不撑断 */
+.ms-form--inline {
+  flex-flow: row wrap;
+  align-items: flex-start;
+  gap: var(--ms-space-3) var(--ms-space-4);
+}
+
+/* ── 表单项 / label / 控件列(基础;后接 horizontal 覆盖,保持升序特异性) ── */
+.ms-form__item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ms-space-2);
+  min-inline-size: 0;
+}
+.ms-form__label {
+  min-inline-size: 0;
+  overflow-wrap: anywhere; /* 超长 label 不挤压控件列 */
+}
+.ms-form__control {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ms-space-1);
+  min-inline-size: 0;
+}
+
+/* horizontal:label 列 + 控件列(CSS Grid),特异性高于上面的基础规则,故放后面 */
+.ms-form--horizontal .ms-form__item {
+  display: grid;
+  grid-template-columns: var(--ms-form-label-w) minmax(0, 1fr);
+  align-items: start;
+  column-gap: var(--ms-space-4);
+}
+.ms-form--horizontal .ms-form__control {
+  grid-column: 2;
+}
+.ms-form--horizontal .ms-form__label {
+  padding-block-start: var(--ms-space-2);
+}
+.ms-form[data-ms-label-align="end"] .ms-form__label {
+  justify-self: end;
+  text-align: end;
+}
+
+/* ── help ── */
+.ms-form__help {
+  font-size: 0.85em;
+  line-height: 1.4;
+  color: var(--ms-color-fg-muted);
+  overflow-wrap: anywhere;
+}
+
+/* ── error(role=alert,进出过渡不抖布局) ── */
+.ms-form__error {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ms-space-1);
+  font-size: 0.85em;
+  line-height: 1.4;
+  color: var(--ms-color-danger);
+  overflow-wrap: anywhere;
+  max-inline-size: 100%;
+  animation: ms-form-error-in var(--ms-dur-fast, 0.15s) var(--ms-ease-standard, ease);
+}
+
+@keyframes ms-form-error-in {
+  from {
+    opacity: 0;
+    transform: translateY(-0.15rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── 校验失败态发光 ──
+   Input/Textarea/NumberInput 自带 invalid→danger 发光;无 invalid prop 的控件(Switch/Slider/
+   Rate/Segmented/Select/Checkbox)由适配器注 data-ms-invalid,这里兜底发光环。 */
+.ms-form__item--invalid [data-ms-invalid] {
+  border-radius: var(--ms-radius-md);
+  box-shadow:
+    0 0 0 1px var(--ms-color-danger),
+    0 0 calc(8px * var(--ms-fx-glow, 1))
+    color-mix(in oklab, var(--ms-color-danger) 40%, transparent);
+  transition: box-shadow var(--ms-dur-fast, 0.15s) var(--ms-ease-standard, ease);
+}
+
+/* Switch/Checkbox 的 data-ms-invalid 落在视觉隐藏的 input 上,改经 item 级 invalid class 命中可见元素发光 */
+.ms-form__item--invalid .ms-switch__track,
+.ms-form__item--invalid .ms-checkbox__box {
+  box-shadow:
+    0 0 0 1px var(--ms-color-danger),
+    0 0 calc(6px * var(--ms-fx-glow, 1))
+    color-mix(in oklab, var(--ms-color-danger) 35%, transparent);
+  transition: box-shadow var(--ms-dur-fast, 0.15s) var(--ms-ease-standard, ease);
+}
+
+/* ── validating 旋转符文(校验中微动效) ── */
+.ms-form__item--validating .ms-form__control::after {
+  content: "";
+  position: absolute;
+}
+.ms-form__validating-rune {
+  display: inline-block;
+  inline-size: 0.9em;
+  block-size: 0.9em;
+  border: 2px solid color-mix(in oklab, var(--ms-color-fg-muted) 40%, transparent);
+  border-top-color: var(--ms-color-primary);
+  border-radius: 50%;
+  animation: ms-form-spin 0.6s linear infinite;
+}
+
+@keyframes ms-form-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ── 动态数组 ── */
+.ms-form__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ms-space-3);
+}
+.ms-form__list-item {
+  display: flex;
+  gap: var(--ms-space-2);
+  align-items: flex-start;
+}
+
+/* ── 错误汇总 ── */
+.ms-form__error-summary {
+  border: 1px solid color-mix(in oklab, var(--ms-color-danger) 30%, transparent);
+  border-radius: var(--ms-radius-md);
+  padding: var(--ms-space-3) var(--ms-space-4);
+  background: color-mix(in oklab, var(--ms-color-danger) 6%, var(--ms-color-surface));
+}
+.ms-form__error-summary-title {
+  font-weight: 600;
+  color: var(--ms-color-danger);
+  margin-block-end: var(--ms-space-2);
+}
+.ms-form__error-summary-list {
+  margin: 0;
+  padding-inline-start: var(--ms-space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--ms-space-1);
+}
+.ms-form__error-summary-item {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: var(--ms-color-danger);
+  text-align: start;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+.ms-form__error-summary-item:hover {
+  opacity: 0.78;
+}
+.ms-form__error-summary-item:focus-visible {
+  outline: 2px solid var(--ms-color-focus-ring);
+  outline-offset: 2px;
+  border-radius: var(--ms-radius-sm);
+}
+
+/* ── 降级:尊重减弱动效 ── */
+@media (prefers-reduced-motion: reduce) {
+  .ms-form__error {
+    animation: none;
+  }
+  .ms-form__validating-rune {
+    animation-duration: 1.6s;
+  }
+}
+[data-ms-motion="off"] .ms-form__error {
+  animation: none;
+}
+[data-ms-motion="off"] .ms-form__validating-rune {
+  animation: none;
+}

@@ -1,0 +1,333 @@
+/* —— AutoComplete:自由文本输入 + 补全建议浮层。
+ *    控件外观贴近 Input;补全浮层贴近 Select listbox。高亮/发光只读 tone 槽位(--ms-c*)。
+ *    浮层进 top-layer 用原生 Popover API,定位用 CSS Anchor Positioning(降级为 fixed 居中)。 */
+
+.ms-autocomplete {
+  display: inline-flex;
+  flex-direction: column;
+  inline-size: 100%;
+  max-inline-size: 100%;
+  font-family: var(--ms-font-sans);
+}
+
+/* —— 控件外壳(带边框/发光),输入框居中,prefix/clear 两侧 —— */
+.ms-autocomplete__control {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ms-space-2);
+  inline-size: 100%;
+  max-inline-size: 100%;
+  border: 1px solid var(--ms-color-border);
+  border-radius: var(--ms-radius-md);
+  background-color: var(--ms-color-surface);
+  background-image: linear-gradient(
+    180deg,
+    color-mix(in oklch, var(--ms-c-glow, var(--ms-color-glow)) 4%, transparent),
+    transparent 60%
+  );
+  color: var(--ms-color-fg);
+  box-shadow: inset 0 0 calc(12px * var(--ms-fx-glow, 1)) -10px
+    var(--ms-c-glow, var(--ms-color-glow));
+  transition:
+    border-color var(--ms-dur-fast) var(--ms-ease-standard),
+    box-shadow var(--ms-dur-base) var(--ms-ease-standard),
+    background-color var(--ms-dur-fast) var(--ms-ease-standard);
+}
+
+.ms-autocomplete__prefix {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  color: var(--ms-color-fg-muted);
+  user-select: none;
+}
+
+/* —— 原生 input:剥 UA 样式,继承外壳 —— */
+.ms-autocomplete__input {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  inline-size: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  /* 行高随尺寸 + 密度,见尺寸段 */
+}
+.ms-autocomplete__input::placeholder {
+  color: var(--ms-color-fg-subtle);
+}
+
+/* —— hover / focus / open:贴 Select 的发光逻辑(读 tone 槽位) —— */
+.ms-autocomplete:not(.ms-autocomplete--disabled) .ms-autocomplete__control:hover {
+  border-color: var(--ms-color-border-strong);
+  box-shadow:
+    inset 0 0 calc(14px * var(--ms-fx-glow, 1)) -10px var(--ms-c-glow, var(--ms-color-glow)),
+    0 0 calc(14px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow, var(--ms-color-glow));
+}
+
+.ms-autocomplete__control:focus-within {
+  border-color: var(--ms-c, var(--ms-color-primary));
+  box-shadow:
+    0 0 0 3px color-mix(in oklch, var(--ms-c-glow, var(--ms-color-focus-ring)) 35%, transparent),
+    0 0 calc(16px * var(--ms-fx-glow, 1)) -6px var(--ms-c-glow, var(--ms-color-glow)),
+    inset 0 0 calc(18px * var(--ms-fx-glow, 1)) -12px var(--ms-c, var(--ms-color-primary));
+}
+
+/* 展开时外壳保持高亮边框,呼应展开态 */
+.ms-autocomplete--open:not(.ms-autocomplete--disabled) .ms-autocomplete__control {
+  border-color: var(--ms-c, var(--ms-color-primary));
+}
+
+/* invalid:强制 danger 环(tone 已在 JS 切到 danger,此处补 aria-invalid 兜底) */
+.ms-autocomplete--invalid .ms-autocomplete__control {
+  border-color: var(--ms-color-danger, var(--ms-c));
+}
+
+.ms-autocomplete--disabled .ms-autocomplete__control {
+  cursor: not-allowed;
+  opacity: 0.5;
+  background-image: none;
+  box-shadow: none;
+}
+.ms-autocomplete--disabled .ms-autocomplete__input {
+  cursor: not-allowed;
+}
+
+/* —— 行内清除钮(span[role=button]) —— */
+.ms-autocomplete__clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  border-radius: var(--ms-radius-sm);
+  color: var(--ms-color-fg-subtle);
+  font-size: 0.95rem;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    color var(--ms-dur-fast) var(--ms-ease-standard),
+    background-color var(--ms-dur-fast) var(--ms-ease-standard);
+}
+@media (hover: hover) {
+  .ms-autocomplete__clear:hover {
+    color: var(--ms-color-fg);
+    background: var(--ms-color-surface-sunken);
+  }
+}
+
+/* —— 尺寸(逻辑属性 + 随密度缩放) —— */
+.ms-autocomplete--sm .ms-autocomplete__control {
+  min-block-size: calc(2rem * var(--ms-density-scale, 1));
+  padding-inline: var(--ms-space-3);
+  font-size: 0.833rem;
+}
+.ms-autocomplete--md .ms-autocomplete__control {
+  min-block-size: calc(2.5rem * var(--ms-density-scale, 1));
+  padding-inline: var(--ms-space-4);
+  font-size: 1rem;
+}
+.ms-autocomplete--lg .ms-autocomplete__control {
+  min-block-size: calc(3rem * var(--ms-density-scale, 1));
+  padding-inline: var(--ms-space-4);
+  font-size: 1.2rem;
+}
+
+/* —— 补全浮层 listbox —— */
+.ms-autocomplete__list {
+  margin: 0;
+  padding: var(--ms-space-1);
+  padding-block-end: calc(var(--ms-space-1) + var(--ms-safe-bottom));
+  border: 1px solid var(--ms-color-border);
+  border-radius: var(--ms-radius-lg);
+  background-color: var(--ms-color-surface-raised);
+  color: var(--ms-color-fg);
+  font-family: var(--ms-font-sans);
+  inline-size: max-content;
+  min-inline-size: 12rem;
+  max-block-size: min(18rem, calc(var(--ms-viewport-h) - var(--ms-space-8)));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  box-shadow:
+    0 24px 64px -24px rgb(0 0 0 / 0.45),
+    0 0 calc(40px * var(--ms-fx-glow, 1)) -16px var(--ms-c-glow, var(--ms-color-glow));
+
+  /* 入场动画初值(收起态) */
+  opacity: 0;
+  transform: translateY(calc(-6px * var(--ms-motion-scale, 1))) scale(0.97);
+  transition:
+    opacity var(--ms-dur-base) var(--ms-ease-standard),
+    transform var(--ms-dur-base) var(--ms-ease-emphasized),
+    overlay var(--ms-dur-base) allow-discrete,
+    display var(--ms-dur-base) allow-discrete;
+}
+
+/* —— 定位:CSS Anchor Positioning(现代) —— */
+@supports (anchor-name: --x) {
+  .ms-autocomplete__list {
+    position: absolute;
+    position-area: block-end span-inline-end;
+    inset: auto;
+    margin-block-start: var(--ms-space-1);
+    /* 与控件同宽下界 */
+    min-inline-size: anchor-size(inline);
+    max-inline-size: min(calc(100dvw - var(--ms-space-4) * 2), 24rem);
+    position-try-fallbacks: flip-block, flip-inline;
+  }
+}
+
+/* —— 降级:不支持 Anchor Positioning 时退化为 fixed 居中,保证可用 —— */
+@supports not (anchor-name: --x) {
+  .ms-autocomplete__list {
+    position: fixed;
+    inset-block-start: 50%;
+    inset-inline-start: 50%;
+    transform: translate(-50%, -50%) scale(0.97);
+    min-inline-size: 16rem;
+    max-inline-size: 92vw;
+  }
+  .ms-autocomplete__list[data-open] {
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+/* 展开态(Popover 显示 → :popover-open;降级靠 [data-open]) */
+.ms-autocomplete__list:popover-open,
+.ms-autocomplete__list[data-open] {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+@starting-style {
+  .ms-autocomplete__list:popover-open,
+  .ms-autocomplete__list[data-open] {
+    opacity: 0;
+    transform: translateY(calc(-6px * var(--ms-motion-scale, 1))) scale(0.97);
+  }
+}
+
+/* 不支持 popover 属性的浏览器:UA 不会隐藏元素,改由 [data-open] 控制显隐 */
+@supports not selector(:popover-open) {
+  .ms-autocomplete__list:not([data-open]) {
+    display: none;
+  }
+}
+
+/* —— 空态 / 加载态 —— */
+.ms-autocomplete__status {
+  padding-block: var(--ms-space-3);
+  padding-inline: var(--ms-space-2);
+  color: var(--ms-color-fg-subtle);
+  font-size: 0.9em;
+  text-align: center;
+  user-select: none;
+}
+
+/* —— 分组 —— */
+.ms-autocomplete__group + .ms-autocomplete__group {
+  margin-block-start: var(--ms-space-1);
+  border-block-start: 1px solid var(--ms-color-border);
+  padding-block-start: var(--ms-space-1);
+}
+.ms-autocomplete__group-label {
+  padding-block: var(--ms-space-1);
+  padding-inline: var(--ms-space-2);
+  color: var(--ms-color-fg-subtle);
+  font-size: 0.78em;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  user-select: none;
+}
+
+/* —— option —— */
+.ms-autocomplete__option {
+  display: flex;
+  align-items: center;
+  gap: var(--ms-space-2);
+  padding-block: var(--ms-space-2);
+  padding-inline: var(--ms-space-2);
+  border-radius: var(--ms-radius-sm);
+  color: var(--ms-color-fg);
+  cursor: pointer;
+  user-select: none;
+  transition:
+    background-color var(--ms-dur-fast) var(--ms-ease-standard),
+    color var(--ms-dur-fast) var(--ms-ease-standard);
+}
+
+/* 键盘/指针高亮态(读 tone 槽位) */
+.ms-autocomplete__option[data-active]:not(.ms-autocomplete__option--disabled) {
+  background-color: var(--ms-c-soft, color-mix(in oklch, var(--ms-color-primary) 18%, transparent));
+  color: var(--ms-color-fg);
+  box-shadow: inset 0 0 calc(16px * var(--ms-fx-glow, 1)) -12px var(--ms-c, var(--ms-color-primary));
+}
+
+.ms-autocomplete__option--disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.ms-autocomplete__label {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 尺寸对 option 行高的轻量映射 */
+.ms-autocomplete__list--sm .ms-autocomplete__option {
+  font-size: 0.833rem;
+}
+.ms-autocomplete__list--lg .ms-autocomplete__option {
+  font-size: 1.1rem;
+  padding-block: var(--ms-space-3);
+}
+
+/* —— 触控设备:抬高热区到目标尺寸(桌面精确指针不受影响) —— */
+@media (pointer: coarse) {
+  .ms-autocomplete--sm .ms-autocomplete__control {
+    min-block-size: max(calc(2rem * var(--ms-density-scale, 1)), var(--ms-target-min));
+  }
+  .ms-autocomplete--md .ms-autocomplete__control {
+    min-block-size: max(calc(2.5rem * var(--ms-density-scale, 1)), var(--ms-target-min));
+  }
+  .ms-autocomplete--lg .ms-autocomplete__control {
+    min-block-size: max(calc(3rem * var(--ms-density-scale, 1)), var(--ms-target-min));
+  }
+  .ms-autocomplete__option {
+    min-block-size: var(--ms-target-min);
+    padding-block: var(--ms-space-3);
+  }
+}
+
+/* 尊重减少动效偏好 */
+@media (prefers-reduced-motion: reduce) {
+  .ms-autocomplete__control,
+  .ms-autocomplete__list,
+  .ms-autocomplete__option {
+    transition-duration: 0.01ms;
+  }
+}
+
+/* 一键降级:data-ms-motion=off 关掉浮层进出场过渡(全库统一总闸) */
+[data-ms-motion="off"] .ms-autocomplete__control,
+[data-ms-motion="off"] .ms-autocomplete__list,
+[data-ms-motion="off"] .ms-autocomplete__option {
+  transition-duration: 0.01ms;
+}
+
+/* fx 总闸:关断所有发光,保留可读的焦点环 */
+[data-ms-fx="off"] .ms-autocomplete__control,
+[data-ms-fx="off"] .ms-autocomplete:not(.ms-autocomplete--disabled) .ms-autocomplete__control:hover,
+[data-ms-fx="off"] .ms-autocomplete__list,
+[data-ms-fx="off"] .ms-autocomplete__option[data-active] {
+  box-shadow: none;
+}
+[data-ms-fx="off"] .ms-autocomplete__control:focus-within {
+  box-shadow: 0 0 0 3px
+    color-mix(in oklch, var(--ms-c-glow, var(--ms-color-focus-ring)) 35%, transparent);
+}

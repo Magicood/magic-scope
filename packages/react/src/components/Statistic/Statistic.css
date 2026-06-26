@@ -1,0 +1,188 @@
+/* —— Statistic 基座:纵向堆叠 标题 / 数值,数值字号随密度(--ms-density-scale)缩放 —— */
+.ms-statistic {
+  display: inline-flex;
+  flex-direction: column;
+  gap: var(--ms-space-1);
+  /* 允许在 flex/grid 父级中收缩,使超长内容能截断而非撑破容器 */
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  font-family: var(--ms-font-sans);
+  color: var(--ms-color-fg);
+}
+
+/* —— 标题:弱化前景 + 单行省略,超长不撑破 —— */
+.ms-statistic__title {
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  overflow: hidden;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: var(--ms-color-fg-muted);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* —— 数值容器:基线对齐 prefix / 数字 / suffix,可在 flex 中收缩 —— */
+.ms-statistic__value {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--ms-space-1);
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  font-weight: 600;
+  line-height: 1.15;
+  /* 数字等宽,滚动/位数变化时不抖动 */
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/* —— 主数字段:整数 + 小数;整段可收缩 + 单行省略防溢出 —— */
+.ms-statistic__number {
+  display: inline-flex;
+  align-items: baseline;
+  min-inline-size: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: calc(2rem * var(--ms-density-scale, 1));
+  /* trend 染色时数字主体也取 tone 主色;无 trend 时退回 fg */
+  color: var(--ms-statistic-color, var(--ms-color-fg));
+}
+
+/* 小数部分略小一档、略弱,主次分明 */
+.ms-statistic__fraction {
+  font-size: 0.72em;
+  opacity: 0.85;
+}
+
+/* 前缀 / 后缀:弱一档字号,基线随数字对齐 */
+.ms-statistic__prefix,
+.ms-statistic__suffix {
+  flex: 0 0 auto;
+  font-size: 0.66em;
+  font-weight: 500;
+  color: var(--ms-statistic-color, var(--ms-color-fg-muted));
+}
+
+/* —— 趋势:箭头取 tone 主色,与数值同染 —— */
+.ms-statistic__trend {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-self: center;
+  color: var(--ms-c);
+}
+.ms-statistic__trend-icon {
+  display: block;
+  font-size: 0.8em;
+}
+
+/* trend 时把数值主色绑到 tone 槽位 --ms-c(success / danger 由根 .ms-tone-* 暴露) */
+.ms-statistic--trend-up,
+.ms-statistic--trend-down {
+  --ms-statistic-color: var(--ms-c);
+}
+
+/* —— 尺寸档:覆盖数字字号(仍乘密度系数) —— */
+.ms-statistic--sm .ms-statistic__number {
+  font-size: calc(1.375rem * var(--ms-density-scale, 1));
+}
+.ms-statistic--sm .ms-statistic__title {
+  font-size: 0.8125rem;
+}
+.ms-statistic--md .ms-statistic__number {
+  font-size: calc(2rem * var(--ms-density-scale, 1));
+}
+.ms-statistic--lg .ms-statistic__number {
+  font-size: calc(2.75rem * var(--ms-density-scale, 1));
+}
+.ms-statistic--lg .ms-statistic__title {
+  font-size: 1rem;
+}
+
+/* —— loading skeleton 占位:复用全库骨架的微光语汇 —— */
+.ms-statistic__skeleton {
+  display: block;
+  inline-size: 100%;
+  max-inline-size: 100%;
+}
+.ms-statistic__skeleton-bar {
+  display: block;
+  inline-size: 7ch;
+  max-inline-size: 100%;
+  block-size: calc(2rem * var(--ms-density-scale, 1));
+  border-radius: var(--ms-radius-md);
+  background-color: var(--ms-color-surface-raised);
+  background-image:
+    linear-gradient(90deg, transparent 0%, var(--ms-color-glow) 50%, transparent 100%),
+    linear-gradient(180deg, var(--ms-color-surface-raised) 0%, var(--ms-color-surface) 100%);
+  background-repeat: no-repeat;
+  background-size:
+    50% 100%,
+    100% 100%;
+  background-position:
+    -150% 0,
+    0 0;
+  box-shadow: inset 0 0 calc(1px * var(--ms-fx-glow, 1)) 0 var(--ms-color-glow);
+  animation: ms-statistic-shimmer 1.4s var(--ms-ease-standard) infinite;
+}
+.ms-statistic--sm .ms-statistic__skeleton-bar {
+  block-size: calc(1.375rem * var(--ms-density-scale, 1));
+}
+.ms-statistic--lg .ms-statistic__skeleton-bar {
+  block-size: calc(2.75rem * var(--ms-density-scale, 1));
+  inline-size: 9ch;
+}
+
+@keyframes ms-statistic-shimmer {
+  from {
+    background-position:
+      -150% 0,
+      0 0;
+  }
+  to {
+    background-position:
+      250% 0,
+      0 0;
+  }
+}
+
+/* —— 动效降档:data-ms-motion=off 停成静态底色 —— */
+[data-ms-motion="off"] .ms-statistic__skeleton-bar {
+  animation: none;
+  background-image: linear-gradient(
+    180deg,
+    var(--ms-color-surface-raised) 0%,
+    var(--ms-color-surface) 100%
+  );
+  background-position: 0 0;
+}
+[data-ms-motion="subtle"] .ms-statistic__skeleton-bar {
+  animation-duration: 2.4s;
+}
+
+/* —— 系统 reduced-motion:位移流光降为透明度呼吸,保留「加载中」语义,放慢不停止 —— */
+@media (prefers-reduced-motion: reduce) {
+  .ms-statistic__skeleton-bar {
+    background-image: linear-gradient(
+      180deg,
+      var(--ms-color-surface-raised) 0%,
+      var(--ms-color-surface) 100%
+    );
+    background-position: 0 0;
+    animation: ms-statistic-breathe 3.6s var(--ms-ease-standard) infinite;
+  }
+}
+@keyframes ms-statistic-breathe {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+
+/* —— 发光总闸关断 —— */
+[data-ms-fx="off"] .ms-statistic__skeleton-bar {
+  box-shadow: none;
+}

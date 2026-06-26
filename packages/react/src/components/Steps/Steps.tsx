@@ -59,7 +59,10 @@ export interface StepsProps extends Omit<ComponentPropsWithoutRef<'div'>, 'onCha
   defaultCurrent?: number;
   /** 当前步整体状态:wait / process / finish / error。默认 process。 */
   status?: StepStatus;
-  /** 点击某步跳转(提供后各可用步可点击 / 键盘可达)。 */
+  /**
+   * 点击某步跳转(提供后各可用步可点击 / 键盘可达)。
+   * @param current 被跳转到的步骤索引(从 0 开始)。
+   */
   onChange?: (current: number) => void;
   /** 方向。默认 horizontal。 */
   direction?: StepsDirection;

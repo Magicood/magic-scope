@@ -47,20 +47,23 @@ export interface DrawerProps extends Omit<ComponentPropsWithoutRef<'dialog'>, 'o
   /**
    * 开合状态变更(开合标配的受控/非受控双通道)。任意关闭路径都会以 false 触发;
    * 与 onClose 同时存在时两者都调用(onOpenChange 语义更通用)。
+   * @param open 变化后的目标显隐状态:true 为打开,false 为关闭(任意关闭路径均以 false 触发)。
    */
   onOpenChange?: (open: boolean) => void;
   /**
-   * 按下 Esc 时触发(关闭前)。调用 event.preventDefault() 可阻止关闭,
-   * 用于「抽屉内表单未保存」二次确认。
+   * 按下 Esc 时触发(关闭前)。用于「抽屉内表单未保存」二次确认。
+   * @param event 触发关闭的原生键盘事件(Esc),在其上调用 preventDefault 可阻止关闭。
    */
   onEscapeKeyDown?: (event: KeyboardEvent) => void;
   /**
-   * 在遮罩(面板之外)按下指针时触发(关闭前)。调用 event.preventDefault() 可阻止关闭。
+   * 在遮罩(面板之外)按下指针时触发(关闭前)。
+   * @param event 遮罩上按下的 React 指针事件,在其上调用 preventDefault 可阻止关闭。
    */
   onPointerDownOutside?: (event: ReactPointerEvent<HTMLDialogElement>) => void;
   /**
-   * 与外部(遮罩)发生交互时触发(关闭前),是 onPointerDownOutside 的语义别名,
-   * 任一调用 preventDefault 都会阻止关闭。便于与其它库的 onInteractOutside 习惯对齐。
+   * 与外部(遮罩)发生交互时触发(关闭前),是 onPointerDownOutside 的语义别名。
+   * 便于与其它库的 onInteractOutside 习惯对齐。
+   * @param event 遮罩交互的 React 指针事件,在其上调用 preventDefault 可阻止关闭。
    */
   onInteractOutside?: (event: ReactPointerEvent<HTMLDialogElement>) => void;
   /** 滑入边:start(左)/ end(右,默认)/ top / bottom。 */

@@ -1,0 +1,26 @@
+{
+  "id": "tour",
+  "name": "Tour",
+  "description": "引导漫游:遮罩覆盖全页并在目标处镂空高亮,逐步引导卡(标题/描述/上一步·下一步·跳过·完成)带步数指示,目标位置 rAF 跟随、切步自动滚入视口,支持键盘 Esc/方向键、受控与非受控双通道、tone 着色与命令式跳步。",
+  "category": "feedback",
+  "tags": [
+    "tour",
+    "onboarding",
+    "guide",
+    "walkthrough",
+    "spotlight",
+    "coachmark",
+    "overlay",
+    "feedback"
+  ],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-26",
+    "requirements": "需要一个新手引导/功能巡览组件:用半透明遮罩压暗全页,只在当前步目标处挖出高亮洞聚焦注意力,旁边浮一张引导卡说明这一步并提供上一步/下一步/跳过/完成。要求目标用选择器或取值器惰性解析、位置随页面滚动与窗口缩放实时跟随,切步把目标滚动进视口;键盘可达(Esc 关、左右方向键切步);受控/非受控双通道便于接入业务状态机;文案走 i18n;可抽取的纯算法(步索引夹取、目标解析、镂空区计算、卡片方位推断)落 logic.ts 以便平移多框架。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Tour.tsx", "Tour.css", "logic.ts", "logic.test.ts", "Tour.test.tsx", "index.ts"]
+}

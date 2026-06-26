@@ -1,0 +1,36 @@
+{
+  "id": "color-picker",
+  "name": "ColorPicker",
+  "description": "颜色选择器:饱和度-明度 2D 面板 + hue / alpha 滑条 + 格式文本输入(hex/rgb/hsl 互转)+ 预设色板 + EyeDropper 屏幕取色 + 预览,色块按钮触发并复用 Popover 浮层。",
+  "category": "forms",
+  "tags": [
+    "color",
+    "color-picker",
+    "hsv",
+    "rgb",
+    "hsl",
+    "hex",
+    "eyedropper",
+    "alpha",
+    "swatch",
+    "popover",
+    "forms"
+  ],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-26",
+    "requirements": "需要一个能覆盖完整取色工作流的颜色选择器:用户既要能在二维面板上拖拽直觉地调饱和度/明度,又要能精确粘贴 hex/rgb/hsl 任意格式的色值并在三种表示间自由切换;支持透明度(alpha)与预设色板复用品牌色;在 Chromium 上还能用系统级 EyeDropper 从屏幕任意位置吸色。设计上把全部色彩数学(HSV/RGB/HSL/HEX 互转、parseColor/formatColor)抽成零依赖纯函数沉到 logic.ts,组件做薄壳,以便后续平移到 vue / web-component 时共用同一套色彩语义;内部状态统一以 HSVA 为真相源(2D 面板天然映射 s/v、hue 滑条给 h、alpha 滑条给 a)。交互全键盘可达(面板与各滑条均 role=slider、方向键微调),诚实暴露 EyeDropper 的浏览器兼容边界(不支持即不渲染该按钮)。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": [
+    "ColorPicker.tsx",
+    "ColorPicker.css",
+    "logic.ts",
+    "logic.test.ts",
+    "ColorPicker.test.tsx",
+    "index.ts"
+  ]
+}

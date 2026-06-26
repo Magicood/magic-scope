@@ -42,11 +42,15 @@ export interface RadioGroupProps extends Omit<ComponentPropsWithoutRef<'div'>, '
   /** 非受控初始选中值。 */
   defaultValue?: string | undefined;
   /**
-   * 选中变化回调。二参:被选中项的 value + 触发的原生 change 事件
-   * (event 可选,旧的「只取 value」调用方完全兼容)。
+   * 选中变化回调(旧的「只取 value」调用方完全兼容)。
+   * @param value 被选中项的 value。
+   * @param event 触发本次选中的原生 change 事件(来自被选 Radio 的 input)。
    */
   onValueChange?: ((value: string, event: ChangeEvent<HTMLInputElement>) => void) | undefined;
-  /** 原生风格的 change 回调(透传到当前被选 Radio 的 input)。与 onValueChange 可同时使用。 */
+  /**
+   * 原生风格的 change 回调(透传到当前被选 Radio 的 input)。与 onValueChange 可同时使用。
+   * @param event 当前被选 Radio 的 input 触发的原生 change 事件。
+   */
   onChange?: ((event: ChangeEvent<HTMLInputElement>) => void) | undefined;
   /** 同组 radio 的 name;省略时自动生成,保证「同名即单选」的原生语义。 */
   name?: string | undefined;

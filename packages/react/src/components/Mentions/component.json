@@ -1,0 +1,25 @@
+{
+  "id": "mentions",
+  "name": "Mentions",
+  "description": "基于 textarea 的 @提及输入:输入触发前缀(默认 @,可多前缀)即弹候选浮层,支持本地过滤与异步搜索、键盘上下移动 / Enter·Tab 选中 / Esc 关闭,选中后把触发段回填为候选并续接分隔符。",
+  "category": "forms",
+  "tags": [
+    "mentions",
+    "mention",
+    "textarea",
+    "autocomplete",
+    "combobox",
+    "tag-people",
+    "at-mention"
+  ],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-26",
+    "requirements": "聊天 / 评论 / 协作文档里高频的 @提及人(或 #话题)输入:用户在多行文本中敲 @ 即弹出可过滤的候选名单,键盘可全程操作并回填。把三块纯算法(检测光标前触发段、候选过滤、替换插入并定位光标)抽到零 React 的 logic.ts 便于平移其它框架与单测覆盖;前缀可配多组、候选可静态可异步(配 loading/空态),受控非受控双通道,a11y 走 combobox + listbox/option 模型。v1 候选浮层锚控件下方(近光标精确定位需镜像 textarea 算坐标,较复杂,留作后续增强)。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Mentions.tsx", "Mentions.css", "logic.ts", "index.ts"]
+}

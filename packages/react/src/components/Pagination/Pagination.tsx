@@ -50,7 +50,10 @@ export interface PaginationProps
   page: number;
   /** 总页数。当传 `total`(条目数)+ `pageSize` 时可不传,内部据此推算。 */
   total?: number;
-  /** 翻页回调,入参为目标页码(1 起)。 */
+  /**
+   * 翻页回调。
+   * @param page 目标页码(1 起)。
+   */
   onPageChange: (page: number) => void;
   /** 当前页两侧各显示的页码数。默认 1。 */
   siblingCount?: number;
@@ -69,9 +72,16 @@ export interface PaginationProps
   pageSizeOptions?: number[];
   /** 是否显示每页条数选择器(需 totalItems 才有意义)。默认在提供 pageSizeOptions 且有 totalItems 时显示。 */
   showSizeChanger?: boolean;
-  /** 每页条数变化回调。 */
+  /**
+   * 每页条数变化回调。
+   * @param pageSize 新的每页条数。
+   */
   onPageSizeChange?: (pageSize: number) => void;
-  /** 聚合回调:页码或每页条数变化都会触发,便于直接驱动数据请求。 */
+  /**
+   * 聚合回调:页码或每页条数变化都会触发,便于直接驱动数据请求。
+   * @param page 变化后的目标页码(1 起)。
+   * @param pageSize 变化后的每页条数。
+   */
   onChange?: (page: number, pageSize: number) => void;
 
   /** 显示总数/区间文案。`(total, range) => ReactNode`,range 为当前页覆盖的 [start, end]。 */
@@ -79,7 +89,10 @@ export interface PaginationProps
 
   /** 显示快速跳页输入框。 */
   showQuickJumper?: boolean;
-  /** 快速跳页(回车 / 失焦提交)回调。 */
+  /**
+   * 快速跳页(回车 / 失焦提交)回调。
+   * @param page 跳页输入框提交的目标页码(已夹取到合法范围,1 起)。
+   */
   onQuickJump?: (page: number) => void;
 
   /** 上一页图标(替换默认 CSS 箭头)。 */
@@ -97,7 +110,12 @@ export interface PaginationProps
    * 返回的元素由你负责承载内容,组件仍会 compose 其 onClick 触发翻页。
    */
   itemRender?: (page: number, type: PaginationItemType, originalElement: ReactNode) => ReactNode;
-  /** 页码项点击(在内部翻页之前),可 `preventDefault()` 阻断内部翻页。 */
+  /**
+   * 页码项点击(在内部翻页之前),可 `preventDefault()` 阻断内部翻页。
+   * @param page 该项对应的目标页码(prev/next 为相邻页)。
+   * @param type 该项类型:'page' / 'prev' / 'next'(ellipsis 不触发点击)。
+   * @param event 该次点击的原始鼠标事件,可 `preventDefault()` 阻断内部翻页。
+   */
   onItemClick?: (page: number, type: PaginationItemType, event: MouseEvent) => void;
 
   /** 组件根 nav 自身 className。 */

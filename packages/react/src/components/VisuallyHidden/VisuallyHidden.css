@@ -1,0 +1,39 @@
+/*
+ * VisuallyHidden —— 视觉隐藏、保留给屏幕阅读器(sr-only 标准技法)。
+ * 刻意不用 display:none / visibility:hidden —— 那会把元素从无障碍树摘掉,SR 也读不到。
+ * 1px 尺寸 + clip 裁剪 + overflow:hidden + 负 margin,把元素压成不可见但仍在可达性树里的点。
+ */
+.ms-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  /* clip 为旧引擎保底,clip-path 为现代标准;两者叠加最大化兼容 */
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  overflow: hidden;
+  /* 防止内容换行后撑出 1px 视口外露,并避免被父级 white-space 影响 */
+  white-space: nowrap;
+  /* 不参与布局留白 / 命中测试 */
+  word-wrap: normal;
+}
+
+/*
+ * focusable:skip-link 模式 —— 聚焦时(自身或后代)还原可见。
+ * 解除全部裁剪并回归正常文档流,让「跳到主内容」之类锚点在 Tab 聚焦时浮现。
+ */
+.ms-visually-hidden--focusable:focus,
+.ms-visually-hidden--focusable:focus-within,
+.ms-visually-hidden--focusable:active {
+  position: static;
+  width: auto;
+  height: auto;
+  margin: 0;
+  padding: var(--ms-space-2, 0.5rem) var(--ms-space-3, 0.75rem);
+  clip: auto;
+  clip-path: none;
+  overflow: visible;
+  white-space: normal;
+}

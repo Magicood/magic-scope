@@ -1,0 +1,17 @@
+{
+  "id": "cascader",
+  "name": "Cascader",
+  "description": "级联选择器:从层级数据中逐级选出一条路径。trigger 显示选中路径,Popover 浮层承载多列级联菜单(hover/点击展开下一列,点叶子提交),支持 changeOnSelect、受控/非受控、完整键盘导航与 menu/menuitem 无障碍。",
+  "category": "forms",
+  "tags": ["cascader", "级联", "多级选择", "树形", "路径选择", "select", "forms"],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-26",
+    "requirements": "省/市/区、商品多级分类这类层级数据,需要让用户沿一条路径逐级收窄、最终落到一个叶子(或允许 changeOnSelect 半路落点)。要点:多列同屏展开而非逐级弹窗,鼠标 hover 即预览下一级、键盘四向(↑↓ 列内、← → 跨列)可达,禁用节点既不可选也不可作为中转;选中结果以 string[] 路径表达,沿途 optionPath 一并回传供业务取每级数据;路径查找/列展开等纯算法抽到 logic.ts 以便平移到其它框架内核。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Cascader.tsx", "Cascader.css", "logic.ts", "index.ts"]
+}

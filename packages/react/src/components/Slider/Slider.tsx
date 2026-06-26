@@ -31,18 +31,25 @@ export interface SliderProps
   value?: number;
   /** 非受控初始值。缺省取 min。 */
   defaultValue?: number;
-  /** 值变化回调(拖动 / 键盘,高频),入参为数值。 */
+  /**
+   * 值变化回调(拖动 / 键盘,高频)。
+   * @param value 变化后的当前数值。
+   */
   onValueChange?: (value: number) => void;
   /**
    * 落定回调:松手 / 键盘抬起 / 失焦时,以最终值触发一次(对齐 Radix `onValueCommit`、MUI `onChangeCommitted`)。
    * 拖动中不触发,适合做「提交请求 / 写入 store」这类只关心终值的副作用。
+   * @param value 本次交互落定后的最终数值。
    */
   onChangeEnd?: (value: number) => void;
-  /** `onChangeEnd` 的别名(对齐 Radix 命名),两者都会被调用。 */
+  /**
+   * `onChangeEnd` 的别名(对齐 Radix 命名),两者都会被调用。
+   * @param value 本次交互落定后的最终数值。
+   */
   onValueCommit?: (value: number) => void;
-  /** 开始拖动 / 键盘交互(显气泡、抬 thumb 层级)。 */
+  /** 开始拖动 / 键盘交互(显气泡、抬 thumb 层级),无参数。 */
   onDragStart?: () => void;
-  /** 结束拖动 / 键盘交互。 */
+  /** 结束拖动 / 键盘交互,无参数。 */
   onDragEnd?: () => void;
   /** 最小值。默认 0。 */
   min?: number;

@@ -71,7 +71,54 @@ export type MessageKey =
   | 'timeline.pending'
   | 'toast.close'
   | 'toaster.region'
-  | 'spinner.label';
+  | 'spinner.label'
+  | 'form.required'
+  | 'form.min'
+  | 'form.max'
+  | 'form.minLength'
+  | 'form.maxLength'
+  | 'form.pattern'
+  | 'form.email'
+  | 'form.url'
+  | 'form.validating'
+  | 'form.submitError'
+  | 'form.errorSummary'
+  | 'datePicker.placeholder'
+  | 'datePicker.rangeStart'
+  | 'datePicker.rangeEnd'
+  | 'datePicker.clear'
+  | 'datePicker.today'
+  | 'datePicker.prevMonth'
+  | 'datePicker.nextMonth'
+  | 'datePicker.prevYear'
+  | 'datePicker.nextYear'
+  | 'datePicker.selectMonthYear'
+  | 'pinInput.label'
+  | 'backTop.label'
+  | 'upload.trigger'
+  | 'upload.hint'
+  | 'upload.remove'
+  | 'upload.retry'
+  | 'upload.uploading'
+  | 'upload.preview'
+  | 'colorPicker.hue'
+  | 'colorPicker.alpha'
+  | 'splitter.resize'
+  | 'timePicker.now'
+  | 'timePicker.confirm'
+  | 'timePicker.placeholder'
+  | 'carousel.previous'
+  | 'carousel.next'
+  | 'carousel.goToSlide'
+  | 'transfer.search'
+  | 'transfer.empty'
+  | 'tour.next'
+  | 'tour.prev'
+  | 'tour.skip'
+  | 'tour.finish'
+  | 'tour.stepOf'
+  | 'image.error'
+  | 'image.preview';
 
 /** 完整字典:每个 key 都有值。 */
 export type Messages = Record<MessageKey, Message>;
@@ -139,6 +186,53 @@ export const defaultMessages: Messages = {
   'toast.close': '关闭',
   'toaster.region': '通知',
   'spinner.label': '加载中',
+  'form.required': '此项为必填项',
+  'form.min': '不能小于 {min}',
+  'form.max': '不能大于 {max}',
+  'form.minLength': '至少需要 {min} 个字符',
+  'form.maxLength': '最多 {max} 个字符',
+  'form.pattern': '格式不正确',
+  'form.email': '请输入有效的邮箱地址',
+  'form.url': '请输入有效的网址',
+  'form.validating': '校验中…',
+  'form.submitError': '提交失败,请检查表单',
+  'form.errorSummary': '表单有 {count} 处错误',
+  'datePicker.placeholder': '请选择日期',
+  'datePicker.rangeStart': '开始日期',
+  'datePicker.rangeEnd': '结束日期',
+  'datePicker.clear': '清除',
+  'datePicker.today': '今天',
+  'datePicker.prevMonth': '上个月',
+  'datePicker.nextMonth': '下个月',
+  'datePicker.prevYear': '上一年',
+  'datePicker.nextYear': '下一年',
+  'datePicker.selectMonthYear': '选择年月',
+  'pinInput.label': '验证码输入',
+  'backTop.label': '回到顶部',
+  'upload.trigger': '点击或拖拽文件到此区域上传',
+  'upload.hint': '支持单个或批量上传',
+  'upload.remove': '删除',
+  'upload.retry': '重试',
+  'upload.uploading': '上传中',
+  'upload.preview': '预览',
+  'colorPicker.hue': '色相',
+  'colorPicker.alpha': '透明度',
+  'splitter.resize': '拖动调整大小',
+  'timePicker.now': '此刻',
+  'timePicker.confirm': '确定',
+  'timePicker.placeholder': '请选择时间',
+  'carousel.previous': '上一张',
+  'carousel.next': '下一张',
+  'carousel.goToSlide': '跳到第 {index} 张',
+  'transfer.search': '搜索',
+  'transfer.empty': '列表为空',
+  'tour.next': '下一步',
+  'tour.prev': '上一步',
+  'tour.skip': '跳过',
+  'tour.finish': '完成',
+  'tour.stepOf': '第 {current} / {total} 步',
+  'image.error': '图片加载失败',
+  'image.preview': '预览',
 };
 
 const TEMPLATE = /\{(\w+)\}/g;
