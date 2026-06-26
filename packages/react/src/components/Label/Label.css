@@ -1,10 +1,14 @@
+/* —— Label:表单标签(基于原生 label,消费 tone 槽位) —— */
 .ms-label {
+  /* 必填标记辉光的局部门控:半径与色统一收口为变量,
+     idle/hover/关断只改变量,避免选择器特异性战争 */
+  --ms-label-glow-blur: calc(6px * var(--ms-fx-glow, 1));
+  --ms-label-glow-color: var(--ms-color-glow);
   display: inline-flex;
   align-items: baseline;
   gap: var(--ms-space-1);
   color: var(--ms-color-fg);
   font-family: var(--ms-font-sans);
-  font-size: 0.9rem;
   font-weight: 500;
   line-height: 1.4;
   margin-block-end: var(--ms-space-2);
@@ -15,19 +19,106 @@
   overflow-wrap: anywhere;
   transition:
     color var(--ms-dur-fast) var(--ms-ease-standard),
+    opacity var(--ms-dur-fast) var(--ms-ease-standard),
     text-shadow var(--ms-dur-base) var(--ms-ease-standard);
 }
 
+/* 显式选了非 neutral tone(success/danger 等校验着色)→ 文字染 --ms-c;
+   neutral(默认)沿用普通 fg,保持中性可读 */
+.ms-label:not(.ms-tone-neutral) {
+  color: var(--ms-c, var(--ms-color-fg));
+}
+
+/* —— 尺寸:逻辑属性 + 随密度缩放,与 Input 三档对齐(font-size 同档) —— */
+.ms-label--sm {
+  font-size: 0.833rem;
+  min-block-size: calc(1.25rem * var(--ms-density-scale, 1));
+}
+.ms-label--md {
+  font-size: 0.9rem;
+  min-block-size: calc(1.5rem * var(--ms-density-scale, 1));
+}
+.ms-label--lg {
+  font-size: 1.05rem;
+  min-block-size: calc(1.75rem * var(--ms-density-scale, 1));
+}
+
+/* —— 必填标记 —— */
 .ms-label__required {
+  /* 默认走 danger(必填惯例红);若显式选了非 neutral tone,跟随 --ms-c 做校验着色 */
   color: var(--ms-color-danger);
   font-weight: 600;
   user-select: none;
-  /* 装饰性微光:门控于 --ms-fx-glow,idle 时极克制地点亮必填标记 */
-  text-shadow: 0 0 calc(6px * var(--ms-fx-glow, 1)) var(--ms-color-glow);
+  /* 装饰性微光:半径/色读局部变量,统一门控于 --ms-fx-glow */
+  text-shadow: 0 0 var(--ms-label-glow-blur) var(--ms-label-glow-color);
   transition: text-shadow var(--ms-dur-base) var(--ms-ease-standard);
 }
+/* 显式 tone(非 neutral / 非默认 primary 的红惯例)→ 星号随色调,辉光色切到 --ms-c-glow */
+.ms-label:not(.ms-tone-neutral):not(.ms-tone-primary) {
+  --ms-label-glow-color: var(--ms-c-glow, var(--ms-color-glow));
+}
+.ms-label:not(.ms-tone-neutral):not(.ms-tone-primary) .ms-label__required {
+  color: var(--ms-c, var(--ms-color-danger));
+}
 
-/* hover 关联表单时,标签整体略微提亮 + 必填标记发光强化(深色奥术氛围) */
-.ms-label:hover .ms-label__required {
-  text-shadow: 0 0 calc(10px * var(--ms-fx-glow, 1)) var(--ms-color-glow);
+/* hover 关联表单时,必填标记发光强化(深色奥术氛围):只抬辉光半径变量 */
+@media (hover: hover) {
+  .ms-label:not(.ms-label--disabled):hover {
+    --ms-label-glow-blur: calc(10px * var(--ms-fx-glow, 1));
+  }
+}
+
+/* —— 可选标记:轻量、弱化,放在文末 —— */
+.ms-label__optional {
+  flex: 0 0 auto;
+  color: var(--ms-color-fg-subtle);
+  font-size: 0.85em;
+  font-weight: 400;
+  user-select: none;
+}
+
+/* —— 屏幕阅读器专用文本(必填的可读语义,不占视觉空间) —— */
+.ms-label__sr {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* —— 禁用态:降透明度、关闭交互态(辉光半径归零) —— */
+.ms-label--disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  --ms-label-glow-blur: 0px;
+}
+
+/* —— 发光总闸关断:辉光半径归零(变量门控,无需 !important / 特异性战争) —— */
+[data-ms-fx="off"] .ms-label {
+  --ms-label-glow-blur: 0px;
+}
+
+/* —— 触控:热区抬到 --ms-target-min,便于点选关联控件 —— */
+@media (pointer: coarse) {
+  .ms-label--sm,
+  .ms-label--md,
+  .ms-label--lg {
+    min-block-size: max(1.5rem, calc(var(--ms-target-min) * 0.625));
+  }
+}
+
+/* —— 动效降级:必填辉光过渡可一键停 —— */
+@media (prefers-reduced-motion: reduce) {
+  .ms-label,
+  .ms-label__required {
+    transition-duration: 0.01ms;
+  }
+}
+[data-ms-motion="off"] .ms-label,
+[data-ms-motion="off"] .ms-label__required {
+  transition: none;
 }

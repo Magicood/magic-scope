@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import '@testing-library/jest-dom/vitest';
-import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
 import { Timeline, TimelineItem } from './Timeline';
 
 describe('Timeline + TimelineItem', () => {
@@ -32,18 +32,21 @@ describe('Timeline + TimelineItem', () => {
     expect(screen.getByText('已发布到生产环境')).toHaveClass('ms-timeline__body');
   });
 
-  it('变体加节点类名;default 不加', () => {
+  it('变体经 tone resolver 上色(ms-tone-* + toned);default 不上色', () => {
     const { container } = render(
       <Timeline>
         <TimelineItem variant="success" title="成功" />
         <TimelineItem variant="danger" title="失败" />
+        <TimelineItem variant="accent" title="强调" />
         <TimelineItem title="普通" />
       </Timeline>,
     );
     const items = container.querySelectorAll('.ms-timeline__item');
-    expect(items[0]).toHaveClass('ms-timeline__item--success');
-    expect(items[1]).toHaveClass('ms-timeline__item--danger');
-    expect(items[2]?.className).not.toMatch(/ms-timeline__item--/);
+    expect(items[0]).toHaveClass('ms-timeline__item--toned', 'ms-tone-success');
+    expect(items[1]).toHaveClass('ms-timeline__item--toned', 'ms-tone-danger');
+    expect(items[2]).toHaveClass('ms-timeline__item--toned', 'ms-tone-accent');
+    expect(items[3]?.className).not.toMatch(/ms-tone-/);
+    expect(items[3]?.className).not.toMatch(/--toned/);
   });
 
   it('默认渲染圆点;提供 icon 时以图标节点替代', () => {
@@ -79,5 +82,137 @@ describe('Timeline + TimelineItem', () => {
     const li = container.querySelector('.ms-timeline__item');
     expect(li).toHaveClass('ms-timeline__item', 'custom');
     expect(li).toHaveAttribute('data-testid', 'it');
+  });
+
+  it('mode / reverse / lineStyle 落到容器类名', () => {
+    const { container, rerender } = render(
+      <Timeline mode="alternate" reverse lineStyle="dashed">
+        <TimelineItem title="a" />
+      </Timeline>,
+    );
+    const ol = container.querySelector('ol.ms-timeline');
+    expect(ol).toHaveClass('ms-timeline--alternate', 'ms-timeline--reverse', 'ms-timeline--dashed');
+
+    rerender(
+      <Timeline mode="right">
+        <TimelineItem title="a" />
+      </Timeline>,
+    );
+    expect(container.querySelector('ol.ms-timeline')).toHaveClass('ms-timeline--right');
+  });
+
+  it('暴露 .ms-timeline__line 连线节点(供 className 钩子定制)', () => {
+    const { container } = render(
+      <Timeline>
+        <TimelineItem title="a" />
+        <TimelineItem title="b" />
+      </Timeline>,
+    );
+    expect(container.querySelectorAll('.ms-timeline__line')).toHaveLength(2);
+  });
+
+  it('pending 追加进行中末节点(呼吸圆点);false 不渲染', () => {
+    const { container, rerender } = render(
+      <Timeline pending="加载更多…">
+        <TimelineItem title="a" />
+      </Timeline>,
+    );
+    expect(container.querySelector('.ms-timeline__item--pending')).toBeInTheDocument();
+    expect(container.querySelector('.ms-timeline__dot--pulse')).toBeInTheDocument();
+    expect(screen.getByText('加载更多…')).toBeInTheDocument();
+
+    rerender(
+      <Timeline pending={false}>
+        <TimelineItem title="a" />
+      </Timeline>,
+    );
+    expect(container.querySelector('.ms-timeline__item--pending')).toBeNull();
+  });
+
+  it('pulse 给圆点加呼吸类', () => {
+    const { container } = render(
+      <Timeline>
+        <TimelineItem title="进行中" pulse />
+      </Timeline>,
+    );
+    expect(container.querySelector('.ms-timeline__dot--pulse')).toBeInTheDocument();
+  });
+
+  it('interactive / onSelect:条目可聚焦、active 标记 aria-current', () => {
+    const { container } = render(
+      <Timeline>
+        <TimelineItem title="可选" onSelect={() => {}} active />
+      </Timeline>,
+    );
+    const li = container.querySelector('.ms-timeline__item');
+    expect(li).toHaveClass('ms-timeline__item--interactive', 'ms-timeline__item--active');
+    expect(li).toHaveAttribute('tabindex', '0');
+    expect(li).toHaveAttribute('aria-current', 'true');
+  });
+
+  it('onClick 与内部 onSelect 都触发(compose,不覆盖用户处理器)', () => {
+    const onClick = vi.fn();
+    const onSelect = vi.fn();
+    const { container } = render(
+      <Timeline>
+        <TimelineItem title="点我" onClick={onClick} onSelect={onSelect} />
+      </Timeline>,
+    );
+    const li = container.querySelector('.ms-timeline__item') as HTMLLIElement;
+    fireEvent.click(li);
+    expect(onClick).toHaveBeenCalledTimes(1);
+    expect(onSelect).toHaveBeenCalledTimes(1);
+  });
+
+  it('用户 onClick preventDefault 可阻断内部 onSelect', () => {
+    const onSelect = vi.fn();
+    const { container } = render(
+      <Timeline>
+        <TimelineItem title="拦截" onClick={(e) => e.preventDefault()} onSelect={onSelect} />
+      </Timeline>,
+    );
+    const li = container.querySelector('.ms-timeline__item') as HTMLLIElement;
+    fireEvent.click(li);
+    expect(onSelect).not.toHaveBeenCalled();
+  });
+
+  it('键盘 Enter / Space 触发 onSelect(交互式)', () => {
+    const onSelect = vi.fn();
+    const { container } = render(
+      <Timeline>
+        <TimelineItem title="键盘" onSelect={onSelect} />
+      </Timeline>,
+    );
+    const li = container.querySelector('.ms-timeline__item') as HTMLLIElement;
+    fireEvent.keyDown(li, { key: 'Enter' });
+    fireEvent.keyDown(li, { key: ' ' });
+    expect(onSelect).toHaveBeenCalledTimes(2);
+  });
+
+  it('非交互条目透传 onClick 但不加 tabindex / interactive 类', () => {
+    const onClick = vi.fn();
+    const { container } = render(
+      <Timeline>
+        <TimelineItem title="纯透传" onClick={onClick} />
+      </Timeline>,
+    );
+    const li = container.querySelector('.ms-timeline__item') as HTMLLIElement;
+    expect(li).not.toHaveClass('ms-timeline__item--interactive');
+    expect(li).not.toHaveAttribute('tabindex');
+    fireEvent.click(li);
+    expect(onClick).toHaveBeenCalledTimes(1);
+  });
+
+  it('Timeline 根透传原生属性与事件', () => {
+    const onMouseEnter = vi.fn();
+    const { container } = render(
+      <Timeline data-testid="tl" onMouseEnter={onMouseEnter}>
+        <TimelineItem title="a" />
+      </Timeline>,
+    );
+    const ol = container.querySelector('ol.ms-timeline') as HTMLOListElement;
+    expect(ol).toHaveAttribute('data-testid', 'tl');
+    fireEvent.mouseEnter(ol);
+    expect(onMouseEnter).toHaveBeenCalledTimes(1);
   });
 });

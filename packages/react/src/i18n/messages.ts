@@ -25,6 +25,8 @@ export type MessageKey =
   | 'avatar.status.offline'
   | 'avatar.status.busy'
   | 'avatar.status.away'
+  | 'label.optional'
+  | 'label.required'
   | 'select.placeholder'
   | 'select.empty'
   | 'select.loading'
@@ -50,6 +52,7 @@ export type MessageKey =
   | 'popconfirm.confirm'
   | 'popconfirm.cancel'
   | 'tag.remove'
+  | 'timeline.pending'
   | 'toast.close'
   | 'toaster.region'
   | 'spinner.label';
@@ -73,6 +76,8 @@ export const defaultMessages: Messages = {
   'avatar.status.offline': '离线',
   'avatar.status.busy': '忙碌',
   'avatar.status.away': '离开',
+  'label.optional': '可选',
+  'label.required': '必填',
   'select.placeholder': '请选择…',
   'select.empty': '无匹配项',
   'select.loading': '加载中…',
@@ -98,6 +103,7 @@ export const defaultMessages: Messages = {
   'popconfirm.confirm': '确定',
   'popconfirm.cancel': '取消',
   'tag.remove': '移除',
+  'timeline.pending': '进行中…',
   'toast.close': '关闭',
   'toaster.region': '通知',
   'spinner.label': '加载中',

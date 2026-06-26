@@ -1,17 +1,31 @@
 {
   "id": "divider",
   "name": "Divider",
-  "description": "分隔线,支持水平/垂直朝向,带 separator 语义与 aria-orientation。",
+  "description": "分隔线(深度组件):水平/垂直朝向,solid/dashed/dotted 线型,thickness/spacing(随密度缩放),tone 语义色调(线色与奥术微光读 6 槽位),children/label 文字分隔(role=separator + 两侧画线 + textAlign 偏置)。无内容用语义 <hr>,有内容升级为 separator;...rest 全量透传原生属性与事件。",
   "category": "layout",
-  "tags": ["divider", "separator", "layout", "horizontal", "vertical", "rule"],
+  "tags": [
+    "divider",
+    "separator",
+    "layout",
+    "horizontal",
+    "vertical",
+    "rule",
+    "dashed",
+    "dotted",
+    "tone",
+    "label",
+    "text-divider",
+    "thickness",
+    "spacing"
+  ],
   "status": "stable",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "frameworks": ["react"],
   "source": {
     "type": "original",
     "capturedAt": "2026-06-24",
-    "requirements": "分隔线,支持水平/垂直朝向,带 separator 语义与 aria-orientation。。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-* 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion。"
+    "requirements": "分隔线,支持水平/垂直朝向,带 separator 语义与 aria-orientation。补强到生产级深度:children/label 文字分隔槽位(两侧伪线 + textAlign)、tone 语义色调(读 tone 6 槽位 --ms-c/--ms-c-glow,默认 neutral=border 色)、variant(solid/dashed/dotted)、thickness/spacing(spacing 随 --ms-density-scale 缩放)。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-* 变量,完整状态与过渡、发光(受 --ms-fx-glow 调制、data-ms-fx=off 总闸),尊重 prefers-reduced-motion 与 data-ms-motion。"
   },
   "dependencies": ["@magic-scope/tokens"],
-  "files": ["Divider.tsx", "Divider.css", "index.ts"]
+  "files": ["Divider.tsx", "Divider.css", "Divider.test.tsx", "index.ts"]
 }
