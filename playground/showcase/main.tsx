@@ -1,12 +1,22 @@
+import {
+  applyTheme,
+  arcaneDark,
+  presetThemes,
+  registerProperties,
+  registerThemes,
+} from '@magic-scope/tokens';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { applyTheme, arcaneDark, registerProperties } from '../packages/tokens/src/index';
-import '../packages/react/src/styles.css';
+import '../../packages/react/src/styles.css';
 import { App } from './App';
+import './showcase.css';
 
-// 应用默认主题(深色奥术)并注册可补间 @property。
+// 注册预设主题(供顶栏 / 预设画廊切换),应用默认深色奥术,注册可补间 @property。
+registerThemes(presetThemes);
 applyTheme(arcaneDark);
 registerProperties();
+// 默认光影克制一档。
+document.documentElement.dataset.msFx = 'subtle';
 document.body.style.background = 'var(--ms-color-bg)';
 document.body.style.minHeight = '100vh';
 document.body.style.margin = '0';

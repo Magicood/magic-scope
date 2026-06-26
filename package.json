@@ -23,6 +23,7 @@
     "version": "changeset version",
     "release": "pnpm build && changeset publish",
     "play": "vite playground",
+    "play:showcase": "vite playground/showcase",
     "gen:props": "tsx scripts/extract-props.ts",
     "check:props": "tsx scripts/extract-props.ts --check",
     "check:showcase": "tsx scripts/check-showcase.ts",
