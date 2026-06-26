@@ -1,17 +1,28 @@
 {
   "id": "tooltip",
   "name": "Tooltip",
-  "description": "提示气泡:用 Popover API 进 top-layer + CSS Anchor Positioning 贴位,hover/focus 延时触发、aria-describedby 关联,深色奥术微光入场,零第三方依赖并带锚定降级。",
+  "description": "提示气泡(旗舰深度):Popover API 进 top-layer + CSS Anchor Positioning 12 向定位(四主轴 × 居中/start/end)+ offset 间距 + 可选指向箭头;tone 色调经全库 tone resolver 驱动边框/发光/箭头(danger 即警示气泡);hover/focus 延时触发(openDelay/closeDelay 拆分)、Esc/点外部关闭可拦截、disabled 不弹;受控 open/defaultOpen + onOpenChange 双通道;触屏 tap-to-toggle;trigger 全事件 compose 合并、气泡根 spread ...rest 透传;aria-describedby 关联、键盘可达,fx/motion 开关与锚定降级。零第三方依赖。",
   "category": "overlay",
-  "tags": ["tooltip", "popover", "overlay", "hint", "anchor-positioning"],
+  "tags": [
+    "tooltip",
+    "popover",
+    "overlay",
+    "hint",
+    "anchor-positioning",
+    "tone",
+    "arrow",
+    "controlled",
+    "placement",
+    "accessible"
+  ],
   "status": "stable",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "frameworks": ["react"],
   "source": {
     "type": "original",
     "capturedAt": "2026-06-25",
-    "requirements": "提示气泡:用 Popover API 进 top-layer + CSS Anchor Positioning 贴位,hover/focus 延时触发、aria-describedby 关联,深色奥术微光入场,零第三方依赖并带锚定降级。。magic-scope overlay 组件:用满平台原生能力(Popover API + CSS Anchor Positioning)自研,带降级、键盘可达、fx/motion 开关、入场动画。"
+    "requirements": "提示气泡:用 Popover API 进 top-layer + CSS Anchor Positioning 贴位,hover/focus 延时触发、aria-describedby 关联,深色奥术微光入场,零第三方依赖并带锚定降级。。magic-scope overlay 组件:用满平台原生能力(Popover API + CSS Anchor Positioning)自研,带降级、键盘可达、fx/motion 开关、入场动画。补强到生产级深度:12 向 placement(四主轴)+ 箭头、tone 槽位配色、受控 open/onOpenChange/defaultOpen 双通道、disabled、openDelay/closeDelay 拆分、...rest 透传气泡根、trigger 事件 compose、onEscapeKeyDown/onPointerDownOutside 拦截关闭。"
   },
   "dependencies": ["@magic-scope/tokens"],
-  "files": ["Tooltip.tsx", "Tooltip.css", "index.ts"]
+  "files": ["Tooltip.tsx", "Tooltip.css", "logic.ts", "index.ts"]
 }

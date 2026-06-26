@@ -1,17 +1,29 @@
 {
   "id": "select",
   "name": "Select",
-  "description": "下拉选择:button trigger(combobox)+ Popover API listbox 进 top-layer、CSS Anchor Positioning 定位并优雅降级,完整键盘导航(↑↓/Enter/Space/Esc/Home/End)、aria-selected 与选中打勾 primary 高亮。",
+  "description": "下拉选择(旗舰深度):button trigger(combobox)+ Popover API listbox 进 top-layer、CSS Anchor Positioning 定位并优雅降级。接全库 tone 槽位(高亮/打勾/发光只读 --ms-c*)、i18n 文案;生产特性 clearable / loading / 空态 / searchable(combobox 过滤)/ multiple(tag 多选);留口 prefix、renderOption/renderValue、option icon/description、classNames 部件定制、原生属性透传;事件 onOpenChange 受控双通道、onClose(reason)、onEscapeKeyDown/onPointerDownOutside 可拦截、onHighlightChange/onSelect/onClear/onSearch/onFocus/onBlur;完整键盘导航(↑↓/Enter/Space/Esc/Home/End/Tab)、尺寸随密度缩放、aria-selected 与选中打勾高亮。",
   "category": "forms",
-  "tags": ["select", "dropdown", "listbox", "combobox", "forms"],
+  "tags": [
+    "select",
+    "dropdown",
+    "listbox",
+    "combobox",
+    "forms",
+    "multiple",
+    "searchable",
+    "clearable",
+    "tone",
+    "i18n",
+    "controlled"
+  ],
   "status": "stable",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "frameworks": ["react"],
   "source": {
     "type": "original",
-    "capturedAt": "2026-06-25",
-    "requirements": "下拉选择:button trigger(combobox)+ Popover API listbox 进 top-layer、CSS Anchor Positioning 定位并优雅降级,完整键盘导航(↑↓/Enter/Space/Esc/Home/End)、aria-selected 与选中打勾 primary 高亮。。magic-scope overlay 组件:用满平台原生能力(Popover API + CSS Anchor Positioning)自研,带降级、键盘可达、fx/motion 开关、入场动画。"
+    "capturedAt": "2026-06-26",
+    "requirements": "把最小版 Select 补强到生产级深度,对标旗舰 Button/Input/Text:接 tone 槽位系统、i18n 文案、clearable/loading/空态/searchable/multiple、render 槽位与 option icon/description、classNames 部件定制、密度缩放、motion/fx 一键降级、完整事件契约(onOpenChange 受控双通道 + onClose(reason) + 可拦截 Esc/点外 + onHighlightChange/onSelect/onClear/onSearch/onFocus/onBlur + 原生透传与 composeEventHandlers 合并)。magic-scope overlay 组件:用满平台原生能力(Popover API + CSS Anchor Positioning)自研,带降级、键盘可达、fx/motion 开关、入场动画。"
   },
   "dependencies": ["@magic-scope/tokens"],
-  "files": ["Select.tsx", "Select.css", "index.ts"]
+  "files": ["Select.tsx", "Select.css", "logic.ts", "index.ts"]
 }
