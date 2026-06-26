@@ -1,4 +1,4 @@
-import { CATEGORIES, ENTRIES } from './registry';
+import { CATALOG, CATEGORIES } from './core/catalog';
 
 export interface SidebarProps {
   activeId: string;
@@ -11,8 +11,8 @@ export function Sidebar({ activeId, query }: SidebarProps) {
   const match = (text: string) => text.toLowerCase().includes(q);
 
   const visible = q
-    ? ENTRIES.filter((e) => match(e.name) || match(e.id) || match(e.summary))
-    : ENTRIES;
+    ? CATALOG.filter((e) => match(e.name) || match(e.id) || match(e.summary))
+    : CATALOG;
 
   return (
     <nav className="sc-sidebar" aria-label="组件导航">

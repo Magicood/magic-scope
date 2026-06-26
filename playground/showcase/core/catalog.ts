@@ -1,4 +1,4 @@
-import type { DocEntry } from './types';
+import { V2_DOCS } from './registry2';
 
 // —— 分类(顺序即侧栏顺序) ——
 export interface Category {
@@ -58,8 +58,12 @@ const ORDER: string[] = [
   'divider',
 ];
 
-// 自动收录 components/ 下所有条目文件:存在哪些就收哪些(新增文件即自动注册)。
-const modules = import.meta.glob<{ entry: DocEntry }>('./components/*.tsx', { eager: true });
+export interface CatalogItem {
+  id: string;
+  name: string;
+  category: string;
+  summary: string;
+}
 
 const catIndex = (c: string) => {
   const i = CATEGORIES.findIndex((x) => x.id === c);
@@ -70,9 +74,14 @@ const orderIndex = (id: string) => {
   return i < 0 ? ORDER.length : i;
 };
 
-export const ENTRIES: DocEntry[] = Object.values(modules)
-  .map((m) => m.entry)
-  .filter((e): e is DocEntry => Boolean(e?.id))
+// 唯一组件目录:从 v2 文档(meta + adapter)推出,按分类 → 顺序 → 名称排序。
+export const CATALOG: CatalogItem[] = Object.values(V2_DOCS)
+  .map((d) => ({
+    id: d.meta.id,
+    name: d.meta.name,
+    category: d.meta.category,
+    summary: d.meta.summary,
+  }))
   .sort((a, b) => {
     const byCat = catIndex(a.category) - catIndex(b.category);
     if (byCat !== 0) return byCat;
@@ -81,10 +90,10 @@ export const ENTRIES: DocEntry[] = Object.values(modules)
     return a.name.localeCompare(b.name);
   });
 
-export function entriesByCategory(category: string): DocEntry[] {
-  return ENTRIES.filter((e) => e.category === category);
+export function findCatalog(id: string): CatalogItem | undefined {
+  return CATALOG.find((c) => c.id === id);
 }
 
-export function findEntry(id: string): DocEntry | undefined {
-  return ENTRIES.find((e) => e.id === id);
+export function categoryLabel(id: string): string {
+  return CATEGORIES.find((c) => c.id === id)?.label ?? '';
 }

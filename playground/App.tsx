@@ -1,15 +1,14 @@
 import { Component, type ReactNode, useEffect, useState } from 'react';
 import { AlertDialogHost, Toaster } from '../packages/react/src/index';
-import { ComponentView } from './showcase/ComponentView';
+import { CATALOG, categoryLabel, findCatalog } from './showcase/core/catalog';
 import { getV2 } from './showcase/core/registry2';
 import { ComponentDocV2 } from './showcase/pages/ComponentDocV2';
-import { CATEGORIES, ENTRIES, findEntry } from './showcase/registry';
 import { Sidebar } from './showcase/Sidebar';
 import { Topbar } from './showcase/Topbar';
 
 function currentId(): string {
   const id = window.location.hash.replace(/^#\/?/, '');
-  return findEntry(id) ? id : (ENTRIES[0]?.id ?? '');
+  return findCatalog(id) ? id : (CATALOG[0]?.id ?? '');
 }
 
 // 页面级兜底:任何单个组件页崩溃只显示局部错误,绝不白屏整站。
@@ -41,29 +40,24 @@ export function App() {
       window.scrollTo({ top: 0 });
     };
     window.addEventListener('hashchange', onHash);
-    if (!window.location.hash && ENTRIES[0]) {
-      window.location.hash = `#/${ENTRIES[0].id}`;
+    if (!window.location.hash && CATALOG[0]) {
+      window.location.hash = `#/${CATALOG[0].id}`;
     }
     return () => window.removeEventListener('hashchange', onHash);
   }, []);
 
-  const entry = findEntry(activeId) ?? ENTRIES[0];
-  const v2 = entry ? getV2(entry.id) : undefined;
-  const categoryLabel = CATEGORIES.find((c) => c.id === entry?.category)?.label ?? '';
+  const id = findCatalog(activeId) ? activeId : (CATALOG[0]?.id ?? '');
+  const doc = getV2(id);
 
   return (
     <div className="sc-app">
       <Topbar query={query} onQuery={setQuery} />
       <div className="sc-body">
-        <Sidebar activeId={activeId} query={query} />
+        <Sidebar activeId={id} query={query} />
         <main className="sc-main">
-          {entry ? (
-            <PageBoundary key={entry.id}>
-              {v2 ? (
-                <ComponentDocV2 doc={v2} categoryLabel={categoryLabel} />
-              ) : (
-                <ComponentView entry={entry} categoryLabel={categoryLabel} />
-              )}
+          {doc ? (
+            <PageBoundary key={doc.meta.id}>
+              <ComponentDocV2 doc={doc} categoryLabel={categoryLabel(doc.meta.category)} />
             </PageBoundary>
           ) : (
             <p className="sc-empty">没有可展示的组件。</p>
