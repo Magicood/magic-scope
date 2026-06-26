@@ -1,0 +1,24 @@
+{
+  "id": "toolbar",
+  "name": "Toolbar",
+  "description": "工具栏:role=toolbar + roving tabindex 的复合动作容器,聚合按钮 / 链接 / 分隔 / 分组 / 单多选切换组,一组只占一个 Tab 位、方向键在项间移焦。",
+  "category": "actions",
+  "tags": ["toolbar", "actions", "roving-tabindex", "toggle-group", "keyboard", "a11y", "compound"],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-26",
+    "requirements": "需要一个把多个动作按钮聚成一条的工具栏:整组只占一个 Tab 序、方向键(横向 ←/→、纵向 ↑/↓、Home/End)在项间移焦(roving tabindex),作为编辑器 / 看板顶栏这类高频场景的承载。子件要覆盖动作按钮、链接、视觉分隔(role=separator)、逻辑分组(role=group),以及单选 / 多选切换组(single 走 radiogroup/radio 语义,multiple 走 aria-pressed),切换组值受控 / 非受控双模式。内容过多要么换行(wrap)要么横向滚动,绝不撑破容器。键盘 roving 范式对齐库内 Tabs/Segmented,导航纯算法抽进 logic.ts 以便平移其它框架。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": [
+    "Toolbar.tsx",
+    "Toolbar.css",
+    "logic.ts",
+    "logic.test.ts",
+    "Toolbar.test.tsx",
+    "index.ts"
+  ]
+}

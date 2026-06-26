@@ -1,0 +1,25 @@
+{
+  "id": "marquee",
+  "name": "Marquee",
+  "description": "无限跑马灯:children 沿主轴无缝无限滚动(内容克隆 N 份首尾相接,CSS transform 位移一份后回卷)。支持四方向 / 横纵双向、speed(px/s)或 duration(固定圈秒)、悬停或按下暂停、两端淡出遮罩、自动或固定克隆份数;reduced-motion / data-ms-motion=off 下停滚静态展示。",
+  "category": "data-display",
+  "tags": [
+    "marquee",
+    "scroll",
+    "ticker",
+    "infinite-scroll",
+    "animation",
+    "seamless",
+    "data-display"
+  ],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-26",
+    "requirements": "需要一个 logo 墙 / 公告 / 弹幕场景的无限滚动条:内容首尾相接视觉无缝、GPU 友好(只动 transform)、可控速度与方向、悬停可暂停、两端能渐隐暗示延续。核心是把无缝循环做对——整数份克隆 + 位移 -100/repeat% 取模动画,而非靠 JS 每帧改 left。布局算法(份数 / 一圈时长 / 位移百分比)抽进零依赖 logic.ts 以便平移到其它框架。无障碍上克隆份对 AT 隐藏、整体可命名、不抢焦点;尊重 reduced-motion 与全库动效总闸。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Marquee.tsx", "Marquee.css", "logic.ts", "index.ts"]
+}

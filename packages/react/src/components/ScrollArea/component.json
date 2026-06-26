@@ -1,0 +1,24 @@
+{
+  "id": "scroll-area",
+  "name": "ScrollArea",
+  "description": "自定义滚动区:原生 overflow 滚动 + 自绘 track/thumb 叠在内容上不占布局,thumb 几何与原生 scrollTop/scrollHeight 实时同步,可拖拽,按 type(auto/always/hover/scroll)显隐。",
+  "category": "layout",
+  "tags": ["scroll", "scrollbar", "overlay", "viewport", "overflow", "layout", "a11y"],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-26",
+    "requirements": "需要一块尺寸受限的滚动容器,原生滚动条在跨平台下样式不一致、且会挤占内容宽度造成布局抖动。目标:用原生 overflow:auto 承载滚动(保留键盘可达与惯性),隐藏系统滚动条后自绘一条与主题一致、叠在内容上不占布局的滚动条;滑块尺寸/位置随真实 scrollTop/scrollHeight 同步、可拖拽反向滚动;支持 auto/always/hover/scroll 四种显隐策略与纵/横/双向;几何换算抽成零依赖纯函数便于平移到其它框架壳;尊重 reduced-motion 与 data-ms-motion=off。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": [
+    "ScrollArea.tsx",
+    "ScrollArea.css",
+    "logic.ts",
+    "logic.test.ts",
+    "ScrollArea.test.tsx",
+    "index.ts"
+  ]
+}

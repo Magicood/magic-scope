@@ -101,3 +101,8 @@
 @import "./components/ConfigProvider/ConfigProvider.css" layer(ms.components);
 @import "./components/Prose/Prose.css" layer(ms.components);
 @import "./components/Spin/Spin.css" layer(ms.components);
+@import "./components/Command/Command.css" layer(ms.components);
+@import "./components/ScrollArea/ScrollArea.css" layer(ms.components);
+@import "./components/Toolbar/Toolbar.css" layer(ms.components);
+@import "./components/CopyButton/CopyButton.css" layer(ms.components);
+@import "./components/Marquee/Marquee.css" layer(ms.components);

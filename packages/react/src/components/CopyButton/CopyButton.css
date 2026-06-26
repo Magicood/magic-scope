@@ -1,0 +1,55 @@
+/* —— CopyButton:复用 Button 基座,仅加「复制 → 已复制」的图标切换魔法 —— */
+
+/* 内容包裹:让图标在尺寸内居中,随密度缩放(继承 Button 的 1em 度量)。 */
+.ms-copy-button__content {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+}
+
+/* 图标入场:从「复制」切到「对勾」时,对勾带描边落笔 + 轻微弹入的魔法感。 */
+.ms-copy-button__content > svg {
+  transition:
+    transform var(--ms-dur-base, 200ms) var(--ms-ease-standard, ease),
+    opacity var(--ms-dur-fast, 120ms) var(--ms-ease-standard, ease);
+}
+.ms-copy-button__content[data-copied] > svg {
+  /* 对勾出现时一次轻弹,并叠一层 tone 发光(经全库 fx-glow 总开关缩放)。 */
+  animation: ms-copy-pop var(--ms-dur-base, 200ms) var(--ms-ease-standard, ease);
+  filter: drop-shadow(0 0 calc(6px * var(--ms-fx-glow, 1)) var(--ms-c-glow, transparent));
+}
+
+@keyframes ms-copy-pop {
+  0% {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.15);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* 已复制态:整钮短暂强化发光,呼应「成功」语义(只读 tone 槽位,零硬编码色)。 */
+.ms-copy-button[data-copied] {
+  box-shadow: 0 0 calc(16px * var(--ms-fx-glow, 1)) -6px var(--ms-c-glow, transparent);
+}
+
+/* 尊重降级:reduced-motion 或全库动效关闭时,去掉弹入 / 发光动画,仅做即时切换。 */
+@media (prefers-reduced-motion: reduce) {
+  .ms-copy-button__content > svg,
+  .ms-copy-button__content[data-copied] > svg {
+    animation: none;
+    transition: none;
+  }
+}
+[data-ms-motion="off"] .ms-copy-button__content > svg,
+[data-ms-motion="off"] .ms-copy-button__content[data-copied] > svg {
+  animation: none;
+  transition: none;
+}
