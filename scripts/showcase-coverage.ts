@@ -17,8 +17,14 @@ interface PropRow {
 }
 const props: Record<string, PropRow[]> = JSON.parse(readFileSync(PROPS, 'utf8'));
 
-// 通用/噪声 props:不强求单独演示。
-const NOISE = /^(className|style|id|name|aria-|data-|ref|key|children)$|^aria-/;
+// 噪声 props:不该单独做 demo(props 表已展示)。
+// - 通用:className/style/id/name/ref/key/children/aria-*/data-*
+// - 多态:as/asChild
+// - 受控态:open/defaultOpen(demo 本就受控)
+// - 回调:on* 事件处理器
+// - 逃生口:*ClassName / *Props(透传)
+const NOISE =
+  /^(className|classNames|style|id|name|ref|key|children|as|asChild|open|defaultOpen)$|^(aria-|data-|on[A-Z]|render[A-Z])|(ClassName|ClassNames|Props)$/;
 
 function metaInfo(id: string) {
   const txt = readFileSync(join(REG, `${id}.meta.ts`), 'utf8');
