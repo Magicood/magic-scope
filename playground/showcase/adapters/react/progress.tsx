@@ -1,3 +1,4 @@
+import type { ProgressSize, ProgressTone, ProgressVariant } from '@magic-scope/react';
 import { Progress } from '@magic-scope/react';
 import type { ComponentType } from 'react';
 import { buildDemos } from '../../core/collectDemos';
@@ -6,9 +7,20 @@ import type { ControlValues } from '../../types';
 
 function Playground({ values }: { values: ControlValues }) {
   const indeterminate = values.indeterminate as boolean;
+  const variant = values.variant as ProgressVariant;
+  const isCircular = variant === 'circular';
   return (
-    <div style={{ inlineSize: 'min(420px, 100%)' }}>
-      {indeterminate ? <Progress indeterminate /> : <Progress value={values.value as number} />}
+    <div style={{ inlineSize: isCircular ? '6rem' : 'min(420px, 100%)' }}>
+      <Progress
+        variant={variant}
+        value={indeterminate ? undefined : (values.value as number)}
+        indeterminate={indeterminate}
+        tone={values.tone as ProgressTone}
+        size={values.size as ProgressSize}
+        striped={values.striped as boolean}
+        animated={values.animated as boolean}
+        showValue={values.showValue as boolean}
+      />
     </div>
   );
 }

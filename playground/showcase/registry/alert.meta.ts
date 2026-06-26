@@ -27,6 +27,8 @@ export const meta: ComponentMeta = {
       label: '正文',
       default: '法术回路稳定,可以安全释放这道奥术。',
     },
+    { type: 'boolean', prop: 'icon', label: '显示图标 icon', default: true },
+    { type: 'boolean', prop: 'dismissible', label: '可关闭 dismissible', default: false },
   ],
   spread: 'div',
 };

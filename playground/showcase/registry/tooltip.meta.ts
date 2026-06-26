@@ -20,6 +20,22 @@ export const meta: ComponentMeta = {
       ],
     },
     {
+      type: 'select',
+      prop: 'tone',
+      label: '色调 tone',
+      default: 'neutral',
+      options: [
+        { value: 'neutral', label: 'neutral 中性' },
+        { value: 'primary', label: 'primary 主色' },
+        { value: 'accent', label: 'accent 强调' },
+        { value: 'success', label: 'success 成功' },
+        { value: 'warning', label: 'warning 警告' },
+        { value: 'danger', label: 'danger 危险' },
+        { value: 'info', label: 'info 信息' },
+      ],
+    },
+    { type: 'boolean', prop: 'arrow', label: '指向箭头 arrow', default: false },
+    {
       type: 'number',
       prop: 'delay',
       label: '延时 delay(ms)',

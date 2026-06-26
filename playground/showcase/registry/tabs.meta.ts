@@ -18,5 +18,41 @@ export const meta: ComponentMeta = {
         { value: 'pill', label: 'pill 胶囊' },
       ],
     },
+    {
+      type: 'select',
+      prop: 'tone',
+      label: '色调 tone',
+      default: 'primary',
+      options: [
+        { value: 'primary', label: 'primary 主色' },
+        { value: 'accent', label: 'accent 强调' },
+        { value: 'success', label: 'success 成功' },
+        { value: 'warning', label: 'warning 警告' },
+        { value: 'danger', label: 'danger 危险' },
+        { value: 'info', label: 'info 信息' },
+        { value: 'neutral', label: 'neutral 中性' },
+      ],
+    },
+    {
+      type: 'select',
+      prop: 'size',
+      label: '尺寸 size',
+      default: 'md',
+      options: [
+        { value: 'sm', label: 'sm 小' },
+        { value: 'md', label: 'md 中' },
+        { value: 'lg', label: 'lg 大' },
+      ],
+    },
+    {
+      type: 'select',
+      prop: 'orientation',
+      label: '朝向 orientation',
+      default: 'horizontal',
+      options: [
+        { value: 'horizontal', label: 'horizontal 横向' },
+        { value: 'vertical', label: 'vertical 竖排' },
+      ],
+    },
   ],
 };

@@ -1,4 +1,4 @@
-import type { TimelineVariant } from '@magic-scope/react';
+import type { TimelineLineStyle, TimelineMode, TimelineVariant } from '@magic-scope/react';
 import { Timeline, TimelineItem } from '@magic-scope/react';
 import type { ComponentType } from 'react';
 import { buildDemos } from '../../core/collectDemos';
@@ -38,7 +38,13 @@ const STEPS: {
 
 function Playground({ values }: { values: ControlValues }) {
   return (
-    <Timeline style={{ inlineSize: 'min(420px, 100%)' }}>
+    <Timeline
+      mode={values.mode as TimelineMode}
+      lineStyle={values.lineStyle as TimelineLineStyle}
+      reverse={values.reverse as boolean}
+      pending={values.pending as boolean}
+      style={{ inlineSize: 'min(420px, 100%)' }}
+    >
       <TimelineItem
         variant={values.variant as TimelineVariant}
         title={values.title as string}

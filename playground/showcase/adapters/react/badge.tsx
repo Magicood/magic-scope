@@ -1,4 +1,4 @@
-import type { BadgeTone, BadgeVariant } from '@magic-scope/react';
+import type { BadgeSize, BadgeTone, BadgeVariant } from '@magic-scope/react';
 import { Badge } from '@magic-scope/react';
 import type { ComponentType } from 'react';
 import { buildDemos } from '../../core/collectDemos';
@@ -7,7 +7,13 @@ import type { ControlValues } from '../../types';
 
 function Playground({ values }: { values: ControlValues }) {
   return (
-    <Badge variant={values.variant as BadgeVariant} tone={values.tone as BadgeTone}>
+    <Badge
+      variant={values.variant as BadgeVariant}
+      tone={values.tone as BadgeTone}
+      size={values.size as BadgeSize}
+      dot={values.dot as boolean}
+      pulse={values.pulse as boolean}
+    >
       {values.children as string}
     </Badge>
   );

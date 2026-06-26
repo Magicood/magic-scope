@@ -1,4 +1,4 @@
-import type { DrawerSide } from '@magic-scope/react';
+import type { DrawerSide, DrawerSize, DrawerTone } from '@magic-scope/react';
 import { Button, Drawer } from '@magic-scope/react';
 import { type ComponentType, useState } from 'react';
 import { buildDemos } from '../../core/collectDemos';
@@ -15,6 +15,8 @@ function Playground({ values }: { values: ControlValues }) {
         open={open}
         onClose={() => setOpen(false)}
         side={side}
+        size={values.size as DrawerSize}
+        tone={values.tone as DrawerTone}
         title={(values.title as string) || undefined}
         dismissable={values.dismissable as boolean}
       >

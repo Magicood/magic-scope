@@ -1,3 +1,4 @@
+import type { TooltipTone } from '@magic-scope/react';
 import { Button, Tooltip } from '@magic-scope/react';
 import type { ComponentType } from 'react';
 import { buildDemos } from '../../core/collectDemos';
@@ -9,6 +10,8 @@ function Playground({ values }: { values: ControlValues }) {
     <Tooltip
       content={values.content as string}
       placement={values.placement as 'top' | 'bottom'}
+      tone={values.tone as TooltipTone}
+      arrow={values.arrow as boolean}
       delay={values.delay as number}
     >
       <Button variant="outline">悬停 / 聚焦我</Button>

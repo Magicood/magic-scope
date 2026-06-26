@@ -1,4 +1,10 @@
-import type { AvatarShape, AvatarSize } from '@magic-scope/react';
+import type {
+  AvatarGlow,
+  AvatarShape,
+  AvatarSize,
+  AvatarStatus,
+  AvatarTone,
+} from '@magic-scope/react';
 import { Avatar } from '@magic-scope/react';
 import type { ComponentType } from 'react';
 import { buildDemos } from '../../core/collectDemos';
@@ -8,10 +14,17 @@ import type { ControlValues } from '../../types';
 const DEMO_SRC = 'https://i.pravatar.cc/120?img=13';
 
 function Playground({ values }: { values: ControlValues }) {
+  const status = values.status as AvatarStatus | 'none';
   return (
     <Avatar
       size={values.size as AvatarSize}
       shape={values.shape as AvatarShape}
+      tone={values.tone as AvatarTone}
+      glow={values.glow as AvatarGlow}
+      status={status === 'none' ? undefined : status}
+      statusPulse={values.statusPulse as boolean}
+      ring={values.ring as boolean}
+      bordered={values.bordered as boolean}
       name={values.name as string}
       src={values.showImage ? DEMO_SRC : undefined}
     />

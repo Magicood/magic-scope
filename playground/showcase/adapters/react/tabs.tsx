@@ -1,4 +1,4 @@
-import type { TabItem } from '@magic-scope/react';
+import type { TabItem, TabsSize, TabsTone } from '@magic-scope/react';
 import { Tabs } from '@magic-scope/react';
 import type { ComponentType } from 'react';
 import { useState } from 'react';
@@ -51,6 +51,9 @@ function Playground({ values }: { values: ControlValues }) {
         value={value}
         onChange={setValue}
         variant={values.variant as 'underline' | 'pill'}
+        tone={values.tone as TabsTone}
+        size={values.size as TabsSize}
+        orientation={values.orientation as 'horizontal' | 'vertical'}
       />
     </div>
   );

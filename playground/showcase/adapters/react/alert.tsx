@@ -7,11 +7,14 @@ import type { ControlValues } from '../../types';
 
 function Playground({ values }: { values: ControlValues }) {
   return (
-    <Alert variant={values.variant as AlertVariant} style={{ maxInlineSize: 'min(32rem, 100%)' }}>
-      <strong style={{ display: 'block', marginBlockEnd: '0.25rem' }}>
-        {values.title as string}
-      </strong>
-      <span>{values.children as string}</span>
+    <Alert
+      variant={values.variant as AlertVariant}
+      title={values.title as string}
+      icon={values.icon === false ? false : undefined}
+      dismissible={values.dismissible as boolean}
+      style={{ maxInlineSize: 'min(32rem, 100%)' }}
+    >
+      {values.children as string}
     </Alert>
   );
 }
