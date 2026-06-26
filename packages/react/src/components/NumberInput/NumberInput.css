@@ -1,8 +1,9 @@
-/* —— 容器:一个描边控件,内含 − / field / ＋ —— */
+/* —— 容器:一个描边控件,内含 − / [prefix] field [suffix] / ＋ —— */
 .ms-number-input {
   display: inline-flex;
   align-items: stretch;
-  block-size: 2.5rem;
+  /* 内容边界:shrink-to-fit 父容器下不漫出 */
+  max-inline-size: 100%;
   border: 1px solid var(--ms-color-border);
   border-radius: var(--ms-radius-md);
   background-color: var(--ms-color-surface);
@@ -12,12 +13,27 @@
     box-shadow var(--ms-dur-base) var(--ms-ease-standard);
 }
 
-/* 聚焦任意内部元素:整体高亮 + 发光环(沿用 Input 的聚焦语言) */
+/* 聚焦任意内部元素:整体高亮 + 发光环(读 tone 6 槽位;invalid 时根挂 ms-tone-danger 自动变红) */
 .ms-number-input:focus-within {
-  border-color: var(--ms-color-primary);
+  border-color: var(--ms-c, var(--ms-color-primary));
   box-shadow:
-    0 0 0 3px color-mix(in oklch, var(--ms-color-focus-ring) 35%, transparent),
-    0 0 calc(16px * var(--ms-fx-glow, 1)) -6px var(--ms-color-glow);
+    0 0 0 3px color-mix(in oklch, var(--ms-c-glow, var(--ms-color-focus-ring)) 35%, transparent),
+    0 0 calc(16px * var(--ms-fx-glow, 1)) -6px var(--ms-c-glow, var(--ms-color-glow));
+}
+
+/* 总闸关断发光 */
+[data-ms-fx="off"] .ms-number-input:focus-within {
+  box-shadow: 0 0 0 3px
+    color-mix(in oklch, var(--ms-c-glow, var(--ms-color-focus-ring)) 35%, transparent);
+}
+
+/* —— 校验失败态:danger 边 + 发光,不依赖聚焦 —— */
+.ms-number-input--invalid {
+  border-color: var(--ms-c, var(--ms-color-danger));
+  box-shadow: 0 0 calc(14px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow, var(--ms-color-danger));
+}
+[data-ms-fx="off"] .ms-number-input--invalid {
+  box-shadow: none;
 }
 
 /* —— 数字输入域:透明融入容器,居中,隐藏原生 spinner —— */
@@ -45,6 +61,25 @@
   outline: none;
 }
 
+/* —— 框内前/后缀(单位 / 图标),不抢热区 —— */
+.ms-number-input__prefix,
+.ms-number-input__suffix {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  min-inline-size: 0;
+  color: var(--ms-color-fg-muted);
+  font-size: 0.9em;
+  white-space: nowrap;
+  user-select: none;
+}
+.ms-number-input__prefix {
+  padding-inline-start: var(--ms-space-2);
+}
+.ms-number-input__suffix {
+  padding-inline-end: var(--ms-space-2);
+}
+
 /* —— 步进按钮 —— */
 .ms-number-input__step {
   flex: 0 0 auto;
@@ -59,6 +94,9 @@
   font-size: 1.125rem;
   line-height: 1;
   cursor: pointer;
+  /* 长按连续步进时不触发文本选中 */
+  user-select: none;
+  touch-action: none;
   transition:
     background-color var(--ms-dur-fast) var(--ms-ease-standard),
     color var(--ms-dur-fast) var(--ms-ease-standard);
@@ -81,7 +119,8 @@
   }
 }
 .ms-number-input__step:not(:disabled):active {
-  background-color: color-mix(in oklch, var(--ms-color-primary) 16%, transparent);
+  background-color: color-mix(in oklch, var(--ms-c, var(--ms-color-primary)) 16%, transparent);
+  color: var(--ms-c, var(--ms-color-fg));
 }
 .ms-number-input__step:disabled {
   cursor: not-allowed;
@@ -94,33 +133,44 @@
   opacity: 0.6;
 }
 
-/* —— 尺寸档 —— */
+/* —— 尺寸档(min-block-size 随密度缩放) —— */
 .ms-number-input--sm {
-  block-size: 2rem;
+  min-block-size: calc(2rem * var(--ms-density-scale, 1));
 }
 .ms-number-input--sm .ms-number-input__field {
   font-size: 0.833rem;
 }
 .ms-number-input--sm .ms-number-input__step {
-  inline-size: 1.875rem;
+  inline-size: calc(1.875rem * var(--ms-density-scale, 1));
   font-size: 1rem;
 }
+.ms-number-input--md {
+  min-block-size: calc(2.5rem * var(--ms-density-scale, 1));
+}
+.ms-number-input--md .ms-number-input__step {
+  inline-size: calc(2.25rem * var(--ms-density-scale, 1));
+}
 .ms-number-input--lg {
-  block-size: 3rem;
+  min-block-size: calc(3rem * var(--ms-density-scale, 1));
 }
 .ms-number-input--lg .ms-number-input__field {
   font-size: 1.2rem;
 }
 .ms-number-input--lg .ms-number-input__step {
-  inline-size: 2.75rem;
+  inline-size: calc(2.75rem * var(--ms-density-scale, 1));
   font-size: 1.25rem;
 }
 
 /* —— 触控指针:整体抬到目标高度、步进按钮加宽便于点按;sm 字号 ≥16px 防 iOS 聚焦缩放 —— */
 @media (pointer: coarse) {
-  .ms-number-input {
-    block-size: auto;
-    min-block-size: var(--ms-target-min);
+  .ms-number-input--sm {
+    min-block-size: max(calc(2rem * var(--ms-density-scale, 1)), var(--ms-target-min));
+  }
+  .ms-number-input--md {
+    min-block-size: max(calc(2.5rem * var(--ms-density-scale, 1)), var(--ms-target-min));
+  }
+  .ms-number-input--lg {
+    min-block-size: max(calc(3rem * var(--ms-density-scale, 1)), var(--ms-target-min));
   }
   .ms-number-input__step {
     min-inline-size: var(--ms-target-min);
@@ -130,10 +180,14 @@
   }
 }
 
-/* —— 尊重减少动效偏好 —— */
+/* —— 尊重减少动效偏好 / 总闸关断 —— */
 @media (prefers-reduced-motion: reduce) {
   .ms-number-input,
   .ms-number-input__step {
     transition-duration: 0.01ms;
   }
+}
+[data-ms-motion="off"] .ms-number-input,
+[data-ms-motion="off"] .ms-number-input__step {
+  transition-duration: 0.01ms;
 }

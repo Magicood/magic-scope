@@ -1,14 +1,24 @@
+/* —— 根容器:挂 tone 类、放 textarea + 底部栏(count / footer);本身不带框 —— */
+.ms-textarea-wrap {
+  display: block;
+  inline-size: 100%;
+  /* 内容边界:shrink-to-fit 父容器下不漫出 */
+  max-inline-size: 100%;
+}
+
 .ms-textarea {
   display: block;
   box-sizing: border-box;
   inline-size: 100%;
+  /* 内容边界 */
+  max-inline-size: 100%;
   resize: vertical;
   border: 1px solid var(--ms-color-border);
   border-radius: var(--ms-radius-md);
   background-color: var(--ms-color-surface);
   background-image: linear-gradient(
     180deg,
-    color-mix(in oklch, var(--ms-color-glow) 5%, transparent),
+    color-mix(in oklch, var(--ms-c-glow, var(--ms-color-glow)) 5%, transparent),
     transparent 40%
   );
   color: var(--ms-color-fg);
@@ -16,7 +26,8 @@
   line-height: 1.5;
   padding-block: var(--ms-space-2);
   padding-inline: var(--ms-space-4);
-  box-shadow: inset 0 0 calc(12px * var(--ms-fx-glow, 1)) -8px var(--ms-color-glow);
+  box-shadow: inset 0 0 calc(12px * var(--ms-fx-glow, 1)) -8px
+    var(--ms-c-glow, var(--ms-color-glow));
   transition:
     border-color var(--ms-dur-fast) var(--ms-ease-standard),
     box-shadow var(--ms-dur-base) var(--ms-ease-standard),
@@ -27,20 +38,21 @@
   color: var(--ms-color-fg-subtle);
 }
 
-.ms-textarea:hover:not(:disabled) {
+.ms-textarea:hover:not(:disabled):not(.ms-textarea--invalid) {
   border-color: var(--ms-color-border-strong);
   box-shadow:
-    inset 0 0 calc(12px * var(--ms-fx-glow, 1)) -8px var(--ms-color-glow),
-    0 0 calc(16px * var(--ms-fx-glow, 1)) -6px var(--ms-color-glow);
+    inset 0 0 calc(12px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow, var(--ms-color-glow)),
+    0 0 calc(16px * var(--ms-fx-glow, 1)) -6px var(--ms-c-glow, var(--ms-color-glow));
 }
 
+/* 聚焦:色调读 tone 槽位(invalid 时根挂 ms-tone-danger,--ms-c/--ms-c-glow 自动变 danger) */
 .ms-textarea:focus-visible {
   outline: none;
-  border-color: var(--ms-color-primary);
+  border-color: var(--ms-c, var(--ms-color-primary));
   box-shadow:
-    0 0 0 3px color-mix(in oklch, var(--ms-color-focus-ring) 35%, transparent),
-    inset 0 0 calc(14px * var(--ms-fx-glow, 1)) -8px var(--ms-color-glow),
-    0 0 calc(22px * var(--ms-fx-glow, 1)) -6px var(--ms-color-glow);
+    0 0 0 3px color-mix(in oklch, var(--ms-c-glow, var(--ms-color-focus-ring)) 35%, transparent),
+    inset 0 0 calc(14px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow, var(--ms-color-glow)),
+    0 0 calc(22px * var(--ms-fx-glow, 1)) -6px var(--ms-c-glow, var(--ms-color-glow));
 }
 
 .ms-textarea:disabled {
@@ -60,17 +72,60 @@
     0 0 calc(20px * var(--ms-fx-glow, 1)) -6px var(--ms-color-danger);
 }
 
-/* —— 尺寸(逻辑属性,RTL 友好) —— */
+/* —— autosize:JS 控高,禁手动拖拽 + 隐藏溢出滚动条(由 JS 在触达 maxRows 时改回 auto) —— */
+.ms-textarea--autosize {
+  resize: none;
+  overflow-y: hidden;
+}
+
+/* —— 底部栏:footer 槽(起始) + 字数(末尾) —— */
+.ms-textarea__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ms-space-2);
+  margin-block-start: var(--ms-space-1);
+  min-inline-size: 0;
+}
+.ms-textarea__footer-start {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  color: var(--ms-color-fg-muted);
+  font-size: 0.75rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* —— 字数(超限染 danger) —— */
+.ms-textarea__count {
+  flex: 0 0 auto;
+  color: var(--ms-color-fg-subtle);
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  user-select: none;
+  transition: color var(--ms-dur-fast) var(--ms-ease-standard);
+}
+.ms-textarea__count--over {
+  color: var(--ms-color-danger);
+  font-weight: 600;
+}
+
+.ms-textarea-wrap--disabled .ms-textarea__footer-start,
+.ms-textarea-wrap--disabled .ms-textarea__count {
+  opacity: 0.5;
+}
+
+/* —— 尺寸(逻辑属性,RTL 友好;min-block-size 随密度缩放) —— */
 .ms-textarea--sm {
-  min-block-size: 4rem;
+  min-block-size: calc(4rem * var(--ms-density-scale, 1));
   font-size: 0.833rem;
 }
 .ms-textarea--md {
-  min-block-size: 5rem;
+  min-block-size: calc(5rem * var(--ms-density-scale, 1));
   font-size: 1rem;
 }
 .ms-textarea--lg {
-  min-block-size: 6rem;
+  min-block-size: calc(6rem * var(--ms-density-scale, 1));
   font-size: 1.2rem;
 }
 
@@ -78,13 +133,36 @@
    (桌面精确指针不受影响,sm 仍是 0.833rem) —— */
 @media (pointer: coarse) {
   .ms-textarea--sm {
-    min-block-size: max(4rem, var(--ms-target-min));
+    min-block-size: max(calc(4rem * var(--ms-density-scale, 1)), var(--ms-target-min));
     font-size: max(16px, 0.833rem);
   }
   .ms-textarea--md {
-    min-block-size: max(5rem, var(--ms-target-min));
+    min-block-size: max(calc(5rem * var(--ms-density-scale, 1)), var(--ms-target-min));
   }
   .ms-textarea--lg {
-    min-block-size: max(6rem, var(--ms-target-min));
+    min-block-size: max(calc(6rem * var(--ms-density-scale, 1)), var(--ms-target-min));
   }
+}
+
+/* —— 动效降级:reduced-motion 或 data-ms-motion=off 时近乎瞬时过渡 —— */
+@media (prefers-reduced-motion: reduce) {
+  .ms-textarea,
+  .ms-textarea__count {
+    transition-duration: 0.01ms;
+  }
+}
+[data-ms-motion="off"] .ms-textarea,
+[data-ms-motion="off"] .ms-textarea__count {
+  transition-duration: 0.01ms;
+}
+
+/* —— 发光总闸:data-ms-fx=off 时清掉所有 glow box-shadow —— */
+[data-ms-fx="off"] .ms-textarea,
+[data-ms-fx="off"] .ms-textarea:hover,
+[data-ms-fx="off"] .ms-textarea:focus-visible {
+  box-shadow: none;
+}
+[data-ms-fx="off"] .ms-textarea:focus-visible {
+  box-shadow: 0 0 0 3px
+    color-mix(in oklch, var(--ms-c-glow, var(--ms-color-focus-ring)) 35%, transparent);
 }

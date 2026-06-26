@@ -1,9 +1,20 @@
 {
   "id": "checkbox",
   "name": "Checkbox",
-  "description": "基于原生 input[type=checkbox] 的复选框,选中时方块染主色并以对勾呈现,带发光聚焦环。",
+  "description": "基于原生 input[type=checkbox] 的深度复选框:7 色调(tone resolver 槽位化)、sm/md/lg 尺寸随密度缩放、indeterminate 半选、次级说明 description、onCheckedChange 语义回调,根 label 全事件透传、onChange compose 不覆盖;配套 CheckboxGroup(受控/非受控多选,自动判定 checked)。选中时方块染 tone 色画对勾、带发光聚焦环,尊重 reduced-motion。",
   "category": "forms",
-  "tags": ["checkbox", "form", "input", "toggle", "selection", "accessible"],
+  "tags": [
+    "checkbox",
+    "checkbox-group",
+    "form",
+    "input",
+    "toggle",
+    "selection",
+    "multi-select",
+    "indeterminate",
+    "tone",
+    "accessible"
+  ],
   "status": "stable",
   "version": "0.1.0",
   "frameworks": ["react"],

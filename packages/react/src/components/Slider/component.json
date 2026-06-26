@@ -1,9 +1,9 @@
 {
   "id": "slider",
   "name": "Slider",
-  "description": "滑块,基于原生 input[type=range]:白嫖可访问的 slider 语义(role=slider + aria-valuenow/min/max、方向键/Home/End),appearance:none + 伪元素自绘轨道/填充/发光滑块。支持受控与非受控、min/max/step、sm/md/lg 三档与可选数值显示(output);触控热区达标、hover/focus-visible 发光、尊重 reduced-motion。",
+  "description": "滑块(旗舰深度),基于原生 input[type=range]:白嫖可访问的 slider 语义(role=slider + aria-valuenow/min/max、方向键/Home/End),appearance:none + 伪元素自绘轨道/填充/发光滑块。接全库 tone 槽位(primary/accent/success/warning/danger/info/neutral,只读 6 槽位不写死配色);支持受控与非受控、min/max/step、刻度 marks(命中高亮)、拖动跟随气泡(showTooltip)、水平/垂直双朝向、sm/md/lg(随密度缩放)与可选数值显示(output)。事件分层:高频 onValueChange、落定 onChangeEnd/onValueCommit(松手/键盘抬起/失焦以终值触发一次)、拖动边界 onDragStart/onDragEnd;原生事件经 composeEventHandlers 合并不丢用户处理器。触控热区达标、hover/focus-visible 发光、尊重 reduced-motion / motion=off / fx=off。",
   "category": "forms",
-  "tags": ["slider", "range", "form", "input", "number"],
+  "tags": ["slider", "range", "form", "input", "number", "marks", "tone", "vertical", "tooltip"],
   "status": "stable",
   "version": "0.0.0",
   "frameworks": ["react"],
@@ -13,5 +13,5 @@
     "requirements": "补齐表单控件:数值滑块。原创实现,遵循『原生优先 / 不 wrap 第三方』——以原生 input[type=range] 承载键盘与 ARIA slider 语义,仅用 appearance:none + ::-webkit-slider-* / ::-moz-range-* 自绘皮肤(填充用 WebKit 渐变 + Firefox 原生 progress)。延续设备适配契约(触控放大滑块 + --ms-target-min 行高、hover 守卫、focus-visible 发光环、reduced-motion)。"
   },
   "dependencies": ["@magic-scope/tokens"],
-  "files": ["Slider.tsx", "Slider.css", "index.ts"]
+  "files": ["Slider.tsx", "Slider.css", "logic.ts", "index.ts"]
 }
