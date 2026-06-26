@@ -1,0 +1,384 @@
+/* —— ColorPicker ——
+ * 触发色块按钮 + Popover 面板(2D 面板 / hue / alpha / 文本输入 / presets / 预览 / 取色器)。
+ * 全程只读 --ms-* 设计 token;实际颜色经实例级 --ms-cp-* 注入(运行时从 HSVA 派生)。
+ * 棋盘格、渐变靠纯 CSS 自绘,零图片;尺寸随 data-ms-density;尊重 reduced-motion / motion=off。
+ */
+
+/* 通用棋盘格底(给透明色露出方格);各处用 background 叠在其上。 */
+.ms-color-picker__trigger-swatch,
+.ms-color-picker__preview,
+.ms-color-picker__alpha,
+.ms-color-picker__preset {
+  --ms-cp-checker: color-mix(in oklch, var(--ms-color-fg) 16%, transparent);
+  background-image: conic-gradient(
+    var(--ms-cp-checker) 0 25%,
+    transparent 0 50%,
+    var(--ms-cp-checker) 0 75%,
+    transparent 0
+  );
+  background-size: 10px 10px;
+  background-position: 0 0;
+}
+
+/* —— 触发色块按钮 —— */
+.ms-color-picker__trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: calc(2.25rem * var(--ms-density-scale, 1));
+  block-size: calc(2.25rem * var(--ms-density-scale, 1));
+  padding: calc(var(--ms-space-1) * var(--ms-density-scale, 1));
+  border: var(--ms-hairline, 1px) solid var(--ms-color-border);
+  border-radius: var(--ms-radius-md);
+  background: var(--ms-color-surface-raised);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition:
+    border-color var(--ms-dur-fast) var(--ms-ease-standard),
+    box-shadow var(--ms-dur-base) var(--ms-ease-standard);
+}
+.ms-color-picker__trigger[data-ms-size="sm"] {
+  inline-size: calc(1.75rem * var(--ms-density-scale, 1));
+  block-size: calc(1.75rem * var(--ms-density-scale, 1));
+}
+.ms-color-picker__trigger[data-ms-size="lg"] {
+  inline-size: calc(2.75rem * var(--ms-density-scale, 1));
+  block-size: calc(2.75rem * var(--ms-density-scale, 1));
+}
+.ms-color-picker__trigger-swatch {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  border-radius: calc(var(--ms-radius-md) - 2px);
+}
+/* 实色叠在棋盘格上:用 currentcolor 注入实例色 */
+.ms-color-picker__trigger-swatch,
+.ms-color-picker__preview,
+.ms-color-picker__preset {
+  background-color: var(--ms-cp-swatch, transparent);
+}
+@media (hover: hover) {
+  .ms-color-picker__trigger:hover:not(:disabled) {
+    border-color: var(--ms-color-border-strong);
+  }
+}
+.ms-color-picker__trigger:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--ms-color-bg),
+    0 0 0 4px var(--ms-color-focus-ring);
+}
+.ms-color-picker__trigger:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* —— 面板 —— */
+.ms-color-picker__panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ms-space-3);
+  inline-size: calc(15rem * var(--ms-density-scale, 1));
+  max-inline-size: min(20rem, 80vw);
+  font-family: var(--ms-font-sans);
+  color: var(--ms-color-fg);
+}
+.ms-color-picker__panel[data-ms-size="sm"] {
+  inline-size: calc(13rem * var(--ms-density-scale, 1));
+}
+.ms-color-picker__panel[data-ms-size="lg"] {
+  inline-size: calc(17rem * var(--ms-density-scale, 1));
+}
+
+/* —— ① 饱和度-明度 2D 面板 —— */
+.ms-color-picker__area {
+  position: relative;
+  inline-size: 100%;
+  block-size: calc(9rem * var(--ms-density-scale, 1));
+  border-radius: var(--ms-radius-md);
+  /* 底色 = 当前 hue 纯色,由 --ms-cp-area-bg 注入 */
+  background-color: var(--ms-cp-area-bg, #f00);
+  overflow: hidden;
+  cursor: crosshair;
+  touch-action: none;
+  user-select: none;
+}
+/* 横向饱和度渐变(白 → 透明)叠在 hue 上 */
+.ms-color-picker__area-sat {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, #fff, rgba(255, 255, 255, 0));
+}
+/* 纵向明度渐变(透明 → 黑) */
+.ms-color-picker__area-val {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, #000, rgba(0, 0, 0, 0));
+}
+.ms-color-picker__area-thumb {
+  position: absolute;
+  inline-size: 14px;
+  block-size: 14px;
+  border-radius: var(--ms-radius-full);
+  border: 2px solid #fff;
+  background-color: var(--ms-cp-thumb, transparent);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.4);
+  translate: -50% -50%;
+  pointer-events: none;
+}
+.ms-color-picker__area:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--ms-color-bg),
+    0 0 0 4px var(--ms-color-focus-ring);
+}
+
+/* —— 滑条区(预览 + 轨道们 + 取色器) —— */
+.ms-color-picker__sliders {
+  display: flex;
+  align-items: center;
+  gap: var(--ms-space-3);
+}
+.ms-color-picker__preview {
+  flex: 0 0 auto;
+  inline-size: calc(2rem * var(--ms-density-scale, 1));
+  block-size: calc(2rem * var(--ms-density-scale, 1));
+  border-radius: var(--ms-radius-full);
+  border: var(--ms-hairline, 1px) solid var(--ms-color-border);
+}
+.ms-color-picker__rails {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ms-space-2);
+  min-inline-size: 0;
+}
+
+/* —— ② hue 滑条 —— */
+.ms-color-picker__hue {
+  position: relative;
+  block-size: calc(0.875rem * var(--ms-density-scale, 1));
+  border-radius: var(--ms-radius-full);
+  background: linear-gradient(
+    to right,
+    #f00 0%,
+    #ff0 17%,
+    #0f0 33%,
+    #0ff 50%,
+    #00f 67%,
+    #f0f 83%,
+    #f00 100%
+  );
+  cursor: pointer;
+  touch-action: none;
+}
+
+/* —— ③ alpha 滑条(渐变 + 棋盘格底) —— */
+.ms-color-picker__alpha {
+  position: relative;
+  block-size: calc(0.875rem * var(--ms-density-scale, 1));
+  border-radius: var(--ms-radius-full);
+  cursor: pointer;
+  touch-action: none;
+}
+/* 实色 → 透明 渐变,叠在棋盘格之上(棋盘格由共用规则给 background-image) */
+.ms-color-picker__alpha::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    to right,
+    color-mix(in srgb, var(--ms-cp-solid, #000) 0%, transparent),
+    var(--ms-cp-solid, #000)
+  );
+}
+
+/* 滑条 thumb 共用外观 */
+.ms-color-picker__hue-thumb,
+.ms-color-picker__alpha-thumb {
+  position: absolute;
+  inset-block-start: 50%;
+  z-index: 1;
+  inline-size: 14px;
+  block-size: 14px;
+  border-radius: var(--ms-radius-full);
+  border: 2px solid #fff;
+  background: transparent;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.4);
+  translate: -50% -50%;
+  pointer-events: none;
+}
+.ms-color-picker__hue:focus-visible,
+.ms-color-picker__alpha:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--ms-color-bg),
+    0 0 0 4px var(--ms-color-focus-ring);
+}
+
+/* —— ⑥ 取色器按钮 —— */
+.ms-color-picker__eyedropper {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: calc(2rem * var(--ms-density-scale, 1));
+  block-size: calc(2rem * var(--ms-density-scale, 1));
+  padding: 0;
+  border: var(--ms-hairline, 1px) solid var(--ms-color-border);
+  border-radius: var(--ms-radius-md);
+  background: var(--ms-color-surface-raised);
+  color: var(--ms-color-fg);
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  transition: border-color var(--ms-dur-fast) var(--ms-ease-standard);
+}
+@media (hover: hover) {
+  .ms-color-picker__eyedropper:hover:not(:disabled) {
+    border-color: var(--ms-color-border-strong);
+  }
+}
+.ms-color-picker__eyedropper:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--ms-color-bg),
+    0 0 0 4px var(--ms-color-focus-ring);
+}
+.ms-color-picker__eyedropper:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* —— ④ 格式输入 + 切换 —— */
+.ms-color-picker__field {
+  display: flex;
+  align-items: stretch;
+  gap: var(--ms-space-2);
+}
+.ms-color-picker__format {
+  display: inline-flex;
+  flex: 0 0 auto;
+  border: var(--ms-hairline, 1px) solid var(--ms-color-border);
+  border-radius: var(--ms-radius-sm);
+  overflow: hidden;
+}
+.ms-color-picker__format-btn {
+  padding-inline: var(--ms-space-2);
+  border: none;
+  background: var(--ms-color-surface-raised);
+  color: var(--ms-color-fg-muted);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color var(--ms-dur-fast) var(--ms-ease-standard),
+    color var(--ms-dur-fast) var(--ms-ease-standard);
+}
+.ms-color-picker__format-btn:not(:last-child) {
+  border-inline-end: var(--ms-hairline, 1px) solid var(--ms-color-border);
+}
+.ms-color-picker__format-btn--active {
+  background: var(--ms-color-surface-sunken);
+  color: var(--ms-color-fg);
+}
+.ms-color-picker__format-btn:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 2px var(--ms-color-focus-ring);
+}
+.ms-color-picker__format-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+.ms-color-picker__input {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  padding: calc(var(--ms-space-1) * var(--ms-density-scale, 1)) var(--ms-space-2);
+  border: var(--ms-hairline, 1px) solid var(--ms-color-border);
+  border-radius: var(--ms-radius-sm);
+  background: var(--ms-color-surface);
+  color: var(--ms-color-fg);
+  font-family: var(--ms-font-mono, var(--ms-font-sans));
+  font-size: 0.8125rem;
+  /* 内容边界:超长串不撑破,横向可滚 */
+  text-overflow: ellipsis;
+}
+.ms-color-picker__input:focus-visible {
+  outline: none;
+  border-color: var(--ms-color-focus-ring);
+  box-shadow: 0 0 0 2px color-mix(in oklch, var(--ms-color-focus-ring) 35%, transparent);
+}
+.ms-color-picker__input:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* —— ⑤ presets 预设色板 —— */
+.ms-color-picker__presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ms-space-2);
+}
+.ms-color-picker__preset {
+  inline-size: calc(1.25rem * var(--ms-density-scale, 1));
+  block-size: calc(1.25rem * var(--ms-density-scale, 1));
+  padding: 0;
+  border: var(--ms-hairline, 1px) solid var(--ms-color-border);
+  border-radius: var(--ms-radius-sm);
+  cursor: pointer;
+  transition: transform var(--ms-dur-fast) var(--ms-ease-emphasized);
+}
+@media (hover: hover) {
+  .ms-color-picker__preset:hover:not(:disabled) {
+    transform: scale(calc(1 + 0.12 * var(--ms-motion-scale, 1)));
+  }
+}
+.ms-color-picker__preset--active {
+  box-shadow:
+    0 0 0 2px var(--ms-color-bg),
+    0 0 0 4px var(--ms-color-fg);
+}
+.ms-color-picker__preset:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--ms-color-bg),
+    0 0 0 4px var(--ms-color-focus-ring);
+}
+.ms-color-picker__preset:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* —— 触控热区:粗指针时滑条 / 预设加高,达标 --ms-target-min —— */
+@media (pointer: coarse) {
+  .ms-color-picker__hue,
+  .ms-color-picker__alpha {
+    block-size: max(calc(0.875rem * var(--ms-density-scale, 1)), 1rem);
+  }
+  .ms-color-picker__preset {
+    inline-size: max(calc(1.25rem * var(--ms-density-scale, 1)), 1.75rem);
+    block-size: max(calc(1.25rem * var(--ms-density-scale, 1)), 1.75rem);
+  }
+}
+
+/* —— 动效门控:reduced-motion / motion=off 关掉过渡与缩放 —— */
+@media (prefers-reduced-motion: reduce) {
+  .ms-color-picker__preset,
+  .ms-color-picker__trigger,
+  .ms-color-picker__eyedropper {
+    transition: none;
+  }
+  .ms-color-picker__preset:hover:not(:disabled) {
+    transform: none;
+  }
+}
+[data-ms-motion="off"] .ms-color-picker__preset,
+[data-ms-motion="off"] .ms-color-picker__trigger,
+[data-ms-motion="off"] .ms-color-picker__eyedropper {
+  transition: none;
+}
+[data-ms-motion="off"] .ms-color-picker__preset:hover:not(:disabled) {
+  transform: none;
+}

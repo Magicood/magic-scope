@@ -83,3 +83,8 @@
 @import "./components/Anchor/Anchor.css" layer(ms.components);
 @import "./components/Watermark/Watermark.css" layer(ms.components);
 @import "./components/BackTop/BackTop.css" layer(ms.components);
+@import "./components/ColorPicker/ColorPicker.css" layer(ms.components);
+@import "./components/Upload/Upload.css" layer(ms.components);
+@import "./components/Cascader/Cascader.css" layer(ms.components);
+@import "./components/Splitter/Splitter.css" layer(ms.components);
+@import "./components/Affix/Affix.css" layer(ms.components);

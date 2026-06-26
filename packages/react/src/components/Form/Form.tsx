@@ -188,9 +188,15 @@ export interface FormProps<T extends Record<string, unknown> = Record<string, un
   extends Omit<ComponentPropsWithoutRef<'form'>, 'onSubmit' | 'onInvalid'> {
   /** 由 useForm 建出的 api(必传,提供 store 与提交逻辑)。 */
   form: FormApi<T>;
-  /** 校验全过的提交回调(拿到类型化 values)。 */
+  /**
+   * 校验全过的提交回调。
+   * @param values 通过校验的整表值(类型化;若挂 schema 则为其 Output)
+   */
   onSubmit?: (values: T) => void | Promise<void>;
-  /** 校验未过的回调(拿到 errors)。 */
+  /**
+   * 校验未过的回调。
+   * @param errors 各字段错误表(path → { message }),提交时聚焦首个错误字段
+   */
   onInvalid?: (errors: Record<string, { message: string }>) => void;
   /** 布局:vertical(默认)/ horizontal / inline。 */
   layout?: FormLayout;

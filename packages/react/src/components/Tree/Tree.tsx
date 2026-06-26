@@ -38,7 +38,10 @@ export interface TreeProps {
   defaultExpandedKeys?: string[];
   /** 默认全展开(仅非受控初始)。 */
   defaultExpandAll?: boolean;
-  /** 展开变化回调。 */
+  /**
+   * 展开变化回调。
+   * @param keys 展开后的全部节点 key 列表
+   */
   onExpandedChange?: (keys: string[]) => void;
   /** 是否可选中。默认 true。 */
   selectable?: boolean;
@@ -48,7 +51,11 @@ export interface TreeProps {
   selectedKeys?: string[];
   /** 非受控初始选中。 */
   defaultSelectedKeys?: string[];
-  /** 选中变化回调。 */
+  /**
+   * 选中变化回调。
+   * @param keys 选中的节点 key 列表(单选时长度 0 或 1)
+   * @param info 本次详情:node 触发的节点、selected 是选中(true)还是取消(false)
+   */
   onSelect?: (keys: string[], info: { node: TreeNode; selected: boolean }) => void;
   /** 显示勾选框(级联)。 */
   checkable?: boolean;
@@ -56,7 +63,11 @@ export interface TreeProps {
   checkedKeys?: string[];
   /** 非受控初始勾选。 */
   defaultCheckedKeys?: string[];
-  /** 勾选变化回调(带半选 key)。 */
+  /**
+   * 勾选变化回调。
+   * @param keys 完全勾选的节点 key 列表(不含半选)
+   * @param info 本次详情:node 触发节点、checked 勾选(true)/取消(false)、halfCheckedKeys 半选 key 列表
+   */
   onCheck?: (
     keys: string[],
     info: { node: TreeNode; checked: boolean; halfCheckedKeys: string[] },

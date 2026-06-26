@@ -1,0 +1,26 @@
+{
+  "id": "upload",
+  "name": "Upload",
+  "description": "文件上传:虚线拖拽区(dragover 高亮 / drop 收文件)+ 点击触发隐藏 input;受控/非受控文件列表,支持 multiple/accept/maxCount/disabled、beforeUpload 准入改写、可插拔 customRequest 接管真实传输;每条文件含名/体积/进度条/状态图标/删除/重试/预览,listType 文本或图片。",
+  "category": "forms",
+  "tags": [
+    "upload",
+    "file",
+    "drag-and-drop",
+    "dropzone",
+    "progress",
+    "form",
+    "controlled",
+    "customRequest"
+  ],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-26",
+    "requirements": "需要一个把「上传编排」与「真实网络传输」彻底解耦的上传组件:组件只负责选文件、客户端准入(accept/maxCount/beforeUpload)、以及维护每条文件 status/percent/list 的 UI 编排,绝不内置 XHR/fetch;真正的传输由用户的 customRequest 提供并通过 onProgress/onSuccess/onError 回灌。可抽取的纯算法(File 规范化 wrapFile、accept 匹配 isAccepted、体积格式化 formatFileSize、状态机 nextStatus、maxCount 截断、列表增删 patch)下沉到零 React 的 logic.ts 以便平移多框架;交互上要同时满足拖拽(dragover 高亮/dragleave 还原/drop)与点击两条入口,a11y 上触发区用 role=button + 键盘可达、每条操作按钮带 aria-label。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Upload.tsx", "Upload.css", "logic.ts", "logic.test.ts", "Upload.test.tsx", "index.ts"]
+}

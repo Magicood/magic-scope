@@ -80,13 +80,25 @@ export interface DialogProps
   open: boolean;
   /** 关闭时回调(Esc / 点击遮罩 / 内建关闭按钮 / 原生 close)。 */
   onClose?: () => void;
-  /** 开合双通道:open 变化时回调,传入下一个 open 值。与受控 open 配合使用。 */
+  /**
+   * 开合双通道:open 变化时回调,传入下一个 open 值。与受控 open 配合使用。
+   * @param open 变化后的目标显隐状态:true 为打开,false 为关闭。
+   */
   onOpenChange?: (open: boolean) => void;
-  /** Esc 触发关闭前回调(原生 cancel)。可 preventDefault 拦截关闭(如未保存内容时)。 */
+  /**
+   * Esc 触发关闭前回调(原生 cancel)。可 preventDefault 拦截关闭(如未保存内容时)。
+   * @param event 触发关闭的原生键盘事件(Esc),在其上调用 preventDefault 可拦截默认关闭。
+   */
   onEscapeKeyDown?: (event: KeyboardEvent) => void;
-  /** 遮罩按下(点击遮罩关闭前)回调。可 preventDefault 拦截关闭。 */
+  /**
+   * 遮罩按下(点击遮罩关闭前)回调。可 preventDefault 拦截关闭。
+   * @param event 遮罩上按下的 React 鼠标事件,在其上调用 preventDefault 可拦截关闭。
+   */
   onPointerDownOutside?: (event: ReactMouseEvent<HTMLDialogElement>) => void;
-  /** 外部交互(遮罩点击)回调,与 onPointerDownOutside 同时触发;可 preventDefault 拦截关闭。 */
+  /**
+   * 外部交互(遮罩点击)回调,与 onPointerDownOutside 同时触发;可 preventDefault 拦截关闭。
+   * @param event 遮罩点击的 React 鼠标事件,在其上调用 preventDefault 可拦截关闭。
+   */
   onInteractOutside?: (event: ReactMouseEvent<HTMLDialogElement>) => void;
   /** 点击遮罩是否关闭。默认 true。 */
   dismissable?: boolean;

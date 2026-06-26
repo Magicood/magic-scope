@@ -1,6 +1,7 @@
 /** 组件统一出口。新增组件由 `pnpm new` 在末尾自动追加 export。 */
 
 export * from './Accordion';
+export * from './Affix';
 export * from './Alert';
 export * from './AlertDialog';
 export * from './Anchor';
@@ -12,9 +13,11 @@ export * from './Blockquote';
 export * from './Breadcrumb';
 export * from './Button';
 export * from './Card';
+export * from './Cascader';
 export * from './Center';
 export * from './Checkbox';
 export * from './Code';
+export * from './ColorPicker';
 export * from './Container';
 export * from './ContextMenu';
 export * from './DatePicker';
@@ -48,6 +51,7 @@ export * from './Select';
 export * from './Skeleton';
 export * from './Slider';
 export * from './Spinner';
+export * from './Splitter';
 export * from './Stack';
 export * from './Statistic';
 export * from './Steps';
@@ -61,4 +65,5 @@ export * from './Timeline';
 export * from './Toast';
 export * from './Tooltip';
 export * from './Tree';
+export * from './Upload';
 export * from './Watermark';

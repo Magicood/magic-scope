@@ -1,0 +1,17 @@
+{
+  "id": "affix",
+  "name": "Affix",
+  "description": "滚动吸附容器:内容随页面滚动到达阈值时吸顶(或吸底)固定,并以等尺寸占位防止布局跳动;支持自定义滚动容器、吸附态回调与命令式重测。",
+  "category": "navigation",
+  "tags": ["affix", "sticky", "scroll", "navigation", "pin", "fixed"],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-26",
+    "requirements": "把「吸附与否、吸成什么样」做成框架无关的纯函数 computeAffix(给几何 + 偏移即出 affixed/mode/style),DOM 读 rect 的副作用留在薄壳,便于单测与平移 vue/core。壳层监听 getTarget(默认 window)滚动/resize、rAF 节流,超 offsetTop 吸顶或超 offsetBottom 吸底,渲染等尺寸 placeholder 杜绝布局抖动,onChange(affixed) 通知跨态。坚持透明包裹不破坏内部语义;宽度跟随用 ResizeObserver(特性检测)且把降级行为如实备注。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Affix.tsx", "Affix.css", "logic.ts", "index.ts"]
+}

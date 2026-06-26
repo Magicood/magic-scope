@@ -40,7 +40,10 @@ export interface AnchorProps
   offsetTop?: number | undefined;
   /** 点击滚动后,目标距容器顶部留白(滚动落点上移多少 px)。默认 0。 */
   targetOffset?: number | undefined;
-  /** active 变化回调(返回新的 active key;无命中为 null)。 */
+  /**
+   * active 变化回调(返回新的 active key;无命中为 null)。
+   * @param activeKey 当前命中的锚点项 key(对应 items 里的 `key`);滚动未命中任何项时为 null。
+   */
   onChange?: ((activeKey: string | null) => void) | undefined;
   /** 受控 active key(传入即受控,高亮由外部决定;仍触发 onChange)。 */
   activeKey?: string | null | undefined;

@@ -32,9 +32,15 @@ export interface ConfirmOptions {
   onCancel?: () => void;
   /** 受控 loading:为 true 时确认按钮 loading + 禁用(异步 onConfirm 期间内部也会自动置位)。 */
   confirmLoading?: boolean;
-  /** 按 Esc 关闭前触发;可 event.preventDefault() 拦截(危险操作禁 Esc 关闭)。 */
+  /**
+   * 按 Esc 关闭前触发;可拦截(危险操作禁 Esc 关闭)。
+   * @param event 触发关闭的原生事件(Esc),在其上调用 preventDefault 可拦截默认关闭。
+   */
   onEscapeKeyDown?: (event: Event) => void;
-  /** 点击遮罩(面板外)关闭前触发;可 event.preventDefault() 拦截(危险操作禁点外关)。 */
+  /**
+   * 点击遮罩(面板外)关闭前触发;可拦截(危险操作禁点外关)。
+   * @param event 遮罩上按下的原生鼠标事件,在其上调用 preventDefault 可拦截关闭。
+   */
   onPointerDownOutside?: (event: MouseEvent) => void;
 }
 
@@ -51,9 +57,15 @@ export interface AlertOptions {
   onConfirm?: () => void | Promise<void>;
   /** 受控 loading。 */
   confirmLoading?: boolean;
-  /** 按 Esc 关闭前触发,可拦截。 */
+  /**
+   * 按 Esc 关闭前触发,可拦截。
+   * @param event 触发关闭的原生事件(Esc),在其上调用 preventDefault 可拦截默认关闭。
+   */
   onEscapeKeyDown?: (event: Event) => void;
-  /** 点击遮罩关闭前触发,可拦截。 */
+  /**
+   * 点击遮罩关闭前触发,可拦截。
+   * @param event 遮罩上按下的原生鼠标事件,在其上调用 preventDefault 可拦截关闭。
+   */
   onPointerDownOutside?: (event: MouseEvent) => void;
 }
 
@@ -79,17 +91,29 @@ export interface PromptOptions {
    * 同时禁用确认按钮;返回 undefined / 空串视为「有效」。实时随输入运行。
    */
   validate?: (value: string) => string | undefined;
-  /** 输入值实时变化时触发(即时拿到当前值,可外部联动)。 */
+  /**
+   * 输入值实时变化时触发(即时拿到当前值,可外部联动)。
+   * @param value 输入框当前的实时值(变化后的字符串)。
+   */
   onValueChange?: (value: string) => void;
-  /** 点击确认(校验通过)时触发;返回 Promise 时进入异步态。参数为当前输入值。 */
+  /**
+   * 点击确认(校验通过)时触发;返回 Promise 时进入异步态。
+   * @param value 确认时输入框的当前值(已通过校验)。
+   */
   onConfirm?: (value: string) => void | Promise<void>;
   /** 点取消时触发。 */
   onCancel?: () => void;
   /** 受控 loading。 */
   confirmLoading?: boolean;
-  /** 按 Esc 关闭前触发,可拦截。 */
+  /**
+   * 按 Esc 关闭前触发,可拦截。
+   * @param event 触发关闭的原生事件(Esc),在其上调用 preventDefault 可拦截默认关闭。
+   */
   onEscapeKeyDown?: (event: Event) => void;
-  /** 点击遮罩关闭前触发,可拦截。 */
+  /**
+   * 点击遮罩关闭前触发,可拦截。
+   * @param event 遮罩上按下的原生鼠标事件,在其上调用 preventDefault 可拦截关闭。
+   */
   onPointerDownOutside?: (event: MouseEvent) => void;
 }
 

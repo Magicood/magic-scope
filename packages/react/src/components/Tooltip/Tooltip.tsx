@@ -81,11 +81,20 @@ export interface TooltipProps extends TooltipRootProps {
   open?: boolean;
   /** 非受控初始打开态。默认 false。 */
   defaultOpen?: boolean;
-  /** 显隐变化回调(受控 / 非受控均触发)。 */
+  /**
+   * 显隐变化回调(受控 / 非受控均触发)。
+   * @param open 变化后的目标显隐状态:true 为打开,false 为关闭。
+   */
   onOpenChange?: (open: boolean) => void;
-  /** Esc 键按下回调;在回调内 preventDefault 可阻止默认的关闭。 */
+  /**
+   * Esc 键按下回调;在回调内 preventDefault 可阻止默认的关闭。
+   * @param event 触发关闭的原生键盘事件(Esc),在其上调用 preventDefault 可拦截默认关闭。
+   */
   onEscapeKeyDown?: (event: KeyboardEvent) => void;
-  /** 触屏 tap-to-toggle 模式下点击气泡外部(pointerdown)回调;preventDefault 可阻止关闭。 */
+  /**
+   * 触屏 tap-to-toggle 模式下点击气泡外部(pointerdown)回调;preventDefault 可阻止关闭。
+   * @param event 气泡外部按下的原生指针事件,在其上调用 preventDefault 可拦截关闭。
+   */
   onPointerDownOutside?: (event: PointerEvent) => void;
   /** 透传到气泡容器的额外 className。 */
   className?: string;

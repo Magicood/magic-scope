@@ -76,7 +76,10 @@ export interface TabsProps extends Omit<ComponentPropsWithoutRef<'div'>, 'onChan
   value?: string;
   /** 非受控初始选中值。缺省取第一个可用项。 */
   defaultValue?: string;
-  /** 选中变化回调,参数为新选中项的 value。 */
+  /**
+   * 选中变化回调。
+   * @param value 新选中项的 value。
+   */
   onChange?: (value: string) => void;
   /** 视觉变体:underline(下划线)| pill(实底胶囊),默认 underline。 */
   variant?: TabsVariant;
@@ -91,9 +94,15 @@ export interface TabsProps extends Omit<ComponentPropsWithoutRef<'div'>, 'onChan
   /**
    * 点击 tab 的瞬间副作用入口(点已选中 tab 时 onChange 不触发,但此处仍触发)。
    * 在内部切换之前调用;你可 event.preventDefault() 阻断切换。
+   * @param value 被点击 tab 的 value。
+   * @param event 该次点击的原始鼠标事件,可 `preventDefault()` 阻断内部切换。
    */
   onTabClick?: (value: string, event: MouseEvent<HTMLDivElement>) => void;
-  /** 增删标签回调(对标 editable-card):remove=点关闭按钮,add=点新增按钮。 */
+  /**
+   * 增删标签回调(对标 editable-card)。
+   * @param value remove 时为被关闭项的 value;add 时为空串 ''。
+   * @param action 动作类别:'remove'=点关闭按钮,'add'=点新增按钮。
+   */
   onEdit?: (value: string, action: TabsEditAction) => void;
   /** 是否在 tablist 末尾渲染「新增标签」按钮,点击触发 onEdit('', 'add')。默认 false。 */
   addable?: boolean;

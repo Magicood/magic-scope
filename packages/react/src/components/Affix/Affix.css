@@ -1,0 +1,42 @@
+/**
+ * Affix —— 滚动吸附。透明布局壳:吸附与定位由 JS 写内联 style(脱流 + 等尺寸占位防跳动),
+ * CSS 只负责「不破坏内部语义 / 不引入多余盒模型」,并给吸附态留可定制的过渡与 z 轴。
+ * 吸附是布局而非动效,默认不加视觉动画;仅吸附进出场处可选一层轻过渡,尊重 reduced-motion / motion=off。
+ */
+
+.ms-affix {
+  /* 占位容器:始终在文档流里。吸附时由 JS 写 min-width/min-height 撑出等尺寸空洞,这里只保证盒模型干净。 */
+  display: block;
+  box-sizing: border-box;
+}
+
+.ms-affix__content {
+  /* 内容包裹层:未吸时完全透明(无样式干预),内部子节点语义与排版不受影响。 */
+  box-sizing: border-box;
+}
+
+/* 吸附态:content 被 JS 设为 position:fixed。这里补 z 轴让它浮在普通内容之上,并留出可定制过渡。 */
+.ms-affix[data-affixed] > .ms-affix__content {
+  z-index: var(--ms-affix-z, var(--ms-z-sticky, 100));
+  /* 吸附进出仅做轻微的盒阴影 / 透明度过渡(纯位置切换不过渡,避免 fixed 跳动时拖影)。 */
+  transition:
+    box-shadow var(--ms-dur-fast, 120ms) var(--ms-ease-standard, ease),
+    background-color var(--ms-dur-fast, 120ms) var(--ms-ease-standard, ease);
+}
+
+/* 吸顶 / 吸底可由使用方按 data-mode 定制吸附时的视觉(默认不强加背景,保持透明包裹本色)。 */
+.ms-affix[data-mode="top"] > .ms-affix__content,
+.ms-affix[data-mode="bottom"] > .ms-affix__content {
+  /* 留空:默认不加边框/底色,避免破坏「透明包裹」契约;使用方可通过 classNames.content 叠加。 */
+}
+
+/* 尊重减弱动效:关掉吸附进出场过渡。 */
+@media (prefers-reduced-motion: reduce) {
+  .ms-affix[data-affixed] > .ms-affix__content {
+    transition: none;
+  }
+}
+
+[data-ms-motion="off"] .ms-affix[data-affixed] > .ms-affix__content {
+  transition: none;
+}

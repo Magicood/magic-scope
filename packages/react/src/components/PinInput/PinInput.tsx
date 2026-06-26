@@ -30,9 +30,15 @@ export interface PinInputProps
   value?: string | undefined;
   /** 非受控初始值。 */
   defaultValue?: string | undefined;
-  /** 值变化回调,回传当前整串(已按 type 清洗)。 */
+  /**
+   * 值变化回调,回传当前整串(已按 type 清洗)。
+   * @param value 当前已输入的紧凑整串(去掉空位、按 type 清洗后的结果);未填满时长度小于 length。
+   */
   onChange?: ((value: string) => void) | undefined;
-  /** 填满全部格子时回调一次,回传完整串。 */
+  /**
+   * 填满全部格子时回调一次,回传完整串。
+   * @param value 填满 length 个格子时的完整整串(已按 type 清洗);仅在「上次未满→本次满」上升沿触发一次。
+   */
   onComplete?: ((value: string) => void) | undefined;
   /** 收字范围:numeric 仅数字 / alphanumeric 数字+字母。默认 numeric。 */
   type?: PinInputType | undefined;

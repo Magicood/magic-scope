@@ -51,11 +51,21 @@ export interface ToastOptions {
   closeIcon?: ReactNode;
   /** 各部件细粒度 className。 */
   classNames?: ToastClassNames;
-  /** 任意关闭时触发(手动 / 自动 / action / 替换),携带关闭来源。 */
+  /**
+   * 任意关闭时触发(手动 / 自动 / action / 替换)。
+   * @param id 被关闭的 toast id
+   * @param reason 关闭来源:manual 手动 / auto 到期 / action 点行动钮 / replace 被同 id 顶替
+   */
   onDismiss?: (id: string, reason: ToastDismissReason) => void;
-  /** 仅自动到期消失时触发(区分手动关闭)。 */
+  /**
+   * 仅自动到期消失时触发(区分手动关闭)。
+   * @param id 自动到期关闭的 toast id
+   */
   onAutoClose?: (id: string) => void;
-  /** 点击 toast 主体(非 action / 关闭钮)时触发,用于跳转 / 查看详情。 */
+  /**
+   * 点击 toast 主体(非 action / 关闭钮)时触发,用于跳转 / 查看详情。
+   * @param id 被点击的 toast id
+   */
   onClick?: (id: string) => void;
 }
 

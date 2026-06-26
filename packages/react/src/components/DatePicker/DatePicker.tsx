@@ -29,13 +29,19 @@ export interface DatePickerProps {
   value?: Date | null;
   /** 非受控初值(single)。 */
   defaultValue?: Date | null;
-  /** single 变更回调。 */
+  /**
+   * single 模式变更回调。
+   * @param date 选中的日期;清除时为 null
+   */
   onChange?: (date: Date | null) => void;
   /** 受控值(range)。 */
   rangeValue?: DateRange;
   /** 非受控初值(range)。 */
   defaultRangeValue?: DateRange;
-  /** range 变更回调。 */
+  /**
+   * range 模式变更回调。
+   * @param range 选中区间 { start, end };清除时两者均为 null
+   */
   onRangeChange?: (range: DateRange) => void;
   /** 可选下限。 */
   min?: Date | null;
@@ -65,7 +71,10 @@ export interface DatePickerProps {
   invalid?: boolean;
   /** 受控浮层开合。 */
   open?: boolean;
-  /** 浮层开合回调。 */
+  /**
+   * 浮层开合回调。
+   * @param open 浮层是否打开
+   */
   onOpenChange?: (open: boolean) => void;
   /** 浮层方位。默认 bottom-start。 */
   placement?: PopoverPlacement;

@@ -94,7 +94,16 @@ export type MessageKey =
   | 'datePicker.nextYear'
   | 'datePicker.selectMonthYear'
   | 'pinInput.label'
-  | 'backTop.label';
+  | 'backTop.label'
+  | 'upload.trigger'
+  | 'upload.hint'
+  | 'upload.remove'
+  | 'upload.retry'
+  | 'upload.uploading'
+  | 'upload.preview'
+  | 'colorPicker.hue'
+  | 'colorPicker.alpha'
+  | 'splitter.resize';
 
 /** 完整字典:每个 key 都有值。 */
 export type Messages = Record<MessageKey, Message>;
@@ -185,6 +194,15 @@ export const defaultMessages: Messages = {
   'datePicker.selectMonthYear': '选择年月',
   'pinInput.label': '验证码输入',
   'backTop.label': '回到顶部',
+  'upload.trigger': '点击或拖拽文件到此区域上传',
+  'upload.hint': '支持单个或批量上传',
+  'upload.remove': '删除',
+  'upload.retry': '重试',
+  'upload.uploading': '上传中',
+  'upload.preview': '预览',
+  'colorPicker.hue': '色相',
+  'colorPicker.alpha': '透明度',
+  'splitter.resize': '拖动调整大小',
 };
 
 const TEMPLATE = /\{(\w+)\}/g;
