@@ -1,0 +1,278 @@
+/* ============================================================================
+ * Vela 应用 dashboard 外壳样式(主会话拥有)。
+ * 轻线条、克制,与营销站同源;面板用 .v-panel(已在 app.css 定义)。
+ * ========================================================================== */
+
+.v-dash {
+  display: grid;
+  grid-template-columns: 264px minmax(0, 1fr);
+  min-block-size: 100dvh;
+}
+
+/* ---------- 侧栏 ---------- */
+.v-side {
+  position: sticky;
+  inset-block-start: 0;
+  align-self: start;
+  block-size: 100dvh;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 1.1rem 0.85rem;
+  border-inline-end: 1px solid var(--ms-color-border);
+  background-color: color-mix(in oklab, var(--ms-color-surface) 55%, var(--ms-color-bg));
+}
+
+.v-side__brand {
+  display: flex;
+  align-items: center;
+  padding: 0.35rem 0.5rem 0.9rem;
+}
+
+.v-side__group-label {
+  padding: 0.75rem 0.6rem 0.4rem;
+  font-size: 0.7rem;
+  font-weight: var(--ms-font-weight-semibold, 600);
+  letter-spacing: var(--ms-tracking-wider, 0.06em);
+  text-transform: uppercase;
+  color: var(--ms-color-fg-subtle);
+}
+
+.v-side__item {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  inline-size: 100%;
+  padding: 0.5rem 0.6rem;
+  border: 0;
+  border-radius: var(--ms-radius-md, 0.5rem);
+  background: transparent;
+  color: var(--ms-color-fg-muted);
+  font: inherit;
+  font-size: 0.9rem;
+  text-align: start;
+  cursor: pointer;
+  transition:
+    background-color 0.18s ease,
+    color 0.18s ease;
+}
+
+.v-side__item:hover {
+  background-color: var(--ms-color-surface-hover, var(--ms-color-surface));
+  color: var(--ms-color-fg);
+}
+
+.v-side__item.is-active {
+  background-color: color-mix(in oklab, var(--ms-color-primary) 14%, transparent);
+  color: var(--ms-color-fg);
+}
+
+.v-side__icon {
+  display: inline-flex;
+  inline-size: 1.05rem;
+  block-size: 1.05rem;
+  color: var(--ms-color-fg-subtle);
+  flex: 0 0 auto;
+}
+
+.v-side__item.is-active .v-side__icon {
+  color: var(--ms-color-primary);
+}
+
+.v-side__spacer {
+  margin-block-start: auto;
+}
+
+.v-side__user {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem;
+  margin-block-start: 0.5rem;
+  border-radius: var(--ms-radius-md, 0.5rem);
+  border: 1px solid var(--ms-color-border);
+}
+
+/* ---------- 主区 ---------- */
+.v-main {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+}
+
+.v-topbar {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem clamp(1rem, 3vw, 1.75rem);
+  border-block-end: 1px solid var(--ms-color-border);
+  background-color: color-mix(in oklab, var(--ms-color-bg) 78%, transparent);
+  backdrop-filter: blur(14px) saturate(1.3);
+}
+
+.v-topbar__search {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-inline-size: 0;
+  inline-size: clamp(12rem, 32vw, 22rem);
+  padding: 0.45rem 0.7rem;
+  border-radius: var(--ms-radius-md, 0.5rem);
+  border: 1px solid var(--ms-color-border);
+  background-color: var(--ms-color-surface-sunken, var(--ms-color-surface));
+  color: var(--ms-color-fg-subtle);
+  font: inherit;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition:
+    border-color 0.18s ease,
+    background-color 0.18s ease;
+}
+
+.v-topbar__search:hover {
+  border-color: var(--ms-color-border-strong);
+}
+
+.v-topbar__kbd {
+  margin-inline-start: auto;
+  display: inline-flex;
+  gap: 0.15rem;
+}
+
+.v-topbar__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-inline-start: auto;
+}
+
+.v-icon-btn {
+  display: inline-grid;
+  place-items: center;
+  inline-size: 2.2rem;
+  block-size: 2.2rem;
+  border-radius: var(--ms-radius-md, 0.5rem);
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--ms-color-fg-muted);
+  cursor: pointer;
+  transition:
+    background-color 0.18s ease,
+    color 0.18s ease,
+    border-color 0.18s ease;
+}
+
+.v-icon-btn:hover {
+  background-color: var(--ms-color-surface-hover, var(--ms-color-surface));
+  color: var(--ms-color-fg);
+}
+
+.v-dash__burger {
+  display: none;
+}
+
+/* ---------- 内容区 ---------- */
+.v-content {
+  padding: clamp(1.1rem, 3vw, 2rem);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1rem, 2.2vw, 1.5rem);
+  max-inline-size: 1320px;
+  inline-size: 100%;
+  margin-inline: auto;
+}
+
+.v-page-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.v-content__cols {
+  display: grid;
+  gap: clamp(1rem, 2.2vw, 1.5rem);
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+}
+
+@media (max-width: 980px) {
+  .v-content__cols {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ---------- 设置抽屉里的控件行 ---------- */
+.v-setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 0.9rem;
+  border-block-end: 1px solid var(--ms-color-border);
+}
+
+.v-setting-row__label {
+  font-size: 0.9rem;
+  color: var(--ms-color-fg);
+}
+
+.v-setting-row__hint {
+  font-size: 0.78rem;
+  color: var(--ms-color-fg-subtle);
+}
+
+.v-swatch-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.v-swatch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.4rem 0.7rem;
+  border-radius: var(--ms-radius-full, 9999px);
+  border: 1px solid var(--ms-color-border);
+  background: transparent;
+  color: var(--ms-color-fg-muted);
+  font: inherit;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition:
+    border-color 0.18s ease,
+    color 0.18s ease;
+}
+
+.v-swatch.is-active {
+  border-color: var(--ms-color-primary);
+  color: var(--ms-color-fg);
+}
+
+.v-swatch__dot {
+  inline-size: 0.85rem;
+  block-size: 0.85rem;
+  border-radius: var(--ms-radius-full, 9999px);
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--ms-color-fg) 12%, transparent);
+}
+
+/* ---------- 响应式:窄屏收起侧栏 ---------- */
+@media (max-width: 860px) {
+  .v-dash {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .v-side {
+    display: none;
+  }
+  .v-dash__burger {
+    display: inline-grid;
+  }
+  .v-topbar__search {
+    inline-size: auto;
+    flex: 1 1 auto;
+  }
+}
