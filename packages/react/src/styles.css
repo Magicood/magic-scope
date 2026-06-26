@@ -57,3 +57,9 @@
 @import "./components/Popconfirm/Popconfirm.css" layer(ms.components);
 @import "./components/ContextMenu/ContextMenu.css" layer(ms.components);
 @import "./components/Text/Text.css" layer(ms.components);
+@import "./components/Heading/Heading.css" layer(ms.components);
+@import "./components/Paragraph/Paragraph.css" layer(ms.components);
+@import "./components/Code/Code.css" layer(ms.components);
+@import "./components/Link/Link.css" layer(ms.components);
+@import "./components/Blockquote/Blockquote.css" layer(ms.components);
+@import "./components/List/List.css" layer(ms.components);

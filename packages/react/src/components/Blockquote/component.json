@@ -1,0 +1,17 @@
+{
+  "id": "blockquote",
+  "name": "Blockquote",
+  "description": "块级引用 <blockquote>:左强调条/柔底块/卡片/纯文字四变体,读全库 tone 槽位上色;出处槽(footer+cite)、机器可读 citeUrl、图标/装饰大引号槽,尺寸走流式字阶;魔法渐变强调条与辉光,受全局 motion·fx 双降级;多态 as/asChild、forwardRef、classNames 子部件定制与全原生属性透传。",
+  "category": "typography",
+  "tags": ["blockquote", "quote", "引用", "出处", "cite", "typography", "tone", "magic", "accent"],
+  "status": "draft",
+  "version": "0.0.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-26",
+    "requirements": "块级引用 typography 组件:语义 <blockquote>,出处(footer/cite 或 cite 属性)、引号/自定义图标槽、tone(左强调条读 --ms-c、柔底 --ms-c-soft)、variant、size,复用 typography.css 行高/字号。对标旗舰 Text/Button:多态 as/asChild、tone resolver 6 槽位、魔法渐变/辉光 + prefers-reduced-motion 与 data-ms-motion=off 双降级、forwardRef + 全 rest 透传 + classNames 子部件映射、内容边界不撑破、strict TS。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Blockquote.tsx", "Blockquote.css", "logic.ts", "index.ts"]
+}

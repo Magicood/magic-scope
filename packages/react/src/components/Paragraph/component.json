@@ -1,0 +1,28 @@
+{
+  "id": "paragraph",
+  "name": "Paragraph",
+  "description": "块级正文段落:size/leading/tone/dimmed/align 排版档,多行省略(可带展开/收起),一键复制(复制成功触发魔法 glow 一闪)。",
+  "category": "typography",
+  "tags": [
+    "paragraph",
+    "text",
+    "typography",
+    "body",
+    "ellipsis",
+    "line-clamp",
+    "expandable",
+    "copyable",
+    "clipboard",
+    "polymorphic"
+  ],
+  "status": "draft",
+  "version": "0.0.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-26",
+    "requirements": "块级 <p> 正文 typography 组件。需求:size/leading/tone/dimmed/align 基础排版;ellipsis?: boolean | { rows, expandable, symbol } 多行省略 + 可选展开/收起(AntD 式,走 typography.expand/collapse 文案);copyable?: boolean | { text, onCopy } 复制按钮(navigator.clipboard,走 typography.copy/copied,复制成功瞬间触发魔法 glow 一闪)。展开/复制纯逻辑抽 logic.ts。对标旗舰 Text/Button/Input:多态 as/asChild、forwardRef 到根、...rest 透传、tone 走 --ms-c 槽位、动效双降级(prefers-reduced-motion + data-ms-motion=off)、i18n 走 useMessages、strict TS。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Paragraph.tsx", "Paragraph.css", "logic.ts", "index.ts"]
+}

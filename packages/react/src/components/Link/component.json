@@ -1,0 +1,30 @@
+{
+  "id": "link",
+  "name": "Link",
+  "description": "内联超链接(typography 分类)。真正的 <a> 原语,把链接的交互/语义/装饰收成 props:下划线四态(auto 静止有/hover 去、hover 反向、always、none)、tone 着色(默认走专用链接角色色 --ms-color-link,有 tone 时切 tone 槽位 --ms-c)、字号档(--ms-type-step-*,默认 inherit)、外链一键安全化(target=_blank + rel=noopener noreferrer 安全合并去重 + 尾随外链图标 + sr-only「在新窗口打开」提示,走 i18n link.newWindow)、disabled(<a> 无原生 disabled,用去 href + aria-disabled + tabIndex=-1 + 拦截点击综合模拟,读屏仍报为被禁用链接)、muted 次级前景色、visited 已访问态、前置图标、魔法微光(text-shadow 受 --ms-fx-glow 调制,off/hover/always)。多态 asChild 把样式/props 合并到路由库 <Link>(事件 compose + ref 合并)。留口充分:...rest 透传所有原生 <a> 属性与事件,自挂 onClick(禁用拦截)用 composeEventHandlers 合并用户处理器(用户 preventDefault 可阻断),className/style 与计算值合并(用户优先),classNames 映射定制图标子部件。所有过渡/图标位移受 prefers-reduced-motion 与 data-ms-motion=off 双降级。纯逻辑(rel 合并、外链/禁用属性派生)抽在 logic.ts 零 React。",
+  "category": "typography",
+  "tags": [
+    "link",
+    "anchor",
+    "typography",
+    "external-link",
+    "underline",
+    "tone",
+    "as-child",
+    "polymorphic",
+    "disabled",
+    "a11y",
+    "magic-glow",
+    "i18n"
+  ],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-26",
+    "requirements": "用户 2026-06-26 定:typography 分类补内联链接 Link。要求生产级深度对标旗舰 Button/Input/Text。核心契约:underline 四态走 Radix 式(auto/hover/always/none);tone 默认走链接角色色 --ms-color-link(读 tone 槽位差异化),不写死 primary;external → target=_blank + rel=noopener noreferrer + 外链图标 + sr-only link.newWindow 文案(i18n,已登记);asChild 走 mergeAsChildProps + composeRefs 接路由 Link;disabled 用 aria-disabled + 去交互模拟(<a> 无原生 disabled);hover 微光受 motion 降级。严格遵循已立标准:留口(forwardRef/...rest/asChild/ReactNode 槽/classNames)、事件 composeEventHandlers 合并不覆盖、i18n 不写死中文、内容边界(长 URL 不撑破)、strict TS(exactOptionalPropertyTypes / noUncheckedIndexedAccess)、纯逻辑放 logic.ts。兼容性备注:link-active/visited token 缺失时三级回退,不强加颜色。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Link.tsx", "Link.css", "logic.ts", "index.ts"]
+}

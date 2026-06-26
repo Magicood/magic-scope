@@ -27,6 +27,12 @@ export type MessageKey =
   | 'avatar.status.away'
   | 'label.optional'
   | 'label.required'
+  | 'typography.copy'
+  | 'typography.copied'
+  | 'typography.expand'
+  | 'typography.collapse'
+  | 'typography.permalink'
+  | 'link.newWindow'
   | 'select.placeholder'
   | 'select.empty'
   | 'select.loading'
@@ -81,6 +87,12 @@ export const defaultMessages: Messages = {
   'avatar.status.away': '离开',
   'label.optional': '可选',
   'label.required': '必填',
+  'typography.copy': '复制',
+  'typography.copied': '已复制',
+  'typography.expand': '展开',
+  'typography.collapse': '收起',
+  'typography.permalink': '永久链接',
+  'link.newWindow': '(在新窗口打开)',
   'select.placeholder': '请选择…',
   'select.empty': '无匹配项',
   'select.loading': '加载中…',
