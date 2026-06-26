@@ -1,0 +1,32 @@
+{
+  "id": "list",
+  "name": "List",
+  "description": "列表排版组件:无序(ul)/有序(ol)/描述(dl)三形态一参切换,标记支持原生 list-style-type 与自定义 ReactNode 图标,间距随密度缩放,tone 着色 ::marker 与魔法辉光;带命名空间子部件 List.Item / List.Term / List.Detail,嵌套友好。",
+  "category": "typography",
+  "tags": [
+    "list",
+    "typography",
+    "unordered",
+    "ordered",
+    "description-list",
+    "marker",
+    "ul",
+    "ol",
+    "dl",
+    "nested",
+    "tone",
+    "density",
+    "polymorphic",
+    "asChild"
+  ],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-26",
+    "requirements": "生产级 typography 列表组件。variant: unordered|ordered|description → 渲染 ul/ol/dl;marker?: list-style-type(disc/circle/decimal/lower-roman…)或 icon ReactNode 自定义标记;spacing 档(随密度 --ms-density-scale);tone(::marker 着色读 --ms-c);List.Item 子部件(命名空间 List.Item);description 变体支持 term/detail。嵌套友好。对标旗舰 Text/Button/Input:多态 as/asChild、...rest 透传、classNames 注入子部件、魔法 glow 双降级、内容边界不撑破、strict TS。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["List.tsx", "List.css", "logic.ts", "index.ts"]
+}

@@ -1,0 +1,67 @@
+/* —— tone resolver(差异化支点):把「当前语义色」统一映射到 6 个槽位变量。
+ * 组件只读这 6 个槽位,不再各写 6 tone × N variant 的硬编码块;换肤=改角色派生一处,全库联动。
+ * 源值全部从 contract/roles.ts 已有的颜色角色(--ms-color-*)派生,不新增硬编码色。
+ * 槽位:--ms-c 主色 / --ms-c-hover / --ms-c-active / --ms-on-c 前景 / --ms-c-soft 浅底 / --ms-c-glow 发光色。 */
+@layer ms.theme {
+  /* 默认(无 tone 类)= primary,保证任意组件读 --ms-c 都有值 */
+  :where(:root),
+  .ms-tone-primary {
+    --ms-c: var(--ms-color-primary);
+    --ms-c-hover: var(--ms-color-primary-hover);
+    --ms-c-active: var(--ms-color-primary-active);
+    --ms-on-c: var(--ms-color-on-primary);
+    --ms-c-soft: color-mix(in oklch, var(--ms-color-primary) 16%, transparent);
+    --ms-c-glow: var(--ms-color-glow);
+  }
+
+  /* 其余 tone:有 on-* 角色直接用;无 hover/active 角色的,朝 fg 派生(暗主题提亮、亮主题压暗,天然主题感知) */
+  .ms-tone-accent {
+    --ms-c: var(--ms-color-accent);
+    --ms-c-hover: color-mix(in oklch, var(--ms-color-accent) 86%, var(--ms-color-fg) 14%);
+    --ms-c-active: color-mix(in oklch, var(--ms-color-accent) 74%, var(--ms-color-fg) 26%);
+    --ms-on-c: var(--ms-color-on-accent);
+    --ms-c-soft: color-mix(in oklch, var(--ms-color-accent) 16%, transparent);
+    --ms-c-glow: var(--ms-color-accent);
+  }
+  .ms-tone-success {
+    --ms-c: var(--ms-color-success);
+    --ms-c-hover: color-mix(in oklch, var(--ms-color-success) 86%, var(--ms-color-fg) 14%);
+    --ms-c-active: color-mix(in oklch, var(--ms-color-success) 74%, var(--ms-color-fg) 26%);
+    --ms-on-c: var(--ms-color-on-success);
+    --ms-c-soft: color-mix(in oklch, var(--ms-color-success) 16%, transparent);
+    --ms-c-glow: var(--ms-color-success);
+  }
+  .ms-tone-warning {
+    --ms-c: var(--ms-color-warning);
+    --ms-c-hover: color-mix(in oklch, var(--ms-color-warning) 86%, var(--ms-color-fg) 14%);
+    --ms-c-active: color-mix(in oklch, var(--ms-color-warning) 74%, var(--ms-color-fg) 26%);
+    --ms-on-c: var(--ms-color-on-warning);
+    --ms-c-soft: color-mix(in oklch, var(--ms-color-warning) 16%, transparent);
+    --ms-c-glow: var(--ms-color-warning);
+  }
+  .ms-tone-danger {
+    --ms-c: var(--ms-color-danger);
+    --ms-c-hover: color-mix(in oklch, var(--ms-color-danger) 86%, var(--ms-color-fg) 14%);
+    --ms-c-active: color-mix(in oklch, var(--ms-color-danger) 74%, var(--ms-color-fg) 26%);
+    --ms-on-c: var(--ms-color-on-danger);
+    --ms-c-soft: color-mix(in oklch, var(--ms-color-danger) 16%, transparent);
+    --ms-c-glow: var(--ms-color-danger);
+  }
+  .ms-tone-info {
+    --ms-c: var(--ms-color-info);
+    --ms-c-hover: color-mix(in oklch, var(--ms-color-info) 86%, var(--ms-color-fg) 14%);
+    --ms-c-active: color-mix(in oklch, var(--ms-color-info) 74%, var(--ms-color-fg) 26%);
+    --ms-on-c: var(--ms-color-on-info);
+    --ms-c-soft: color-mix(in oklch, var(--ms-color-info) 16%, transparent);
+    --ms-c-glow: var(--ms-color-info);
+  }
+  /* 中性:走 fg-muted,用于无语义色的标签/按钮 */
+  .ms-tone-neutral {
+    --ms-c: var(--ms-color-fg-muted);
+    --ms-c-hover: var(--ms-color-fg);
+    --ms-c-active: var(--ms-color-fg);
+    --ms-on-c: var(--ms-color-bg);
+    --ms-c-soft: color-mix(in oklch, var(--ms-color-fg-muted) 14%, transparent);
+    --ms-c-glow: var(--ms-color-glow);
+  }
+}

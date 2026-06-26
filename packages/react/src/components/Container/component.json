@@ -1,0 +1,27 @@
+{
+  "id": "container",
+  "name": "Container",
+  "description": "居中定宽容器:限宽(sm/md/lg/xl/full 或自定义)+ 水平居中 + 响应式内边距(token 档/断点对象/流式 clamp),支持垂直居中、满宽、多态 as 与 asChild。RTL 友好的 CSS 逻辑属性实现。",
+  "category": "layout",
+  "tags": [
+    "layout",
+    "container",
+    "wrapper",
+    "responsive",
+    "centered",
+    "max-width",
+    "spacing",
+    "rtl",
+    "polymorphic"
+  ],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-26",
+    "requirements": "新增布局组件 Container：居中定宽容器。size(sm/md/lg/xl/full 或自定义 max-inline-size，映射断点 token 宽度)、自动水平居中(margin-inline:auto)、响应式内边距(padding-inline 随断点、clamp)、centered?(整屏垂直居中)、fluid?(满宽)。多态 as(默认 div，语义场景 section/main)。布局组件为结构性：多态 + asChild、间距 token 化、断点对象响应式、CSS 逻辑属性 RTL 友好；无 tone/发光、无 i18n 文案。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Container.tsx", "Container.css", "logic.ts", "index.ts"]
+}

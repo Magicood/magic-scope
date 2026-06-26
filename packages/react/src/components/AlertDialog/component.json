@@ -1,0 +1,30 @@
+{
+  "id": "alert-dialog",
+  "name": "AlertDialog",
+  "description": "命令式确认/提示/输入弹窗:confirm(message) 返回 Promise<boolean>、alert(message) 返回 Promise<void>、prompt(message) 返回 Promise<string|null>;+ <AlertDialogHost /> 渲染容器(模块级队列订阅、基于原生 <dialog> showModal 的焦点陷阱/Esc/top-layer、portal、锁背景滚动)。role=alertdialog + aria-labelledby/describedby;默认确认/取消文案走 i18n 字典单例(translate)。完整语义色调 variant(default/danger/warning/success/info):面板挂 ms-tone-*,确认按钮与强调条/辉光只读 tone 槽位(零硬编码),配 icon 警示图标槽。prompt 内建输入框默认聚焦、Enter 提交,支持 inputType(text/password/number)与 validate 实时校验(无效拦截确认并展示提示、禁用按钮),onValueChange 实时回值。异步 onConfirm 返回 Promise 时确认按钮 loading+禁用、resolve 才关闭、reject 保持打开重试(亦可受控 confirmLoading)。回调与 Promise 双轨:onConfirm/onCancel(主动取消),onEscapeKeyDown/onPointerDownOutside 可 preventDefault 拦截关闭(危险操作禁 Esc/点外关)。danger 变体默认焦点落在取消防误触;进出场动画、安全区、窄屏动作纵向排布、尊重 reduced-motion 与 data-ms-motion/fx 总闸。",
+  "category": "feedback",
+  "tags": [
+    "alert-dialog",
+    "confirm",
+    "alert",
+    "prompt",
+    "dialog",
+    "imperative",
+    "feedback",
+    "tone",
+    "i18n",
+    "async-confirm",
+    "validate",
+    "loading"
+  ],
+  "status": "stable",
+  "version": "0.0.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-25",
+    "requirements": "补齐弹窗提示:命令式确认/提示框。原创实现,与 Toast 同构(模块级队列 + useSyncExternalStore + host),但叠加 Promise 解析(await confirm())。基于原生 <dialog> showModal 白嫖焦点陷阱/Esc/top-layer;复用 ms-button 类保证按钮一致。涵盖 role=alertdialog 语义、danger 默认焦点防误触、安全区/窄屏纵向动作/reduced-motion。区别于已有的通用模态 Dialog(声明式容器)。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["AlertDialog.tsx", "AlertDialog.css", "index.ts"]
+}

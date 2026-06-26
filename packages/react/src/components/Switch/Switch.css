@@ -1,8 +1,31 @@
+/* —— Switch 基座:尺寸变量驱动(随密度缩放) + tone 槽位染色 —— */
 .ms-switch {
+  /* 尺寸变量(md 默认),size 类覆盖;统一乘 --ms-density-scale 接密度 */
+  --ms-switch-track-w: calc(2.75rem * var(--ms-density-scale, 1));
+  --ms-switch-track-h: calc(1.5rem * var(--ms-density-scale, 1));
+  --ms-switch-thumb: calc(1rem * var(--ms-density-scale, 1));
+  --ms-switch-pad: calc(0.25rem * var(--ms-density-scale, 1));
+
   display: inline-flex;
   align-items: center;
+  gap: var(--ms-space-2);
+  max-inline-size: 100%;
   cursor: pointer;
   user-select: none;
+}
+
+/* —— 尺寸:仅改尺寸变量,几何全由变量推导 —— */
+.ms-switch--sm {
+  --ms-switch-track-w: calc(2.25rem * var(--ms-density-scale, 1));
+  --ms-switch-track-h: calc(1.25rem * var(--ms-density-scale, 1));
+  --ms-switch-thumb: calc(0.8125rem * var(--ms-density-scale, 1));
+  --ms-switch-pad: calc(0.21875rem * var(--ms-density-scale, 1));
+}
+.ms-switch--lg {
+  --ms-switch-track-w: calc(3.25rem * var(--ms-density-scale, 1));
+  --ms-switch-track-h: calc(1.75rem * var(--ms-density-scale, 1));
+  --ms-switch-thumb: calc(1.25rem * var(--ms-density-scale, 1));
+  --ms-switch-pad: calc(0.25rem * var(--ms-density-scale, 1));
 }
 
 /* 视觉隐藏原生 checkbox,但保留可聚焦与可点击 */
@@ -21,11 +44,13 @@
 
 /* —— 轨道 —— */
 .ms-switch__track {
+  position: relative;
   display: inline-flex;
+  flex: 0 0 auto;
   align-items: center;
-  inline-size: 2.75rem;
-  block-size: 1.5rem;
-  padding-inline: var(--ms-space-1);
+  inline-size: var(--ms-switch-track-w);
+  block-size: var(--ms-switch-track-h);
+  padding-inline: var(--ms-switch-pad);
   border: 1px solid var(--ms-color-border);
   border-radius: var(--ms-radius-full);
   background-color: var(--ms-color-surface-sunken);
@@ -37,8 +62,14 @@
 
 /* —— 滑块 —— */
 .ms-switch__thumb {
-  inline-size: 1rem;
-  block-size: 1rem;
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  inline-size: var(--ms-switch-thumb);
+  block-size: var(--ms-switch-thumb);
   border-radius: var(--ms-radius-full);
   background-color: var(--ms-color-fg-muted);
   transition:
@@ -47,10 +78,55 @@
     box-shadow var(--ms-dur-base) var(--ms-ease-standard);
 }
 
+/* —— 右侧文字:可收缩,超长省略号,绝不撑破 —— */
+.ms-switch__label {
+  min-inline-size: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-family: var(--ms-font-sans);
+  font-size: 1rem;
+  line-height: 1.4;
+  color: var(--ms-color-fg);
+}
+.ms-switch--sm .ms-switch__label {
+  font-size: 0.875rem;
+}
+.ms-switch--lg .ms-switch__label {
+  font-size: 1.125rem;
+}
+
+/* —— 轨道内两端图标:左=on(checked 显),右=off(unchecked 显) —— */
+.ms-switch__icon {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inset-block: 0;
+  inline-size: var(--ms-switch-thumb);
+  font-size: calc(0.625rem * var(--ms-density-scale, 1));
+  line-height: 0;
+  pointer-events: none;
+  transition: opacity var(--ms-dur-fast) var(--ms-ease-standard);
+}
+.ms-switch--lg .ms-switch__icon {
+  font-size: calc(0.75rem * var(--ms-density-scale, 1));
+}
+.ms-switch__icon--on {
+  inset-inline-start: var(--ms-switch-pad);
+  color: var(--ms-on-c);
+  opacity: 0;
+}
+.ms-switch__icon--off {
+  inset-inline-end: var(--ms-switch-pad);
+  color: var(--ms-color-fg-muted);
+  opacity: 1;
+}
+
 /* —— hover:轨道描边变亮 + 轨道内微光预热 —— */
 .ms-switch__input:not(:disabled):hover + .ms-switch__track {
   border-color: var(--ms-color-border-strong);
-  box-shadow: inset 0 0 calc(8px * var(--ms-fx-glow, 1)) -4px var(--ms-color-glow);
+  box-shadow: inset 0 0 calc(8px * var(--ms-fx-glow, 1)) -4px var(--ms-c-glow);
 }
 
 /* —— focus-visible:发光环(可达性,模糊半径不参与开关) —— */
@@ -60,28 +136,37 @@
     0 0 0 4px var(--ms-color-focus-ring);
 }
 
-/* —— checked:轨道染主色,滑块右移并染 on-primary —— */
-/* idle 微光 + 内层暖辉,营造奥术充能感 */
-.ms-switch__input:checked + .ms-switch__track {
-  border-color: var(--ms-color-primary);
-  background-color: var(--ms-color-primary);
-  box-shadow:
-    0 0 calc(14px * var(--ms-fx-glow, 1)) -3px var(--ms-color-glow),
-    inset 0 0 calc(6px * var(--ms-fx-glow, 1)) -2px var(--ms-color-glow);
-}
+/* —— checked:轨道染主色,滑块右移并染 on-c —— */
+/* 固定位移 = 轨道内可移动距离(不乘 motion-scale,关动效仍到位) */
 .ms-switch__input:checked + .ms-switch__track .ms-switch__thumb {
-  transform: translateX(calc(1.25rem * var(--ms-motion-scale, 1)));
-  background-color: var(--ms-color-on-primary);
-  box-shadow: 0 0 calc(6px * var(--ms-fx-glow, 1)) -1px var(--ms-color-glow);
+  transform: translateX(
+    calc(var(--ms-switch-track-w) - var(--ms-switch-thumb) - 2 * var(--ms-switch-pad) - 2px)
+  );
+  background-color: var(--ms-on-c);
+  box-shadow: 0 0 calc(6px * var(--ms-fx-glow, 1)) -1px var(--ms-c-glow);
+}
+.ms-switch__input:checked + .ms-switch__track {
+  border-color: var(--ms-c);
+  background-color: var(--ms-c);
+  box-shadow:
+    0 0 calc(14px * var(--ms-fx-glow, 1)) -3px var(--ms-c-glow),
+    inset 0 0 calc(6px * var(--ms-fx-glow, 1)) -2px var(--ms-c-glow);
+}
+/* checked 时切换两端图标可见性 */
+.ms-switch__input:checked + .ms-switch__track .ms-switch__icon--on {
+  opacity: 1;
+}
+.ms-switch__input:checked + .ms-switch__track .ms-switch__icon--off {
+  opacity: 0;
 }
 
 /* checked + hover:加深主色,发光强化 */
 .ms-switch__input:checked:not(:disabled):hover + .ms-switch__track {
-  background-color: var(--ms-color-primary-hover);
-  border-color: var(--ms-color-primary-hover);
+  background-color: var(--ms-c-hover);
+  border-color: var(--ms-c-hover);
   box-shadow:
-    0 0 calc(24px * var(--ms-fx-glow, 1)) -2px var(--ms-color-glow),
-    inset 0 0 calc(8px * var(--ms-fx-glow, 1)) -2px var(--ms-color-glow);
+    0 0 calc(24px * var(--ms-fx-glow, 1)) -2px var(--ms-c-glow),
+    inset 0 0 calc(8px * var(--ms-fx-glow, 1)) -2px var(--ms-c-glow);
 }
 
 /* checked + focus-visible:发光环(可达性,不参与开关)叠加主色光 */
@@ -89,15 +174,45 @@
   box-shadow:
     0 0 0 2px var(--ms-color-bg),
     0 0 0 4px var(--ms-color-focus-ring),
-    0 0 calc(20px * var(--ms-fx-glow, 1)) -2px var(--ms-color-glow);
+    0 0 calc(20px * var(--ms-fx-glow, 1)) -2px var(--ms-c-glow);
+}
+
+/* —— loading:滑块内旋转符文,装饰用 motion-scale 调强度 —— */
+.ms-switch__spinner {
+  display: inline-block;
+  inline-size: calc(var(--ms-switch-thumb) * 0.625);
+  block-size: calc(var(--ms-switch-thumb) * 0.625);
+  border-radius: var(--ms-radius-full);
+  border: 2px solid color-mix(in oklch, var(--ms-color-fg-muted) 32%, transparent);
+  border-block-start-color: var(--ms-color-fg-muted);
+  animation: ms-switch-spin 0.7s linear infinite;
+}
+.ms-switch__input:checked + .ms-switch__track .ms-switch__spinner {
+  border-color: color-mix(in oklch, var(--ms-c) 28%, transparent);
+  border-block-start-color: var(--ms-c);
+}
+.ms-switch--loading {
+  cursor: progress;
+}
+@keyframes ms-switch-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* —— 发光总闸:fx 关断时去掉所有装饰辉光(focus-ring 仍保留可达性) —— */
+[data-ms-fx="off"] .ms-switch__input:not(:disabled):hover + .ms-switch__track,
+[data-ms-fx="off"] .ms-switch__input:checked + .ms-switch__track,
+[data-ms-fx="off"] .ms-switch__input:checked:not(:disabled):hover + .ms-switch__track {
+  box-shadow: none;
+}
+[data-ms-fx="off"] .ms-switch__input:checked + .ms-switch__track .ms-switch__thumb {
+  box-shadow: none;
 }
 
 /* —— 触控设备:轨道视觉不变,隐形扩竖直命中区到 target-min(满足触控热区) —— */
 @media (pointer: coarse) {
-  .ms-switch__track {
-    position: relative;
-  }
-  .ms-switch__track::before {
+  .ms-switch__track::after {
     content: "";
     position: absolute;
     inset-block: 50%;
@@ -114,4 +229,24 @@
 }
 .ms-switch:has(.ms-switch__input:disabled) {
   cursor: not-allowed;
+}
+
+/* —— 动效降级:reduced-motion 与 data-ms-motion=off 双通道,关掉过渡/动画但视觉到位 —— */
+@media (prefers-reduced-motion: reduce) {
+  .ms-switch__track,
+  .ms-switch__thumb,
+  .ms-switch__icon {
+    transition-duration: 0.01ms;
+  }
+  .ms-switch__spinner {
+    animation-duration: 1.6s;
+  }
+}
+[data-ms-motion="off"] .ms-switch__track,
+[data-ms-motion="off"] .ms-switch__thumb,
+[data-ms-motion="off"] .ms-switch__icon {
+  transition-duration: 0.01ms;
+}
+[data-ms-motion="off"] .ms-switch__spinner {
+  animation: none;
 }

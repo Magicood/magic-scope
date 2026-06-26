@@ -1,0 +1,27 @@
+{
+  "id": "descriptions",
+  "name": "Descriptions",
+  "description": "描述列表(键值展示)。CSS Grid 排布,items 数据或 Descriptions.Item 复合子组件双入口;span 跨列、行末 filler 补齐由纯逻辑层计算;columns 支持响应式断点对象随屏收窄(每断点一个 CSS 变量 + 静态 @media 级联);bordered 表格态、size 三档随密度缩放、horizontal/vertical 排布、colon、tone 语义色(标签软底/强调描边/发光);title/extra/emptyText ReactNode 槽、classNames 部件定制、多态 as;空态走 i18n。",
+  "category": "data-display",
+  "tags": [
+    "descriptions",
+    "description-list",
+    "key-value",
+    "data-display",
+    "grid",
+    "responsive",
+    "bordered",
+    "definition-list",
+    "detail"
+  ],
+  "status": "stable",
+  "version": "0.0.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-26",
+    "requirements": "描述列表(键值展示,对标 AntD Descriptions):items {label,value/children,span?}[] 或复合 Descriptions.Item 子组件;columns(number 默认 3,或响应式断点对象,随屏收窄)、bordered(带边框表格态)、size(sm/md/lg)、layout(horizontal 默认 / vertical)、title?/extra? 槽、colon。用 CSS grid 排布,span 跨列。多态 as。logic.ts 放 columns 响应式 + span 布局解析。遵循 magic-scope 旗舰标准(tone 6 槽位 / 密度缩放 / 减动降级 / strict TS / i18n 空态 / 留口)。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Descriptions.tsx", "Descriptions.css", "logic.ts", "index.ts"]
+}

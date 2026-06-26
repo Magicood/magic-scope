@@ -1,0 +1,63 @@
+/* —— ContextMenu 右键菜单 ——
+ * 包裹区域不生成盒子,仅承载 contextmenu 事件;浮层 portal 到 body、固定定位在光标处。
+ * 配色:tone resolver —— 根挂 .ms-tone-${tone},只读 6 槽位(--ms-c / --ms-c-soft / --ms-c-glow …)。
+ * 菜单项视觉复用 .ms-menu__item(见 Menu.css),tone 高亮 / danger 自动随槽位走。
+ */
+
+/* 包裹区域:不生成盒子、不影响布局,仅承载 contextmenu 事件 */
+.ms-context-menu-area {
+  display: contents;
+}
+
+/* 浮层容器:固定定位在光标处(由内联 inset-block-start/inline-start 给值),自带视觉与入场 */
+.ms-context-menu {
+  position: fixed;
+  z-index: 9999;
+  margin: 0;
+  min-inline-size: min(11rem, 90vw);
+  max-inline-size: min(20rem, calc(100dvw - var(--ms-space-4) * 2));
+  max-block-size: min(60svh, 24rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--ms-space-1);
+  border: 1px solid var(--ms-color-border);
+  border-radius: var(--ms-radius-lg);
+  background-color: var(--ms-color-surface-raised);
+  color: var(--ms-color-fg);
+  font-family: var(--ms-font-sans);
+  box-shadow:
+    0 24px 64px -24px rgb(0 0 0 / 0.45),
+    0 0 calc(40px * var(--ms-fx-glow, 1)) -16px var(--ms-c-glow);
+  transform-origin: top left;
+  animation: ms-context-menu-in var(--ms-dur-base) var(--ms-ease-emphasized);
+}
+
+@keyframes ms-context-menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(calc(-4px * var(--ms-motion-scale, 1))) scale(0.97);
+  }
+}
+
+/* 发光总闸关断:去掉外发光,保留景深投影 */
+[data-ms-fx="off"] .ms-context-menu {
+  box-shadow: 0 24px 64px -24px rgb(0 0 0 / 0.45);
+}
+
+/* —— 触控设备:浮层底部留出安全区,避免被手势条 / 圆角遮挡 —— */
+@media (pointer: coarse) {
+  .ms-context-menu {
+    padding-block-end: calc(var(--ms-space-1) + var(--ms-safe-bottom));
+  }
+}
+
+/* —— 动效降级:尊重系统偏好与库级总闸 —— */
+@media (prefers-reduced-motion: reduce) {
+  .ms-context-menu {
+    animation-duration: 0.01ms;
+  }
+}
+
+[data-ms-motion="off"] .ms-context-menu {
+  animation: none;
+}

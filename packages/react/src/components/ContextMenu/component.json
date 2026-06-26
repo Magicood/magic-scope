@@ -1,0 +1,28 @@
+{
+  "id": "context-menu",
+  "name": "ContextMenu",
+  "description": "右键菜单(旗舰深度)。右键(contextmenu)在包裹区域弹出,定位光标处(越界自动夹回视口,纯函数 logic.ts),portal 到 body;点选/点外/Esc/滚动关闭;↑↓/Home/End/Enter/typeahead 键盘可达,role=menu/menuitem/menuitemcheckbox/menuitemradio。复用 Menu 的 MenuItem 与 logic(item/separator/group + icon/shortcut/checked/href),tone 7 色调只读 6 槽位 + 辉光。事件全留口:包裹区 onContextMenu(可 preventDefault 拦截打开)+ onOpen(带坐标)、受控 open/onOpenChange 双通道、菜单级 onSelect、可拦截 onEscapeKeyDown/onPointerDownOutside;包裹根与浮层根透传原生属性(...rest / overlayProps),classNames / renderItem 定制。区别于点击锚定展开的 Menu。",
+  "category": "overlay",
+  "tags": [
+    "context-menu",
+    "right-click",
+    "menu",
+    "overlay",
+    "cursor",
+    "tone",
+    "typeahead",
+    "controllable",
+    "portal",
+    "keyboard"
+  ],
+  "status": "stable",
+  "version": "0.0.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-25",
+    "requirements": "补齐弹窗体系:右键菜单。原创实现,与点击锚定的 Menu 不重复——由 contextmenu 事件触发、定位在鼠标光标处(夹回视口),复用 Menu 的项结构与 .ms-menu__item 样式;点外/Esc/滚动关闭,键盘方向键可达。旗舰补强:复用 Menu MenuItem/logic(separator/group/icon/shortcut/checked/href + typeahead)、接 tone、事件全留口(onContextMenu 可拦截 / onOpen 带坐标 / onOpenChange 受控双通道 / onSelect / onEscapeKeyDown / onPointerDownOutside)、包裹根与浮层透传原生属性、classNames/renderItem。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["ContextMenu.tsx", "ContextMenu.css", "logic.ts", "index.ts"]
+}

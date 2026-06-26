@@ -1,0 +1,147 @@
+/* —— List 基座:列表排版旗舰(category: typography)——
+ * 三形态(ul / ol / dl)、原生 + 自定义标记、间距密度、tone 着色 ::marker、魔法辉光。
+ * 间距走 var(--ms-space-*) × var(--ms-density-scale)(密度闭环);着色读 tone 槽位 --ms-c。
+ * 内容边界:max-inline-size:100% + overflow-wrap,超长项不撑破容器。需引入 styles.css。 */
+
+.ms-list {
+  /* 间距档由修饰类注入(下面 spacing-* 设 --ms-list-gap),随密度缩放 */
+  --ms-list-gap: calc(var(--ms-list-gap-base, 0.5em) * var(--ms-density-scale, 1));
+  margin: 0;
+  padding: 0;
+  max-inline-size: 100%;
+  color: inherit;
+  list-style-position: outside;
+}
+
+/* —— 三形态根标签 —— */
+.ms-list--unordered,
+.ms-list--ordered {
+  /* 标记类型由 inline --ms-list-marker-type 注入(disc / decimal / lower-roman…) */
+  list-style-type: var(--ms-list-marker-type, disc);
+  /* 标记缩进:给标记留一道逻辑内边距(outside 模式标记落在内容框外) */
+  padding-inline-start: 1.5em;
+}
+
+.ms-list--description {
+  list-style: none;
+  padding: 0;
+}
+
+/* —— 标记位置 —— */
+.ms-list--marker-inside {
+  list-style-position: inside;
+  padding-inline-start: 0;
+}
+
+/* —— 列表项 —— */
+.ms-list__item {
+  margin: 0;
+  /* 项与项的间距(首项不叠加) */
+  overflow-wrap: anywhere;
+}
+.ms-list__item + .ms-list__item {
+  margin-block-start: var(--ms-list-gap);
+}
+
+/* 嵌套子列表:与父项的上间距对齐档位,且子列表标记/间距独立(不向下穿透) */
+.ms-list__item > .ms-list {
+  margin-block-start: var(--ms-list-gap);
+}
+
+/* —— 间距档(设 --ms-list-gap-base,由基座 × 密度) —— */
+.ms-list--spacing-none {
+  --ms-list-gap-base: 0em;
+}
+.ms-list--spacing-xs {
+  --ms-list-gap-base: 0.25em;
+}
+.ms-list--spacing-sm {
+  --ms-list-gap-base: 0.4em;
+}
+.ms-list--spacing-md {
+  --ms-list-gap-base: 0.6em;
+}
+.ms-list--spacing-lg {
+  --ms-list-gap-base: 1em;
+}
+
+/* —— 自定义标记容器(marker 为 ReactNode 时由 List.Item 渲染的标记列)——
+ * 先声明低特异性的 .ms-list__marker 基础态,再到下面的高特异性 ::marker 规则(避免降序覆盖)。 */
+.ms-list__marker {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  color: var(--ms-c, currentcolor);
+  /* 标记与首行基线对齐:用 line-height 贴合正文 */
+  line-height: var(--ms-leading-normal, 1.5);
+}
+.ms-list__content {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+/* 魔法辉光:自定义标记用 text-shadow(原生 ::marker 不支持阴影,只能改色)。
+ * 受全局 --ms-fx-glow 调制;data-ms-fx=off 时彻底去辉光。 */
+.ms-list--glow .ms-list__marker {
+  color: var(--ms-c);
+  text-shadow: 0 0 calc(0.4em * var(--ms-fx-glow, 1)) var(--ms-c-glow);
+}
+[data-ms-fx="off"] .ms-list--glow .ms-list__marker {
+  text-shadow: none;
+}
+
+/* —— 自定义标记布局(list-style:none + 标记列 / 内容列对齐)—— */
+.ms-list--custom-marker {
+  list-style: none;
+  padding-inline-start: 0;
+}
+.ms-list--custom-marker > .ms-list__item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: baseline;
+  column-gap: 0.5em;
+}
+/* inside 模式下自定义标记不另起列,随首行内嵌 */
+.ms-list--custom-marker.ms-list--marker-inside > .ms-list__item {
+  display: list-item;
+}
+.ms-list--custom-marker.ms-list--marker-inside .ms-list__marker {
+  margin-inline-end: 0.4em;
+}
+
+/* —— tone / glow 着色原生 ::marker(项目符号 / 序号):放在最后(伪元素特异性更高)—— */
+.ms-list--toned > .ms-list__item::marker,
+.ms-list--toned > li::marker,
+.ms-list--glow > .ms-list__item::marker,
+.ms-list--glow > li::marker {
+  color: var(--ms-c);
+}
+
+/* —— 描述列表 dl —— */
+.ms-list__term {
+  margin: 0;
+  font-weight: var(--ms-font-weight-semibold, 600);
+  color: var(--ms-color-fg, currentcolor);
+  overflow-wrap: anywhere;
+}
+.ms-list--toned .ms-list__term {
+  color: var(--ms-c);
+}
+.ms-list__detail {
+  margin: 0;
+  margin-inline-start: 0;
+  color: var(--ms-color-fg-muted, inherit);
+  overflow-wrap: anywhere;
+}
+/* dt 与上一个 dd 的间距(成组的 term/detail 之间留行距) */
+.ms-list--description .ms-list__detail + .ms-list__term {
+  margin-block-start: var(--ms-list-gap);
+}
+.ms-list--description .ms-list__term + .ms-list__detail {
+  margin-block-start: calc(var(--ms-list-gap) * 0.4);
+}
+/* 缩进 dd,形成术语 → 释义的层级感 */
+.ms-list--description .ms-list__detail {
+  padding-inline-start: 1em;
+}

@@ -88,6 +88,89 @@
   </label>
 </div>
 
+### Radio
+
+<div class="ms-demo">
+  <div class="ms-radio-group ms-radio-group--vertical" role="radiogroup" aria-label="套餐(纵向)">
+    <label class="ms-radio">
+      <input type="radio" name="demo-plan" value="free" class="ms-radio__input" checked />
+      <span class="ms-radio__control" aria-hidden="true"></span>
+      <span class="ms-radio__label">Free</span>
+    </label>
+    <label class="ms-radio">
+      <input type="radio" name="demo-plan" value="pro" class="ms-radio__input" />
+      <span class="ms-radio__control" aria-hidden="true"></span>
+      <span class="ms-radio__label">Pro</span>
+    </label>
+    <label class="ms-radio">
+      <input type="radio" name="demo-plan" value="ent" class="ms-radio__input" disabled />
+      <span class="ms-radio__control" aria-hidden="true"></span>
+      <span class="ms-radio__label">Enterprise(禁用)</span>
+    </label>
+  </div>
+
+  <div class="ms-radio-group ms-radio-group--horizontal" role="radiogroup" aria-label="尺码(横向 + 尺寸档)">
+    <label class="ms-radio ms-radio--sm">
+      <input type="radio" name="demo-size" value="s" class="ms-radio__input" />
+      <span class="ms-radio__control" aria-hidden="true"></span>
+      <span class="ms-radio__label">小(sm)</span>
+    </label>
+    <label class="ms-radio">
+      <input type="radio" name="demo-size" value="m" class="ms-radio__input" checked />
+      <span class="ms-radio__control" aria-hidden="true"></span>
+      <span class="ms-radio__label">中(md)</span>
+    </label>
+    <label class="ms-radio ms-radio--lg">
+      <input type="radio" name="demo-size" value="l" class="ms-radio__input" />
+      <span class="ms-radio__control" aria-hidden="true"></span>
+      <span class="ms-radio__label">大(lg)</span>
+    </label>
+  </div>
+</div>
+
+### Slider
+
+<div class="ms-demo" style="flex-direction: column; align-items: stretch; gap: var(--ms-space-5); max-inline-size: 22rem;">
+  <span class="ms-slider ms-slider--sm" style="--ms-slider-pct: 25%;">
+    <input type="range" class="ms-slider__input" min="0" max="100" value="25" aria-label="sm 滑块" />
+  </span>
+  <span class="ms-slider" style="--ms-slider-pct: 60%;">
+    <input type="range" class="ms-slider__input" min="0" max="100" value="60" aria-label="md 滑块" />
+    <output class="ms-slider__value">60</output>
+  </span>
+  <span class="ms-slider ms-slider--lg" style="--ms-slider-pct: 80%;">
+    <input type="range" class="ms-slider__input" min="0" max="100" value="80" aria-label="lg 滑块" />
+  </span>
+  <span class="ms-slider" style="--ms-slider-pct: 40%;">
+    <input type="range" class="ms-slider__input" min="0" max="100" value="40" aria-label="禁用滑块" disabled />
+  </span>
+</div>
+
+### NumberInput
+
+<div class="ms-demo">
+  <div class="ms-number-input ms-number-input--sm">
+    <button type="button" class="ms-number-input__step ms-number-input__step--dec" aria-label="减少" tabindex="-1"><span aria-hidden="true">−</span></button>
+    <input type="number" class="ms-number-input__field" value="2" aria-label="数量 sm" />
+    <button type="button" class="ms-number-input__step ms-number-input__step--inc" aria-label="增加" tabindex="-1"><span aria-hidden="true">+</span></button>
+  </div>
+  <div class="ms-number-input">
+    <button type="button" class="ms-number-input__step ms-number-input__step--dec" aria-label="减少" tabindex="-1"><span aria-hidden="true">−</span></button>
+    <input type="number" class="ms-number-input__field" value="8" aria-label="数量 md" />
+    <button type="button" class="ms-number-input__step ms-number-input__step--inc" aria-label="增加" tabindex="-1"><span aria-hidden="true">+</span></button>
+  </div>
+  <div class="ms-number-input ms-number-input--lg">
+    <button type="button" class="ms-number-input__step ms-number-input__step--dec" aria-label="减少" tabindex="-1"><span aria-hidden="true">−</span></button>
+    <input type="number" class="ms-number-input__field" value="20" aria-label="数量 lg" />
+    <button type="button" class="ms-number-input__step ms-number-input__step--inc" aria-label="增加" tabindex="-1"><span aria-hidden="true">+</span></button>
+  </div>
+  <div class="ms-number-input ms-number-input--disabled">
+    <button type="button" class="ms-number-input__step ms-number-input__step--dec" aria-label="减少" tabindex="-1" disabled><span aria-hidden="true">−</span></button>
+    <input type="number" class="ms-number-input__field" value="5" aria-label="禁用" disabled />
+    <button type="button" class="ms-number-input__step ms-number-input__step--inc" aria-label="增加" tabindex="-1" disabled><span aria-hidden="true">+</span></button>
+  </div>
+</div>
+
 ### Label
 
 <div class="ms-demo">
@@ -196,6 +279,41 @@
   </span>
 </div>
 
+### Timeline
+
+<div class="ms-demo">
+  <ol class="ms-timeline" style="max-inline-size: 26rem;">
+    <li class="ms-timeline__item ms-timeline__item--success">
+      <div class="ms-timeline__node" aria-hidden="true"><span class="ms-timeline__dot"></span></div>
+      <div class="ms-timeline__content">
+        <div class="ms-timeline__header"><span class="ms-timeline__title">部署上线</span><time class="ms-timeline__time">10:00</time></div>
+        <div class="ms-timeline__body">已发布到生产环境,健康检查通过。</div>
+      </div>
+    </li>
+    <li class="ms-timeline__item ms-timeline__item--primary">
+      <div class="ms-timeline__node" aria-hidden="true"><span class="ms-timeline__dot"></span></div>
+      <div class="ms-timeline__content">
+        <div class="ms-timeline__header"><span class="ms-timeline__title">合并 PR #128</span><time class="ms-timeline__time">09:42</time></div>
+        <div class="ms-timeline__body">设备适配 P1:浮层抽屉 + Table 卡片化。</div>
+      </div>
+    </li>
+    <li class="ms-timeline__item ms-timeline__item--warning">
+      <div class="ms-timeline__node" aria-hidden="true"><span class="ms-timeline__icon">!</span></div>
+      <div class="ms-timeline__content">
+        <div class="ms-timeline__header"><span class="ms-timeline__title">CI 重试一次</span><time class="ms-timeline__time">09:30</time></div>
+        <div class="ms-timeline__body">flaky 测试触发重跑,第二次通过。</div>
+      </div>
+    </li>
+    <li class="ms-timeline__item">
+      <div class="ms-timeline__node" aria-hidden="true"><span class="ms-timeline__dot"></span></div>
+      <div class="ms-timeline__content">
+        <div class="ms-timeline__header"><span class="ms-timeline__title">提交代码</span><time class="ms-timeline__time">09:12</time></div>
+        <div class="ms-timeline__body">默认变体(中性节点)。</div>
+      </div>
+    </li>
+  </ol>
+</div>
+
 ## 布局 Layout
 
 ### Card
@@ -285,5 +403,63 @@
   <div class="ms-skeleton ms-skeleton--rect" style="block-size: 6rem"></div>
   <div class="ms-skeleton ms-skeleton--text"></div>
   <div class="ms-skeleton ms-skeleton--text" style="inline-size: 80%"></div>
+</div>
+
+### Toast
+
+命令式调用:`toast('已保存')` / `toast.success(...)` / `toast.error(...)`,在应用根挂一个 `<Toaster />`。下面是各变体的静态外观示意(真实弹出与自动消失见 playground)。
+
+<div class="ms-demo" style="flex-direction: column; align-items: stretch; gap: var(--ms-space-3); max-inline-size: 24rem;">
+  <div class="ms-toast ms-toast--default" role="status">
+    <div class="ms-toast__content">
+      <p class="ms-toast__message">已保存 ✦</p>
+    </div>
+    <button type="button" class="ms-toast__close" aria-label="关闭"><span aria-hidden="true">×</span></button>
+  </div>
+  <div class="ms-toast ms-toast--success" role="status">
+    <div class="ms-toast__content">
+      <p class="ms-toast__message">操作成功</p>
+      <p class="ms-toast__description">你的改动已同步到云端。</p>
+    </div>
+    <button type="button" class="ms-toast__close" aria-label="关闭"><span aria-hidden="true">×</span></button>
+  </div>
+  <div class="ms-toast ms-toast--danger" role="alert">
+    <div class="ms-toast__content">
+      <p class="ms-toast__message">出错了</p>
+      <p class="ms-toast__description">无法连接服务器,请稍后重试。</p>
+    </div>
+    <button type="button" class="ms-toast__action">重试</button>
+    <button type="button" class="ms-toast__close" aria-label="关闭"><span aria-hidden="true">×</span></button>
+  </div>
+  <div class="ms-toast ms-toast--warning" role="alert">
+    <div class="ms-toast__content">
+      <p class="ms-toast__message">已删除 1 项</p>
+    </div>
+    <button type="button" class="ms-toast__action">撤销</button>
+    <button type="button" class="ms-toast__close" aria-label="关闭"><span aria-hidden="true">×</span></button>
+  </div>
+</div>
+
+### AlertDialog(confirm / alert)
+
+命令式调用:`await confirm('确定删除?', { variant: 'danger' })` 返回 `Promise<boolean>`,`alert('提示')` 返回 `Promise<void>`,在应用根挂一个 `<AlertDialogHost />`。下面是面板的静态外观示意(真实弹出见 playground)。
+
+<div class="ms-demo" style="gap: var(--ms-space-4); align-items: flex-start;">
+  <div class="ms-alert-dialog__panel" style="max-inline-size: 22rem;">
+    <h2 class="ms-alert-dialog__title">保存更改?</h2>
+    <div class="ms-alert-dialog__message">你有未保存的更改,离开前是否保存?</div>
+    <div class="ms-alert-dialog__actions">
+      <button type="button" class="ms-button ms-button--ghost ms-button--md">取消</button>
+      <button type="button" class="ms-button ms-button--solid ms-button--md ms-alert-dialog__confirm">保存</button>
+    </div>
+  </div>
+  <div class="ms-alert-dialog__panel ms-alert-dialog__panel--danger" style="max-inline-size: 22rem;">
+    <h2 class="ms-alert-dialog__title">删除该项?</h2>
+    <div class="ms-alert-dialog__message">此操作不可撤销,确定删除吗?</div>
+    <div class="ms-alert-dialog__actions">
+      <button type="button" class="ms-button ms-button--ghost ms-button--md">再想想</button>
+      <button type="button" class="ms-button ms-button--solid ms-button--md ms-alert-dialog__confirm">删除</button>
+    </div>
+  </div>
 </div>
 

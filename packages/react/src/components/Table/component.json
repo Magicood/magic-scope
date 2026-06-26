@@ -1,17 +1,35 @@
 {
   "id": "table",
   "name": "Table",
-  "description": "基础数据表格:列定义 + 行数据驱动,支持斑马纹与行 hover 高亮,圆角描边外框与横向 overflow,采用逻辑属性。",
+  "description": "数据表格(旗舰深度):列定义 + 行数据驱动(泛型 T)。排序(受控/非受控、三态 + aria-sort)、行选择(全选三态 indeterminate + onSelect/onSelectAll 细分回调)、可展开行(rowRender + expandedKeys 受控/非受控 + onExpandedChange)、列固定(fixed left/right sticky)、行高三档密度(size sm/md/lg × token 密度)、汇总/页脚行(summary + column.renderSummary / footer)、空态/加载态(Spinner 遮罩淡入+微模糊 + 骨架行 + aria-busy)、粘性表头、列对齐/自定义 render、斑马纹、行 hover 高亮。接全库 tone resolver(选中行/hover 强调条/排序箭头读 6 槽位);魔法动效:行 stagger 进场、排序箭头脉冲、选中行 inset glow(fx/motion 可一键降级)。行级事件 onRowClick/onRowDoubleClick/onRowContextMenu + Ant 式 onRow 工厂;根 wrap spread ...rest 透传所有原生属性/事件,classNames 注入关键子部件类名。新能力默认关闭,旧 columns/data 用法零改动。逻辑属性、设备适配。",
   "category": "data-display",
-  "tags": ["table", "data-display", "data-table", "grid", "stripe", "hoverable", "react", "arcane"],
+  "tags": [
+    "table",
+    "data-display",
+    "data-table",
+    "grid",
+    "sort",
+    "selection",
+    "expandable",
+    "fixed-column",
+    "summary",
+    "tone",
+    "density",
+    "sticky",
+    "loading",
+    "empty",
+    "stripe",
+    "row-events",
+    "react"
+  ],
   "status": "stable",
   "version": "0.1.0",
   "frameworks": ["react"],
   "source": {
     "type": "original",
     "capturedAt": "2026-06-25",
-    "requirements": "基础数据表格:列定义 + 行数据驱动,支持斑马纹与行 hover 高亮,圆角描边外框与横向 overflow,采用逻辑属性。。magic-scope 结构/导航组件:自研、消费 tokens,完整状态、键盘可达、fx/motion 开关、逻辑属性。"
+    "requirements": "数据表格:列定义 + 行数据驱动,支持排序/行选择/可展开行/列固定/行高密度/汇总行,斑马纹与行 hover 高亮,圆角描边外框与横向 overflow,采用逻辑属性。magic-scope 数据展示组件:自研、消费 tokens,接 tone resolver 6 槽位、魔法动效(行 stagger 进场/排序脉冲/选中 inset glow)、完整状态、键盘可达、fx/motion 开关、i18n 文案、行级事件留口与 ...rest 透传、逻辑属性、设备适配。"
   },
   "dependencies": ["@magic-scope/tokens"],
-  "files": ["Table.tsx", "Table.css", "index.ts"]
+  "files": ["Table.tsx", "Table.css", "useTableSort.ts", "useTableExpand.ts", "index.ts"]
 }

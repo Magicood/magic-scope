@@ -1,4 +1,14 @@
+/* —— Divider —— 分隔线。两条渲染路径:无内容 <hr> / 有内容 .ms-divider--labeled。
+ * 线色 / 微光统一读 tone 6 槽位(--ms-c / --ms-c-glow);neutral 时回落到更克制的 border 色。
+ * thickness / spacing 经 --ms-divider-* 自定义属性注入(由 .tsx 解析 token 关键字)。 */
+
 .ms-divider {
+  /* 线色:默认读 tone 主色;neutral 下覆盖为 border 色(见下),保持「分隔不抢眼」 */
+  --ms-divider-color: var(--ms-c);
+  --ms-divider-glow: var(--ms-c-glow);
+  /* 兜底:thickness / spacing 未注入时的默认值 */
+  --ms-divider-thickness: 1px;
+  --ms-divider-spacing: 0px;
   border: 0;
   margin: 0;
   transition:
@@ -6,25 +16,33 @@
     box-shadow var(--ms-dur-base) var(--ms-ease-standard);
 }
 
+/* neutral(默认 tone):线用 border 色,微光仍用全局 glow —— 克制、不抢视觉 */
+.ms-divider.ms-tone-neutral {
+  --ms-divider-color: var(--ms-color-border);
+  --ms-divider-glow: var(--ms-color-glow);
+}
+
 /* —— horizontal:横跨容器,上边框成线 —— */
 .ms-divider--horizontal {
   inline-size: 100%;
+  max-inline-size: 100%;
   block-size: 0;
-  border-block-start: 1px solid var(--ms-color-border);
+  border-block-start: var(--ms-divider-thickness) solid var(--ms-divider-color);
+  margin-block: var(--ms-divider-spacing);
   /* 奥术微光:沿线方向的渐变点缀,中段微亮、两端隐入 */
   background-image: linear-gradient(
     90deg,
     transparent,
-    var(--ms-color-border) 18%,
-    var(--ms-color-glow) 50%,
-    var(--ms-color-border) 82%,
+    var(--ms-divider-color) 18%,
+    var(--ms-divider-glow) 50%,
+    var(--ms-divider-color) 82%,
     transparent
   );
   background-repeat: no-repeat;
   background-position: center;
-  background-size: 100% 1px;
+  background-size: 100% var(--ms-divider-thickness);
   /* idle 微光:由 --ms-fx-glow 控制强度,可整体关闭 */
-  box-shadow: 0 0 calc(6px * var(--ms-fx-glow, 1)) -3px var(--ms-color-glow);
+  box-shadow: 0 0 calc(6px * var(--ms-fx-glow, 1)) -3px var(--ms-divider-glow);
 }
 
 /* —— vertical:行内,贴满高度,起始侧边框成线 —— */
@@ -33,19 +51,144 @@
   block-size: 100%;
   inline-size: 0;
   vertical-align: middle;
-  border-inline-start: 1px solid var(--ms-color-border);
+  border-inline-start: var(--ms-divider-thickness) solid var(--ms-divider-color);
+  margin-inline: var(--ms-divider-spacing);
   /* 奥术微光:沿线方向的渐变点缀,中段微亮、两端隐入 */
   background-image: linear-gradient(
     180deg,
     transparent,
-    var(--ms-color-border) 18%,
-    var(--ms-color-glow) 50%,
-    var(--ms-color-border) 82%,
+    var(--ms-divider-color) 18%,
+    var(--ms-divider-glow) 50%,
+    var(--ms-divider-color) 82%,
     transparent
   );
   background-repeat: no-repeat;
   background-position: center;
-  background-size: 1px 100%;
+  background-size: var(--ms-divider-thickness) 100%;
   /* idle 微光:由 --ms-fx-glow 控制强度,可整体关闭 */
-  box-shadow: 0 0 calc(6px * var(--ms-fx-glow, 1)) -3px var(--ms-color-glow);
+  box-shadow: 0 0 calc(6px * var(--ms-fx-glow, 1)) -3px var(--ms-divider-glow);
+}
+
+/* —— 线型:虚线 / 点线(对 <hr> 路径生效;labeled 路径在伪线上另设) —— */
+.ms-divider--horizontal.ms-divider--dashed,
+.ms-divider--horizontal.ms-divider--dotted,
+.ms-divider--vertical.ms-divider--dashed,
+.ms-divider--vertical.ms-divider--dotted {
+  /* 虚 / 点线用边框承载,关掉渐变背景(渐变只为实线微光服务) */
+  background-image: none;
+}
+.ms-divider--horizontal.ms-divider--dashed,
+.ms-divider--vertical.ms-divider--dashed {
+  border-style: dashed;
+}
+.ms-divider--horizontal.ms-divider--dotted,
+.ms-divider--vertical.ms-divider--dotted {
+  border-style: dotted;
+}
+
+/* —— labeled:有内容,两侧画线 + 中间文字(始终水平) —— */
+.ms-divider--labeled {
+  display: flex;
+  align-items: center;
+  inline-size: 100%;
+  max-inline-size: 100%;
+  /* 重置 <hr> 残留 */
+  block-size: auto;
+  background-image: none;
+  box-shadow: none;
+  border: 0;
+  margin-block: var(--ms-divider-spacing);
+  /* 文字与线之间的呼吸 */
+  gap: var(--ms-space-3);
+  color: var(--ms-color-fg-muted);
+  font-size: 0.875em;
+  line-height: 1.4;
+}
+
+/* 两侧线段:flex 撑开,用 border 画线、渐变兜微光 */
+.ms-divider__line {
+  flex: 1 1 0;
+  min-inline-size: 0;
+  block-size: 0;
+  border-block-start: var(--ms-divider-thickness) solid var(--ms-divider-color);
+  background-image: linear-gradient(
+    90deg,
+    transparent,
+    var(--ms-divider-color) 30%,
+    var(--ms-divider-glow) 70%
+  );
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100% var(--ms-divider-thickness);
+  box-shadow: 0 0 calc(5px * var(--ms-fx-glow, 1)) -3px var(--ms-divider-glow);
+}
+/* 右侧线渐变方向镜像,让微光朝向文字中段 */
+.ms-divider__line + .ms-divider__content + .ms-divider__line {
+  background-image: linear-gradient(
+    270deg,
+    transparent,
+    var(--ms-divider-color) 30%,
+    var(--ms-divider-glow) 70%
+  );
+}
+
+/* labeled 的线型:虚 / 点线时关渐变、改 border-style */
+.ms-divider--labeled.ms-divider--dashed .ms-divider__line,
+.ms-divider--labeled.ms-divider--dotted .ms-divider__line {
+  background-image: none;
+  box-shadow: none;
+}
+.ms-divider--labeled.ms-divider--dashed .ms-divider__line {
+  border-style: dashed;
+}
+.ms-divider--labeled.ms-divider--dotted .ms-divider__line {
+  border-style: dotted;
+}
+
+/* 文字内容:不收缩、超长截断 */
+.ms-divider__content {
+  flex: 0 1 auto;
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  /* 非 neutral tone 时文字提色,贴合语义 */
+}
+.ms-divider--labeled:not(.ms-tone-neutral) .ms-divider__content {
+  color: var(--ms-c);
+  text-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) var(--ms-c-glow);
+}
+
+/* —— textAlign:偏置文字(收/放两侧线段的占比) —— */
+.ms-divider--align-start .ms-divider__line:first-child {
+  flex-grow: 0;
+  flex-basis: var(--ms-space-4);
+}
+.ms-divider--align-end .ms-divider__line:last-child {
+  flex-grow: 0;
+  flex-basis: var(--ms-space-4);
+}
+
+/* —— 发光总闸:data-ms-fx="off" 时清掉所有辉光,只留实线 —— */
+[data-ms-fx="off"] .ms-divider--horizontal,
+[data-ms-fx="off"] .ms-divider--vertical {
+  background-image: none;
+  box-shadow: none;
+}
+[data-ms-fx="off"] .ms-divider__line {
+  background-image: none;
+  box-shadow: none;
+}
+[data-ms-fx="off"] .ms-divider--labeled:not(.ms-tone-neutral) .ms-divider__content {
+  text-shadow: none;
+}
+
+/* —— 动效降级:Divider 无入场动画,仅压缩颜色 / 阴影过渡时长 —— */
+@media (prefers-reduced-motion: reduce) {
+  .ms-divider {
+    transition-duration: 0.01ms;
+  }
+}
+[data-ms-motion="off"] .ms-divider {
+  transition-duration: 0.01ms;
 }

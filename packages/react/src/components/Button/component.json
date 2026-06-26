@@ -1,9 +1,9 @@
 {
   "id": "button",
   "name": "Button",
-  "description": "主操作按钮:solid / outline / ghost 变体 + 三档尺寸,solid 带奥术发光,完整状态与过渡",
+  "description": "主操作按钮(旗舰深度组件)。tone(6 语义色,经全库统一 resolver 派生)× variant(solid/soft/outline/ghost/link)× size(随 data-ms-density 缩放)+ loading(aria-busy/保宽/旋转环)、leftIcon/rightIcon/iconOnly、fullWidth、shape、实例级 glow、asChild 多态渲染。配套 ButtonGroup(吸附相邻按钮)。完整状态与过渡、tone 发光环、设备适配。",
   "category": "actions",
-  "tags": ["button", "action", "form"],
+  "tags": ["button", "button-group", "action", "form", "tone", "loading", "icon", "as-child"],
   "status": "stable",
   "version": "0.1.0",
   "frameworks": ["react"],

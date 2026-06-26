@@ -1,0 +1,32 @@
+{
+  "id": "heading",
+  "name": "Heading",
+  "description": "h1–h6 语义标题,视觉与语义解耦(level 定标签 / variant 定视觉档:display·title·subtitle·overline·caption)。复用 Text 的字族·tone·字重·对齐·截断·折行(默认 balance 均衡)·魔法渐变与辉光;支持 anchor 永久链接(hover 浮出 # permalink,自动派生可读 slug,CJK 友好)。",
+  "category": "typography",
+  "tags": [
+    "heading",
+    "title",
+    "typography",
+    "h1-h6",
+    "semantic",
+    "variant",
+    "anchor",
+    "permalink",
+    "prose",
+    "polymorphic",
+    "gradient",
+    "glow",
+    "balance",
+    "magic"
+  ],
+  "status": "draft",
+  "version": "0.0.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-26",
+    "requirements": "生产级 typography 标题组件。要求:level(1-6) 定语义 hN 标签;variant 视觉档(display/title/subtitle/overline/caption,MUI 式视觉与语义解耦);复用 Text 的 family(display=Cinzel 魔法标题)/tone/weight/align/truncate/lineClamp/wrap(默认 balance 标题均衡)/gradient/glow;新增 anchor(boolean|string)——hover 出现 # permalink 锚点(给文档/Prose 用,带 id + 可点 # 链接,a11y)。内部复用 typography.css token 与 ms-text 同款类。对标旗舰 Button/Input/Text 的留口范式(forwardRef/...rest 透传/as/asChild/classNames/composeEventHandlers)。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Heading.tsx", "Heading.css", "logic.ts", "index.ts"]
+}

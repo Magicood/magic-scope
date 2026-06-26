@@ -1,5 +1,9 @@
 .ms-pagination {
-  display: block;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ms-space-3);
+  max-inline-size: 100%;
   font-family: var(--ms-font-sans);
 }
 
@@ -12,10 +16,26 @@
   margin: 0;
   padding: 0;
   list-style: none;
+  min-inline-size: 0;
 }
 
 .ms-pagination__item {
   display: inline-flex;
+  min-inline-size: 0;
+}
+
+/* —— 尺寸基准(随密度缩放),供按钮 / 省略号 / 控件统一引用 —— */
+.ms-pagination {
+  --ms-pg-min: calc(2.25rem * var(--ms-density-scale, 1));
+  --ms-pg-font: 0.95rem;
+}
+.ms-pagination--sm {
+  --ms-pg-min: calc(1.875rem * var(--ms-density-scale, 1));
+  --ms-pg-font: 0.85rem;
+}
+.ms-pagination--lg {
+  --ms-pg-min: calc(2.75rem * var(--ms-density-scale, 1));
+  --ms-pg-font: 1.05rem;
 }
 
 /* —— 通用按钮:幽灵态方块 —— */
@@ -23,8 +43,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-inline-size: 2.25rem;
-  block-size: 2.25rem;
+  min-inline-size: var(--ms-pg-min);
+  block-size: var(--ms-pg-min);
   padding-inline: var(--ms-space-2);
   appearance: none;
   background-color: transparent;
@@ -32,10 +52,11 @@
   border-radius: var(--ms-radius-md);
   color: var(--ms-color-fg-muted);
   font-family: inherit;
-  font-size: 0.95rem;
+  font-size: var(--ms-pg-font);
   font-weight: 600;
   font-variant-numeric: tabular-nums;
   line-height: 1;
+  text-decoration: none;
   cursor: pointer;
   user-select: none;
   transition:
@@ -56,29 +77,41 @@
   box-shadow:
     0 0 0 2px var(--ms-color-bg),
     0 0 0 4px var(--ms-color-focus-ring),
-    0 0 calc(12px * var(--ms-fx-glow, 1)) -2px var(--ms-color-glow);
+    0 0 calc(12px * var(--ms-fx-glow, 1)) -2px var(--ms-c-glow, var(--ms-color-glow));
 }
 
 .ms-pagination__btn:active:not(:disabled) {
   transform: scale(calc(1 - 0.04 * var(--ms-motion-scale, 1)));
 }
 
-.ms-pagination__btn:disabled {
+.ms-pagination__btn:disabled,
+.ms-pagination__btn[aria-disabled="true"] {
   cursor: not-allowed;
   opacity: 0.4;
 }
 
-/* —— 当前页:主色实底 + 奥术发光 —— */
+/* —— 当前页:主色实底 + 奥术发光(读 tone 6 槽位) —— */
 .ms-pagination__btn--current {
-  background-color: var(--ms-color-primary);
-  border-color: var(--ms-color-primary);
-  color: var(--ms-color-on-primary);
-  box-shadow: 0 0 calc(16px * var(--ms-fx-glow, 1)) -3px var(--ms-color-glow);
+  background-color: var(--ms-c, var(--ms-color-primary));
+  border-color: var(--ms-c, var(--ms-color-primary));
+  color: var(--ms-on-c, var(--ms-color-on-primary));
+  box-shadow: 0 0 calc(16px * var(--ms-fx-glow, 1)) -3px var(--ms-c-glow, var(--ms-color-glow));
   cursor: default;
 }
 
 .ms-pagination__btn--current:hover {
-  background-color: var(--ms-color-primary-hover);
+  background-color: var(--ms-c-hover, var(--ms-color-primary-hover));
+}
+
+/* —— 发光总闸关断 —— */
+[data-ms-fx="off"] .ms-pagination__btn--current,
+[data-ms-fx="off"] .ms-pagination__btn:focus-visible {
+  box-shadow:
+    0 0 0 2px var(--ms-color-bg),
+    0 0 0 4px var(--ms-color-focus-ring);
+}
+[data-ms-fx="off"] .ms-pagination__btn--current {
+  box-shadow: none;
 }
 
 /* —— 省略号 —— */
@@ -86,12 +119,22 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-inline-size: 2.25rem;
-  block-size: 2.25rem;
+  min-inline-size: var(--ms-pg-min);
+  block-size: var(--ms-pg-min);
   color: var(--ms-color-fg-subtle);
-  font-size: 0.95rem;
+  font-size: var(--ms-pg-font);
   letter-spacing: 0.1em;
   user-select: none;
+}
+
+/* —— 图标插槽(prevIcon / nextIcon / renderItem 图标) —— */
+.ms-pagination__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 1em;
+  block-size: 1em;
+  line-height: 1;
 }
 
 /* —— 上一页 / 下一页 箭头(纯 CSS 绘制) —— */
@@ -113,6 +156,137 @@
   margin-inline-end: 0.15rem;
 }
 
+/* —— simple 精简变体 —— */
+.ms-pagination__simple {
+  align-items: center;
+  gap: var(--ms-space-1);
+  padding-inline: var(--ms-space-2);
+  color: var(--ms-color-fg);
+  font-size: var(--ms-pg-font);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+.ms-pagination__simple-current {
+  color: var(--ms-c, var(--ms-color-primary));
+}
+.ms-pagination__simple-sep {
+  color: var(--ms-color-fg-subtle);
+}
+.ms-pagination__simple-total {
+  color: var(--ms-color-fg-muted);
+}
+
+/* —— 总数 / 区间文案 —— */
+.ms-pagination__total {
+  color: var(--ms-color-fg-muted);
+  font-size: var(--ms-pg-font);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* —— 每页条数选择器 —— */
+.ms-pagination__options {
+  display: inline-flex;
+  align-items: center;
+}
+.ms-pagination__size-select {
+  appearance: none;
+  min-block-size: var(--ms-pg-min);
+  padding-inline: var(--ms-space-2) calc(var(--ms-space-2) + 0.75rem);
+  border: 1px solid var(--ms-color-border);
+  border-radius: var(--ms-radius-md);
+  background-color: var(--ms-color-surface);
+  background-image:
+    linear-gradient(45deg, transparent 50%, currentColor 50%),
+    linear-gradient(135deg, currentColor 50%, transparent 50%);
+  background-position:
+    right calc(var(--ms-space-2) + 0.1rem) center,
+    right var(--ms-space-2) center;
+  background-size:
+    0.32rem 0.32rem,
+    0.32rem 0.32rem;
+  background-repeat: no-repeat;
+  color: var(--ms-color-fg);
+  font: inherit;
+  font-size: var(--ms-pg-font);
+  cursor: pointer;
+  transition:
+    border-color var(--ms-dur-fast) var(--ms-ease-standard),
+    box-shadow var(--ms-dur-base) var(--ms-ease-standard);
+}
+.ms-pagination__size-select:hover {
+  border-color: var(--ms-color-border-strong, var(--ms-color-border));
+}
+.ms-pagination__size-select:focus-visible {
+  outline: none;
+  border-color: var(--ms-c, var(--ms-color-focus-ring));
+  box-shadow:
+    0 0 0 3px color-mix(in oklch, var(--ms-c-glow, var(--ms-color-focus-ring)) 30%, transparent),
+    0 0 calc(14px * var(--ms-fx-glow, 1)) -6px var(--ms-c-glow, var(--ms-color-glow));
+}
+[data-ms-fx="off"] .ms-pagination__size-select:focus-visible {
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--ms-color-focus-ring) 30%, transparent);
+}
+
+/* —— 快速跳页 —— */
+.ms-pagination__jumper {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ms-space-2);
+  color: var(--ms-color-fg-muted);
+  font-size: var(--ms-pg-font);
+  white-space: nowrap;
+}
+.ms-pagination__jumper-label {
+  user-select: none;
+}
+.ms-pagination__jumper-input {
+  inline-size: 3.5rem;
+  min-block-size: var(--ms-pg-min);
+  padding-inline: var(--ms-space-2);
+  border: 1px solid var(--ms-color-border);
+  border-radius: var(--ms-radius-md);
+  background-color: var(--ms-color-surface);
+  color: var(--ms-color-fg);
+  font: inherit;
+  font-size: var(--ms-pg-font);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  transition:
+    border-color var(--ms-dur-fast) var(--ms-ease-standard),
+    box-shadow var(--ms-dur-base) var(--ms-ease-standard);
+}
+.ms-pagination__jumper-input:focus-visible {
+  outline: none;
+  border-color: var(--ms-c, var(--ms-color-focus-ring));
+  box-shadow:
+    0 0 0 3px color-mix(in oklch, var(--ms-c-glow, var(--ms-color-focus-ring)) 30%, transparent),
+    0 0 calc(14px * var(--ms-fx-glow, 1)) -6px var(--ms-c-glow, var(--ms-color-glow));
+}
+[data-ms-fx="off"] .ms-pagination__jumper-input:focus-visible {
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--ms-color-focus-ring) 30%, transparent);
+}
+
+/* —— 降级:reduced-motion / motion 总闸 关掉过渡与位移 —— */
+@media (prefers-reduced-motion: reduce) {
+  .ms-pagination__btn,
+  .ms-pagination__size-select,
+  .ms-pagination__jumper-input {
+    transition-duration: 0.01ms;
+  }
+  .ms-pagination__btn:active:not(:disabled) {
+    transform: none;
+  }
+}
+[data-ms-motion="off"] .ms-pagination__btn,
+[data-ms-motion="off"] .ms-pagination__size-select,
+[data-ms-motion="off"] .ms-pagination__jumper-input {
+  transition: none;
+}
+[data-ms-motion="off"] .ms-pagination__btn:active:not(:disabled) {
+  transform: none;
+}
+
 /* —— 触控适配:扩大命中区 + 拉大间距防误触,视觉保持不变 —— */
 @media (pointer: coarse) {
   .ms-pagination__list {
@@ -120,9 +294,11 @@
     row-gap: var(--ms-space-2);
   }
 
-  /* 隐形热区:视觉仍为 36px,命中区扩到 --ms-target-min */
+  /* 隐形热区:视觉仍按 size,命中区扩到 --ms-target-min */
   .ms-pagination__btn {
     position: relative;
+    min-inline-size: max(var(--ms-pg-min), var(--ms-target-min));
+    block-size: max(var(--ms-pg-min), var(--ms-target-min));
   }
 
   .ms-pagination__btn::before {
@@ -132,5 +308,10 @@
     inline-size: max(100%, var(--ms-target-min));
     block-size: max(100%, var(--ms-target-min));
     translate: -50% -50%;
+  }
+
+  .ms-pagination__size-select,
+  .ms-pagination__jumper-input {
+    min-block-size: max(var(--ms-pg-min), var(--ms-target-min));
   }
 }

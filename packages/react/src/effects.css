@@ -6,7 +6,8 @@
  * 在任意祖先(通常 <html> 或主题容器)设 data-ms-motion / data-ms-fx 即全局联动。 */
 :root {
   --ms-motion-scale: 1;
-  --ms-fx-glow: 1;
+  /* 装饰发光默认强度:0.6 为克制基线(此前 1 偏重)。data-ms-fx=full 可恢复满强度。 */
+  --ms-fx-glow: 0.6;
   --ms-dur-fast: calc(var(--ms-duration-fast, 120ms) * var(--ms-motion-scale));
   --ms-dur-base: calc(var(--ms-duration-base, 200ms) * var(--ms-motion-scale));
 }
@@ -18,6 +19,13 @@
   --ms-motion-scale: 0;
 }
 
+/* 发光强度三档:full 满强度 / subtle 更淡 / off 关闭(聚焦环不受影响,保可达性) */
+[data-ms-fx="full"] {
+  --ms-fx-glow: 1;
+}
+[data-ms-fx="subtle"] {
+  --ms-fx-glow: 0.3;
+}
 [data-ms-fx="off"] {
   --ms-fx-glow: 0;
 }

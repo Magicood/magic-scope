@@ -1,17 +1,27 @@
 {
   "id": "skeleton",
   "name": "Skeleton",
-  "description": "加载占位,surface-raised 底叠加奥术流光,支持 text/rect/circle 三形态。",
+  "description": "加载占位(旗舰深度):text/rect/circle 三形态 · 四档动画(shimmer/pulse/wave/none) · 便捷 width/height · 多行文本骨架(末行自动收窄) · 内容感知(loading+children 加载完显真实内容) · SkeletonText/SkeletonGroup 组合与预制模板 · asChild 多态。动效受 data-ms-motion 调档,发光受 data-ms-fx 门控,尊重 reduced-motion。",
   "category": "feedback",
-  "tags": ["skeleton", "loading", "placeholder", "shimmer", "feedback", "react"],
+  "tags": [
+    "skeleton",
+    "loading",
+    "placeholder",
+    "shimmer",
+    "pulse",
+    "wave",
+    "content-aware",
+    "feedback",
+    "react"
+  ],
   "status": "stable",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "frameworks": ["react"],
   "source": {
     "type": "original",
     "capturedAt": "2026-06-24",
-    "requirements": "加载占位,surface-raised 底叠加奥术流光,支持 text/rect/circle 三形态。。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-* 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion。"
+    "requirements": "加载占位,surface-raised 底叠加奥术流光。补强到生产级深度:四档动画受 motion 档调控(off 停静态 / subtle 放慢)、多行文本骨架末行收窄、便捷 width/height、内容感知 loading 切换真实内容、SkeletonText/SkeletonGroup 组合与头像+标题+正文预制模板、asChild 多态。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-* 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion。"
   },
   "dependencies": ["@magic-scope/tokens"],
-  "files": ["Skeleton.tsx", "Skeleton.css", "index.ts"]
+  "files": ["Skeleton.tsx", "Skeleton.css", "logic.ts", "index.ts"]
 }

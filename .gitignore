@@ -5,6 +5,9 @@ coverage/
 *.tsbuildinfo
 .DS_Store
 .turbo/
+
+# Claude Code agent 临时 worktree(隔离会话工作区,勿纳入主树/工具链)
+.claude/worktrees/
 docs/.vitepress/cache/
 docs/.vitepress/dist/
 

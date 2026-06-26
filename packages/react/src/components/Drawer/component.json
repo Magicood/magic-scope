@@ -1,0 +1,29 @@
+{
+  "id": "drawer",
+  "name": "Drawer",
+  "description": "侧边抽屉(旗舰深度)。基于原生 <dialog> + showModal()(焦点陷阱、Esc、::backdrop、top-layer)。受控 open + onOpenChange 双通道,四方向滑入(start/end/top/bottom),size 档位(sm/md/lg)控横/纵向尺寸,tone 语义色调读统一 6 槽位(focus 环 / 辉光)。可拦截的 Esc(onEscapeKeyDown)与点遮罩(onPointerDownOutside/onInteractOutside,preventDefault 阻止关闭,适配未保存表单二次确认)。header 整块或 title 头部(aria-labelledby 关联)、Footer 固定底栏(安全区避让)、可换 closeIcon / 隐藏关闭钮、classNames 各部件细粒度定制、asChild 替换 panel。点遮罩关闭、锁背景滚动、安全区避让、进出场滑动动画,尊重 reduced-motion 与 fx/motion 总闸。原生事件经 compose 转发不丢用户处理器。",
+  "category": "overlay",
+  "tags": [
+    "drawer",
+    "sidebar",
+    "panel",
+    "overlay",
+    "sheet",
+    "dialog",
+    "tone",
+    "footer",
+    "controlled",
+    "dismissable",
+    "accessible"
+  ],
+  "status": "stable",
+  "version": "0.0.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-25",
+    "requirements": "补齐弹窗体系:侧边抽屉。原创实现,与 Dialog 同构(原生 <dialog> showModal 白嫖焦点陷阱/Esc/top-layer),贴边定位 + 四方向滑入,内建头部/关闭、锁滚动、安全区。常用于移动导航、设置、详情面板。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Drawer.tsx", "Drawer.css", "index.ts"]
+}

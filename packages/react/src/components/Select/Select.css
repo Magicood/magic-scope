@@ -1,30 +1,42 @@
-/* —— Select trigger:外观贴近 Input —— */
+/* —— Select trigger:外观贴近 Input,高亮/发光读 tone 槽位(--ms-c*) —— */
 .ms-select {
   display: inline-flex;
   align-items: center;
   gap: var(--ms-space-2);
   inline-size: 100%;
+  /* 内容边界:shrink-to-fit 父容器下不漫出 */
+  max-inline-size: 100%;
   border: 1px solid var(--ms-color-border);
   border-radius: var(--ms-radius-md);
   background-color: var(--ms-color-surface);
   background-image: linear-gradient(
     180deg,
-    color-mix(in oklch, var(--ms-color-glow) 4%, transparent),
+    color-mix(in oklch, var(--ms-c-glow, var(--ms-color-glow)) 4%, transparent),
     transparent 60%
   );
   color: var(--ms-color-fg);
   font-family: var(--ms-font-sans);
   text-align: start;
   cursor: pointer;
-  box-shadow: inset 0 0 calc(12px * var(--ms-fx-glow, 1)) -10px var(--ms-color-glow);
+  box-shadow: inset 0 0 calc(12px * var(--ms-fx-glow, 1)) -10px
+    var(--ms-c-glow, var(--ms-color-glow));
   transition:
     border-color var(--ms-dur-fast) var(--ms-ease-standard),
     box-shadow var(--ms-dur-base) var(--ms-ease-standard),
     background-color var(--ms-dur-fast) var(--ms-ease-standard);
 }
 
+.ms-select__prefix {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  color: var(--ms-color-fg-muted);
+  user-select: none;
+}
+
 .ms-select__value {
   flex: 1 1 auto;
+  min-inline-size: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -44,28 +56,28 @@
 
 .ms-select--open .ms-select__arrow {
   transform: rotate(180deg);
-  color: var(--ms-color-primary);
+  color: var(--ms-c, var(--ms-color-primary));
 }
 
 .ms-select:hover:not(:disabled) {
   border-color: var(--ms-color-border-strong);
   box-shadow:
-    inset 0 0 calc(14px * var(--ms-fx-glow, 1)) -10px var(--ms-color-glow),
-    0 0 calc(14px * var(--ms-fx-glow, 1)) -8px var(--ms-color-glow);
+    inset 0 0 calc(14px * var(--ms-fx-glow, 1)) -10px var(--ms-c-glow, var(--ms-color-glow)),
+    0 0 calc(14px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow, var(--ms-color-glow));
 }
 
 .ms-select:focus-visible {
   outline: none;
-  border-color: var(--ms-color-primary);
+  border-color: var(--ms-c, var(--ms-color-primary));
   box-shadow:
-    0 0 0 3px color-mix(in oklch, var(--ms-color-focus-ring) 35%, transparent),
-    0 0 calc(16px * var(--ms-fx-glow, 1)) -6px var(--ms-color-glow),
-    inset 0 0 calc(18px * var(--ms-fx-glow, 1)) -12px var(--ms-color-primary);
+    0 0 0 3px color-mix(in oklch, var(--ms-c-glow, var(--ms-color-focus-ring)) 35%, transparent),
+    0 0 calc(16px * var(--ms-fx-glow, 1)) -6px var(--ms-c-glow, var(--ms-color-glow)),
+    inset 0 0 calc(18px * var(--ms-fx-glow, 1)) -12px var(--ms-c, var(--ms-color-primary));
 }
 
 /* 打开时 trigger 也保持高亮边框,呼应展开态 */
 .ms-select--open:not(:disabled) {
-  border-color: var(--ms-color-primary);
+  border-color: var(--ms-c, var(--ms-color-primary));
 }
 
 .ms-select:disabled {
@@ -75,21 +87,100 @@
   box-shadow: none;
 }
 
-/* —— 尺寸(逻辑属性,RTL 友好) —— */
+/* —— 行内清除钮(嵌在 button 内,用 role=button 的 span) —— */
+.ms-select__clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  border-radius: var(--ms-radius-sm);
+  color: var(--ms-color-fg-subtle);
+  font-size: 0.95rem;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    color var(--ms-dur-fast) var(--ms-ease-standard),
+    background-color var(--ms-dur-fast) var(--ms-ease-standard);
+}
+@media (hover: hover) {
+  .ms-select__clear:hover {
+    color: var(--ms-color-fg);
+    background: var(--ms-color-surface-sunken);
+  }
+}
+
+/* —— 多选 tag —— */
+.ms-select__tags {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ms-space-1);
+  overflow: hidden;
+}
+.ms-select__tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ms-space-1);
+  max-inline-size: 100%;
+  padding-block: 0.05rem;
+  padding-inline: var(--ms-space-2);
+  border-radius: var(--ms-radius-sm);
+  background: var(--ms-c-soft, color-mix(in oklch, var(--ms-color-primary) 16%, transparent));
+  color: var(--ms-c, var(--ms-color-primary));
+  font-size: 0.85em;
+  line-height: 1.4;
+}
+.ms-select__tag-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ms-select__tag-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  inline-size: 1rem;
+  block-size: 1rem;
+  padding: 0;
+  border: none;
+  border-radius: var(--ms-radius-sm);
+  background: transparent;
+  color: inherit;
+  font-size: 0.9em;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity var(--ms-dur-fast) var(--ms-ease-standard);
+}
+.ms-select__tag-remove:hover {
+  opacity: 1;
+}
+
+/* —— 尺寸(逻辑属性 + 随密度缩放) —— */
 .ms-select--sm {
-  block-size: 2rem;
+  min-block-size: calc(2rem * var(--ms-density-scale, 1));
   padding-inline: var(--ms-space-3);
   font-size: 0.833rem;
 }
 .ms-select--md {
-  block-size: 2.5rem;
+  min-block-size: calc(2.5rem * var(--ms-density-scale, 1));
   padding-inline: var(--ms-space-4);
   font-size: 1rem;
 }
 .ms-select--lg {
-  block-size: 3rem;
+  min-block-size: calc(3rem * var(--ms-density-scale, 1));
   padding-inline: var(--ms-space-4);
   font-size: 1.2rem;
+}
+
+/* 多选放 tag 时高度自适应,纵向留白 */
+.ms-select--multiple {
+  padding-block: var(--ms-space-1);
 }
 
 /* —— 浮层 listbox —— */
@@ -110,8 +201,8 @@
   overflow-y: auto;
   overscroll-behavior: contain;
   box-shadow:
-    0 24px 64px -24px rgb(0 0 0 / 0.7),
-    0 0 calc(40px * var(--ms-fx-glow, 1)) -16px var(--ms-color-glow);
+    0 24px 64px -24px rgb(0 0 0 / 0.45),
+    0 0 calc(40px * var(--ms-fx-glow, 1)) -16px var(--ms-c-glow, var(--ms-color-glow));
 
   /* 入场动画初值(收起态) */
   opacity: 0;
@@ -178,6 +269,47 @@
   }
 }
 
+/* —— 内联搜索框(searchable) —— */
+.ms-select__search {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 1;
+  padding-block-end: var(--ms-space-1);
+  margin-block-end: var(--ms-space-1);
+  background-color: var(--ms-color-surface-raised);
+  border-block-end: 1px solid var(--ms-color-border);
+}
+.ms-select__search-input {
+  inline-size: 100%;
+  padding-block: var(--ms-space-2);
+  padding-inline: var(--ms-space-2);
+  border: 1px solid var(--ms-color-border);
+  border-radius: var(--ms-radius-sm);
+  background-color: var(--ms-color-surface);
+  color: var(--ms-color-fg);
+  font: inherit;
+  font-size: 0.9em;
+}
+.ms-select__search-input:focus {
+  outline: none;
+  border-color: var(--ms-c, var(--ms-color-primary));
+  box-shadow: 0 0 0 2px
+    color-mix(in oklch, var(--ms-c-glow, var(--ms-color-focus-ring)) 30%, transparent);
+}
+.ms-select__search-input::placeholder {
+  color: var(--ms-color-fg-subtle);
+}
+
+/* —— 空态 / 加载态 —— */
+.ms-select__status {
+  padding-block: var(--ms-space-3);
+  padding-inline: var(--ms-space-2);
+  color: var(--ms-color-fg-subtle);
+  font-size: 0.9em;
+  text-align: center;
+  user-select: none;
+}
+
 /* —— option —— */
 .ms-select__option {
   display: flex;
@@ -194,19 +326,19 @@
     color var(--ms-dur-fast) var(--ms-ease-standard);
 }
 
-/* 键盘/指针高亮态 */
+/* 键盘/指针高亮态(读 tone 槽位) */
 .ms-select__option[data-active]:not(.ms-select__option--disabled) {
-  background-color: color-mix(in oklch, var(--ms-color-primary) 18%, transparent);
+  background-color: var(--ms-c-soft, color-mix(in oklch, var(--ms-color-primary) 18%, transparent));
   color: var(--ms-color-fg);
-  box-shadow: inset 0 0 calc(16px * var(--ms-fx-glow, 1)) -12px var(--ms-color-primary);
+  box-shadow: inset 0 0 calc(16px * var(--ms-fx-glow, 1)) -12px var(--ms-c, var(--ms-color-primary));
 }
 
-/* 选中态:打勾 + primary 高亮 */
+/* 选中态:打勾 + 主色高亮 */
 .ms-select__option--selected {
-  color: var(--ms-color-primary);
+  color: var(--ms-c, var(--ms-color-primary));
 }
 .ms-select__option--selected[data-active] {
-  color: var(--ms-color-primary-hover);
+  color: var(--ms-c-hover, var(--ms-color-primary-hover));
 }
 
 .ms-select__option--disabled {
@@ -220,7 +352,7 @@
   display: inline-flex;
   inline-size: 1rem;
   block-size: 1rem;
-  color: var(--ms-color-primary);
+  color: var(--ms-c, var(--ms-color-primary));
   opacity: 0;
   transform: scale(0.6);
   transition:
@@ -232,8 +364,31 @@
   transform: scale(1);
 }
 
-.ms-select__label {
+/* option 图标 */
+.ms-select__option-icon {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  color: var(--ms-color-fg-muted);
+}
+
+/* option 主体:label + 描述纵向排 */
+.ms-select__option-body {
   flex: 1 1 auto;
+  min-inline-size: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.ms-select__label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ms-select__description {
+  color: var(--ms-color-fg-subtle);
+  font-size: 0.82em;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -250,11 +405,15 @@
 
 /* —— 触控设备:抬高热区到目标尺寸(桌面精确指针不受影响) —— */
 @media (pointer: coarse) {
-  /* trigger:固定 block-size 改为下界,确保不低于触控目标 */
-  .ms-select--sm,
+  /* trigger:热区下界抬到触控目标 */
+  .ms-select--sm {
+    min-block-size: max(calc(2rem * var(--ms-density-scale, 1)), var(--ms-target-min));
+  }
   .ms-select--md {
-    block-size: auto;
-    min-block-size: var(--ms-target-min);
+    min-block-size: max(calc(2.5rem * var(--ms-density-scale, 1)), var(--ms-target-min));
+  }
+  .ms-select--lg {
+    min-block-size: max(calc(3rem * var(--ms-density-scale, 1)), var(--ms-target-min));
   }
 
   /* option:行高达标 + 纵向内边距加大,便于点按 */
@@ -273,4 +432,27 @@
   .ms-select__check {
     transition-duration: 0.01ms;
   }
+}
+
+/* 一键降级:data-ms-motion=off 关掉 listbox 进出场过渡(全库统一总闸)。
+   位移/缩放是装饰,瞬时切换不影响可用性。 */
+[data-ms-motion="off"] .ms-select,
+[data-ms-motion="off"] .ms-select__arrow,
+[data-ms-motion="off"] .ms-select__list,
+[data-ms-motion="off"] .ms-select__option,
+[data-ms-motion="off"] .ms-select__check {
+  transition-duration: 0.01ms;
+}
+
+/* fx 总闸:关断所有发光 */
+[data-ms-fx="off"] .ms-select,
+[data-ms-fx="off"] .ms-select:hover:not(:disabled),
+[data-ms-fx="off"] .ms-select:focus-visible,
+[data-ms-fx="off"] .ms-select__list,
+[data-ms-fx="off"] .ms-select__option[data-active] {
+  box-shadow: none;
+}
+[data-ms-fx="off"] .ms-select:focus-visible {
+  box-shadow: 0 0 0 3px
+    color-mix(in oklch, var(--ms-c-glow, var(--ms-color-focus-ring)) 35%, transparent);
 }

@@ -1,6 +1,11 @@
+/* —— 容器:带框的 affix 行(消费 tone 槽位做聚焦发光) —— */
 .ms-input {
-  display: block;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ms-space-2);
   inline-size: 100%;
+  /* 内容边界:shrink-to-fit 父容器下不漫出 */
+  max-inline-size: 100%;
   border: 1px solid var(--ms-color-border);
   border-radius: var(--ms-radius-md);
   background-color: var(--ms-color-surface);
@@ -18,75 +23,188 @@
     background-color var(--ms-dur-fast) var(--ms-ease-standard);
 }
 
-.ms-input::placeholder {
+/* —— 裸输入:透明铺满、无边框,边框/发光归容器 —— */
+.ms-input__field {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  inline-size: 100%;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+}
+.ms-input__field:focus {
+  outline: none;
+}
+.ms-input__field::placeholder {
   color: var(--ms-color-fg-subtle);
 }
 
-.ms-input:hover:not(:disabled) {
+.ms-input:hover:not(.ms-input--disabled):not(.ms-input--invalid) {
   border-color: var(--ms-color-border-strong);
   box-shadow:
     inset 0 0 calc(14px * var(--ms-fx-glow, 1)) -10px var(--ms-color-glow),
-    0 0 calc(14px * var(--ms-fx-glow, 1)) -8px var(--ms-color-glow);
+    0 0 calc(14px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow, var(--ms-color-glow));
 }
 
-.ms-input:focus-visible {
-  outline: none;
-  border-color: var(--ms-color-primary);
+/* 聚焦:焦点在内层 field,发光环由容器 :focus-within 承接;色调读 tone 槽位
+   (invalid 时组件挂 ms-tone-danger,--ms-c/--ms-c-glow 自动变 danger) */
+.ms-input:focus-within {
+  border-color: var(--ms-c, var(--ms-color-primary));
   box-shadow:
-    0 0 0 3px color-mix(in oklch, var(--ms-color-focus-ring) 35%, transparent),
-    0 0 calc(16px * var(--ms-fx-glow, 1)) -6px var(--ms-color-glow),
-    inset 0 0 calc(18px * var(--ms-fx-glow, 1)) -12px var(--ms-color-primary);
-}
-
-.ms-input:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
-  background-image: none;
-  box-shadow: none;
+    0 0 0 3px color-mix(in oklch, var(--ms-c-glow, var(--ms-color-focus-ring)) 35%, transparent),
+    0 0 calc(16px * var(--ms-fx-glow, 1)) -6px var(--ms-c-glow, var(--ms-color-glow)),
+    inset 0 0 calc(18px * var(--ms-fx-glow, 1)) -12px var(--ms-c, var(--ms-color-primary));
 }
 
 .ms-input--invalid {
   border-color: var(--ms-color-danger);
   box-shadow: inset 0 0 calc(12px * var(--ms-fx-glow, 1)) -10px var(--ms-color-danger);
 }
-.ms-input--invalid:focus-visible {
-  border-color: var(--ms-color-danger);
-  box-shadow:
-    0 0 0 3px color-mix(in oklch, var(--ms-color-danger) 35%, transparent),
-    0 0 calc(16px * var(--ms-fx-glow, 1)) -6px var(--ms-color-danger);
+
+.ms-input--disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  background-image: none;
+  box-shadow: none;
+}
+.ms-input--disabled .ms-input__field {
+  cursor: not-allowed;
 }
 
-/* —— 尺寸(逻辑属性,RTL 友好) —— */
+/* —— 框内前/后缀(图标 / 文字) —— */
+.ms-input__prefix,
+.ms-input__suffix {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  color: var(--ms-color-fg-muted);
+  user-select: none;
+}
+
+/* —— 字数 —— */
+.ms-input__count {
+  flex: 0 0 auto;
+  color: var(--ms-color-fg-subtle);
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  user-select: none;
+}
+
+/* —— 行内动作钮(清除 / 明文切换) —— */
+.ms-input__action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  inline-size: 1.5rem;
+  block-size: 1.5rem;
+  padding: 0;
+  border: none;
+  border-radius: var(--ms-radius-sm);
+  background: transparent;
+  color: var(--ms-color-fg-subtle);
+  font-size: 0.95rem;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    color var(--ms-dur-fast) var(--ms-ease-standard),
+    background-color var(--ms-dur-fast) var(--ms-ease-standard);
+}
+@media (hover: hover) {
+  .ms-input__action:hover {
+    color: var(--ms-color-fg);
+    background: var(--ms-color-surface-sunken);
+  }
+}
+.ms-input__action:focus-visible {
+  outline: 2px solid var(--ms-c, var(--ms-color-focus-ring));
+  outline-offset: 1px;
+}
+
+/* —— 尺寸(逻辑属性 + 随密度缩放;padding 给容器,field 齐平) —— */
 .ms-input--sm {
-  min-block-size: 2rem;
-  padding-block: var(--ms-space-1);
-  padding-inline: var(--ms-space-3);
+  min-block-size: calc(2rem * var(--ms-density-scale, 1));
+  padding-inline: var(--ms-space-2);
+  gap: var(--ms-space-1);
   font-size: 0.833rem;
 }
 .ms-input--md {
-  min-block-size: 2.5rem;
-  padding-block: var(--ms-space-2);
-  padding-inline: var(--ms-space-4);
+  min-block-size: calc(2.5rem * var(--ms-density-scale, 1));
+  padding-inline: var(--ms-space-3);
   font-size: 1rem;
 }
 .ms-input--lg {
-  min-block-size: 3rem;
-  padding-block: var(--ms-space-2);
+  min-block-size: calc(3rem * var(--ms-density-scale, 1));
   padding-inline: var(--ms-space-4);
   font-size: 1.2rem;
 }
 
-/* —— 触控:各档热区抬到 --ms-target-min;sm 字号抬到 ≥16px 防 iOS 聚焦缩放
-   (桌面精确指针不受影响,sm 仍是 0.833rem) —— */
+/* —— 触控:热区抬到 --ms-target-min;sm 字号抬到 ≥16px 防 iOS 聚焦缩放 —— */
 @media (pointer: coarse) {
   .ms-input--sm {
-    min-block-size: max(2rem, var(--ms-target-min));
+    min-block-size: max(calc(2rem * var(--ms-density-scale, 1)), var(--ms-target-min));
     font-size: max(16px, 0.833rem);
   }
   .ms-input--md {
-    min-block-size: max(2.5rem, var(--ms-target-min));
+    min-block-size: max(calc(2.5rem * var(--ms-density-scale, 1)), var(--ms-target-min));
   }
   .ms-input--lg {
-    min-block-size: max(3rem, var(--ms-target-min));
+    min-block-size: max(calc(3rem * var(--ms-density-scale, 1)), var(--ms-target-min));
   }
+}
+
+/* —— 框外拼接段(addonBefore / addonAfter) —— */
+.ms-input-group {
+  display: inline-flex;
+  align-items: stretch;
+  inline-size: 100%;
+  /* 内容边界:shrink-to-fit 父容器下不漫出 */
+  max-inline-size: 100%;
+}
+.ms-input-group > .ms-input {
+  border-radius: 0;
+  /* 内容边界:字段列可收缩,长 addon 才不撑破 group */
+  min-inline-size: 0;
+}
+.ms-input-group > .ms-input:focus-within {
+  position: relative;
+  z-index: 1;
+}
+.ms-input-group > .ms-input:first-child {
+  border-start-start-radius: var(--ms-radius-md);
+  border-end-start-radius: var(--ms-radius-md);
+}
+.ms-input-group > .ms-input:last-child {
+  border-start-end-radius: var(--ms-radius-md);
+  border-end-end-radius: var(--ms-radius-md);
+}
+.ms-input__addon {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  padding-inline: var(--ms-space-3);
+  background: var(--ms-color-surface-sunken);
+  border: 1px solid var(--ms-color-border);
+  color: var(--ms-color-fg-muted);
+  white-space: nowrap;
+  /* 内容边界:超长 addon 段封顶+省略,不撑破 group */
+  min-inline-size: 0;
+  max-inline-size: 40%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ms-input-group > .ms-input__addon:first-child {
+  border-start-start-radius: var(--ms-radius-md);
+  border-end-start-radius: var(--ms-radius-md);
+  border-inline-end: none;
+}
+.ms-input-group > .ms-input__addon:last-child {
+  border-start-end-radius: var(--ms-radius-md);
+  border-end-end-radius: var(--ms-radius-md);
+  border-inline-start: none;
+}
+.ms-input-group--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }

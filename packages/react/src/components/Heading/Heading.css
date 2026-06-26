@@ -1,0 +1,128 @@
+/* —— Heading:复用 .ms-text 基座(字重 var、selection、字族/对齐/截断/折行/魔法等全部同源),
+   本文件只补「标题专属」:浏览器默认 margin 重置、variant 视觉档、anchor permalink。 —— */
+
+.ms-heading {
+  /* 标题不继承 UA 的默认上下 margin(由布局/Prose 决定间距,组件自身不夹带),
+     但保留可被用户 style/className 覆盖 */
+  margin-block: 0;
+  /* 超长内容不撑破容器(内容边界硬约束) */
+  max-inline-size: 100%;
+  /* 标题默认更紧的行高;可被 leading 同款类或 style 覆盖 */
+  line-height: var(--ms-leading-tight);
+  /* 默认前景色(无 tone/color 时);tone/dimmed/gradient 各自的 ms-text--* 类会覆盖 */
+  color: var(--ms-color-fg);
+  text-wrap: balance;
+}
+
+/* —— 视觉档(与 level 解耦):字号/字重/字距/transform 的成套预设 —— */
+
+/* display:巨标题(英雄区) */
+.ms-heading--display {
+  font-size: var(--ms-type-step-6);
+  font-weight: var(--ms-text-weight, var(--ms-font-weight-bold));
+  letter-spacing: var(--ms-tracking-tight);
+  line-height: var(--ms-leading-none);
+}
+
+/* title:标准标题(章节) */
+.ms-heading--title {
+  font-size: var(--ms-type-step-4);
+  font-weight: var(--ms-text-weight, var(--ms-font-weight-bold));
+  letter-spacing: var(--ms-tracking-tight);
+  line-height: var(--ms-leading-tight);
+}
+
+/* subtitle:副标题(弱化、常配 title 之下) */
+.ms-heading--subtitle {
+  font-size: var(--ms-type-step-2);
+  font-weight: var(--ms-text-weight, var(--ms-font-weight-semibold));
+  letter-spacing: var(--ms-tracking-normal);
+  line-height: var(--ms-leading-snug);
+  color: var(--ms-color-fg-muted);
+}
+
+/* overline:全大写上标签(卡片小标题、栏目名) */
+.ms-heading--overline {
+  font-size: var(--ms-type-step--1);
+  font-weight: var(--ms-text-weight, var(--ms-font-weight-semibold));
+  letter-spacing: var(--ms-tracking-widest);
+  line-height: var(--ms-leading-snug);
+  text-transform: uppercase;
+  color: var(--ms-color-fg-muted);
+}
+
+/* caption:说明小字(图注、辅助标题) */
+.ms-heading--caption {
+  font-size: var(--ms-type-step-0);
+  font-weight: var(--ms-text-weight, var(--ms-font-weight-medium));
+  letter-spacing: var(--ms-tracking-normal);
+  line-height: var(--ms-leading-snug);
+  color: var(--ms-color-fg-muted);
+}
+
+/* —— anchor permalink —— */
+
+/* 锚定标题用相对定位,让 # 可绝对挂在行首外侧(宽屏)或内联(窄屏由媒体查询调) */
+.ms-heading--anchored {
+  position: relative;
+  scroll-margin-block-start: var(--ms-anchor-scroll-margin, 1rem);
+}
+
+/* 文本包裹:无额外样式,仅作语义分组与 anchor 的定位锚 */
+.ms-heading__text {
+  display: inline;
+}
+
+/* permalink 链接:默认隐形(opacity 0),hover/聚焦标题或聚焦自身时浮出 */
+.ms-heading__anchor {
+  margin-inline-start: 0.3em;
+  color: var(--ms-c, var(--ms-color-primary));
+  text-decoration: none;
+  opacity: 0;
+  /* 过渡平滑,受 motion 总闸调制 */
+  transition: opacity 0.18s var(--ms-ease-standard, ease);
+  /* 不让锚点参与文本基线抖动 */
+  vertical-align: baseline;
+  outline-offset: 2px;
+}
+
+.ms-heading__anchor-icon {
+  font-weight: var(--ms-font-weight-normal);
+  user-select: none;
+}
+
+/* hover 标题 / 聚焦标题内任意 / 聚焦锚点本身 → 浮出 */
+.ms-heading--anchored:hover .ms-heading__anchor,
+.ms-heading--anchored:focus-within .ms-heading__anchor,
+.ms-heading__anchor:focus-visible {
+  opacity: 1;
+}
+
+.ms-heading__anchor:hover {
+  color: var(--ms-c-hover, var(--ms-color-primary-hover));
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+/* 键盘聚焦可见焦点环(无视觉 hover 也能定位) */
+.ms-heading__anchor:focus-visible {
+  outline: 2px solid var(--ms-c, var(--ms-color-primary));
+  border-radius: 2px;
+}
+
+/* 触摸/无 hover 设备:锚点常驻可见(coarse pointer 无 hover 态,否则永远摸不到) */
+@media (hover: none) {
+  .ms-heading--anchored .ms-heading__anchor {
+    opacity: 0.6;
+  }
+}
+
+/* 动效降级:reduced-motion 或 motion 总闸关闭时去掉过渡(浮出仍生效,只是不渐变) */
+@media (prefers-reduced-motion: reduce) {
+  .ms-heading__anchor {
+    transition: none;
+  }
+}
+[data-ms-motion="off"] .ms-heading__anchor {
+  transition: none;
+}

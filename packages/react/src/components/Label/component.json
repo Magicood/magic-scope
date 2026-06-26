@@ -1,17 +1,30 @@
 {
   "id": "label",
   "name": "Label",
-  "description": "表单标签,基于原生 label,支持 htmlFor 关联控件,可显示必填装饰星号。",
+  "description": "表单标签(旗舰深度):基于原生 label,htmlFor 关联控件;size 三档随密度缩放、tone 语义色调(读 6 槽位,可做 success/danger 校验着色)、required / optional 互斥标记、requiredMark 可替换必填标记、disabled 态;必填标记装饰发光门控于 --ms-fx-glow,文案走 i18n,尊重 prefers-reduced-motion。",
   "category": "forms",
-  "tags": ["form", "label", "forms", "field", "required", "accessibility", "react"],
+  "tags": [
+    "form",
+    "label",
+    "forms",
+    "field",
+    "required",
+    "optional",
+    "size",
+    "tone",
+    "validation",
+    "i18n",
+    "accessibility",
+    "react"
+  ],
   "status": "stable",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "frameworks": ["react"],
   "source": {
     "type": "original",
     "capturedAt": "2026-06-24",
-    "requirements": "表单标签,基于原生 label,支持 htmlFor 关联控件,可显示必填装饰星号。。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-* 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion。"
+    "requirements": "表单标签,基于原生 label,支持 htmlFor 关联控件。补强到旗舰深度:size(sm/md/lg)随 data-ms-density 缩放、tone 语义色调读 tone 6 槽位(可 success/danger 校验着色)、required 与 optional 互斥标记(可选文案走 i18n label.optional、必填读屏语义走 label.required)、requiredMark / requiredClassName 自定义必填标记、disabled 态;根 label 透传所有原生属性与事件(onClick compose 不丢用户处理器)。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-* 变量,完整状态与过渡、发光门控于 --ms-fx-glow,尊重 prefers-reduced-motion 与 data-ms-motion。"
   },
   "dependencies": ["@magic-scope/tokens"],
-  "files": ["Label.tsx", "Label.css", "index.ts"]
+  "files": ["Label.tsx", "Label.css", "logic.ts", "index.ts"]
 }

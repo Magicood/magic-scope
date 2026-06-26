@@ -71,4 +71,18 @@
     block-size: max(100%, var(--ms-target-min));
     translate: -50% -50%;
   }
+
+  /* 视觉隐藏但对屏幕阅读器可读:统一出口(卡片化列名 / 隐藏 label / 方向文字等复用) */
+  .ms-sr-only {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
 }

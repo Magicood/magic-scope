@@ -1,17 +1,30 @@
 {
   "id": "avatar",
   "name": "Avatar",
-  "description": "头像组件,展示用户图片或姓名首字母占位,支持三种尺寸与圆形/方形两种形状。",
+  "description": "头像组件(旗舰深度):图片/姓名首字母占位,接全库 tone 槽位配色,name 哈希确定性配色(colorful),img 加载失败自动回退占位;支持状态点(online/offline/busy/away,可脉冲)、光环 ring、边框、三形状(circle/rounded/square)、尺寸预设+number 像素尺寸(随密度缩放)、实例级 glow、fallback 槽位、imgProps 透传、asChild 多态。配套 AvatarGroup(重叠堆叠+max 余量 +N+spacing)。",
   "category": "data-display",
-  "tags": ["avatar", "data-display", "user", "image", "initials", "profile"],
+  "tags": [
+    "avatar",
+    "data-display",
+    "user",
+    "image",
+    "initials",
+    "profile",
+    "status",
+    "presence",
+    "group",
+    "stacked",
+    "tone",
+    "fallback"
+  ],
   "status": "stable",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "frameworks": ["react"],
   "source": {
     "type": "original",
     "capturedAt": "2026-06-24",
-    "requirements": "头像组件,展示用户图片或姓名首字母占位,支持三种尺寸与圆形/方形两种形状。。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-* 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion。"
+    "requirements": "头像组件,展示用户图片或姓名首字母占位。补强到生产级深度:接全库 tone 槽位(只读 6 槽位,零硬编码配色)、name 哈希确定性配色、img 加载失败回退、状态点(presence,可脉冲)、光环/边框、circle/rounded/square 三形状、尺寸预设与 number 像素尺寸(随密度缩放)、实例级 glow、fallback 槽位、imgProps 透传、asChild 多态、AvatarGroup 重叠堆叠+余量占位。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-* 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion 与 data-ms-motion/fx 总闸。"
   },
   "dependencies": ["@magic-scope/tokens"],
-  "files": ["Avatar.tsx", "Avatar.css", "index.ts"]
+  "files": ["Avatar.tsx", "Avatar.css", "logic.ts", "Avatar.test.tsx", "index.ts"]
 }

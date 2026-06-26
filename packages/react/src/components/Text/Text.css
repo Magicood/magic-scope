@@ -1,0 +1,402 @@
+/* —— Text 基座:字重走 var(让数值字重可经 inline --ms-text-weight 注入) —— */
+.ms-text {
+  font-weight: var(--ms-text-weight, inherit);
+}
+
+/* 选区高亮:接通契约里现成但无人消费的 selection / onSelection 角色(零成本差异化) */
+.ms-text::selection {
+  background: var(--ms-color-selection);
+  color: var(--ms-color-on-selection);
+}
+
+/* —— 字族(语义 token) —— */
+.ms-text--family-sans {
+  font-family: var(--ms-font-sans);
+}
+.ms-text--family-serif {
+  font-family: var(--ms-font-serif);
+}
+.ms-text--family-mono {
+  font-family: var(--ms-font-mono);
+}
+.ms-text--family-display {
+  font-family: var(--ms-font-display);
+}
+
+/* —— 字号档(流式字阶 --ms-type-step-*) —— */
+.ms-text--size-xs {
+  font-size: var(--ms-type-step--2);
+}
+.ms-text--size-sm {
+  font-size: var(--ms-type-step--1);
+}
+.ms-text--size-base {
+  font-size: var(--ms-type-step-0);
+}
+.ms-text--size-lg {
+  font-size: var(--ms-type-step-1);
+}
+.ms-text--size-xl {
+  font-size: var(--ms-type-step-2);
+}
+.ms-text--size-2xl {
+  font-size: var(--ms-type-step-3);
+}
+.ms-text--size-3xl {
+  font-size: var(--ms-type-step-4);
+}
+.ms-text--size-4xl {
+  font-size: var(--ms-type-step-5);
+}
+.ms-text--size-5xl {
+  font-size: var(--ms-type-step-6);
+}
+
+/* —— 字重语义档(设 var,由基座消费) —— */
+.ms-text--weight-normal {
+  --ms-text-weight: var(--ms-font-weight-normal);
+}
+.ms-text--weight-medium {
+  --ms-text-weight: var(--ms-font-weight-medium);
+}
+.ms-text--weight-semibold {
+  --ms-text-weight: var(--ms-font-weight-semibold);
+}
+.ms-text--weight-bold {
+  --ms-text-weight: var(--ms-font-weight-bold);
+}
+
+.ms-text--italic {
+  font-style: italic;
+}
+
+/* —— 颜色 / tone —— */
+.ms-text--toned {
+  color: var(--ms-c);
+}
+.ms-text--dimmed {
+  color: var(--ms-color-fg-muted);
+}
+
+/* —— 对齐(逻辑值,RTL 友好) —— */
+.ms-text--align-start {
+  text-align: start;
+}
+.ms-text--align-end {
+  text-align: end;
+}
+.ms-text--align-center {
+  text-align: center;
+}
+.ms-text--align-justify {
+  text-align: justify;
+}
+
+/* —— 行高 —— */
+.ms-text--leading-none {
+  line-height: var(--ms-leading-none);
+}
+.ms-text--leading-tight {
+  line-height: var(--ms-leading-tight);
+}
+.ms-text--leading-snug {
+  line-height: var(--ms-leading-snug);
+}
+.ms-text--leading-normal {
+  line-height: var(--ms-leading-normal);
+}
+.ms-text--leading-relaxed {
+  line-height: var(--ms-leading-relaxed);
+}
+.ms-text--leading-loose {
+  line-height: var(--ms-leading-loose);
+}
+
+/* —— 字距 —— */
+.ms-text--tracking-tighter {
+  letter-spacing: var(--ms-tracking-tighter);
+}
+.ms-text--tracking-tight {
+  letter-spacing: var(--ms-tracking-tight);
+}
+.ms-text--tracking-normal {
+  letter-spacing: var(--ms-tracking-normal);
+}
+.ms-text--tracking-wide {
+  letter-spacing: var(--ms-tracking-wide);
+}
+.ms-text--tracking-wider {
+  letter-spacing: var(--ms-tracking-wider);
+}
+.ms-text--tracking-widest {
+  letter-spacing: var(--ms-tracking-widest);
+}
+
+/* —— transform —— */
+.ms-text--transform-none {
+  text-transform: none;
+}
+.ms-text--transform-uppercase {
+  text-transform: uppercase;
+}
+.ms-text--transform-lowercase {
+  text-transform: lowercase;
+}
+.ms-text--transform-capitalize {
+  text-transform: capitalize;
+}
+.ms-text--transform-full-width {
+  text-transform: full-width;
+}
+
+/* —— 装饰 —— */
+.ms-text--underline {
+  text-decoration-line: underline;
+  text-underline-offset: 0.15em;
+}
+.ms-text--strikethrough {
+  text-decoration-line: line-through;
+}
+.ms-text--underline.ms-text--strikethrough {
+  text-decoration-line: underline line-through;
+}
+
+/* —— 截断:单行省略(需块级格式化才能 ellipsis,故 display:block) —— */
+.ms-text--truncate {
+  display: block;
+  max-inline-size: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+/* 头部省略:direction 翻转技巧(见 prop TSDoc 兼容备注) */
+.ms-text--truncate-start {
+  direction: rtl;
+  text-align: start;
+}
+
+/* —— 截断:多行省略 —— */
+.ms-text--clamp {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: var(--ms-line-clamp, 2);
+  line-clamp: var(--ms-line-clamp, 2);
+  overflow: hidden;
+}
+
+/* —— 折行(text-wrap:渐进增强,旧浏览器回退普通换行) —— */
+.ms-text--wrap-wrap {
+  text-wrap: wrap;
+  white-space: normal;
+}
+.ms-text--wrap-nowrap {
+  text-wrap: nowrap;
+  white-space: nowrap;
+}
+.ms-text--wrap-balance {
+  text-wrap: balance;
+}
+.ms-text--wrap-pretty {
+  text-wrap: pretty;
+}
+
+/* —— 空白处理 —— */
+.ms-text--ws-normal {
+  white-space: normal;
+}
+.ms-text--ws-nowrap {
+  white-space: nowrap;
+}
+.ms-text--ws-pre {
+  white-space: pre;
+}
+.ms-text--ws-pre-wrap {
+  white-space: pre-wrap;
+}
+.ms-text--ws-pre-line {
+  white-space: pre-line;
+}
+.ms-text--ws-break-spaces {
+  white-space: break-spaces;
+}
+
+/* —— 断词 / 连字符 —— */
+.ms-text--break {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+.ms-text--hyphens {
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}
+
+/* —— 数字变体 —— */
+.ms-text--numeric-tabular {
+  font-variant-numeric: tabular-nums;
+}
+.ms-text--numeric-oldstyle {
+  font-variant-numeric: oldstyle-nums;
+}
+.ms-text--numeric-lining {
+  font-variant-numeric: lining-nums;
+}
+.ms-text--numeric-proportional {
+  font-variant-numeric: proportional-nums;
+}
+.ms-text--numeric-slashed-zero {
+  font-variant-numeric: slashed-zero;
+}
+
+.ms-text--small-caps {
+  font-variant-caps: small-caps;
+}
+.ms-text--no-select {
+  user-select: none;
+}
+
+/* —— 魔法:渐变文字(tone 槽位驱动,不支持环境回退实色) —— */
+.ms-text--gradient {
+  background-image: linear-gradient(
+    var(--ms-text-grad-angle, 92deg),
+    var(--ms-c),
+    var(--ms-c-glow)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+@supports not ((background-clip: text) or (-webkit-background-clip: text)) {
+  .ms-text--gradient {
+    color: var(--ms-c);
+    -webkit-text-fill-color: currentcolor;
+  }
+}
+.ms-text--gradient-aurora {
+  background-size: 200% auto;
+  animation: ms-text-aurora 6s linear infinite;
+}
+@keyframes ms-text-aurora {
+  to {
+    background-position: 200% center;
+  }
+}
+/* 动效降级:reduced-motion 或 data-ms-motion=off 时停流光 */
+@media (prefers-reduced-motion: reduce) {
+  .ms-text--gradient-aurora {
+    animation: none;
+  }
+}
+[data-ms-motion="off"] .ms-text--gradient-aurora {
+  animation: none;
+}
+
+/* —— 魔法:辉光文字(text-shadow,受 --ms-fx-glow 调制) —— */
+.ms-text--glow {
+  text-shadow: 0 0 calc(0.4em * var(--ms-fx-glow, 1)) var(--ms-c-glow);
+}
+.ms-text--glow-strong {
+  text-shadow:
+    0 0 calc(0.7em * var(--ms-fx-glow, 1)) var(--ms-c-glow),
+    0 0 calc(0.3em * var(--ms-fx-glow, 1)) var(--ms-c-glow);
+}
+/* fx 总闸关闭时彻底去辉光 */
+[data-ms-fx="off"] .ms-text--glow,
+[data-ms-fx="off"] .ms-text--glow-strong {
+  text-shadow: none;
+}
+
+/* —— 魔法:描边文字 —— */
+.ms-text--stroke {
+  -webkit-text-stroke: 1px var(--ms-c);
+}
+
+/* —— 竖排(CJK 友好) —— */
+.ms-text--vertical {
+  writing-mode: vertical-rl;
+}
+
+/* —— 魔法动效 —— */
+/* 入场:上浮淡入 */
+@keyframes ms-text-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(0.5em);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.ms-text--anim-reveal {
+  animation: ms-text-reveal 0.5s var(--ms-ease-emphasized, ease-out) both;
+}
+/* 入场:模糊聚焦 */
+@keyframes ms-text-blur-in {
+  from {
+    opacity: 0;
+    filter: blur(10px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+.ms-text--anim-blur-in {
+  animation: ms-text-blur-in 0.6s var(--ms-ease-standard, ease) both;
+}
+/* 持续:辉光呼吸(复用 tone 槽位) */
+@keyframes ms-text-pulse {
+  0%,
+  100% {
+    text-shadow: 0 0 calc(0.25em * var(--ms-fx-glow, 1)) var(--ms-c-glow);
+  }
+  50% {
+    text-shadow: 0 0 calc(0.75em * var(--ms-fx-glow, 1)) var(--ms-c-glow);
+  }
+}
+.ms-text--anim-pulse {
+  animation: ms-text-pulse 2.2s ease-in-out infinite;
+}
+/* 持续:流光扫过(亮带横扫,基于 background-clip:text) */
+.ms-text--anim-shimmer {
+  background-image: linear-gradient(
+    100deg,
+    var(--ms-c) 35%,
+    color-mix(in oklch, var(--ms-c) 35%, white) 50%,
+    var(--ms-c) 65%
+  );
+  background-size: 220% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: ms-text-aurora 2.6s linear infinite;
+}
+/* 持续:渐变流动(tone → glow 全色域漂移) */
+.ms-text--anim-flow {
+  background-image: linear-gradient(100deg, var(--ms-c), var(--ms-c-glow), var(--ms-c));
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: ms-text-aurora 5s linear infinite;
+}
+@supports not ((background-clip: text) or (-webkit-background-clip: text)) {
+  .ms-text--anim-shimmer,
+  .ms-text--anim-flow {
+    color: var(--ms-c);
+    -webkit-text-fill-color: currentcolor;
+  }
+}
+/* 动效降级:reduced-motion 或 data-ms-motion=off 时停所有文字动效
+   (入场动画去掉后回到自然态、不卡在隐藏) */
+@media (prefers-reduced-motion: reduce) {
+  [class*="ms-text--anim-"] {
+    animation: none;
+  }
+}
+[data-ms-motion="off"] [class*="ms-text--anim-"] {
+  animation: none;
+}

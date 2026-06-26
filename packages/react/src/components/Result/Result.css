@@ -1,0 +1,135 @@
+/* —— Result 基座:tone 槽位驱动 + 密度(--ms-density-scale)接活,纵向居中结果页 —— */
+.ms-result {
+  /* 单图标尺寸(柔底圆直径)与符文字号:md 基线,sm/lg 覆盖。随密度缩放。 */
+  --ms-result-icon-size: calc(4.5rem * var(--ms-density-scale, 1));
+  --ms-result-glyph-size: calc(2.25rem * var(--ms-density-scale, 1));
+  --ms-result-gap: calc(var(--ms-space-3) * var(--ms-density-scale, 1));
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--ms-result-gap);
+  inline-size: 100%;
+  max-inline-size: 100%;
+  padding-block: calc(var(--ms-space-7, 2.5rem) * var(--ms-density-scale, 1));
+  padding-inline: var(--ms-space-5);
+  text-align: center;
+  /* 触控:整块结果页留出不小于目标尺寸的最小高度,触屏上不至于过扁 */
+  min-block-size: max(0px, var(--ms-target-min));
+}
+
+/* —— 图标区:tone 柔底发光圆 + 大号符文 —— */
+.ms-result__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  inline-size: var(--ms-result-icon-size);
+  block-size: var(--ms-result-icon-size);
+  border-radius: var(--ms-radius-full);
+  /* 柔底:tone 浅底槽位;发光由 --ms-fx-glow 门控(静态视觉,不受 motion 影响) */
+  background-color: var(--ms-c-soft);
+  color: var(--ms-c);
+  box-shadow:
+    0 0 calc(28px * var(--ms-fx-glow, 1)) -6px var(--ms-c-glow),
+    inset 0 0 0 var(--ms-hairline) color-mix(in oklch, var(--ms-c) 26%, transparent);
+}
+.ms-result__glyph {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--ms-result-glyph-size);
+  line-height: 1;
+  font-weight: 600;
+  /* 符文柔发光,克制(text-shadow × fx-glow) */
+  text-shadow: 0 0 calc(12px * var(--ms-fx-glow, 1)) var(--ms-c-glow);
+}
+/* HTTP 异常码:纯数字,缩小字号并用等宽数字,避免“404”过宽撑破圆 */
+.ms-result__icon--code .ms-result__glyph {
+  font-size: calc(var(--ms-result-glyph-size) * 0.62);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+
+/* —— 标题 / 副标题 —— */
+.ms-result__title {
+  max-inline-size: 100%;
+  font-family: var(--ms-font-sans);
+  font-size: var(--ms-type-step-2);
+  font-weight: 600;
+  line-height: var(--ms-leading-snug);
+  color: var(--ms-color-fg);
+  /* 内容边界:超长标题换行而非撑破,长单词强制断行 */
+  overflow-wrap: anywhere;
+}
+.ms-result__subtitle {
+  max-inline-size: min(100%, 42rem);
+  font-size: var(--ms-type-step-0);
+  line-height: var(--ms-leading-normal);
+  color: var(--ms-color-fg-muted);
+  overflow-wrap: anywhere;
+}
+
+/* —— 补充内容 / 操作区 —— */
+.ms-result__content {
+  max-inline-size: 100%;
+  margin-block-start: calc(var(--ms-space-2) * var(--ms-density-scale, 1));
+  color: var(--ms-color-fg-muted);
+  text-align: start;
+  overflow-wrap: anywhere;
+}
+.ms-result__extra {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ms-space-3);
+  max-inline-size: 100%;
+  margin-block-start: calc(var(--ms-space-3) * var(--ms-density-scale, 1));
+}
+
+/* —— 尺寸档(随密度缩放):仅覆盖图标尺度变量,文字走流式 type scale —— */
+.ms-result--sm {
+  --ms-result-icon-size: calc(3.25rem * var(--ms-density-scale, 1));
+  --ms-result-glyph-size: calc(1.6rem * var(--ms-density-scale, 1));
+}
+.ms-result--sm .ms-result__title {
+  font-size: var(--ms-type-step-1);
+}
+.ms-result--sm .ms-result__subtitle {
+  font-size: var(--ms-type-step--1);
+}
+.ms-result--lg {
+  --ms-result-icon-size: calc(6rem * var(--ms-density-scale, 1));
+  --ms-result-glyph-size: calc(3rem * var(--ms-density-scale, 1));
+}
+.ms-result--lg .ms-result__title {
+  font-size: var(--ms-type-step-3);
+}
+
+/* —— 入场:图标轻微浮入 + 发光呼吸(克制)。受 motion 双降级 —— */
+.ms-result__icon {
+  animation: ms-result-icon-in calc(var(--ms-dur-base) * 2) var(--ms-ease-emphasized, ease-out) both;
+}
+@keyframes ms-result-icon-in {
+  from {
+    opacity: 0;
+    transform: scale(calc(1 - 0.12 * var(--ms-motion-scale, 1)))
+      translateY(calc(8px * var(--ms-motion-scale, 1)));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* 动效双降级:系统减弱 + 显式关闭,均取消入场动画 */
+@media (prefers-reduced-motion: reduce) {
+  .ms-result__icon {
+    animation: none;
+  }
+}
+[data-ms-motion="off"] .ms-result__icon {
+  animation: none;
+}

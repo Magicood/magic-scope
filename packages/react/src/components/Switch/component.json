@@ -1,9 +1,9 @@
 {
   "id": "switch",
   "name": "Switch",
-  "description": "开关:基于 input[type=checkbox] 的视觉隐藏切换控件,checked 时轨道染主色、滑块右移并发光,完整 hover/focus-visible(发光环)/disabled 状态(逻辑属性,RTL 友好,尊重 reduced-motion)。",
+  "description": "开关:基于 input[type=checkbox] 的视觉隐藏切换控件。size(sm/md/lg,随密度缩放)× tone(7 色,经全库 tone resolver 染 checked 色与 glow);支持右侧文字、轨道内两端图标(checked/unchecked)、loading(滑块转旋转符文、aria-busy);滑块位移为固定值(关动效仍到位),完整 hover/focus-visible(发光环)/disabled 状态;留口 labelClassName/trackClassName/thumbClassName + 原生属性透传(逻辑属性,RTL 友好,尊重 reduced-motion 与 data-ms-motion/data-ms-fx)。",
   "category": "forms",
-  "tags": ["switch", "toggle", "form", "checkbox"],
+  "tags": ["switch", "toggle", "form", "checkbox", "tone", "size", "loading", "icon"],
   "status": "stable",
   "version": "0.1.0",
   "frameworks": ["react"],

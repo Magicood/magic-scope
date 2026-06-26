@@ -1,12 +1,17 @@
-/* —— 外框:圆角 + 描边 + 横向滚动容器,裁掉表头圆角溢出 —— */
+/* —— 外框:圆角 + 描边 + 横向滚动容器,裁掉表头圆角溢出;position 为加载遮罩定位锚 —— */
 .ms-table-wrap {
+  position: relative;
   display: block;
   inline-size: 100%;
+  max-inline-size: 100%;
   overflow-x: auto;
   border: 1px solid var(--ms-color-border);
   border-radius: var(--ms-radius-lg);
   background-color: var(--ms-color-surface);
-  box-shadow: 0 0 calc(16px * var(--ms-fx-glow, 1)) -10px var(--ms-color-glow);
+  box-shadow: 0 0 calc(16px * var(--ms-fx-glow, 1)) -10px var(--ms-c-glow);
+}
+[data-ms-fx="off"] .ms-table-wrap {
+  box-shadow: none;
 }
 
 .ms-table {
@@ -30,7 +35,7 @@
 
 /* —— 表头:surface-raised 底 + 加粗 + 底部强描边 —— */
 .ms-table__th {
-  padding-block: var(--ms-space-3);
+  padding-block: calc(var(--ms-space-3) * var(--ms-density-scale, 1));
   padding-inline: var(--ms-space-4);
   background-color: var(--ms-color-surface-raised);
   border-block-end: 1px solid var(--ms-color-border-strong);
@@ -43,13 +48,23 @@
 
 /* —— 单元格:行间分隔线 —— */
 .ms-table__td {
-  padding-block: var(--ms-space-3);
+  padding-block: calc(var(--ms-space-3) * var(--ms-density-scale, 1));
   padding-inline: var(--ms-space-4);
   border-block-start: 1px solid var(--ms-color-border);
   color: var(--ms-color-fg-muted);
   text-align: start;
   vertical-align: middle;
   transition: background-color var(--ms-dur-fast) var(--ms-ease-standard);
+}
+
+/* —— 行高三档密度(组件级,叠加在 token 密度之上)—— */
+.ms-table-wrap--sm .ms-table__th,
+.ms-table-wrap--sm .ms-table__td {
+  padding-block: calc(var(--ms-space-2) * var(--ms-density-scale, 1));
+}
+.ms-table-wrap--lg .ms-table__th,
+.ms-table-wrap--lg .ms-table__td {
+  padding-block: calc(var(--ms-space-4) * var(--ms-density-scale, 1));
 }
 
 /* tbody 首行不需要顶分隔线(thead 已有底边) */
@@ -68,16 +83,296 @@
   text-align: end;
 }
 
-/* —— 斑马纹:偶数体行加极淡 sunken 底 —— */
-.ms-table-wrap--stripe .ms-table__body .ms-table__row:nth-child(even) .ms-table__td {
+/* —— 斑马纹:偶数「数据行」加极淡 sunken 底(只认 --data,空态/骨架/展开行不染)—— */
+.ms-table-wrap--stripe .ms-table__body .ms-table__row--data:nth-of-type(even) .ms-table__td {
   background-color: color-mix(in srgb, var(--ms-color-surface-sunken) 55%, transparent);
 }
 
-/* —— 行 hover 高亮:整行换 surface-raised 底 + 主色起始强调条 —— */
-.ms-table-wrap--hoverable .ms-table__body .ms-table__row:hover .ms-table__td {
+/* —— 行 hover 高亮:整行换 surface-raised 底 + 主色起始强调条(仅 hover 能力的指针) —— */
+@media (hover: hover) {
+  .ms-table-wrap--hoverable .ms-table__body .ms-table__row--data:hover .ms-table__td {
+    background-color: var(--ms-color-surface-raised);
+    color: var(--ms-color-fg);
+    box-shadow: inset 2px 0 0 -1px color-mix(in srgb, var(--ms-c) 70%, transparent);
+  }
+}
+
+/* —— 可交互行(挂了 onRowClick/onRow)指针手型 —— */
+.ms-table__row--interactive {
+  cursor: pointer;
+}
+
+/* —— 选中行高亮:主色起始强调条 + 极淡主色底 + inset glow(fx 调制) —— */
+.ms-table__row--selected .ms-table__td {
+  background-color: color-mix(in oklch, var(--ms-c) 10%, transparent);
+  box-shadow:
+    inset 2px 0 0 -1px var(--ms-c),
+    inset 0 0 calc(12px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow);
+}
+[data-ms-fx="off"] .ms-table__row--selected .ms-table__td {
+  box-shadow: inset 2px 0 0 -1px var(--ms-c);
+}
+
+/* —— 选择列 / 展开列:收窄、居中,去文字换行 —— */
+.ms-table__th--selection,
+.ms-table__td--selection,
+.ms-table__th--expand,
+.ms-table__td--expand {
+  inline-size: 1%;
+  white-space: nowrap;
+  text-align: center;
+  vertical-align: middle;
+}
+
+/* —— 列固定:sticky 吸边 + 背景遮底防穿透 + 边界投影 —— */
+.ms-table__th--fixed,
+.ms-table__td--fixed {
+  position: sticky;
+  z-index: 1;
+  background-color: var(--ms-color-surface);
+}
+.ms-table__th--fixed {
+  z-index: 3;
   background-color: var(--ms-color-surface-raised);
+}
+.ms-table__th--fixed-left,
+.ms-table__td--fixed-left {
+  inset-inline-start: 0;
+}
+.ms-table__th--fixed-right,
+.ms-table__td--fixed-right {
+  inset-inline-end: 0;
+}
+.ms-table__td--fixed-left {
+  box-shadow: 6px 0 8px -8px color-mix(in srgb, var(--ms-color-fg) 40%, transparent);
+}
+.ms-table__td--fixed-right {
+  box-shadow: -6px 0 8px -8px color-mix(in srgb, var(--ms-color-fg) 40%, transparent);
+}
+/* 选中行的固定列仍需主色底覆盖 sticky 背景 */
+.ms-table__row--selected .ms-table__td--fixed {
+  background-color: color-mix(in oklch, var(--ms-c) 10%, var(--ms-color-surface));
+}
+
+/* —— 排序表头按钮:占满 th、透明、继承对齐,箭头三态 —— */
+.ms-table__sort-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ms-space-2);
+  inline-size: 100%;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: var(--ms-radius-sm);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-align: inherit;
+  cursor: pointer;
+}
+.ms-table__th--center .ms-table__sort-btn {
+  justify-content: center;
+}
+.ms-table__th--end .ms-table__sort-btn {
+  justify-content: flex-end;
+}
+.ms-table__sort-btn:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--ms-color-bg),
+    0 0 0 4px var(--ms-color-focus-ring);
+}
+@media (hover: hover) {
+  .ms-table__sort-btn:hover {
+    color: var(--ms-c-hover);
+  }
+}
+/* 箭头:默认双向弱提示,激活态显当前方向并染主色;emphasized 缓动 + 激活脉冲 */
+.ms-table__sort-arrow {
+  flex: 0 0 auto;
+  inline-size: 0.75rem;
+  block-size: 0.75rem;
+  color: var(--ms-color-fg-subtle);
+  transition:
+    color var(--ms-dur-fast) var(--ms-ease-standard),
+    transform var(--ms-dur-base) var(--ms-ease-emphasized);
+  background: currentcolor;
+  /* 用 mask 画一个上箭头,asc 正向 / desc 翻转 */
+  mask: var(--ms-table-arrow-mask) center / contain no-repeat;
+  -webkit-mask: var(--ms-table-arrow-mask) center / contain no-repeat;
+  --ms-table-arrow-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 5l6 8H6z' fill='black'/%3E%3C/svg%3E");
+  opacity: 0.5;
+}
+.ms-table__sort-btn[data-ms-sort="asc"] .ms-table__sort-arrow {
+  color: var(--ms-c);
+  opacity: 1;
+  filter: drop-shadow(0 0 calc(4px * var(--ms-fx-glow, 1)) var(--ms-c-glow));
+  animation: ms-table-sort-pop var(--ms-dur-base) var(--ms-ease-emphasized);
+}
+.ms-table__sort-btn[data-ms-sort="desc"] .ms-table__sort-arrow {
+  color: var(--ms-c);
+  opacity: 1;
+  transform: rotate(180deg);
+  filter: drop-shadow(0 0 calc(4px * var(--ms-fx-glow, 1)) var(--ms-c-glow));
+  animation: ms-table-sort-pop var(--ms-dur-base) var(--ms-ease-emphasized);
+}
+@keyframes ms-table-sort-pop {
+  0% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+    scale: 1.35;
+  }
+  100% {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+/* —— 展开按钮:旋转的折叠箭头 —— */
+.ms-table__expand-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 1.5rem;
+  block-size: 1.5rem;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: var(--ms-radius-sm);
+  background: transparent;
+  color: var(--ms-color-fg-muted);
+  cursor: pointer;
+  transition: color var(--ms-dur-fast) var(--ms-ease-standard);
+}
+@media (hover: hover) {
+  .ms-table__expand-btn:hover {
+    color: var(--ms-c);
+  }
+}
+.ms-table__expand-btn:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--ms-color-bg),
+    0 0 0 4px var(--ms-color-focus-ring);
+}
+.ms-table__expand-icon {
+  inline-size: 0.625rem;
+  block-size: 0.625rem;
+  background: currentcolor;
+  mask: var(--ms-table-arrow-mask) center / contain no-repeat;
+  -webkit-mask: var(--ms-table-arrow-mask) center / contain no-repeat;
+  --ms-table-arrow-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9 6l8 6-8 6z' fill='black'/%3E%3C/svg%3E");
+  transition: transform var(--ms-dur-base) var(--ms-ease-emphasized);
+}
+.ms-table__expand-btn[data-ms-expanded] .ms-table__expand-icon {
+  transform: rotate(90deg);
+}
+
+/* —— 展开内容行:无横向分隔噪点,内层缩进 + 淡入下滑 —— */
+.ms-table__row--expansion .ms-table__expansion {
+  padding: 0;
+  background-color: color-mix(in srgb, var(--ms-color-surface-sunken) 40%, transparent);
+}
+.ms-table__expansion-inner {
+  padding-block: var(--ms-space-3);
+  padding-inline: var(--ms-space-4);
+  color: var(--ms-color-fg-muted);
+  animation: ms-table-expand-in var(--ms-dur-base) var(--ms-ease-emphasized);
+}
+@keyframes ms-table-expand-in {
+  from {
+    opacity: 0;
+    translate: 0 -0.25rem;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+/* —— 汇总 / 页脚行:强描边 + 半粗 —— */
+.ms-table__foot .ms-table__td--summary {
+  background-color: var(--ms-color-surface-raised);
+  border-block-start: 1px solid var(--ms-color-border-strong);
   color: var(--ms-color-fg);
-  box-shadow: inset 2px 0 0 -1px color-mix(in srgb, var(--ms-color-primary) 70%, transparent);
+  font-weight: 600;
+}
+
+/* —— 空态行 —— */
+.ms-table__empty {
+  padding-block: var(--ms-space-10);
+  padding-inline: var(--ms-space-4);
+  color: var(--ms-color-fg-muted);
+  text-align: center;
+}
+
+/* —— 加载遮罩:半透明覆盖 + 居中 Spinner + 淡入 + 背景微模糊 —— */
+.ms-table-wrap--loading .ms-table__loading {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: color-mix(in oklch, var(--ms-color-surface) 60%, transparent);
+  backdrop-filter: blur(1.5px);
+  animation: ms-table-overlay-in var(--ms-dur-fast) var(--ms-ease-standard);
+}
+@keyframes ms-table-overlay-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* —— 行 stagger 进场:每行按序号错峰淡入下滑(装饰性) —— */
+.ms-table__row--data {
+  animation: ms-table-row-in var(--ms-dur-base) var(--ms-ease-emphasized) both;
+  animation-delay: calc(var(--ms-table-row-index, 0) * 28ms);
+}
+@keyframes ms-table-row-in {
+  from {
+    opacity: 0;
+    translate: 0 0.375rem;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+/* —— 粘性表头:限高可滚 + 表头吸顶。border-collapse 下 sticky 会丢边框,故底线改 inset 阴影 —— */
+.ms-table-wrap--sticky-head {
+  max-block-size: var(--ms-table-max-block-size, var(--ms-viewport-h, 100vh));
+  overflow-y: auto;
+}
+.ms-table-wrap--sticky-head .ms-table__th {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 2;
+  border-block-end: none;
+  box-shadow: inset 0 -1px 0 var(--ms-color-border-strong);
+}
+/* 粘性表头 + 固定列交叉:角落 th 同时吸顶吸边,层级抬最高 */
+.ms-table-wrap--sticky-head .ms-table__th--fixed {
+  z-index: 4;
+}
+
+/* —— 触控:排序按钮 / 展开按钮 / 选择列命中区抬到目标尺寸 —— */
+@media (pointer: coarse) {
+  .ms-table__sort-btn,
+  .ms-table__expand-btn {
+    min-block-size: var(--ms-target-min);
+  }
+  .ms-table__td--selection,
+  .ms-table__td--expand {
+    min-block-size: var(--ms-target-min);
+  }
 }
 
 /* —— P0 触控适配:窄屏走横向滚动兜底,不挤垮列;长串内容防撑宽 ——
@@ -98,4 +393,26 @@
   .ms-table__td {
     overflow-wrap: anywhere;
   }
+}
+
+/* —— 动效降级:reduced-motion 或 data-ms-motion=off 时停所有进场/脉冲动效 —— */
+@media (prefers-reduced-motion: reduce) {
+  .ms-table__row--data,
+  .ms-table__expansion-inner,
+  .ms-table-wrap--loading .ms-table__loading,
+  .ms-table__sort-btn[data-ms-sort="asc"] .ms-table__sort-arrow,
+  .ms-table__sort-btn[data-ms-sort="desc"] .ms-table__sort-arrow {
+    animation: none;
+  }
+  .ms-table__sort-arrow,
+  .ms-table__expand-icon {
+    transition-duration: 0.01ms;
+  }
+}
+[data-ms-motion="off"] .ms-table__row--data,
+[data-ms-motion="off"] .ms-table__expansion-inner,
+[data-ms-motion="off"] .ms-table-wrap--loading .ms-table__loading,
+[data-ms-motion="off"] .ms-table__sort-btn[data-ms-sort="asc"] .ms-table__sort-arrow,
+[data-ms-motion="off"] .ms-table__sort-btn[data-ms-sort="desc"] .ms-table__sort-arrow {
+  animation: none;
 }

@@ -4,6 +4,7 @@
   border: none;
   background: transparent;
   inline-size: 100%;
+  /* 默认 = md;尺寸变体覆盖 max-inline-size */
   max-inline-size: min(92vw, 32rem);
   /* 对话框整体不超过(动态感知的)视口高度,避免长内容把 dialog 撑出屏外 */
   max-block-size: var(--ms-viewport-h);
@@ -50,9 +51,43 @@
   }
 }
 
+/* —— 尺寸变体:控制 max-inline-size;full 铺满视口 —— */
+.ms-dialog--sm {
+  max-inline-size: min(92vw, 24rem);
+}
+
+.ms-dialog--md {
+  max-inline-size: min(92vw, 32rem);
+}
+
+.ms-dialog--lg {
+  max-inline-size: min(94vw, 48rem);
+}
+
+.ms-dialog--full {
+  inline-size: 100dvw;
+  block-size: 100dvh;
+  max-inline-size: 100dvw;
+  max-block-size: 100dvh;
+  margin: 0;
+}
+
+/* —— 位置:center(默认 margin:auto 居中)/ top(贴顶,长表单更稳) —— */
+.ms-dialog--top {
+  margin-block-start: max(var(--ms-space-8), var(--ms-safe-top, 0px));
+  margin-block-end: auto;
+}
+
+.ms-dialog--full.ms-dialog--top {
+  margin: 0;
+}
+
 .ms-dialog__panel {
   /* 定位上下文:给绝对定位的内建关闭按钮当锚 */
   position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ms-space-4);
   background-color: var(--ms-color-surface-raised);
   border: 1px solid var(--ms-color-border);
   border-radius: var(--ms-radius-lg);
@@ -62,12 +97,74 @@
     calc(var(--ms-space-6) + var(--ms-safe-right));
   /* 长内容不再被顶部裁切:面板自身限高并可滚,滚动不链给背景 */
   max-block-size: min(100%, calc(var(--ms-viewport-h) - var(--ms-space-8)));
+  /* 超长内容不撑破 */
+  max-inline-size: 100%;
   overflow-y: auto;
   overscroll-behavior: contain;
   font-family: var(--ms-font-sans);
   box-shadow:
-    0 24px 64px -24px rgb(0 0 0 / 0.7),
-    0 0 calc(40px * var(--ms-fx-glow, 1)) -16px var(--ms-color-glow);
+    0 24px 64px -24px rgb(0 0 0 / 0.45),
+    0 0 calc(40px * var(--ms-fx-glow, 1)) -16px var(--ms-c-glow, var(--ms-color-glow));
+}
+
+[data-ms-fx="off"] .ms-dialog__panel {
+  box-shadow: 0 24px 64px -24px rgb(0 0 0 / 0.45);
+}
+
+/* full 尺寸:面板铺满、去圆角与边框(定义在基础 panel 之后,避免降序特异性) */
+.ms-dialog--full .ms-dialog__panel {
+  block-size: 100%;
+  max-block-size: 100%;
+  border-radius: 0;
+  border: none;
+}
+
+/* —— 子部件:Header / Title / Description / Body / Footer —— */
+.ms-dialog__header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ms-space-1);
+  /* 给内建关闭按钮让出右侧热区,标题不被压到按钮下 */
+  padding-inline-end: var(--ms-space-8);
+  min-inline-size: 0;
+}
+
+.ms-dialog__title {
+  margin: 0;
+  font-size: var(--ms-font-size-lg, 1.125rem);
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--ms-color-fg);
+  /* 超长标题不撑破 */
+  min-inline-size: 0;
+  overflow-wrap: break-word;
+}
+
+.ms-dialog__description {
+  margin: 0;
+  font-size: var(--ms-font-size-sm, 0.875rem);
+  line-height: 1.5;
+  color: var(--ms-color-fg-muted);
+  min-inline-size: 0;
+  overflow-wrap: break-word;
+}
+
+.ms-dialog__body {
+  min-inline-size: 0;
+  /* 主体过长时自身可滚,而非把整面板撑高 */
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  line-height: 1.6;
+}
+
+.ms-dialog__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--ms-space-3);
+  /* 推到底部:多内容时贴附底缘 */
+  margin-block-start: auto;
 }
 
 /* 内建关闭按钮:标准模态全平台可见;触屏此前只能点遮罩关闭,这里给出确定可达的命中点 */
@@ -75,6 +172,7 @@
   position: absolute;
   inset-block-start: var(--ms-space-3);
   inset-inline-end: var(--ms-space-3);
+  z-index: 1;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -99,6 +197,20 @@
 }
 
 .ms-dialog__close:focus-visible {
-  outline: 2px solid var(--ms-color-primary);
+  /* tone 槽位优先,无 tone 时回退到全局 focus-ring */
+  outline: 2px solid var(--ms-c, var(--ms-color-focus-ring));
   outline-offset: 2px;
+}
+
+/* —— 降级:reduced-motion 与 motion 总闸,与 Drawer / AlertDialog 对齐 —— */
+@media (prefers-reduced-motion: reduce) {
+  .ms-dialog,
+  .ms-dialog::backdrop {
+    transition-duration: 0.01ms;
+  }
+}
+
+[data-ms-motion="off"] .ms-dialog,
+[data-ms-motion="off"] .ms-dialog::backdrop {
+  transition-duration: 0.01ms;
 }

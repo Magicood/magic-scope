@@ -1,5 +1,6 @@
 .ms-skeleton {
   display: block;
+  max-inline-size: 100%;
   inline-size: 100%;
   block-size: 1.5rem;
   border-radius: var(--ms-radius-md);
@@ -15,11 +16,39 @@
   background-position:
     -150% 0,
     0 0;
-  animation: ms-skeleton-shimmer 1.4s var(--ms-ease-standard) infinite;
   /* 微弱奥术发光,呼应主题:外层柔光 + 内侧描边微光,模糊半径受 fx-glow 调控 */
   box-shadow:
     0 0 calc(8px * var(--ms-fx-glow, 1)) -2px var(--ms-color-glow),
     inset 0 0 calc(1px * var(--ms-fx-glow, 1)) 0 var(--ms-color-glow);
+}
+
+/* —— 动画分档:shimmer 横向流光 / pulse 透明度呼吸 / wave 渐变波动 / none 静态 —— */
+.ms-skeleton--anim-shimmer {
+  animation: ms-skeleton-shimmer 1.4s var(--ms-ease-standard) infinite;
+}
+.ms-skeleton--anim-pulse {
+  /* 脉冲不靠流光,关掉流光层,只留底色做透明度呼吸 */
+  background-image: linear-gradient(
+    180deg,
+    var(--ms-color-surface-raised) 0%,
+    var(--ms-color-surface) 100%
+  );
+  animation: ms-skeleton-breathe 2s var(--ms-ease-standard) infinite;
+}
+.ms-skeleton--anim-wave {
+  /* 波浪:更宽的高亮带 + 更慢节奏,营造缓行的能量波 */
+  background-size:
+    65% 100%,
+    100% 100%;
+  animation: ms-skeleton-shimmer 2.2s var(--ms-ease-emphasized) infinite;
+}
+.ms-skeleton--anim-none {
+  background-image: linear-gradient(
+    180deg,
+    var(--ms-color-surface-raised) 0%,
+    var(--ms-color-surface) 100%
+  );
+  animation: none;
 }
 
 /* —— 流光:让高亮从左掠到右(仅移动流光层,渐变点缀层保持静止) —— */
@@ -33,6 +62,16 @@
     background-position:
       250% 0,
       0 0;
+  }
+}
+
+@keyframes ms-skeleton-breathe {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
   }
 }
 
@@ -54,10 +93,114 @@
   border-radius: var(--ms-radius-full);
 }
 
-/* —— 尊重 reduced-motion:持续关键帧动画不受 motion-scale 影响,故保留并降级 —— */
-/* —— 去掉位移流光,放慢为透明度呼吸,保留「加载中」语义,放慢不停止 —— */
+/* —— 多行文本骨架:外层不画底,只做纵向行容器;每行各自带动画 —— */
+.ms-skeleton--multiline {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ms-space-2);
+  block-size: auto;
+  background: none;
+  box-shadow: none;
+  animation: none;
+}
+.ms-skeleton__line {
+  display: block;
+  inline-size: 100%;
+  block-size: 0.75rem;
+  border-radius: var(--ms-radius-sm);
+  background-color: var(--ms-color-surface-raised);
+  background-image:
+    linear-gradient(90deg, transparent 0%, var(--ms-color-glow) 50%, transparent 100%),
+    linear-gradient(180deg, var(--ms-color-surface-raised) 0%, var(--ms-color-surface) 100%);
+  background-repeat: no-repeat;
+  background-size:
+    50% 100%,
+    100% 100%;
+  background-position:
+    -150% 0,
+    0 0;
+  box-shadow: inset 0 0 calc(1px * var(--ms-fx-glow, 1)) 0 var(--ms-color-glow);
+}
+/* 多行继承外层动画档:行级动画跟随根的 anim-* 类 */
+.ms-skeleton--anim-shimmer .ms-skeleton__line {
+  animation: ms-skeleton-shimmer 1.4s var(--ms-ease-standard) infinite;
+}
+.ms-skeleton--anim-wave .ms-skeleton__line {
+  background-size:
+    65% 100%,
+    100% 100%;
+  animation: ms-skeleton-shimmer 2.2s var(--ms-ease-emphasized) infinite;
+}
+.ms-skeleton--anim-pulse .ms-skeleton__line {
+  background-image: linear-gradient(
+    180deg,
+    var(--ms-color-surface-raised) 0%,
+    var(--ms-color-surface) 100%
+  );
+  animation: ms-skeleton-breathe 2s var(--ms-ease-standard) infinite;
+}
+
+/* —— SkeletonGroup:骨架组合容器,纵向堆叠子骨架 —— */
+.ms-skeleton-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ms-space-3);
+  max-inline-size: 100%;
+  inline-size: 100%;
+}
+
+/* —— 预制模板:头像 + 标题 + 正文 —— */
+.ms-skeleton-template {
+  display: flex;
+  gap: var(--ms-space-3);
+  align-items: flex-start;
+  max-inline-size: 100%;
+}
+.ms-skeleton-template__avatar {
+  flex: 0 0 auto;
+}
+.ms-skeleton-template__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ms-space-2);
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+.ms-skeleton-template__title {
+  inline-size: 45%;
+  block-size: 1rem;
+}
+
+/* —— 动效降档:data-ms-motion="off" 停成静态底色(不只靠系统偏好) —— */
+[data-ms-motion="off"] .ms-skeleton,
+[data-ms-motion="off"] .ms-skeleton__line {
+  animation: none;
+  background-image: linear-gradient(
+    180deg,
+    var(--ms-color-surface-raised) 0%,
+    var(--ms-color-surface) 100%
+  );
+  background-position: 0 0;
+}
+
+/* —— subtle:放慢节奏,弱化存在感 —— */
+[data-ms-motion="subtle"] .ms-skeleton--anim-shimmer,
+[data-ms-motion="subtle"] .ms-skeleton--anim-shimmer .ms-skeleton__line {
+  animation-duration: 2.4s;
+}
+[data-ms-motion="subtle"] .ms-skeleton--anim-wave,
+[data-ms-motion="subtle"] .ms-skeleton--anim-wave .ms-skeleton__line {
+  animation-duration: 3.4s;
+}
+[data-ms-motion="subtle"] .ms-skeleton--anim-pulse,
+[data-ms-motion="subtle"] .ms-skeleton--anim-pulse .ms-skeleton__line {
+  animation-duration: 3.2s;
+}
+
+/* —— 系统 reduced-motion:去掉位移流光,放慢为透明度呼吸,保留「加载中」语义,放慢不停止 —— */
 @media (prefers-reduced-motion: reduce) {
-  .ms-skeleton {
+  .ms-skeleton:not(.ms-skeleton--multiline):not(.ms-skeleton--anim-none),
+  .ms-skeleton__line {
     background-image: linear-gradient(
       180deg,
       var(--ms-color-surface-raised) 0%,
@@ -66,14 +209,14 @@
     background-position: 0 0;
     animation: ms-skeleton-breathe 3.6s var(--ms-ease-standard) infinite;
   }
-
-  @keyframes ms-skeleton-breathe {
-    0%,
-    100% {
-      opacity: 1;
-    }
-    50% {
-      opacity: 0.55;
-    }
+  .ms-skeleton--anim-none,
+  .ms-skeleton--multiline {
+    animation: none;
   }
+}
+
+/* —— 发光总闸关断:data-ms-fx="off" 熄灭所有辉光 —— */
+[data-ms-fx="off"] .ms-skeleton,
+[data-ms-fx="off"] .ms-skeleton__line {
+  box-shadow: none;
 }

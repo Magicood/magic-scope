@@ -1,0 +1,68 @@
+/* 气泡外观(定位 / 背景 / 描边 / 阴影 / 入场)复用 .ms-popover;此处只排版内容。
+ * 确认按钮配色由内部 .ms-button 读 tone 6 槽位驱动(不在此写死语义色)。 */
+.ms-popconfirm__body {
+  min-inline-size: 12rem;
+  /* 不撑破浮层:与面板共享最大宽度,超长内容换行 */
+  max-inline-size: min(18rem, 100%);
+}
+
+/* 标题行:警示图标 + 文字(图标可选,顶对齐多行标题) */
+.ms-popconfirm__title {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ms-space-2);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.ms-popconfirm__title-text {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+/* 图标用 tone 主色着色,与确认按钮 / 浮层发光同源 */
+.ms-popconfirm__icon {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  inline-size: 1.125rem;
+  block-size: 1.4em;
+  color: var(--ms-c);
+  font-size: 1.05em;
+  line-height: 1;
+}
+.ms-popconfirm__icon > svg {
+  inline-size: 1em;
+  block-size: 1em;
+}
+
+.ms-popconfirm__desc {
+  margin-block-start: var(--ms-space-1);
+  color: var(--ms-color-fg-muted);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.ms-popconfirm__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--ms-space-2);
+  margin-block-start: var(--ms-space-3);
+}
+
+/* 取消按钮:中性化 ghost(Button 无 neutral tone,这里把主色 hover 收敛成中性) */
+.ms-popconfirm__cancel.ms-button {
+  color: var(--ms-color-fg-muted);
+}
+.ms-popconfirm__cancel.ms-button:hover:not(:disabled) {
+  color: var(--ms-color-fg);
+  background-color: color-mix(in oklch, var(--ms-color-fg) 8%, transparent);
+}
+
+/* 触屏(粗指针):气泡内按钮抬到触控目标基线(与 Popover 面板一致,此处兜底确认/取消两键) */
+@media (pointer: coarse) {
+  .ms-popconfirm__actions .ms-button {
+    min-block-size: max(var(--ms-button-min, 2rem), var(--ms-target-min));
+  }
+}

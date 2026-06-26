@@ -1,0 +1,27 @@
+{
+  "id": "steps",
+  "name": "Steps",
+  "description": "步骤条 / 向导:沿水平或垂直轴展示多步流程的进度与状态。支持 items 数组或复合 Steps.Step 两种入口;current 受控/非受控 + onChange 可点击跳步(键盘可达);每步 wait/process/finish/error 状态自动派生或单步覆盖,圆点/图标按状态着 tone 色(finish/process 主色、error danger、wait 弱化),连线 finish 染色;尺寸 sm/default、点状 progressDot、标题位置 labelPlacement、当前步进度环 percent;接全库 tone 槽位与密度缩放,动效随 prefers-reduced-motion 降级。",
+  "category": "navigation",
+  "tags": [
+    "steps",
+    "stepper",
+    "wizard",
+    "progress",
+    "navigation",
+    "process",
+    "guide",
+    "vertical",
+    "horizontal"
+  ],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-26",
+    "requirements": "步骤条(向导,对标 AntD Steps)。items: {title,description?,icon?,status?,disabled?}[] 或复合 Steps.Step;current(受控)+ onChange(可点击跳步)、status(当前步 wait/process/finish/error)、direction(horizontal 默认 | vertical)、size(sm/default)、progressDot(点状)、labelPlacement(horizontal/vertical)、percent(当前步进度环)。每步圆点/图标按 status 着 tone 色(finish→primary、error→danger、process→primary 高亮),连线 finish 染色。键盘可达(可点击时)。logic.ts 放步态解析。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Steps.tsx", "Steps.css", "logic.ts", "index.ts"]
+}

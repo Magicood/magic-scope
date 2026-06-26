@@ -1,0 +1,192 @@
+/* —— Paragraph 基座:块级正文段落。默认 base 字号、relaxed 行高(正文易读) —— */
+.ms-paragraph {
+  margin: 0;
+  color: var(--ms-color-fg);
+  font-size: var(--ms-type-step-0);
+  line-height: var(--ms-leading-relaxed);
+  /* 内容边界:不撑破容器,长串/URL 强制断行 */
+  max-inline-size: 100%;
+  overflow-wrap: break-word;
+}
+
+/* 选区高亮(对齐 Text 的差异化处理) */
+.ms-paragraph ::selection,
+.ms-paragraph::selection {
+  background: var(--ms-color-selection);
+  color: var(--ms-color-on-selection);
+}
+
+/* —— 字号档(流式字阶 --ms-type-step-*) —— */
+.ms-paragraph--size-xs {
+  font-size: var(--ms-type-step--2);
+}
+.ms-paragraph--size-sm {
+  font-size: var(--ms-type-step--1);
+}
+.ms-paragraph--size-base {
+  font-size: var(--ms-type-step-0);
+}
+.ms-paragraph--size-lg {
+  font-size: var(--ms-type-step-1);
+}
+.ms-paragraph--size-xl {
+  font-size: var(--ms-type-step-2);
+}
+
+/* —— 行高语义档 —— */
+.ms-paragraph--leading-tight {
+  line-height: var(--ms-leading-tight);
+}
+.ms-paragraph--leading-snug {
+  line-height: var(--ms-leading-snug);
+}
+.ms-paragraph--leading-normal {
+  line-height: var(--ms-leading-normal);
+}
+.ms-paragraph--leading-relaxed {
+  line-height: var(--ms-leading-relaxed);
+}
+.ms-paragraph--leading-loose {
+  line-height: var(--ms-leading-loose);
+}
+
+/* —— 颜色 / tone(读 tone resolver 的 --ms-c,不写死语义色) —— */
+.ms-paragraph--toned {
+  color: var(--ms-c);
+}
+.ms-paragraph--dimmed {
+  color: var(--ms-color-fg-muted);
+}
+
+/* —— 对齐(逻辑值,RTL 友好) —— */
+.ms-paragraph--align-start {
+  text-align: start;
+}
+.ms-paragraph--align-end {
+  text-align: end;
+}
+.ms-paragraph--align-center {
+  text-align: center;
+}
+.ms-paragraph--align-justify {
+  text-align: justify;
+}
+
+/* —— 文本主体:默认透明承载,只有省略时切到 -webkit-box —— */
+.ms-paragraph__content {
+  /* 继承根的颜色/字号,自身只在 clamp 时变身 */
+  max-inline-size: 100%;
+}
+
+/* —— 多行省略:-webkit-line-clamp(rows 经 inline --ms-line-clamp 注入) —— */
+.ms-paragraph__content--clamp {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: var(--ms-line-clamp, 1);
+  line-clamp: var(--ms-line-clamp, 1);
+  overflow: hidden;
+}
+
+/* 自定义省略符号:仅当用户显式给 data-ms-symbol 时,在末尾追加(浏览器自带 … 之外的语义后缀) */
+.ms-paragraph__content--clamp[data-ms-symbol]::after {
+  content: attr(data-ms-symbol);
+  color: var(--ms-color-fg-muted);
+}
+
+/* —— 操作行:带按钮时让按钮与文本同基线流排 —— */
+.ms-paragraph--has-actions {
+  /* 按钮 inline 跟在文本后;复制按钮浮在末尾不打断阅读 */
+}
+
+/* —— 展开 / 收起切换 —— */
+.ms-paragraph__toggle {
+  margin-inline-start: var(--ms-space-1);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ms-c, var(--ms-color-primary));
+  font: inherit;
+  font-weight: var(--ms-font-weight-medium);
+  line-height: inherit;
+  cursor: pointer;
+  transition: color var(--ms-dur-fast) var(--ms-ease-standard);
+}
+.ms-paragraph__toggle:hover {
+  color: var(--ms-c-hover, var(--ms-color-primary-hover));
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+.ms-paragraph__toggle:focus-visible {
+  outline: none;
+  border-radius: var(--ms-radius-sm);
+  box-shadow:
+    0 0 0 2px var(--ms-color-bg),
+    0 0 0 4px var(--ms-color-focus-ring);
+}
+
+/* —— 复制按钮 —— */
+.ms-paragraph__copy {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 1.5em;
+  block-size: 1.5em;
+  margin-inline-start: var(--ms-space-1);
+  padding: 0;
+  border: 0;
+  border-radius: var(--ms-radius-sm);
+  background: transparent;
+  color: var(--ms-color-fg-muted);
+  font-size: 0.9em;
+  line-height: 1;
+  vertical-align: baseline;
+  cursor: pointer;
+  transition:
+    color var(--ms-dur-fast) var(--ms-ease-standard),
+    background-color var(--ms-dur-fast) var(--ms-ease-standard),
+    box-shadow var(--ms-dur-base) var(--ms-ease-standard);
+}
+.ms-paragraph__copy:hover {
+  color: var(--ms-c, var(--ms-color-fg));
+  background: var(--ms-c-soft);
+}
+.ms-paragraph__copy:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--ms-color-bg),
+    0 0 0 4px var(--ms-color-focus-ring);
+}
+
+/* —— 复制成功:染 tone + 魔法 glow 一闪(受 --ms-fx-glow 调制) —— */
+.ms-paragraph__copy--copied {
+  color: var(--ms-c);
+  animation: ms-paragraph-copied 1s var(--ms-ease-standard, ease) both;
+}
+@keyframes ms-paragraph-copied {
+  0% {
+    box-shadow: 0 0 0 0 var(--ms-c-glow);
+    transform: scale(1);
+  }
+  30% {
+    box-shadow: 0 0 calc(12px * var(--ms-fx-glow, 1)) 0 var(--ms-c-glow);
+    transform: scale(calc(1 + 0.12 * var(--ms-motion-scale, 1)));
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+    transform: scale(1);
+  }
+}
+
+/* —— 动效双降级:reduced-motion 与 data-ms-motion=off 都停 glow 闪(保留色态切换,可达性不丢反馈) —— */
+@media (prefers-reduced-motion: reduce) {
+  .ms-paragraph__copy--copied {
+    animation: none;
+  }
+}
+[data-ms-motion="off"] .ms-paragraph__copy--copied {
+  animation: none;
+}
+/* fx 总闸关闭:彻底去发光(动画里的 box-shadow 用 --ms-fx-glow=0 自然归零) */
+[data-ms-fx="off"] .ms-paragraph__copy--copied {
+  box-shadow: none;
+}

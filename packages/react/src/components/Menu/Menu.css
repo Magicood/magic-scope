@@ -1,7 +1,9 @@
 /* —— Menu 下拉菜单 ——
  * 浮层进 top-layer:Popover API(.ms-menu[popover])。
- * 定位:CSS Anchor Positioning —— position-anchor 由内联 style 提供,position-area 锚到 trigger 下方。
- * 降级:@supports not (anchor-name) → 退化为 fixed 居中,保证不支持的浏览器仍可用。
+ * 定位:CSS Anchor Positioning —— position-anchor 由内联 style 提供,position-area(--ms-menu-area)
+ *   由 placement × align 派生,offset(--ms-menu-offset)控制与 trigger 间距。
+ * 配色:tone resolver —— 只读 6 槽位(--ms-c / --ms-c-soft / --ms-c-glow / --ms-on-c …),不写死语义色。
+ * 降级:@supports not (anchor-name) → 退化为 fixed 居顶,保证不支持的浏览器仍可用。
  */
 .ms-menu {
   /* popover 浮层默认 inset:0 + margin:auto,这里清掉,改由 anchor 定位 */
@@ -21,8 +23,8 @@
   color: var(--ms-color-fg);
   font-family: var(--ms-font-sans);
   box-shadow:
-    0 24px 64px -24px rgb(0 0 0 / 0.7),
-    0 0 calc(40px * var(--ms-fx-glow, 1)) -16px var(--ms-color-glow);
+    0 24px 64px -24px rgb(0 0 0 / 0.45),
+    0 0 calc(40px * var(--ms-fx-glow, 1)) -16px var(--ms-c-glow);
 
   /* 入场动画:淡入 + 自顶部展开下滑,位移受 motion-scale 门控 */
   opacity: 0;
@@ -48,13 +50,30 @@
   }
 }
 
-/* —— 锚定位:支持 anchor-name 时锚到 trigger 正下方,留 6px 间隙 —— */
+/* 发光总闸关断 */
+[data-ms-fx="off"] .ms-menu {
+  box-shadow: 0 24px 64px -24px rgb(0 0 0 / 0.45);
+}
+
+/* —— 锚定位:支持 anchor-name 时按 placement/align 锚定,offset 控制间距 —— */
 @supports (anchor-name: --x) {
   .ms-menu {
-    position-area: block-end span-inline-end;
-    margin-block-start: var(--ms-space-2);
+    position-area: var(--ms-menu-area, block-end span-inline-end);
     /* 空间不足时翻转到上方 / 另一侧 */
     position-try-fallbacks: flip-block, flip-inline;
+  }
+  /* 主轴方位 → 对应方向的间距(offset) */
+  .ms-menu[data-placement="bottom"] {
+    margin-block-start: var(--ms-menu-offset, var(--ms-space-2));
+  }
+  .ms-menu[data-placement="top"] {
+    margin-block-end: var(--ms-menu-offset, var(--ms-space-2));
+  }
+  .ms-menu[data-placement="right"] {
+    margin-inline-start: var(--ms-menu-offset, var(--ms-space-2));
+  }
+  .ms-menu[data-placement="left"] {
+    margin-inline-end: var(--ms-menu-offset, var(--ms-space-2));
   }
 }
 
@@ -74,7 +93,9 @@
 .ms-menu__item {
   display: flex;
   align-items: center;
+  gap: var(--ms-space-2);
   inline-size: 100%;
+  min-inline-size: 0;
   padding-block: var(--ms-space-2);
   padding-inline: var(--ms-space-3);
   border: none;
@@ -84,6 +105,7 @@
   font: inherit;
   font-size: 0.95rem;
   text-align: start;
+  text-decoration: none;
   white-space: normal;
   overflow-wrap: anywhere;
   cursor: pointer;
@@ -94,29 +116,77 @@
     box-shadow var(--ms-dur-fast) var(--ms-ease-standard);
 }
 
+/* 项内部:图标 / 标签(占满可压缩)/ 对勾 / 快捷键 */
+.ms-menu__icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  inline-size: 1.1em;
+  block-size: 1.1em;
+}
+.ms-menu__check {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  inline-size: 1.1em;
+  color: var(--ms-c);
+}
+.ms-menu__label {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+.ms-menu__shortcut {
+  flex: 0 0 auto;
+  margin-inline-start: auto;
+  padding-inline-start: var(--ms-space-3);
+  color: var(--ms-color-fg-muted);
+  font-size: 0.85em;
+}
+
 /* hover / focus 高亮:浮起表面 + 主色字 + 内侧微光导轨 */
-.ms-menu__item:hover:not(:disabled),
+.ms-menu__item:hover:not(:disabled, [aria-disabled="true"]),
 .ms-menu__item:focus-visible {
   outline: none;
-  background-color: var(--ms-color-surface);
-  color: var(--ms-color-primary-hover);
+  background-color: var(--ms-c-soft);
+  color: var(--ms-c-hover);
   box-shadow:
-    inset 2px 0 0 var(--ms-color-primary),
-    0 0 calc(16px * var(--ms-fx-glow, 1)) -8px var(--ms-color-glow);
+    inset 2px 0 0 var(--ms-c),
+    0 0 calc(16px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow);
 }
 
 /* 键盘聚焦再叠加发光环,保证可达性(不受 fx 门控) */
 .ms-menu__item:focus-visible {
   box-shadow:
-    inset 2px 0 0 var(--ms-color-primary),
+    inset 2px 0 0 var(--ms-c),
     0 0 0 2px var(--ms-color-focus-ring);
+}
+
+/* 发光总闸关断:项保留导轨,去掉外发光 */
+[data-ms-fx="off"] .ms-menu__item:hover:not(:disabled, [aria-disabled="true"]),
+[data-ms-fx="off"] .ms-menu__item:focus-visible {
+  box-shadow: inset 2px 0 0 var(--ms-c);
+}
+[data-ms-fx="off"] .ms-menu__item:focus-visible {
+  box-shadow:
+    inset 2px 0 0 var(--ms-c),
+    0 0 0 2px var(--ms-color-focus-ring);
+}
+
+/* 选中态项:选中时标签略加粗 */
+.ms-menu__item--selectable[aria-checked="true"] .ms-menu__label {
+  font-weight: 600;
 }
 
 /* danger 项:危险色,hover / focus 时染红并微光 */
 .ms-menu__item--danger {
   color: var(--ms-color-danger);
 }
-.ms-menu__item--danger:hover:not(:disabled),
+.ms-menu__item--danger .ms-menu__check {
+  color: var(--ms-color-danger);
+}
+.ms-menu__item--danger:hover:not(:disabled, [aria-disabled="true"]),
 .ms-menu__item--danger:focus-visible {
   background-color: color-mix(in oklab, var(--ms-color-danger) 14%, transparent);
   color: var(--ms-color-danger);
@@ -130,15 +200,67 @@
     0 0 0 2px var(--ms-color-focus-ring);
 }
 
-.ms-menu__item:disabled {
+.ms-menu__item:disabled,
+.ms-menu__item[aria-disabled="true"] {
   cursor: not-allowed;
   opacity: 0.45;
+}
+
+/* —— 分隔线(<hr>:重置默认边框,只留一条细线) —— */
+.ms-menu__separator {
+  block-size: 1px;
+  margin-block: var(--ms-space-1);
+  margin-inline: var(--ms-space-2);
+  border: none;
+  background-color: var(--ms-color-border);
+}
+
+/* —— 分组标题 —— */
+.ms-menu__group-label {
+  padding-block: var(--ms-space-1);
+  padding-inline: var(--ms-space-3);
+  color: var(--ms-color-fg-muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+.ms-menu__group-label:not(:first-child) {
+  margin-block-start: var(--ms-space-1);
 }
 
 /* —— 触控设备:菜单项达标到最小命中目标,纵向更宽松 —— */
 @media (pointer: coarse) {
   .ms-menu__item {
-    min-block-size: var(--ms-target-min);
+    min-block-size: max(var(--ms-target-min), calc(2.5rem * var(--ms-density-scale, 1)));
     padding-block: var(--ms-space-3);
   }
+}
+
+/* —— 动效降级:尊重系统偏好与库级总闸 —— */
+@media (prefers-reduced-motion: reduce) {
+  .ms-menu {
+    transition-duration: 0.01ms;
+    transform: none;
+  }
+  .ms-menu:popover-open {
+    transform: none;
+  }
+  @starting-style {
+    .ms-menu:popover-open {
+      transform: none;
+    }
+  }
+  .ms-menu__item {
+    transition-duration: 0.01ms;
+  }
+}
+
+[data-ms-motion="off"] .ms-menu,
+[data-ms-motion="off"] .ms-menu:popover-open {
+  transition: none;
+  transform: none;
+}
+[data-ms-motion="off"] .ms-menu__item {
+  transition: none;
 }

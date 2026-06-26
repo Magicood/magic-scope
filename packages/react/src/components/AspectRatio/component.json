@@ -1,0 +1,28 @@
+{
+  "id": "aspect-ratio",
+  "name": "AspectRatio",
+  "description": "宽高比盒:用 CSS aspect-ratio 维持任意宽高比,子媒体(img/video/iframe)绝对铺满、object-fit 可选裁剪;ratio 支持断点对象响应式,旧引擎 padding-top 百分比自动兜底。多态 as + asChild。",
+  "category": "layout",
+  "tags": [
+    "layout",
+    "aspect-ratio",
+    "media",
+    "responsive",
+    "image",
+    "video",
+    "iframe",
+    "object-fit",
+    "polymorphic",
+    "as-child"
+  ],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-26",
+    "requirements": "新布局组件 AspectRatio:宽高比盒。ratio(number 如 16/9、1、4/3)用 CSS aspect-ratio 维持比例,子内容(img/video/iframe)绝对填满(object-fit:cover 可选)。@supports 兜底用 padding-top 百分比技巧。ratio 支持响应式对象。多态 as + asChild。布局组件为结构性:多态、响应式、间距 token 化、RTL 友好,不需要 tone/发光。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["AspectRatio.tsx", "AspectRatio.css", "logic.ts", "index.ts", "AspectRatio.test.tsx"]
+}

@@ -1,0 +1,27 @@
+{
+  "id": "popconfirm",
+  "name": "Popconfirm",
+  "description": "锚定在元素旁的轻量确认气泡(非全屏模态)。复用 Popover(原生 Popover API + CSS Anchor Positioning,点外/Esc 关闭),内建确认/取消按钮流;tone 色调经全库 resolver 驱动确认按钮配色与浮层发光(variant=danger 向后兼容收敛为 tone);异步 onConfirm(返回 Promise 时确认按钮 loading+禁用,resolve 才关、reject 保持打开)、confirmLoading;受控 open/defaultOpen + onOpenChange 双通道;onEscapeKeyDown/onPointerDownOutside 可拦截关闭;icon 警示槽、title/description、confirmText/cancelText(默认走 i18n)、confirmButtonProps/cancelButtonProps 透传内部按钮、classNames 细粒度槽位、placement。常用于列表内联删除确认。",
+  "category": "overlay",
+  "tags": [
+    "popconfirm",
+    "confirm",
+    "popover",
+    "overlay",
+    "inline",
+    "tone",
+    "async",
+    "controlled",
+    "i18n"
+  ],
+  "status": "stable",
+  "version": "0.0.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-25",
+    "requirements": "补齐弹窗体系:气泡确认。原创实现,不另造定位——直接包一层已有的 Popover(锚定 + 点外/Esc 关闭),只叠加确认/取消 UI 与回调;区别于全屏的 AlertDialog confirm() 与装任意内容的 Popover。常见于内联删除确认。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Popconfirm.tsx", "Popconfirm.css", "index.ts"]
+}

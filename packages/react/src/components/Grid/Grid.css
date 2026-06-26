@@ -1,0 +1,445 @@
+/* —— Grid:CSS Grid 原语 ——
+ * 响应式机制:Grid.tsx 把每个断点的值写成 `--ms-grid-<prop>-<bp>` CSS 变量(只写用户提供的断点)。
+ * 本文件用静态 `@media`(视口模式)/ `@container`(容器模式)块,按移动优先做「fallback 链级联」:
+ * 某断点未提供变量时,沿 base→sm→md→lg→xl→2xl 回退到更小断点已声明的值。
+ * 断点像素 = tokens breakpoints.viewport(sm 30rem / md 48rem / lg 64rem / xl 80rem / 2xl 96rem),
+ * 容器断点复用相同 rem 阈值(对父容器 inline-size 生效)。
+ * CSS 逻辑属性(gap / align-items 等本就方向无关),RTL 友好。 */
+
+.ms-grid {
+  display: grid;
+  /* 基线(base 断点 + 单值)。fallback 给安全默认,未设属性时回到 CSS 初始值语义。 */
+  grid-template-columns: var(--ms-grid-cols-base, none);
+  grid-template-rows: var(--ms-grid-rows-base, none);
+  gap: var(--ms-grid-row-gap-base, var(--ms-grid-gap-base, 0))
+    var(--ms-grid-col-gap-base, var(--ms-grid-gap-base, 0));
+  grid-auto-flow: var(--ms-grid-flow-base, row);
+  grid-auto-rows: var(--ms-grid-auto-rows-base, auto);
+  grid-auto-columns: var(--ms-grid-auto-cols-base, auto);
+  align-items: var(--ms-grid-align-base, stretch);
+  justify-items: var(--ms-grid-justify-base, stretch);
+  align-content: var(--ms-grid-align-content-base, normal);
+  justify-content: var(--ms-grid-justify-content-base, normal);
+}
+
+.ms-grid--inline {
+  display: inline-grid;
+}
+
+/* 容器查询模式:对父容器宽度自适应而非视口。 */
+.ms-grid--container {
+  container-type: inline-size;
+}
+
+.ms-grid__item {
+  grid-column-start: var(--ms-grid-item-col-start-base, auto);
+  grid-row-start: var(--ms-grid-item-row-start-base, auto);
+  grid-column-end: var(--ms-grid-item-col-span-base, auto);
+  grid-row-end: var(--ms-grid-item-row-span-base, auto);
+  align-self: var(--ms-grid-item-align-self-base, auto);
+  justify-self: var(--ms-grid-item-justify-self-base, auto);
+}
+
+/* ============================================================
+ * 视口媒体查询级联(默认模式)。每档 fallback 链回退到更小断点。
+ * ============================================================ */
+
+@media (min-width: 30rem) {
+  .ms-grid:not(.ms-grid--container) {
+    grid-template-columns: var(--ms-grid-cols-sm, var(--ms-grid-cols-base, none));
+    grid-template-rows: var(--ms-grid-rows-sm, var(--ms-grid-rows-base, none));
+    gap: var(
+        --ms-grid-row-gap-sm,
+        var(--ms-grid-gap-sm, var(--ms-grid-row-gap-base, var(--ms-grid-gap-base, 0)))
+      )
+      var(
+        --ms-grid-col-gap-sm,
+        var(--ms-grid-gap-sm, var(--ms-grid-col-gap-base, var(--ms-grid-gap-base, 0)))
+      );
+    grid-auto-flow: var(--ms-grid-flow-sm, var(--ms-grid-flow-base, row));
+    grid-auto-rows: var(--ms-grid-auto-rows-sm, var(--ms-grid-auto-rows-base, auto));
+    grid-auto-columns: var(--ms-grid-auto-cols-sm, var(--ms-grid-auto-cols-base, auto));
+    align-items: var(--ms-grid-align-sm, var(--ms-grid-align-base, stretch));
+    justify-items: var(--ms-grid-justify-sm, var(--ms-grid-justify-base, stretch));
+    align-content: var(--ms-grid-align-content-sm, var(--ms-grid-align-content-base, normal));
+    justify-content: var(--ms-grid-justify-content-sm, var(--ms-grid-justify-content-base, normal));
+  }
+  .ms-grid:not(.ms-grid--container) > .ms-grid__item {
+    grid-column-start: var(--ms-grid-item-col-start-sm, var(--ms-grid-item-col-start-base, auto));
+    grid-row-start: var(--ms-grid-item-row-start-sm, var(--ms-grid-item-row-start-base, auto));
+    grid-column-end: var(--ms-grid-item-col-span-sm, var(--ms-grid-item-col-span-base, auto));
+    grid-row-end: var(--ms-grid-item-row-span-sm, var(--ms-grid-item-row-span-base, auto));
+    align-self: var(--ms-grid-item-align-self-sm, var(--ms-grid-item-align-self-base, auto));
+    justify-self: var(--ms-grid-item-justify-self-sm, var(--ms-grid-item-justify-self-base, auto));
+  }
+}
+
+@media (min-width: 48rem) {
+  .ms-grid:not(.ms-grid--container) {
+    grid-template-columns: var(
+        --ms-grid-cols-md,
+        var(--ms-grid-cols-sm, var(--ms-grid-cols-base, none))
+      );
+    grid-template-rows: var(
+        --ms-grid-rows-md,
+        var(--ms-grid-rows-sm, var(--ms-grid-rows-base, none))
+      );
+    gap: var(
+        --ms-grid-row-gap-md,
+        var(
+          --ms-grid-gap-md,
+          var(
+            --ms-grid-row-gap-sm,
+            var(--ms-grid-gap-sm, var(--ms-grid-row-gap-base, var(--ms-grid-gap-base, 0)))
+          )
+        )
+      )
+      var(
+        --ms-grid-col-gap-md,
+        var(
+          --ms-grid-gap-md,
+          var(
+            --ms-grid-col-gap-sm,
+            var(--ms-grid-gap-sm, var(--ms-grid-col-gap-base, var(--ms-grid-gap-base, 0)))
+          )
+        )
+      );
+    grid-auto-flow: var(--ms-grid-flow-md, var(--ms-grid-flow-sm, var(--ms-grid-flow-base, row)));
+    grid-auto-rows: var(
+      --ms-grid-auto-rows-md,
+      var(--ms-grid-auto-rows-sm, var(--ms-grid-auto-rows-base, auto))
+    );
+    grid-auto-columns: var(
+      --ms-grid-auto-cols-md,
+      var(--ms-grid-auto-cols-sm, var(--ms-grid-auto-cols-base, auto))
+    );
+    align-items: var(
+      --ms-grid-align-md,
+      var(--ms-grid-align-sm, var(--ms-grid-align-base, stretch))
+    );
+    justify-items: var(
+      --ms-grid-justify-md,
+      var(--ms-grid-justify-sm, var(--ms-grid-justify-base, stretch))
+    );
+    align-content: var(
+      --ms-grid-align-content-md,
+      var(--ms-grid-align-content-sm, var(--ms-grid-align-content-base, normal))
+    );
+    justify-content: var(
+      --ms-grid-justify-content-md,
+      var(--ms-grid-justify-content-sm, var(--ms-grid-justify-content-base, normal))
+    );
+  }
+  .ms-grid:not(.ms-grid--container) > .ms-grid__item {
+    grid-column-start: var(
+      --ms-grid-item-col-start-md,
+      var(--ms-grid-item-col-start-sm, var(--ms-grid-item-col-start-base, auto))
+    );
+    grid-row-start: var(
+      --ms-grid-item-row-start-md,
+      var(--ms-grid-item-row-start-sm, var(--ms-grid-item-row-start-base, auto))
+    );
+    grid-column-end: var(
+      --ms-grid-item-col-span-md,
+      var(--ms-grid-item-col-span-sm, var(--ms-grid-item-col-span-base, auto))
+    );
+    grid-row-end: var(
+      --ms-grid-item-row-span-md,
+      var(--ms-grid-item-row-span-sm, var(--ms-grid-item-row-span-base, auto))
+    );
+    align-self: var(
+      --ms-grid-item-align-self-md,
+      var(--ms-grid-item-align-self-sm, var(--ms-grid-item-align-self-base, auto))
+    );
+    justify-self: var(
+      --ms-grid-item-justify-self-md,
+      var(--ms-grid-item-justify-self-sm, var(--ms-grid-item-justify-self-base, auto))
+    );
+  }
+}
+
+@media (min-width: 64rem) {
+  .ms-grid:not(.ms-grid--container) {
+    grid-template-columns: var(
+        --ms-grid-cols-lg,
+        var(--ms-grid-cols-md, var(--ms-grid-cols-sm, var(--ms-grid-cols-base, none)))
+      );
+    grid-template-rows: var(
+        --ms-grid-rows-lg,
+        var(--ms-grid-rows-md, var(--ms-grid-rows-sm, var(--ms-grid-rows-base, none)))
+      );
+    gap: var(
+        --ms-grid-row-gap-lg,
+        var(
+          --ms-grid-gap-lg,
+          var(
+            --ms-grid-row-gap-md,
+            var(--ms-grid-gap-md, var(--ms-grid-row-gap-base, var(--ms-grid-gap-base, 0)))
+          )
+        )
+      )
+      var(
+        --ms-grid-col-gap-lg,
+        var(
+          --ms-grid-gap-lg,
+          var(
+            --ms-grid-col-gap-md,
+            var(--ms-grid-gap-md, var(--ms-grid-col-gap-base, var(--ms-grid-gap-base, 0)))
+          )
+        )
+      );
+    grid-auto-flow: var(--ms-grid-flow-lg, var(--ms-grid-flow-md, var(--ms-grid-flow-base, row)));
+    grid-auto-rows: var(
+      --ms-grid-auto-rows-lg,
+      var(--ms-grid-auto-rows-md, var(--ms-grid-auto-rows-base, auto))
+    );
+    grid-auto-columns: var(
+      --ms-grid-auto-cols-lg,
+      var(--ms-grid-auto-cols-md, var(--ms-grid-auto-cols-base, auto))
+    );
+    align-items: var(
+      --ms-grid-align-lg,
+      var(--ms-grid-align-md, var(--ms-grid-align-base, stretch))
+    );
+    justify-items: var(
+      --ms-grid-justify-lg,
+      var(--ms-grid-justify-md, var(--ms-grid-justify-base, stretch))
+    );
+    align-content: var(
+      --ms-grid-align-content-lg,
+      var(--ms-grid-align-content-md, var(--ms-grid-align-content-base, normal))
+    );
+    justify-content: var(
+      --ms-grid-justify-content-lg,
+      var(--ms-grid-justify-content-md, var(--ms-grid-justify-content-base, normal))
+    );
+  }
+  .ms-grid:not(.ms-grid--container) > .ms-grid__item {
+    grid-column-start: var(
+      --ms-grid-item-col-start-lg,
+      var(--ms-grid-item-col-start-md, var(--ms-grid-item-col-start-base, auto))
+    );
+    grid-row-start: var(
+      --ms-grid-item-row-start-lg,
+      var(--ms-grid-item-row-start-md, var(--ms-grid-item-row-start-base, auto))
+    );
+    grid-column-end: var(
+      --ms-grid-item-col-span-lg,
+      var(--ms-grid-item-col-span-md, var(--ms-grid-item-col-span-base, auto))
+    );
+    grid-row-end: var(
+      --ms-grid-item-row-span-lg,
+      var(--ms-grid-item-row-span-md, var(--ms-grid-item-row-span-base, auto))
+    );
+    align-self: var(
+      --ms-grid-item-align-self-lg,
+      var(--ms-grid-item-align-self-md, var(--ms-grid-item-align-self-base, auto))
+    );
+    justify-self: var(
+      --ms-grid-item-justify-self-lg,
+      var(--ms-grid-item-justify-self-md, var(--ms-grid-item-justify-self-base, auto))
+    );
+  }
+}
+
+@media (min-width: 80rem) {
+  .ms-grid:not(.ms-grid--container) {
+    grid-template-columns: var(
+        --ms-grid-cols-xl,
+        var(--ms-grid-cols-lg, var(--ms-grid-cols-md, var(--ms-grid-cols-base, none)))
+      );
+    grid-template-rows: var(
+        --ms-grid-rows-xl,
+        var(--ms-grid-rows-lg, var(--ms-grid-rows-base, none))
+      );
+    gap: var(
+        --ms-grid-row-gap-xl,
+        var(
+          --ms-grid-gap-xl,
+          var(
+            --ms-grid-row-gap-lg,
+            var(--ms-grid-gap-lg, var(--ms-grid-row-gap-base, var(--ms-grid-gap-base, 0)))
+          )
+        )
+      )
+      var(
+        --ms-grid-col-gap-xl,
+        var(
+          --ms-grid-gap-xl,
+          var(
+            --ms-grid-col-gap-lg,
+            var(--ms-grid-gap-lg, var(--ms-grid-col-gap-base, var(--ms-grid-gap-base, 0)))
+          )
+        )
+      );
+    grid-auto-flow: var(--ms-grid-flow-xl, var(--ms-grid-flow-lg, var(--ms-grid-flow-base, row)));
+    grid-auto-rows: var(
+      --ms-grid-auto-rows-xl,
+      var(--ms-grid-auto-rows-lg, var(--ms-grid-auto-rows-base, auto))
+    );
+    grid-auto-columns: var(
+      --ms-grid-auto-cols-xl,
+      var(--ms-grid-auto-cols-lg, var(--ms-grid-auto-cols-base, auto))
+    );
+    align-items: var(
+      --ms-grid-align-xl,
+      var(--ms-grid-align-lg, var(--ms-grid-align-base, stretch))
+    );
+    justify-items: var(
+      --ms-grid-justify-xl,
+      var(--ms-grid-justify-lg, var(--ms-grid-justify-base, stretch))
+    );
+    align-content: var(
+      --ms-grid-align-content-xl,
+      var(--ms-grid-align-content-lg, var(--ms-grid-align-content-base, normal))
+    );
+    justify-content: var(
+      --ms-grid-justify-content-xl,
+      var(--ms-grid-justify-content-lg, var(--ms-grid-justify-content-base, normal))
+    );
+  }
+  .ms-grid:not(.ms-grid--container) > .ms-grid__item {
+    grid-column-start: var(
+      --ms-grid-item-col-start-xl,
+      var(--ms-grid-item-col-start-lg, var(--ms-grid-item-col-start-base, auto))
+    );
+    grid-row-start: var(
+      --ms-grid-item-row-start-xl,
+      var(--ms-grid-item-row-start-lg, var(--ms-grid-item-row-start-base, auto))
+    );
+    grid-column-end: var(
+      --ms-grid-item-col-span-xl,
+      var(--ms-grid-item-col-span-lg, var(--ms-grid-item-col-span-base, auto))
+    );
+    grid-row-end: var(
+      --ms-grid-item-row-span-xl,
+      var(--ms-grid-item-row-span-lg, var(--ms-grid-item-row-span-base, auto))
+    );
+    align-self: var(
+      --ms-grid-item-align-self-xl,
+      var(--ms-grid-item-align-self-lg, var(--ms-grid-item-align-self-base, auto))
+    );
+    justify-self: var(
+      --ms-grid-item-justify-self-xl,
+      var(--ms-grid-item-justify-self-lg, var(--ms-grid-item-justify-self-base, auto))
+    );
+  }
+}
+
+@media (min-width: 96rem) {
+  .ms-grid:not(.ms-grid--container) {
+    grid-template-columns: var(
+        --ms-grid-cols-2xl,
+        var(--ms-grid-cols-xl, var(--ms-grid-cols-lg, var(--ms-grid-cols-base, none)))
+      );
+    gap: var(
+        --ms-grid-row-gap-2xl,
+        var(
+          --ms-grid-gap-2xl,
+          var(
+            --ms-grid-row-gap-xl,
+            var(--ms-grid-gap-xl, var(--ms-grid-row-gap-base, var(--ms-grid-gap-base, 0)))
+          )
+        )
+      )
+      var(
+        --ms-grid-col-gap-2xl,
+        var(
+          --ms-grid-gap-2xl,
+          var(
+            --ms-grid-col-gap-xl,
+            var(--ms-grid-gap-xl, var(--ms-grid-col-gap-base, var(--ms-grid-gap-base, 0)))
+          )
+        )
+      );
+    grid-auto-flow: var(--ms-grid-flow-2xl, var(--ms-grid-flow-xl, var(--ms-grid-flow-base, row)));
+    align-items: var(
+      --ms-grid-align-2xl,
+      var(--ms-grid-align-xl, var(--ms-grid-align-base, stretch))
+    );
+    justify-items: var(
+      --ms-grid-justify-2xl,
+      var(--ms-grid-justify-xl, var(--ms-grid-justify-base, stretch))
+    );
+  }
+  .ms-grid:not(.ms-grid--container) > .ms-grid__item {
+    grid-column-end: var(
+      --ms-grid-item-col-span-2xl,
+      var(--ms-grid-item-col-span-xl, var(--ms-grid-item-col-span-base, auto))
+    );
+    grid-row-end: var(
+      --ms-grid-item-row-span-2xl,
+      var(--ms-grid-item-row-span-xl, var(--ms-grid-item-row-span-base, auto))
+    );
+  }
+}
+
+/* ============================================================
+ * 容器查询级联(container 模式)。阈值同视口断点 rem,但对父容器 inline-size 生效。
+ * ============================================================ */
+
+@container (min-width: 30rem) {
+  .ms-grid--container {
+    grid-template-columns: var(--ms-grid-cols-sm, var(--ms-grid-cols-base, none));
+    gap: var(
+        --ms-grid-row-gap-sm,
+        var(--ms-grid-gap-sm, var(--ms-grid-row-gap-base, var(--ms-grid-gap-base, 0)))
+      )
+      var(
+        --ms-grid-col-gap-sm,
+        var(--ms-grid-gap-sm, var(--ms-grid-col-gap-base, var(--ms-grid-gap-base, 0)))
+      );
+  }
+}
+
+@container (min-width: 48rem) {
+  .ms-grid--container {
+    grid-template-columns: var(
+        --ms-grid-cols-md,
+        var(--ms-grid-cols-sm, var(--ms-grid-cols-base, none))
+      );
+    gap: var(
+        --ms-grid-row-gap-md,
+        var(--ms-grid-gap-md, var(--ms-grid-row-gap-base, var(--ms-grid-gap-base, 0)))
+      )
+      var(
+        --ms-grid-col-gap-md,
+        var(--ms-grid-gap-md, var(--ms-grid-col-gap-base, var(--ms-grid-gap-base, 0)))
+      );
+  }
+}
+
+@container (min-width: 64rem) {
+  .ms-grid--container {
+    grid-template-columns: var(
+        --ms-grid-cols-lg,
+        var(--ms-grid-cols-md, var(--ms-grid-cols-base, none))
+      );
+    gap: var(
+        --ms-grid-row-gap-lg,
+        var(--ms-grid-gap-lg, var(--ms-grid-row-gap-base, var(--ms-grid-gap-base, 0)))
+      )
+      var(
+        --ms-grid-col-gap-lg,
+        var(--ms-grid-gap-lg, var(--ms-grid-col-gap-base, var(--ms-grid-gap-base, 0)))
+      );
+  }
+}
+
+@container (min-width: 80rem) {
+  .ms-grid--container {
+    grid-template-columns: var(
+        --ms-grid-cols-xl,
+        var(--ms-grid-cols-lg, var(--ms-grid-cols-base, none))
+      );
+  }
+}
+
+@container (min-width: 96rem) {
+  .ms-grid--container {
+    grid-template-columns: var(
+        --ms-grid-cols-2xl,
+        var(--ms-grid-cols-xl, var(--ms-grid-cols-base, none))
+      );
+  }
+}

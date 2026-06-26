@@ -1,0 +1,48 @@
+/* 文字排版 —— 共享尺度 token(组件内兜底)。归属 ms.tokens 层(同 device.css:结构尺度常量)。
+ *
+ * ⚠ 兼容/协调备注(不藏着):正经的 fluid type scale 由架构线在 @magic-scope/tokens 落地
+ *   (DESIGN §5.3,公开名 --ms-type-step-<n> / --ms-font-family-<role>),目前是 greenfield、
+ *   改 ThemeContract 属 major break。此处是**零跨线依赖的同名兜底**:架构线接入正式 token 后,
+ *   :where(:root) 默认会被真 token 覆盖(同名),Typography 组件无需改动。
+ *   clamp() 流式字号:Chrome/Safari/FF 全绿;clamp 本身 IE 不支持(本库 evergreen,无碍)。 */
+@layer ms.tokens {
+  :where(:root) {
+    /* —— 字号阶梯(1.2 minor-third + fluid clamp,step-0 = base) —— */
+    --ms-type-step--2: clamp(0.69rem, 0.66rem + 0.15vw, 0.75rem);
+    --ms-type-step--1: clamp(0.83rem, 0.79rem + 0.2vw, 0.9rem);
+    --ms-type-step-0: clamp(1rem, 0.95rem + 0.25vw, 1.1rem);
+    --ms-type-step-1: clamp(1.2rem, 1.1rem + 0.4vw, 1.35rem);
+    --ms-type-step-2: clamp(1.44rem, 1.3rem + 0.6vw, 1.65rem);
+    --ms-type-step-3: clamp(1.728rem, 1.5rem + 0.9vw, 2rem);
+    --ms-type-step-4: clamp(2.074rem, 1.7rem + 1.4vw, 2.5rem);
+    --ms-type-step-5: clamp(2.488rem, 1.9rem + 2.2vw, 3.1rem);
+    --ms-type-step-6: clamp(2.986rem, 2.1rem + 3.4vw, 3.9rem);
+
+    /* —— 行高语义档(补了组件高频的 snug=1.4,原 scale 只有 1.2/1.5/1.7) —— */
+    --ms-leading-none: 1;
+    --ms-leading-tight: 1.2;
+    --ms-leading-snug: 1.4;
+    --ms-leading-normal: 1.5;
+    --ms-leading-relaxed: 1.7;
+    --ms-leading-loose: 2;
+
+    /* —— 字距(当前 tokens 完全空白,此处新增一轴;em 随字号缩放) —— */
+    --ms-tracking-tighter: -0.03em;
+    --ms-tracking-tight: -0.015em;
+    --ms-tracking-normal: 0em;
+    --ms-tracking-wide: 0.02em;
+    --ms-tracking-wider: 0.06em;
+    --ms-tracking-widest: 0.12em;
+
+    /* —— 字重语义档(映射 scale.ts 常量) —— */
+    --ms-font-weight-normal: 400;
+    --ms-font-weight-medium: 500;
+    --ms-font-weight-semibold: 600;
+    --ms-font-weight-bold: 700;
+
+    /* —— serif 角色当前无 token:兜底系统 serif 栈(含 CJK);
+       不复用 --ms-font-display(Cinzel 是装饰性 display 衬线,不适合正文) —— */
+    --ms-font-serif:
+      ui-serif, Georgia, Cambria, "Songti SC", "Noto Serif CJK SC", "Source Han Serif SC", serif;
+  }
+}
