@@ -1,0 +1,53 @@
+import type { ComponentMeta } from '../core/types';
+
+export const meta: ComponentMeta = {
+  id: 'tag',
+  name: 'Tag',
+  category: 'data',
+  summary: '语义色标签,六档 tone 柔和底色,可选关闭按钮,用于分类、过滤与可移除项。',
+  description:
+    '自研、零依赖,消费 @magic-scope/tokens 的 --ms-* 变量。\ntone 用 color-mix 调出 18% 柔和底 + tone 文字,紧凑内边距适合密集场景。\nclosable 时在末尾渲染移除按钮,hover 加深、focus-visible 显示发光环;移除逻辑由 onRemove 交给上层 state 控制。透传原生 span 属性(title / onClick 等)。',
+  controls: [
+    {
+      type: 'select',
+      prop: 'tone',
+      label: '色调 tone',
+      default: 'neutral',
+      options: [
+        { value: 'primary', label: 'primary 主色' },
+        { value: 'accent', label: 'accent 强调' },
+        { value: 'success', label: 'success 成功' },
+        { value: 'warning', label: 'warning 警告' },
+        { value: 'danger', label: 'danger 危险' },
+        { value: 'info', label: 'info 信息' },
+        { value: 'neutral', label: 'neutral 中性' },
+      ],
+    },
+    {
+      type: 'select',
+      prop: 'variant',
+      label: '变体 variant',
+      default: 'soft',
+      options: [
+        { value: 'soft', label: 'soft 柔色底' },
+        { value: 'solid', label: 'solid 实底' },
+        { value: 'outline', label: 'outline 描边' },
+      ],
+    },
+    {
+      type: 'select',
+      prop: 'size',
+      label: '尺寸 size',
+      default: 'md',
+      options: [
+        { value: 'sm', label: 'sm 小号' },
+        { value: 'md', label: 'md 中号' },
+      ],
+    },
+    { type: 'boolean', prop: 'closable', label: '可关闭 closable', default: false },
+    { type: 'boolean', prop: 'checkable', label: '可选 checkable', default: false },
+    { type: 'boolean', prop: 'selected', label: '选中 selected', default: false },
+    { type: 'text', prop: 'children', label: '文案', default: '奥术 ✦' },
+  ],
+  spread: 'span',
+};

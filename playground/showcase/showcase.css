@@ -1,0 +1,890 @@
+/* —— magic-scope 组件展示站外壳样式(sc- 前缀,全部消费 --ms-* token) —— */
+
+:root {
+  --sc-topbar-h: 56px;
+  --sc-sidebar-w: 248px;
+  --sc-max: 980px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* 页面级横向溢出兜底:任何子项异常超宽都不让整页出现横向滚动条。 */
+:where(html, body) {
+  overflow-x: clip;
+  max-inline-size: 100%;
+}
+
+.sc-app {
+  min-block-size: 100vh;
+  max-inline-size: 100%;
+  overflow-x: clip;
+  color: var(--ms-color-fg);
+  font-family: var(--ms-font-sans);
+  background:
+    radial-gradient(
+      120% 80% at 100% 0%,
+      color-mix(in oklab, var(--ms-color-primary) 10%, transparent),
+      transparent 60%
+    ),
+    var(--ms-color-bg);
+}
+
+/* —— 顶栏 —— */
+.sc-topbar {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 20;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  min-block-size: var(--sc-topbar-h);
+  max-inline-size: 100%;
+  padding-block: 0.5rem;
+  padding-inline: clamp(0.75rem, 3vw, 1.5rem);
+  border-block-end: 1px solid var(--ms-color-border);
+  background: color-mix(in oklab, var(--ms-color-bg) 82%, transparent);
+  backdrop-filter: blur(12px);
+}
+
+.sc-topbar__brand {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-family: var(--ms-font-display);
+  font-size: 1.15rem;
+}
+.sc-topbar__brand strong {
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+.sc-topbar__spark {
+  color: var(--ms-color-primary);
+  font-size: 1.1em;
+}
+.sc-topbar__tag {
+  font-family: var(--ms-font-sans);
+  font-size: 0.72rem;
+  color: var(--ms-color-fg-subtle);
+  border: 1px solid var(--ms-color-border);
+  border-radius: var(--ms-radius-full);
+  padding: 0.1rem 0.5rem;
+}
+
+.sc-search {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-inline-start: 0.5rem;
+  padding: 0.34rem 0.7rem;
+  inline-size: min(240px, 28vw);
+  color: var(--ms-color-fg-muted);
+  background: var(--ms-color-surface-sunken, var(--ms-color-surface));
+  border: 1px solid var(--ms-color-border);
+  border-radius: var(--ms-radius-md);
+  transition: border-color var(--ms-dur-fast) var(--ms-ease-standard);
+}
+.sc-search:focus-within {
+  border-color: var(--ms-color-primary);
+}
+.sc-search input {
+  inline-size: 100%;
+  border: 0;
+  background: transparent;
+  color: var(--ms-color-fg);
+  font: inherit;
+  outline: none;
+}
+
+.sc-topbar__controls {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-inline-start: auto;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+.sc-seg {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-inline-size: 0;
+}
+.sc-seg__label {
+  font-size: 0.72rem;
+  color: var(--ms-color-fg-subtle);
+}
+.sc-seg__track {
+  display: inline-flex;
+  padding: 2px;
+  background: var(--ms-color-surface-sunken, var(--ms-color-surface));
+  border: 1px solid var(--ms-color-border);
+  border-radius: var(--ms-radius-md);
+}
+.sc-seg__btn {
+  border: 0;
+  background: transparent;
+  color: var(--ms-color-fg-muted);
+  font: inherit;
+  font-size: 0.76rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: calc(var(--ms-radius-md) - 2px);
+  cursor: pointer;
+  transition: all var(--ms-dur-fast) var(--ms-ease-standard);
+}
+.sc-seg__btn:hover {
+  color: var(--ms-color-fg);
+}
+.sc-seg__btn[data-active] {
+  color: var(--ms-color-on-primary);
+  background: var(--ms-color-primary);
+  box-shadow: 0 0 calc(12px * var(--ms-fx-glow, 0.6))
+    color-mix(in oklab, var(--ms-color-glow, var(--ms-color-primary)) 70%, transparent);
+}
+
+/* —— 主体两栏 —— */
+.sc-body {
+  display: grid;
+  grid-template-columns: var(--sc-sidebar-w) minmax(0, 1fr);
+  align-items: start;
+  max-inline-size: 100%;
+}
+
+/* —— 侧栏 —— */
+.sc-sidebar {
+  position: sticky;
+  inset-block-start: var(--sc-topbar-h);
+  block-size: calc(100vh - var(--sc-topbar-h));
+  overflow-y: auto;
+  padding: 1.1rem 0.85rem 3rem;
+  border-inline-end: 1px solid var(--ms-color-border);
+  scrollbar-width: thin;
+}
+.sc-navgroup {
+  margin-block-end: 1.1rem;
+}
+.sc-navgroup__title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 0 0.4rem;
+  padding-inline: 0.5rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ms-color-fg-subtle);
+}
+.sc-navgroup__count {
+  font-size: 0.64rem;
+  color: var(--ms-color-fg-subtle);
+  opacity: 0.7;
+}
+.sc-navlist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1px;
+}
+.sc-navlink {
+  display: block;
+  padding: 0.34rem 0.5rem;
+  border-radius: var(--ms-radius-md);
+  color: var(--ms-color-fg-muted);
+  text-decoration: none;
+  font-size: 0.86rem;
+  transition: all var(--ms-dur-fast) var(--ms-ease-standard);
+}
+.sc-navlink:hover {
+  color: var(--ms-color-fg);
+  background: color-mix(in oklab, var(--ms-color-fg) 6%, transparent);
+}
+.sc-navlink[data-active] {
+  color: var(--ms-color-fg);
+  background: color-mix(in oklab, var(--ms-color-primary) 18%, transparent);
+  box-shadow: inset 2px 0 0 var(--ms-color-primary);
+}
+
+/* —— 主内容 —— */
+.sc-main {
+  min-inline-size: 0;
+  padding: clamp(1.25rem, 4vw, 2.5rem);
+}
+.sc-view {
+  max-inline-size: var(--sc-max);
+  margin-inline: auto;
+}
+.sc-view__head {
+  margin-block-end: 1.75rem;
+}
+.sc-view__crumb {
+  font-size: 0.78rem;
+  color: var(--ms-color-primary);
+  margin-block-end: 0.35rem;
+}
+.sc-h1 {
+  font-family: var(--ms-font-display);
+  font-size: clamp(1.8rem, 4vw, 2.4rem);
+  margin: 0 0 0.4rem;
+  color: var(--ms-color-fg);
+}
+.sc-summary {
+  font-size: 1.02rem;
+  color: var(--ms-color-fg-muted);
+  margin: 0;
+}
+.sc-desc {
+  margin-block-start: 0.6rem;
+  color: var(--ms-color-fg-muted);
+  line-height: 1.65;
+  white-space: pre-line;
+}
+
+.sc-section {
+  margin-block-start: 2rem;
+}
+.sc-h2 {
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ms-color-fg-subtle);
+  margin: 0 0 0.75rem;
+}
+
+/* —— 演示区:舞台 + 参数面板 —— */
+.sc-demo {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 264px;
+  gap: 1rem;
+  align-items: stretch;
+}
+.sc-demo__stage {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  min-block-size: 220px;
+  padding: 2rem;
+  border: 1px solid var(--ms-color-border);
+  border-radius: var(--ms-radius-lg);
+  background:
+    linear-gradient(0deg, color-mix(in oklab, var(--ms-color-fg) 2%, transparent), transparent),
+    var(--ms-color-surface);
+  background-image: radial-gradient(
+    color-mix(in oklab, var(--ms-color-fg) 7%, transparent) 1px,
+    transparent 1px
+  );
+  background-size: 18px 18px;
+}
+.sc-demo-error {
+  color: var(--ms-color-danger);
+  font-size: 0.85rem;
+}
+
+.sc-demo__controls {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--ms-color-border);
+  border-radius: var(--ms-radius-lg);
+  background: var(--ms-color-surface);
+  overflow: hidden;
+}
+.sc-controls__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.55rem 0.85rem;
+  border-block-end: 1px solid var(--ms-color-border);
+  font-size: 0.74rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ms-color-fg-subtle);
+}
+.sc-reset {
+  border: 0;
+  background: transparent;
+  color: var(--ms-color-primary);
+  font: inherit;
+  font-size: 0.74rem;
+  cursor: pointer;
+  text-transform: none;
+  letter-spacing: 0;
+}
+.sc-reset:hover {
+  text-decoration: underline;
+}
+.sc-controls__body {
+  display: grid;
+  gap: 0.7rem;
+  padding: 0.85rem;
+}
+.sc-ctl {
+  display: grid;
+  gap: 0.3rem;
+}
+.sc-ctl--inline {
+  grid-auto-flow: column;
+  justify-content: start;
+  align-items: center;
+  gap: 0.5rem;
+}
+.sc-ctl__label {
+  font-size: 0.78rem;
+  color: var(--ms-color-fg-muted);
+}
+.sc-ctl__input,
+.sc-ctl__select select {
+  inline-size: 100%;
+  padding: 0.34rem 0.5rem;
+  color: var(--ms-color-fg);
+  background: var(--ms-color-surface-sunken, var(--ms-color-bg));
+  border: 1px solid var(--ms-color-border);
+  border-radius: var(--ms-radius-md);
+  font: inherit;
+  font-size: 0.82rem;
+}
+.sc-ctl__select {
+  position: relative;
+}
+.sc-ctl__select select {
+  appearance: none;
+  cursor: pointer;
+}
+.sc-ctl__select::after {
+  content: "";
+  position: absolute;
+  inset-inline-end: 0.6rem;
+  inset-block-start: 50%;
+  inline-size: 7px;
+  block-size: 7px;
+  border-inline-end: 1.5px solid var(--ms-color-fg-subtle);
+  border-block-end: 1.5px solid var(--ms-color-fg-subtle);
+  transform: translateY(-65%) rotate(45deg);
+  pointer-events: none;
+}
+.sc-ctl__input:focus,
+.sc-ctl__select select:focus {
+  outline: 2px solid var(--ms-color-focus-ring, var(--ms-color-primary));
+  outline-offset: 1px;
+  border-color: transparent;
+}
+.sc-ctl__check {
+  inline-size: 1rem;
+  block-size: 1rem;
+  accent-color: var(--ms-color-primary);
+}
+
+/* —— 代码块 —— */
+.sc-code {
+  margin: 0;
+  padding: 1rem 1.1rem;
+  overflow-x: auto;
+  font-family: var(--ms-font-mono);
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: var(--ms-color-fg);
+  background: var(--ms-color-surface-sunken, var(--ms-color-surface));
+  border: 1px solid var(--ms-color-border);
+  border-radius: var(--ms-radius-md);
+}
+
+/* —— props 表 —— */
+.sc-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--ms-color-border);
+  border-radius: var(--ms-radius-md);
+}
+.sc-proptable {
+  inline-size: 100%;
+  border-collapse: collapse;
+  font-size: 0.86rem;
+}
+.sc-proptable th,
+.sc-proptable td {
+  text-align: start;
+  padding: 0.6rem 0.85rem;
+  border-block-end: 1px solid var(--ms-color-border);
+  vertical-align: top;
+}
+.sc-proptable th {
+  font-size: 0.74rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ms-color-fg-subtle);
+  background: color-mix(in oklab, var(--ms-color-fg) 3%, transparent);
+}
+.sc-proptable tbody tr:last-child td {
+  border-block-end: 0;
+}
+.sc-proptable td:nth-child(4) {
+  color: var(--ms-color-fg-muted);
+}
+.sc-code-name,
+.sc-code-type,
+.sc-code-def {
+  font-family: var(--ms-font-mono);
+  font-size: 0.8em;
+  white-space: nowrap;
+}
+.sc-code-name {
+  color: var(--ms-color-fg);
+}
+.sc-code-type {
+  color: var(--ms-color-accent, var(--ms-color-primary-hover));
+}
+.sc-code-def {
+  color: var(--ms-color-fg-muted);
+}
+
+/* —— 更多示例 —— */
+.sc-examples {
+  display: grid;
+  gap: 1rem;
+}
+.sc-example {
+  border: 1px solid var(--ms-color-border);
+  border-radius: var(--ms-radius-lg);
+  background: var(--ms-color-surface);
+  overflow: hidden;
+}
+.sc-example__head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  padding: 0.6rem 0.95rem;
+  border-block-end: 1px solid var(--ms-color-border);
+  font-size: 0.86rem;
+}
+.sc-example__head span {
+  font-size: 0.78rem;
+  color: var(--ms-color-fg-subtle);
+}
+.sc-example__stage {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 1.4rem;
+}
+
+.sc-empty {
+  color: var(--ms-color-fg-subtle);
+  font-size: 0.9rem;
+  padding: 1rem 0.5rem;
+}
+
+.sc-page-error {
+  max-inline-size: var(--sc-max);
+  margin-inline: auto;
+  padding: 1.25rem 1.5rem;
+  color: var(--ms-color-danger);
+  border: 1px solid color-mix(in oklab, var(--ms-color-danger) 40%, var(--ms-color-border));
+  border-radius: var(--ms-radius-lg);
+  background: color-mix(in oklab, var(--ms-color-danger) 8%, var(--ms-color-surface));
+}
+.sc-page-error pre {
+  margin: 0.5rem 0 0;
+  white-space: pre-wrap;
+  font-family: var(--ms-font-mono);
+  font-size: 0.82rem;
+}
+
+/* —— 响应式:窄屏收起侧栏为顶部横向条 —— */
+@media (max-width: 860px) {
+  .sc-body {
+    grid-template-columns: 1fr;
+  }
+  .sc-sidebar {
+    position: static;
+    block-size: auto;
+    max-inline-size: 100%;
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    border-inline-end: 0;
+    border-block-end: 1px solid var(--ms-color-border);
+  }
+  .sc-navgroup {
+    margin-block-end: 0;
+    flex: none;
+  }
+  .sc-demo {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* —— 极窄屏(≤480,含 iPhone 390):收紧内边距,模拟框/舞台不吃满宽 —— */
+@media (max-width: 480px) {
+  .sc-main {
+    padding: 1rem 0.85rem 2rem;
+  }
+  .sc-demo__stage {
+    padding: 1rem;
+    min-block-size: 160px;
+  }
+  .sc-vpframe[data-framed] {
+    padding: 0.6rem;
+  }
+  .sc-section__head {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .sc-example__stage {
+    padding: 1rem;
+  }
+}
+
+/* —— 新架构(ComponentDocV2)增量样式 —— */
+.sc-section__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-block-end: 0.75rem;
+}
+.sc-section__head .sc-h2 {
+  margin: 0;
+}
+
+/* 「props 源自源码」徽标 */
+.sc-badge-src {
+  margin-inline-start: 0.6rem;
+  padding: 0.05rem 0.45rem;
+  font-size: 0.66rem;
+  color: var(--ms-color-success);
+  border: 1px solid color-mix(in oklab, var(--ms-color-success) 40%, var(--ms-color-border));
+  border-radius: var(--ms-radius-full);
+  vertical-align: middle;
+}
+
+/* 设备视口分段切换 */
+.sc-seg2 {
+  display: inline-flex;
+  margin: 0;
+  padding: 2px;
+  min-inline-size: 0;
+  background: var(--ms-color-surface-sunken, var(--ms-color-surface));
+  border: 1px solid var(--ms-color-border);
+  border-radius: var(--ms-radius-md);
+}
+.sc-seg2__btn {
+  border: 0;
+  background: transparent;
+  color: var(--ms-color-fg-muted);
+  font: inherit;
+  font-size: 0.74rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: calc(var(--ms-radius-md) - 2px);
+  cursor: pointer;
+  transition: all var(--ms-dur-fast) var(--ms-ease-standard);
+}
+.sc-seg2__btn:hover {
+  color: var(--ms-color-fg);
+}
+.sc-seg2__btn[data-active] {
+  color: var(--ms-color-on-primary);
+  background: var(--ms-color-primary);
+}
+
+/* 视口框:非「自适应」时给个设备边框,直观看响应式/容器查询 */
+.sc-vpframe {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  max-inline-size: 100%;
+  min-inline-size: 0;
+  overflow-x: auto;
+  margin-inline: auto;
+  transition: inline-size var(--ms-dur-base) var(--ms-ease-standard);
+}
+.sc-vpframe[data-framed] {
+  padding: 1rem;
+  border: 1px dashed color-mix(in oklab, var(--ms-color-primary) 45%, var(--ms-color-border));
+  border-radius: var(--ms-radius-md);
+  background: color-mix(in oklab, var(--ms-color-primary) 4%, transparent);
+}
+
+/* demo 示例:渲染舞台 + 可切换/可折叠代码块同一卡片 */
+.sc-codeblock {
+  border-block-start: 1px solid var(--ms-color-border);
+}
+.sc-codeblock__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.35rem 0.6rem 0.35rem 0.5rem;
+  background: color-mix(in oklab, var(--ms-color-fg) 3%, transparent);
+}
+.sc-codeblock__tabs {
+  display: inline-flex;
+  gap: 2px;
+}
+.sc-codetab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  border: 0;
+  background: transparent;
+  color: var(--ms-color-fg-muted);
+  font: inherit;
+  font-size: 0.76rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--ms-radius-sm);
+  cursor: pointer;
+  transition: all var(--ms-dur-fast) var(--ms-ease-standard);
+}
+.sc-codetab:hover:not(:disabled) {
+  color: var(--ms-color-fg);
+  background: color-mix(in oklab, var(--ms-color-fg) 6%, transparent);
+}
+.sc-codetab[data-active] {
+  color: var(--ms-color-fg);
+  background: color-mix(in oklab, var(--ms-color-primary) 18%, transparent);
+}
+.sc-codetab:disabled {
+  color: var(--ms-color-fg-subtle);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+.sc-codetab__soon {
+  font-size: 0.6rem;
+  padding: 0 0.25rem;
+  border: 1px solid var(--ms-color-border);
+  border-radius: var(--ms-radius-full);
+}
+.sc-codeblock__actions {
+  display: inline-flex;
+  gap: 0.35rem;
+}
+.sc-codebtn {
+  border: 1px solid var(--ms-color-border);
+  background: transparent;
+  color: var(--ms-color-fg-muted);
+  font: inherit;
+  font-size: 0.72rem;
+  padding: 0.18rem 0.55rem;
+  border-radius: var(--ms-radius-sm);
+  cursor: pointer;
+  transition: all var(--ms-dur-fast) var(--ms-ease-standard);
+}
+.sc-codebtn:hover {
+  color: var(--ms-color-fg);
+  border-color: var(--ms-color-primary);
+}
+.sc-code--demo {
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+}
+.sc-req {
+  color: var(--ms-color-danger);
+  font-weight: 700;
+}
+
+/* —— 顶栏品牌(改 a)与主题画廊入口 —— */
+.sc-topbar__brand {
+  text-decoration: none;
+  color: inherit;
+}
+.sc-topbar__gallery {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  flex: none;
+  padding: 0.28rem 0.7rem;
+  font-size: 0.82rem;
+  color: var(--ms-color-primary);
+  text-decoration: none;
+  border: 1px solid color-mix(in oklab, var(--ms-color-primary) 45%, var(--ms-color-border));
+  border-radius: var(--ms-radius-full);
+  background: color-mix(in oklab, var(--ms-color-primary) 8%, transparent);
+  transition: all var(--ms-dur-fast) var(--ms-ease-standard);
+}
+.sc-topbar__gallery:hover {
+  color: var(--ms-color-on-primary);
+  background: var(--ms-color-primary);
+  box-shadow: 0 0 calc(14px * var(--ms-fx-glow, 0.6))
+    color-mix(in oklab, var(--ms-color-glow, var(--ms-color-primary)) 70%, transparent);
+}
+
+/* —— 预设画廊 —— */
+.sc-swatches {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(7rem, 1fr));
+  gap: 0.85rem;
+}
+.sc-swatch {
+  display: grid;
+  gap: 0.5rem;
+  padding: 0.6rem;
+  border: 1px solid var(--ms-color-border);
+  border-radius: var(--ms-radius-lg);
+  background: var(--ms-color-surface);
+  cursor: pointer;
+  transition: all var(--ms-dur-fast) var(--ms-ease-standard);
+}
+.sc-swatch:hover {
+  border-color: var(--ms-color-primary);
+  transform: translateY(calc(-2px * var(--ms-motion-scale, 1)));
+}
+.sc-swatch[data-active] {
+  border-color: var(--ms-color-primary);
+  box-shadow:
+    0 0 0 1px var(--ms-color-primary),
+    0 0 calc(18px * var(--ms-fx-glow, 0.6))
+    color-mix(in oklab, var(--ms-color-glow, var(--ms-color-primary)) 60%, transparent);
+}
+.sc-swatch__preview {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  justify-content: center;
+  block-size: 2.6rem;
+  border-radius: var(--ms-radius-md);
+  border: 1px solid var(--ms-color-border);
+}
+.sc-swatch__preview > span {
+  inline-size: 1.1rem;
+  block-size: 1.1rem;
+  border-radius: var(--ms-radius-full);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12) inset;
+}
+.sc-swatch__label {
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--ms-color-fg);
+}
+
+.sc-gallery__dials {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.5rem;
+  align-items: center;
+}
+.sc-gallery__diallabel {
+  font-size: 0.74rem;
+  color: var(--ms-color-fg-subtle);
+  padding-inline: 0.2rem 0.4rem;
+}
+
+.sc-sampler {
+  display: grid;
+  gap: 1rem;
+  padding: 1.5rem;
+  border: 1px solid var(--ms-color-border);
+  border-radius: var(--ms-radius-lg);
+  background:
+    linear-gradient(0deg, color-mix(in oklab, var(--ms-color-fg) 2%, transparent), transparent),
+    var(--ms-color-surface);
+}
+.sc-sampler__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+/* —— 事件表:自有/原生分隔行 + 原生事件名稍弱化 —— */
+.sc-events-sep td {
+  padding: 0.5rem 0.85rem;
+  font-size: 0.78rem;
+  color: var(--ms-color-fg-subtle);
+  background: color-mix(in oklab, var(--ms-color-fg) 4%, transparent);
+}
+.sc-proptable tr[data-native] .sc-code-name {
+  color: var(--ms-color-fg-muted);
+}
+
+/* —— 专有事件卡片 —— */
+.sc-events {
+  display: grid;
+  gap: 0.85rem;
+}
+.sc-event {
+  border: 1px solid var(--ms-color-border);
+  border-radius: var(--ms-radius-lg);
+  background: var(--ms-color-surface);
+  overflow: hidden;
+}
+.sc-event__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 0.75rem;
+  padding: 0.65rem 0.9rem;
+  border-block-end: 1px solid var(--ms-color-border);
+  background: color-mix(in oklab, var(--ms-color-primary) 6%, transparent);
+}
+.sc-event__head .sc-code-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+.sc-event__params {
+  display: flex;
+  gap: 0.6rem;
+  padding: 0.6rem 0.9rem 0;
+  font-size: 0.85rem;
+}
+.sc-event__plabel {
+  flex: none;
+  color: var(--ms-color-fg-subtle);
+  font-size: 0.74rem;
+  padding-block-start: 0.15rem;
+}
+.sc-event__params ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.25rem;
+}
+.sc-event__psep {
+  color: var(--ms-color-fg-subtle);
+  margin-inline: 0.15rem;
+}
+.sc-event__params li {
+  line-height: 1.6;
+}
+.sc-event__pdesc {
+  margin-inline-start: 0.5rem;
+  color: var(--ms-color-fg-muted);
+  font-size: 0.82rem;
+}
+.sc-event__desc {
+  margin: 0.55rem 0 0.2rem;
+  padding-inline: 0.9rem;
+  color: var(--ms-color-fg-muted);
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+.sc-event__native {
+  margin-block-start: 1rem;
+  padding: 0.75rem 0.9rem;
+  border: 1px dashed color-mix(in oklab, var(--ms-color-primary) 40%, var(--ms-color-border));
+  border-radius: var(--ms-radius-md);
+  color: var(--ms-color-fg-muted);
+  font-size: 0.86rem;
+  line-height: 1.7;
+}
+.sc-event__native a,
+.sc-event__desc a {
+  color: var(--ms-color-link, var(--ms-color-primary));
+}
+
+.sc-topbar__gallery--alt {
+  color: var(--ms-color-fg-muted);
+  border-color: var(--ms-color-border);
+  background: transparent;
+}

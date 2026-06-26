@@ -23,7 +23,14 @@
     "changeset": "changeset",
     "version": "changeset version",
     "release": "pnpm build && changeset publish",
-    "play": "vite playground"
+    "play": "vite playground",
+    "play:showcase": "vite playground/showcase",
+    "gen:props": "tsx scripts/extract-props.ts",
+    "check:props": "tsx scripts/extract-props.ts --check",
+    "check:showcase": "tsx scripts/check-showcase.ts",
+    "check:docs": "pnpm check:props && pnpm check:showcase",
+    "showcase:coverage": "tsx scripts/showcase-coverage.ts",
+    "showcase:sync": "pnpm gen:props && pnpm showcase:coverage"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.0",
@@ -35,6 +42,7 @@
     "@vitejs/plugin-react": "^4.7.0",
     "jsdom": "^29.1.1",
     "react": "^19.2.7",
+    "react-docgen-typescript": "^2.4.0",
     "react-dom": "^19.2.7",
     "tsup": "^8.5.1",
     "tsx": "^4.22.4",
