@@ -10,8 +10,16 @@
   box-sizing: border-box;
 }
 
+/* 页面级横向溢出兜底:任何子项异常超宽都不让整页出现横向滚动条。 */
+:where(html, body) {
+  overflow-x: clip;
+  max-inline-size: 100%;
+}
+
 .sc-app {
   min-block-size: 100vh;
+  max-inline-size: 100%;
+  overflow-x: clip;
   color: var(--ms-color-fg);
   font-family: var(--ms-font-sans);
   background:
@@ -29,9 +37,12 @@
   inset-block-start: 0;
   z-index: 20;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 1rem;
-  block-size: var(--sc-topbar-h);
+  gap: 0.5rem 1rem;
+  min-block-size: var(--sc-topbar-h);
+  max-inline-size: 100%;
+  padding-block: 0.5rem;
   padding-inline: clamp(0.75rem, 3vw, 1.5rem);
   border-block-end: 1px solid var(--ms-color-border);
   background: color-mix(in oklab, var(--ms-color-bg) 82%, transparent);
@@ -142,6 +153,7 @@
   display: grid;
   grid-template-columns: var(--sc-sidebar-w) minmax(0, 1fr);
   align-items: start;
+  max-inline-size: 100%;
 }
 
 /* —— 侧栏 —— */
@@ -494,6 +506,7 @@
   .sc-sidebar {
     position: static;
     block-size: auto;
+    max-inline-size: 100%;
     display: flex;
     gap: 1rem;
     overflow-x: auto;
@@ -506,6 +519,27 @@
   }
   .sc-demo {
     grid-template-columns: 1fr;
+  }
+}
+
+/* —— 极窄屏(≤480,含 iPhone 390):收紧内边距,模拟框/舞台不吃满宽 —— */
+@media (max-width: 480px) {
+  .sc-main {
+    padding: 1rem 0.85rem 2rem;
+  }
+  .sc-demo__stage {
+    padding: 1rem;
+    min-block-size: 160px;
+  }
+  .sc-vpframe[data-framed] {
+    padding: 0.6rem;
+  }
+  .sc-section__head {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .sc-example__stage {
+    padding: 1rem;
   }
 }
 
@@ -569,6 +603,8 @@
   justify-content: center;
   gap: 1rem;
   max-inline-size: 100%;
+  min-inline-size: 0;
+  overflow-x: auto;
   margin-inline: auto;
   transition: inline-size var(--ms-dur-base) var(--ms-ease-standard);
 }

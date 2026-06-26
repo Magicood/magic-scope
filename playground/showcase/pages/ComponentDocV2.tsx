@@ -8,8 +8,8 @@ import { useControls } from '../useControls';
 // 设备视口档（展示容器查询自适应 + 移动端形态切换）。
 const VIEWPORTS = [
   { id: 'full', label: '自适应', width: '100%' },
-  { id: 'tablet', label: '平板 768', width: '768px' },
-  { id: 'mobile', label: '移动 390', width: '390px' },
+  { id: 'tablet', label: '平板 768', width: 'min(768px, 100%)' },
+  { id: 'mobile', label: '移动 390', width: 'min(390px, 100%)' },
 ] as const;
 
 class DemoBoundary extends Component<{ children: ReactNode }, { error: Error | null }> {
