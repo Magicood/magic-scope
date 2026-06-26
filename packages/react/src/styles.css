@@ -77,3 +77,4 @@
 @import "./components/Steps/Steps.css" layer(ms.components);
 @import "./components/Form/Form.css" layer(ms.components);
 @import "./components/DatePicker/DatePicker.css" layer(ms.components);
+@import "./components/Tree/Tree.css" layer(ms.components);
