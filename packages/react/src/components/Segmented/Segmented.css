@@ -1,0 +1,197 @@
+/* —— Segmented 分段控制器 —— 紧凑 tab/radio 替代。
+ * 单个滑块 indicator 经 CSS 变量(--ms-segmented-x/y/w/h,组件层测量写入)平移到选中段;
+ * 选中底色 / 发光只读 tone 槽位(--ms-c*),零硬编码配色;尺寸随密度;动效 motion 双降级。 */
+
+.ms-segmented {
+  position: relative;
+  display: inline-flex;
+  align-items: stretch;
+  gap: 0;
+  box-sizing: border-box;
+  padding: var(--ms-segmented-pad, 0.25rem);
+  border-radius: var(--ms-radius-lg, 0.625rem);
+  background-color: color-mix(in oklch, var(--ms-color-fg) 6%, transparent);
+  /* 轨道内描边发丝线,贴合各主题底色 */
+  box-shadow: inset 0 0 0 var(--ms-hairline) color-mix(in oklch, var(--ms-color-fg) 8%, transparent);
+  font-size: var(--ms-type-step--1, 0.9rem);
+  line-height: var(--ms-leading-snug, 1.4);
+  vertical-align: middle;
+  user-select: none;
+}
+
+/* —— 滑块 indicator:绝对定位,用变量定位 + 尺寸,过渡平移 —— */
+.ms-segmented__indicator {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  inline-size: var(--ms-segmented-w, 0);
+  block-size: var(--ms-segmented-h, 0);
+  border-radius: calc(var(--ms-radius-lg, 0.625rem) - 0.18rem);
+  background-color: var(--ms-color-bg, #fff);
+  box-shadow:
+    0 1px 2px color-mix(in oklch, var(--ms-color-fg) 14%, transparent),
+    0 0 calc(16px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow);
+  translate: var(--ms-segmented-x, 0) var(--ms-segmented-y, 0);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    translate 0.24s cubic-bezier(0.22, 1, 0.36, 1),
+    inline-size 0.24s cubic-bezier(0.22, 1, 0.36, 1),
+    block-size 0.24s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.16s ease;
+  z-index: 0;
+}
+.ms-segmented__indicator[data-visible] {
+  opacity: 1;
+}
+
+/* —— 段按钮 —— */
+.ms-segmented__item {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-block-size: calc(2.25rem * var(--ms-density-scale, 1));
+  padding-inline: calc(var(--ms-space-4, 0.75rem) * var(--ms-density-scale, 1));
+  padding-block: calc(var(--ms-space-1, 0.25rem) * var(--ms-density-scale, 1));
+  margin: 0;
+  border: 0;
+  border-radius: calc(var(--ms-radius-lg, 0.625rem) - 0.18rem);
+  background: transparent;
+  color: var(--ms-color-fg-muted, #555);
+  font: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    color 0.18s ease,
+    background-color 0.18s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ms-segmented__inner {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  min-inline-size: 0;
+}
+.ms-segmented__icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  font-size: 1.1em;
+  line-height: 0;
+}
+/* 内容边界:超长 label 单行省略,绝不撑破 */
+.ms-segmented__label {
+  min-inline-size: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* —— hover(具备 hover 能力的指针,且未选中 / 未禁用) —— */
+@media (hover: hover) {
+  .ms-segmented__item:not([data-selected]):not(:disabled):hover {
+    color: var(--ms-color-fg, #111);
+    background-color: color-mix(in oklch, var(--ms-color-fg) 5%, transparent);
+  }
+}
+
+/* —— 选中:文字提色;底由滑块承载(故此处不再涂背景,避免与 indicator 叠色) —— */
+.ms-segmented__item--selected {
+  color: var(--ms-color-fg, #111);
+  font-weight: var(--ms-font-weight-medium, 500);
+}
+
+/* —— focus-visible:tone 发光环 —— */
+.ms-segmented__item:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--ms-color-bg),
+    0 0 0 4px var(--ms-color-focus-ring),
+    0 0 calc(14px * var(--ms-fx-glow, 1)) -4px var(--ms-c-glow);
+}
+
+/* —— 禁用:单段 / 整组 —— */
+.ms-segmented__item:disabled,
+.ms-segmented__item--disabled {
+  cursor: not-allowed;
+  opacity: 0.42;
+}
+.ms-segmented--disabled {
+  cursor: not-allowed;
+}
+.ms-segmented--disabled .ms-segmented__indicator {
+  opacity: 0.5;
+}
+
+/* —— 尺寸(随密度缩放) —— */
+.ms-segmented--sm {
+  font-size: var(--ms-type-step--2, 0.8rem);
+}
+.ms-segmented--sm .ms-segmented__item {
+  min-block-size: calc(1.75rem * var(--ms-density-scale, 1));
+  padding-inline: calc(var(--ms-space-3, 0.5rem) * var(--ms-density-scale, 1));
+}
+.ms-segmented--lg {
+  font-size: var(--ms-type-step-0, 1rem);
+}
+.ms-segmented--lg .ms-segmented__item {
+  min-block-size: calc(2.75rem * var(--ms-density-scale, 1));
+  padding-inline: calc(var(--ms-space-5, 1rem) * var(--ms-density-scale, 1));
+}
+
+/* —— 块级:铺满 + 各段等分 —— */
+.ms-segmented--block {
+  display: flex;
+  inline-size: 100%;
+}
+.ms-segmented--block .ms-segmented__item {
+  flex: 1 1 0;
+}
+
+/* —— 纵向 —— */
+.ms-segmented--vertical {
+  flex-direction: column;
+  align-items: stretch;
+}
+.ms-segmented--vertical .ms-segmented__item {
+  justify-content: flex-start;
+}
+.ms-segmented--vertical.ms-segmented--block {
+  inline-size: auto;
+}
+
+/* —— 触控:命中区不低于目标尺寸 —— */
+@media (pointer: coarse) {
+  .ms-segmented__item {
+    min-block-size: max(calc(2.25rem * var(--ms-density-scale, 1)), var(--ms-target-min));
+  }
+  .ms-segmented--sm .ms-segmented__item {
+    min-block-size: max(calc(1.75rem * var(--ms-density-scale, 1)), var(--ms-target-min));
+  }
+}
+
+/* —— 动效降级(双闸):减少动效偏好 + data-ms-motion=off 总闸 —— */
+@media (prefers-reduced-motion: reduce) {
+  .ms-segmented__indicator,
+  .ms-segmented__item {
+    transition-duration: 0.01ms;
+  }
+}
+[data-ms-motion="off"] .ms-segmented__indicator,
+[data-ms-motion="off"] .ms-segmented__item {
+  transition-duration: 0.01ms;
+}
+
+/* —— fx 总闸:关断滑块发光 —— */
+[data-ms-fx="off"] .ms-segmented__indicator {
+  box-shadow: 0 1px 2px color-mix(in oklch, var(--ms-color-fg) 14%, transparent);
+}
+[data-ms-fx="off"] .ms-segmented__item:focus-visible {
+  box-shadow:
+    0 0 0 2px var(--ms-color-bg),
+    0 0 0 4px var(--ms-color-focus-ring);
+}

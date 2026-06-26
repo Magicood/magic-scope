@@ -33,6 +33,7 @@ export type MessageKey =
   | 'typography.collapse'
   | 'typography.permalink'
   | 'link.newWindow'
+  | 'empty.description'
   | 'select.placeholder'
   | 'select.empty'
   | 'select.loading'
@@ -93,6 +94,7 @@ export const defaultMessages: Messages = {
   'typography.collapse': '收起',
   'typography.permalink': '永久链接',
   'link.newWindow': '(在新窗口打开)',
+  'empty.description': '暂无数据',
   'select.placeholder': '请选择…',
   'select.empty': '无匹配项',
   'select.loading': '加载中…',

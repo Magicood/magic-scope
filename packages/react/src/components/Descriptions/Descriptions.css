@@ -1,0 +1,296 @@
+/* —— Descriptions:描述列表(键值展示)——
+ * 布局:每「行」是一个 CSS Grid 容器,列数 = --ms-desc-cols-<bp>(逻辑列);
+ * 每个 cell 用 grid-column: span var(--ms-desc-span) 跨逻辑列(span 已在 logic.ts 截断到不溢出)。
+ * cell 内部再用自身 grid 排布 label / content:
+ *   - horizontal:两列 [label auto | content 1fr],同行;
+ *   - vertical:一列两行 [label / content],label 在上。
+ * 响应式列数:Descriptions.tsx 把每断点写成 --ms-desc-cols-<bp> 变量(只写用户提供的断点),
+ * 本文件用静态 @media 块按移动优先做 fallback 链级联(@media 条件里 var() 不生效,故走变量+静态查询)。
+ * 断点像素 = tokens breakpoints.viewport(sm 30rem / md 48rem / lg 64rem / xl 80rem / 2xl 96rem)。
+ * 配色只读 tone 6 槽位(--ms-c* / --ms-on-c),不写死语义色。CSS 逻辑属性,RTL 友好。 */
+
+.ms-descriptions {
+  /* 尺寸档驱动的本地变量(随密度缩放) */
+  --ms-desc-pad-y: calc(var(--ms-space-2) * var(--ms-density-scale, 1));
+  --ms-desc-pad-x: calc(var(--ms-space-3) * var(--ms-density-scale, 1));
+  --ms-desc-row-gap: calc(var(--ms-space-3) * var(--ms-density-scale, 1));
+  --ms-desc-col-gap: calc(var(--ms-space-4) * var(--ms-density-scale, 1));
+  --ms-desc-label-gap: calc(var(--ms-space-2) * var(--ms-density-scale, 1));
+  --ms-desc-font: var(--ms-type-step-0);
+  --ms-desc-label-font: var(--ms-type-step--1);
+
+  display: block;
+  color: var(--ms-color-fg);
+  font-family: var(--ms-font-sans);
+  font-size: var(--ms-desc-font);
+  line-height: var(--ms-leading-normal);
+}
+
+.ms-descriptions--sm {
+  --ms-desc-pad-y: calc(var(--ms-space-1) * var(--ms-density-scale, 1));
+  --ms-desc-pad-x: calc(var(--ms-space-2) * var(--ms-density-scale, 1));
+  --ms-desc-row-gap: calc(var(--ms-space-2) * var(--ms-density-scale, 1));
+  --ms-desc-col-gap: calc(var(--ms-space-3) * var(--ms-density-scale, 1));
+  --ms-desc-font: var(--ms-type-step--1);
+  --ms-desc-label-font: var(--ms-type-step--2);
+}
+
+.ms-descriptions--lg {
+  --ms-desc-pad-y: calc(var(--ms-space-3) * var(--ms-density-scale, 1));
+  --ms-desc-pad-x: calc(var(--ms-space-4) * var(--ms-density-scale, 1));
+  --ms-desc-row-gap: calc(var(--ms-space-4) * var(--ms-density-scale, 1));
+  --ms-desc-col-gap: calc(var(--ms-space-5) * var(--ms-density-scale, 1));
+  --ms-desc-font: var(--ms-type-step-1);
+  --ms-desc-label-font: var(--ms-type-step-0);
+}
+
+/* —— 头部:title + extra —— */
+.ms-descriptions__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--ms-desc-col-gap);
+  margin-block-end: var(--ms-desc-row-gap);
+}
+
+.ms-descriptions__title {
+  font-size: var(--ms-type-step-1);
+  font-weight: var(--ms-font-weight-semibold);
+  line-height: var(--ms-leading-snug);
+  color: var(--ms-color-fg);
+  /* 长标题不撑破 */
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+.ms-descriptions__extra {
+  flex: 0 0 auto;
+  color: var(--ms-color-fg-muted);
+  font-size: var(--ms-type-step--1);
+}
+
+/* —— 主体:每行一个 grid —— */
+.ms-descriptions__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ms-desc-row-gap);
+}
+
+.ms-descriptions__row {
+  display: grid;
+  grid-template-columns: repeat(var(--ms-desc-cols-base, 3), minmax(0, 1fr));
+  column-gap: var(--ms-desc-col-gap);
+  row-gap: var(--ms-desc-row-gap);
+}
+
+/* 一个 cell 跨 span 个逻辑列(span 已在 logic 层截断到不溢出) */
+.ms-descriptions__cell {
+  grid-column: span var(--ms-desc-span, 1);
+  min-inline-size: 0;
+  display: grid;
+  align-items: baseline;
+  gap: var(--ms-desc-label-gap);
+}
+
+/* horizontal:label 自适应宽 + content 占满剩余,同一行 */
+.ms-descriptions--horizontal .ms-descriptions__cell {
+  grid-template-columns: minmax(auto, max-content) minmax(0, 1fr);
+}
+
+/* vertical:label 在上、content 在下(单列两行) */
+.ms-descriptions--vertical .ms-descriptions__cell {
+  grid-template-columns: minmax(0, 1fr);
+  align-items: stretch;
+}
+
+.ms-descriptions__cell--filler {
+  display: block;
+}
+
+/* —— 标签格 —— */
+.ms-descriptions__label {
+  color: var(--ms-color-fg-muted);
+  font-size: var(--ms-desc-label-font);
+  font-weight: var(--ms-font-weight-medium);
+  line-height: var(--ms-leading-snug);
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+/* horizontal + colon:标签后缀冒号(用 ::after 不污染文本,便于复制) */
+.ms-descriptions--colon .ms-descriptions__label-text::after {
+  content: ":";
+  margin-inline-start: 0.125em;
+  color: var(--ms-color-fg-muted);
+}
+
+/* —— 内容格 —— */
+.ms-descriptions__content {
+  color: var(--ms-color-fg);
+  min-inline-size: 0;
+  /* 超长内容(URL / 无空格串)不撑破 */
+  overflow-wrap: anywhere;
+}
+
+.ms-descriptions__placeholder {
+  color: var(--ms-color-fg-muted);
+}
+
+/* —— 空态 —— */
+.ms-descriptions__empty {
+  padding-block: calc(var(--ms-space-6) * var(--ms-density-scale, 1));
+  text-align: center;
+  color: var(--ms-color-fg-muted);
+  font-size: var(--ms-desc-label-font);
+}
+
+/* ============================================================
+ * bordered:表格态。每 cell 描边、标签格带 tone 软底,行间相邻边框合并。
+ * 用 box-shadow 画发丝线(不占布局),tone 软底来自 --ms-c-soft。
+ * ============================================================ */
+.ms-descriptions--bordered .ms-descriptions__body {
+  gap: 0;
+  border: var(--ms-hairline) solid var(--ms-color-border);
+  border-radius: var(--ms-radius-lg);
+  overflow: hidden;
+}
+
+.ms-descriptions--bordered .ms-descriptions__row {
+  column-gap: 0;
+  row-gap: 0;
+}
+
+/* 行间分隔线(除首行) */
+.ms-descriptions--bordered .ms-descriptions__row:not(:first-child) {
+  border-block-start: var(--ms-hairline) solid var(--ms-color-border);
+}
+
+.ms-descriptions--bordered .ms-descriptions__cell {
+  gap: 0;
+}
+
+/* cell 间竖分隔线(除每行首 cell);horizontal 态 label|content 内部也分隔 */
+.ms-descriptions--bordered .ms-descriptions__cell:not(:first-child) {
+  border-inline-start: var(--ms-hairline) solid var(--ms-color-border);
+}
+
+.ms-descriptions--bordered .ms-descriptions__label,
+.ms-descriptions--bordered .ms-descriptions__content {
+  padding: var(--ms-desc-pad-y) var(--ms-desc-pad-x);
+}
+
+/* bordered + horizontal:label 格带 tone 软底 + 与 content 间竖线 */
+.ms-descriptions--bordered.ms-descriptions--horizontal .ms-descriptions__label {
+  background: var(--ms-c-soft);
+  border-inline-end: var(--ms-hairline) solid var(--ms-color-border);
+  /* 标签格定宽下限,避免极短标签忽宽忽窄 */
+  white-space: nowrap;
+}
+
+/* bordered + vertical:label 在上,底部分隔线 */
+.ms-descriptions--bordered.ms-descriptions--vertical .ms-descriptions__label {
+  background: var(--ms-c-soft);
+  border-block-end: var(--ms-hairline) solid var(--ms-color-border);
+}
+
+.ms-descriptions--bordered .ms-descriptions__cell--filler {
+  background: var(--ms-color-surface-sunken, transparent);
+}
+
+/* ============================================================
+ * tone 强调:bordered 时整体外框带一抹 tone 发光(魔法差异化),可随 fx 开关降级。
+ * ============================================================ */
+.ms-descriptions--bordered .ms-descriptions__body {
+  box-shadow: 0 0 0 0 transparent;
+  transition: box-shadow var(--ms-dur-base, 240ms) var(--ms-ease-standard, ease);
+}
+
+.ms-descriptions--bordered:hover .ms-descriptions__body {
+  box-shadow: 0 0 calc(12px * var(--ms-fx-glow, 0))
+    color-mix(in oklch, var(--ms-c-glow) 40%, transparent);
+}
+
+/* 减动 / 关动效:去掉过渡与发光 */
+@media (prefers-reduced-motion: reduce) {
+  .ms-descriptions--bordered .ms-descriptions__body {
+    transition: none;
+  }
+  .ms-descriptions--bordered:hover .ms-descriptions__body {
+    box-shadow: none;
+  }
+}
+
+[data-ms-motion="off"] .ms-descriptions--bordered .ms-descriptions__body {
+  transition: none;
+}
+[data-ms-motion="off"] .ms-descriptions--bordered:hover .ms-descriptions__body {
+  box-shadow: none;
+}
+
+/* ============================================================
+ * 响应式列数级联(移动优先)。每断点 fallback 回退到更小断点已声明的列数。
+ * @media 条件里 var() 不生效,故用「每断点一个变量 + 静态查询块」做 fallback 链。
+ * 断点像素对齐 tokens breakpoints.viewport。
+ * ============================================================ */
+@media (min-width: 30rem) {
+  .ms-descriptions__row {
+    grid-template-columns: repeat(
+        var(--ms-desc-cols-sm, var(--ms-desc-cols-base, 3)),
+        minmax(0, 1fr)
+      );
+  }
+}
+
+@media (min-width: 48rem) {
+  .ms-descriptions__row {
+    grid-template-columns: repeat(
+        var(--ms-desc-cols-md, var(--ms-desc-cols-sm, var(--ms-desc-cols-base, 3))),
+        minmax(0, 1fr)
+      );
+  }
+}
+
+@media (min-width: 64rem) {
+  .ms-descriptions__row {
+    grid-template-columns: repeat(
+        var(
+          --ms-desc-cols-lg,
+          var(--ms-desc-cols-md, var(--ms-desc-cols-sm, var(--ms-desc-cols-base, 3)))
+        ),
+        minmax(0, 1fr)
+      );
+  }
+}
+
+@media (min-width: 80rem) {
+  .ms-descriptions__row {
+    grid-template-columns: repeat(
+        var(
+          --ms-desc-cols-xl,
+          var(
+            --ms-desc-cols-lg,
+            var(--ms-desc-cols-md, var(--ms-desc-cols-sm, var(--ms-desc-cols-base, 3)))
+          )
+        ),
+        minmax(0, 1fr)
+      );
+  }
+}
+
+@media (min-width: 96rem) {
+  .ms-descriptions__row {
+    grid-template-columns: repeat(
+        var(
+          --ms-desc-cols-2xl,
+          var(
+            --ms-desc-cols-xl,
+            var(
+              --ms-desc-cols-lg,
+              var(--ms-desc-cols-md, var(--ms-desc-cols-sm, var(--ms-desc-cols-base, 3)))
+            )
+          )
+        ),
+        minmax(0, 1fr)
+      );
+  }
+}

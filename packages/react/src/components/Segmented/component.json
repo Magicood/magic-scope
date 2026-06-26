@@ -1,0 +1,29 @@
+{
+  "id": "segmented",
+  "name": "Segmented",
+  "description": "分段控制器:紧凑的 tab/radio 替代。选中段由单个滑块 indicator 平滑跨段位移(测量段偏移写 CSS 变量,过渡受 motion 降级)。支持 options 数组(label 可 ReactNode/icon/disabled)或复合 Segmented.Item;受控 value/defaultValue + onChange/onValueChange;size 随密度、tone 语义色、block 等分、纵向、disabled;键盘 ArrowLeft/Right(纵向 Up/Down)/Home/End 导航 + Enter/Space,roving tabindex;role=radiogroup/radio 或 tablist/tab;classNames 部件定制。",
+  "category": "forms",
+  "tags": [
+    "segmented",
+    "segmented-control",
+    "tabs",
+    "radio-group",
+    "toggle",
+    "switch",
+    "selection",
+    "indicator",
+    "keyboard",
+    "accessible",
+    "controlled"
+  ],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-26",
+    "requirements": "对标 AntD Segmented 的生产级分段控制器:紧凑的 tab/radio 替代。需求:options({label,value,icon?,disabled?}[],label 可 ReactNode)或 children 复合用法;受控 value/defaultValue + onChange(value);单个滑块 indicator 平滑跨段位移(测选中段 offset 写 CSS 变量,过渡受 motion 降级);size(sm/md/lg 随密度)、tone(6 语义色)、block/fullWidth(等分)、纵向、disabled;键盘 ArrowLeft/Right/Home/End 导航 + Enter/Space;role=radiogroup/radio 或 tablist/tab;classNames 部件定制;选中解析 / 键盘 step 纯逻辑下沉 logic.ts。接全库 tone 槽位 + 密度 + 动效双降级 + i18n。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Segmented.tsx", "Segmented.css", "logic.ts", "index.ts"]
+}

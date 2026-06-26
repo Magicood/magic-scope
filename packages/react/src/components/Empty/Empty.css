@@ -1,0 +1,113 @@
+/* —— Empty 空状态:垂直居中堆叠(插画 / 描述 / 操作区),tone 槽位驱动插画着色与辉光 —— */
+.ms-empty {
+  /* 插画基准边长(随 size 改写,再乘密度 scale);描述与间距同样按 size 档切换 */
+  --ms-empty-img: 5rem;
+  --ms-empty-gap: var(--ms-space-4);
+  --ms-empty-desc-size: var(--ms-type-step--1);
+  /* 进场上移量,乘 motion-scale → off/reduced-motion 归零 */
+  --ms-empty-enter-y: 6px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ms-empty-gap);
+  box-sizing: border-box;
+  max-inline-size: 100%;
+  padding-block: var(--ms-space-6);
+  padding-inline: var(--ms-space-4);
+  color: var(--ms-color-fg-muted);
+  font-family: var(--ms-font-sans);
+  text-align: center;
+  /* 内容边界:超长描述 / 无空格长串换行,不撑破容器 */
+  overflow-wrap: anywhere;
+}
+
+/* —— 尺寸档:改插画边长 + 间距 + 描述字号,统一乘密度 scale —— */
+.ms-empty--sm {
+  --ms-empty-img: calc(3.5rem * var(--ms-density-scale, 1));
+  --ms-empty-gap: var(--ms-space-3);
+  --ms-empty-desc-size: var(--ms-type-step--2);
+}
+.ms-empty--md {
+  --ms-empty-img: calc(5rem * var(--ms-density-scale, 1));
+  --ms-empty-gap: var(--ms-space-4);
+  --ms-empty-desc-size: var(--ms-type-step--1);
+}
+.ms-empty--lg {
+  --ms-empty-img: calc(7rem * var(--ms-density-scale, 1));
+  --ms-empty-gap: var(--ms-space-5);
+  --ms-empty-desc-size: var(--ms-type-step-0);
+}
+
+/* —— 插画列:用 tone 主色着色 currentColor,带克制辉光(总闸可关) —— */
+.ms-empty__image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--ms-empty-img);
+  block-size: var(--ms-empty-img);
+  /* 默认插画用 tone 主色;自定义节点(img/icon)若用 currentColor 也随之着色 */
+  color: var(--ms-c);
+  /* 让默认 SVG 略带魔法辉光;data-ms-fx 总闸与 reduced-motion 不影响(静态光) */
+  filter: drop-shadow(0 0 calc(10px * var(--ms-fx-glow, 1)) var(--ms-c-glow));
+  /* 入场:轻微淡入上移 */
+  transition:
+    opacity var(--ms-dur-base) var(--ms-ease-standard),
+    transform var(--ms-dur-base) var(--ms-ease-emphasized);
+}
+
+.ms-empty__svg {
+  inline-size: 100%;
+  block-size: 100%;
+  /* 默认插画整体半透,克制不抢眼 */
+  opacity: 0.85;
+}
+
+/* 自定义插画里的图片自适应不溢出 */
+.ms-empty__image :where(img, svg) {
+  max-inline-size: 100%;
+  max-block-size: 100%;
+}
+
+/* —— 描述文案 —— */
+.ms-empty__description {
+  max-inline-size: 36ch;
+  color: var(--ms-color-fg-muted);
+  font-size: var(--ms-empty-desc-size);
+  line-height: var(--ms-leading-snug);
+  overflow-wrap: anywhere;
+}
+
+/* —— 底部操作区(按钮 / 链接等) —— */
+.ms-empty__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ms-space-2);
+  margin-block-start: calc(-1 * var(--ms-space-1));
+}
+
+/* —— 进场:首帧淡入 + 上移(@starting-style);不支持的浏览器直接终态出现 —— */
+@starting-style {
+  .ms-empty__image {
+    opacity: 0;
+    transform: translateY(calc(var(--ms-empty-enter-y) * var(--ms-motion-scale, 1)));
+  }
+}
+
+/* —— 发光总闸:data-ms-fx="off" 时清掉插画辉光 —— */
+[data-ms-fx="off"] .ms-empty__image {
+  filter: none;
+}
+
+/* —— 动效降级:位移 / 过渡归零(双降级:系统偏好 + 库总闸) —— */
+@media (prefers-reduced-motion: reduce) {
+  .ms-empty__image {
+    transition-duration: 0.01ms;
+  }
+}
+[data-ms-motion="off"] .ms-empty__image {
+  transition-duration: 0.01ms;
+}

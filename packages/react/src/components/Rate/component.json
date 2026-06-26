@@ -1,0 +1,29 @@
+{
+  "id": "rate",
+  "name": "Rate",
+  "description": "评分组件:受控/非受控 value + onChange,半星、再点清零、自定义图标(共用或逐星 render-prop)、只读/禁用、hover 预览高亮、每星 tooltip、评分文案、键盘 ←/→/↑/↓ 加减(配半星 0.5 步进)。接全库 tone 槽位(默认 warning 金色)与密度缩放,role=slider 无障碍。",
+  "category": "forms",
+  "tags": [
+    "rate",
+    "rating",
+    "评分",
+    "star",
+    "review",
+    "feedback",
+    "form",
+    "slider",
+    "half-star",
+    "tone",
+    "a11y"
+  ],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-26",
+    "requirements": "评分组件,对标 AntD Rate / MUI Rating。要求:受控 value/defaultValue + onChange(value);count(默认 5)、allowHalf(半星)、allowClear(再点清零)、character 自定义图标(默认星)、readOnly、disabled、size、tone(默认 warning 金色,读 --ms-c)、hover 预览高亮、键盘 ArrowLeft/Right 加减(配 allowHalf 步进 0.5)、tooltips 每星提示、aria(role=slider,aria-valuenow/valuetext)、onHoverChange 回调;value/hover/键盘步进纯逻辑下沉 logic.ts。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Rate.tsx", "Rate.css", "logic.ts", "index.ts"]
+}

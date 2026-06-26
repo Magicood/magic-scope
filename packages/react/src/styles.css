@@ -69,3 +69,9 @@
 @import "./components/Container/Container.css" layer(ms.components);
 @import "./components/Center/Center.css" layer(ms.components);
 @import "./components/AspectRatio/AspectRatio.css" layer(ms.components);
+@import "./components/Segmented/Segmented.css" layer(ms.components);
+@import "./components/Empty/Empty.css" layer(ms.components);
+@import "./components/Result/Result.css" layer(ms.components);
+@import "./components/Rate/Rate.css" layer(ms.components);
+@import "./components/Descriptions/Descriptions.css" layer(ms.components);
+@import "./components/Steps/Steps.css" layer(ms.components);
