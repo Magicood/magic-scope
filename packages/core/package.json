@@ -1,0 +1,48 @@
+{
+  "name": "@magic-scope/core",
+  "version": "0.0.0",
+  "description": "magic-scope 框架无关 headless 逻辑内核(状态机 / 键盘 / 焦点 / 受控,纯 TS,零框架依赖)",
+  "type": "module",
+  "license": "MIT",
+  "sideEffects": false,
+  "keywords": [
+    "headless",
+    "state-machine",
+    "framework-agnostic",
+    "magic-scope"
+  ],
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Magicood/magic-scope.git",
+    "directory": "packages/core"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

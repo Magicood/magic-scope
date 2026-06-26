@@ -1,0 +1,77 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Lint · Typecheck · Test · Build · Publint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # changeset 守卫需与 base 比对
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint (biome)
+        run: pnpm lint
+
+      - name: Build packages
+        run: pnpm build
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Test
+        run: pnpm test
+
+      - name: Registry 索引校验
+        run: pnpm registry
+
+      - name: manifest.json 必须已提交最新结果
+        run: git diff --exit-code registry/manifest.json
+
+      - name: 包发布质量 (publint)
+        run: |
+          npx -y publint packages/tokens
+          npx -y publint packages/react
+
+      - name: 类型导出正确性 (are-the-types-wrong)
+        run: |
+          # 忽略 no-resolution:CSS 导出无类型、node10 不支持 exports 子路径,均为已知误报;
+          # JS 入口的 false-esm / cjs-resolves-to-esm 等真问题仍会拦截。
+          npx -y @arethetypeswrong/cli --pack packages/tokens --ignore-rules no-resolution
+          npx -y @arethetypeswrong/cli --pack packages/react --ignore-rules no-resolution
+
+      - name: 包体积守卫 (gzip)
+        run: pnpm size
+
+      - name: changeset 守卫 (改发布包应有 changeset)
+        if: github.event_name == 'pull_request'
+        run: |
+          git fetch origin "${{ github.base_ref }}" --depth=1 || true
+          CHANGED=$(git diff --name-only "origin/${{ github.base_ref }}...HEAD" || true)
+          if echo "$CHANGED" | grep -qE '^packages/(tokens|react)/(src/|package\.json)' \
+            && ! echo "$CHANGED" | grep -qE '^\.changeset/.+\.md$'; then
+            echo "::warning::改动了发布包但没有新 changeset。面向用户的改动请运行 pnpm changeset。"
+          fi
