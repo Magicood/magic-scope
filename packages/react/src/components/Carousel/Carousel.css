@@ -1,0 +1,220 @@
+/* —— Carousel 轮播 ——
+ * 配色只读全库 tone 槽位(--ms-c / --ms-c-glow / --ms-on-c),不写死语义色。
+ * 两种切换效果:slide(单条 track 沿主轴 transform 位移,横/纵)、fade(slide 叠放,opacity 交替)。
+ * 箭头 / 指示点尺寸随 data-ms-density;切换过渡 prefers-reduced-motion / data-ms-motion=off 一键降级。
+ */
+.ms-carousel {
+  position: relative;
+  inline-size: 100%;
+  max-inline-size: 100%;
+  font-family: var(--ms-font-sans);
+  color: var(--ms-color-fg);
+  /* 切换时长基准 + 尺寸基准(随密度) */
+  --ms-carousel-dur: var(--ms-dur-300, 300ms);
+  --ms-carousel-arrow-size: calc(2.25rem * var(--ms-density-scale, 1));
+  --ms-carousel-dot-size: calc(0.6rem * var(--ms-density-scale, 1));
+  --ms-carousel-gap: var(--ms-space-2);
+  --ms-carousel-radius: var(--ms-radius-3, 0.75rem);
+}
+
+/* —— 视口:裁掉轨道溢出,圆角 —— */
+.ms-carousel__viewport {
+  position: relative;
+  overflow: hidden;
+  inline-size: 100%;
+  border-radius: var(--ms-carousel-radius);
+  touch-action: pan-y;
+}
+.ms-carousel--vertical .ms-carousel__viewport {
+  touch-action: pan-x;
+}
+
+/* —— 轨道:slide 效果下用 flex 横排,transform 位移整条 —— */
+.ms-carousel__track {
+  display: flex;
+  inline-size: 100%;
+  transition: transform var(--ms-carousel-dur) var(--ms-ease-standard, ease);
+  will-change: transform;
+}
+.ms-carousel--slide .ms-carousel__track {
+  transform: translateX(var(--ms-carousel-offset, 0%));
+}
+.ms-carousel--slide.ms-carousel--vertical .ms-carousel__track {
+  flex-direction: column;
+  block-size: 100%;
+  transform: translateY(var(--ms-carousel-offset, 0%));
+}
+
+/* —— 单张 slide:占满视口宽,不收缩 —— */
+.ms-carousel__slide {
+  flex: 0 0 100%;
+  inline-size: 100%;
+  min-inline-size: 0;
+  /* 内容边界:超长内容不撑破视口 */
+  overflow: hidden;
+}
+
+/* —— fade 效果:所有 slide 叠放,用 opacity 交替(track 不位移) —— */
+.ms-carousel--fade .ms-carousel__track {
+  display: grid;
+  transform: none;
+}
+.ms-carousel--fade .ms-carousel__slide {
+  grid-area: 1 / 1;
+  opacity: 0;
+  transition: opacity var(--ms-carousel-dur) var(--ms-ease-standard, ease);
+  pointer-events: none;
+}
+.ms-carousel--fade .ms-carousel__slide[data-active] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* —— 箭头按钮:绝对定位在两侧中央,tone 发光 —— */
+.ms-carousel__arrow {
+  position: absolute;
+  inset-block-start: 50%;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--ms-carousel-arrow-size);
+  block-size: var(--ms-carousel-arrow-size);
+  padding: 0;
+  border: 1px solid color-mix(in oklch, var(--ms-color-fg) 12%, transparent);
+  border-radius: var(--ms-radius-full, 9999px);
+  background-color: color-mix(in oklch, var(--ms-color-bg) 78%, transparent);
+  color: var(--ms-color-fg);
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  transform: translateY(-50%);
+  transition:
+    background-color var(--ms-dur-150, 150ms) var(--ms-ease-standard, ease),
+    border-color var(--ms-dur-150, 150ms) var(--ms-ease-standard, ease),
+    box-shadow var(--ms-dur-150, 150ms) var(--ms-ease-standard, ease);
+}
+.ms-carousel__arrow--prev {
+  inset-inline-start: var(--ms-carousel-gap);
+}
+.ms-carousel__arrow--next {
+  inset-inline-end: var(--ms-carousel-gap);
+}
+.ms-carousel__arrow:hover:not(:disabled) {
+  border-color: var(--ms-c);
+  color: var(--ms-c);
+  box-shadow: 0 0 calc(16px * var(--ms-fx-glow, 1)) -6px var(--ms-c-glow);
+}
+.ms-carousel__arrow:focus-visible {
+  outline: 2px solid var(--ms-c);
+  outline-offset: 2px;
+}
+.ms-carousel__arrow:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* 纵向:箭头改为上/下中央 */
+.ms-carousel--vertical .ms-carousel__arrow {
+  inset-block-start: auto;
+  inset-inline-start: 50%;
+  transform: translateX(-50%);
+}
+.ms-carousel--vertical .ms-carousel__arrow--prev {
+  inset-block-start: var(--ms-carousel-gap);
+  inset-inline-start: 50%;
+}
+.ms-carousel--vertical .ms-carousel__arrow--next {
+  inset-block-end: var(--ms-carousel-gap);
+  inset-inline-start: 50%;
+}
+
+/* 箭头图标:CSS 画的 chevron(随方向旋转) */
+.ms-carousel__arrow-icon {
+  inline-size: 0.6em;
+  block-size: 0.6em;
+  border-inline-start: 2px solid currentColor;
+  border-block-start: 2px solid currentColor;
+}
+.ms-carousel__arrow--prev .ms-carousel__arrow-icon {
+  transform: rotate(-45deg) translate(2px, 2px);
+}
+.ms-carousel__arrow--next .ms-carousel__arrow-icon {
+  transform: rotate(135deg) translate(2px, 2px);
+}
+.ms-carousel--vertical .ms-carousel__arrow--prev .ms-carousel__arrow-icon {
+  transform: rotate(45deg) translate(2px, 2px);
+}
+.ms-carousel--vertical .ms-carousel__arrow--next .ms-carousel__arrow-icon {
+  transform: rotate(-135deg) translate(2px, 2px);
+}
+
+/* —— 指示点:底部居中一排;活动点亮 tone 色 —— */
+.ms-carousel__dots {
+  position: absolute;
+  inset-block-end: var(--ms-carousel-gap);
+  inset-inline: 0;
+  z-index: 2;
+  display: flex;
+  gap: var(--ms-space-1);
+  align-items: center;
+  justify-content: center;
+}
+.ms-carousel--vertical .ms-carousel__dots {
+  inset-block: 0;
+  inset-inline-end: var(--ms-carousel-gap);
+  inset-inline-start: auto;
+  flex-direction: column;
+}
+
+.ms-carousel__dot {
+  inline-size: var(--ms-carousel-dot-size);
+  block-size: var(--ms-carousel-dot-size);
+  padding: 0;
+  border: none;
+  border-radius: var(--ms-radius-full, 9999px);
+  background-color: color-mix(in oklch, var(--ms-color-fg) 35%, transparent);
+  cursor: pointer;
+  transition:
+    background-color var(--ms-dur-150, 150ms) var(--ms-ease-standard, ease),
+    box-shadow var(--ms-dur-150, 150ms) var(--ms-ease-standard, ease),
+    inline-size var(--ms-dur-150, 150ms) var(--ms-ease-standard, ease);
+}
+.ms-carousel__dot:hover {
+  background-color: color-mix(in oklch, var(--ms-c) 70%, transparent);
+}
+.ms-carousel__dot:focus-visible {
+  outline: 2px solid var(--ms-c);
+  outline-offset: 2px;
+}
+.ms-carousel__dot--active {
+  /* 活动点拉长成胶囊 + tone 发光,作为「魔法」高亮 */
+  inline-size: calc(var(--ms-carousel-dot-size) * 2.4);
+  background-color: var(--ms-c);
+  box-shadow: 0 0 calc(10px * var(--ms-fx-glow, 1)) -2px var(--ms-c-glow);
+}
+.ms-carousel--vertical .ms-carousel__dot--active {
+  inline-size: var(--ms-carousel-dot-size);
+  block-size: calc(var(--ms-carousel-dot-size) * 2.4);
+}
+
+/* —— 动效一键降级:reduced-motion 与 data-ms-motion=off 都关切换过渡 —— */
+@media (prefers-reduced-motion: reduce) {
+  .ms-carousel__track,
+  .ms-carousel--fade .ms-carousel__slide,
+  .ms-carousel__dot,
+  .ms-carousel__arrow {
+    transition: none;
+  }
+}
+[data-ms-motion="off"] .ms-carousel__track,
+[data-ms-motion="off"] .ms-carousel--fade .ms-carousel__slide,
+[data-ms-motion="off"] .ms-carousel__dot,
+[data-ms-motion="off"] .ms-carousel__arrow {
+  transition: none;
+}
+
+/* —— 发光总闸关断 —— */
+[data-ms-fx="off"] .ms-carousel__dot--active,
+[data-ms-fx="off"] .ms-carousel__arrow:hover:not(:disabled) {
+  box-shadow: none;
+}

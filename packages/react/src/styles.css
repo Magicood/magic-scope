@@ -88,3 +88,8 @@
 @import "./components/Cascader/Cascader.css" layer(ms.components);
 @import "./components/Splitter/Splitter.css" layer(ms.components);
 @import "./components/Affix/Affix.css" layer(ms.components);
+@import "./components/Transfer/Transfer.css" layer(ms.components);
+@import "./components/TimePicker/TimePicker.css" layer(ms.components);
+@import "./components/Mentions/Mentions.css" layer(ms.components);
+@import "./components/Carousel/Carousel.css" layer(ms.components);
+@import "./components/FloatButton/FloatButton.css" layer(ms.components);

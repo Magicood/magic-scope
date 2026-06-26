@@ -1,0 +1,30 @@
+{
+  "id": "time-picker",
+  "name": "TimePicker",
+  "description": "时间选择器:Input 式 trigger + 浮层内可滚动的时/分/秒列(每列 listbox,选中项高亮居中)。支持 12/24 小时制、步进、禁用时分秒、此刻/确定、清除、受控值与开合,接全库 tone 与密度。",
+  "category": "forms",
+  "tags": [
+    "time-picker",
+    "time",
+    "forms",
+    "input",
+    "popover",
+    "listbox",
+    "12-hour",
+    "24-hour",
+    "step",
+    "clearable",
+    "controlled",
+    "a11y"
+  ],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-26",
+    "requirements": "需要一个生产级时间选择器:trigger 是只读 Input 显示格式化时间或占位;点开浮层后用「时/分/秒」三条可滚动列让用户逐列选值(对标主流库的滚轮列体验),选中项高亮并滚到列中央。要能切 12/24 小时制(12 制额外加 AM/PM 列)、按 hourStep/minuteStep/secondStep 稀疏化选项、按 disabledHours/Minutes/Seconds 屏蔽不可选值,并提供「此刻」一键填当前时间与「确定」收起。值要同时吃 Date 与 'HH:mm:ss' 字符串、受控/非受控双通道,开合可受控。把纯逻辑(解析/格式化/12-24 互转/选项生成/clamp 对齐/禁用判定/列内导航)抽进零 React 的 logic.ts 以便平移到 vue/core。a11y 上每列是独立 listbox + option(aria-selected),键盘 ↑↓ 在列内选值;供 Form 用的 invalid 态。浮层复用与 Select 同款的原生 Popover API + CSS Anchor Positioning + 降级方案,保持全库适配语义一致。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["TimePicker.tsx", "TimePicker.css", "logic.ts", "index.ts"]
+}

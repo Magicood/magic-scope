@@ -103,7 +103,15 @@ export type MessageKey =
   | 'upload.preview'
   | 'colorPicker.hue'
   | 'colorPicker.alpha'
-  | 'splitter.resize';
+  | 'splitter.resize'
+  | 'timePicker.now'
+  | 'timePicker.confirm'
+  | 'timePicker.placeholder'
+  | 'carousel.previous'
+  | 'carousel.next'
+  | 'carousel.goToSlide'
+  | 'transfer.search'
+  | 'transfer.empty';
 
 /** 完整字典:每个 key 都有值。 */
 export type Messages = Record<MessageKey, Message>;
@@ -203,6 +211,14 @@ export const defaultMessages: Messages = {
   'colorPicker.hue': '色相',
   'colorPicker.alpha': '透明度',
   'splitter.resize': '拖动调整大小',
+  'timePicker.now': '此刻',
+  'timePicker.confirm': '确定',
+  'timePicker.placeholder': '请选择时间',
+  'carousel.previous': '上一张',
+  'carousel.next': '下一张',
+  'carousel.goToSlide': '跳到第 {index} 张',
+  'transfer.search': '搜索',
+  'transfer.empty': '列表为空',
 };
 
 const TEMPLATE = /\{(\w+)\}/g;
