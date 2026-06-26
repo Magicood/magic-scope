@@ -854,6 +854,14 @@
   color: var(--ms-color-fg-subtle);
   margin-inline: 0.15rem;
 }
+.sc-event__params li {
+  line-height: 1.6;
+}
+.sc-event__pdesc {
+  margin-inline-start: 0.5rem;
+  color: var(--ms-color-fg-muted);
+  font-size: 0.82rem;
+}
 .sc-event__desc {
   margin: 0.55rem 0 0.2rem;
   padding-inline: 0.9rem;

@@ -12,6 +12,12 @@ import ts from 'typescript';
 const COMPONENTS_DIR = 'packages/react/src/components';
 const OUT = 'playground/showcase/generated/props.json';
 
+/** 事件回调的逐个参数说明(抽自源码 @param;无 @param 则为空)。 */
+export interface EventParamDoc {
+  name: string;
+  description: string;
+}
+
 export interface PropRow {
   name: string;
   type: string;
@@ -20,6 +26,8 @@ export interface PropRow {
   required: boolean;
   /** 是否继承自原生元素(透传事件 / 属性);组件自有为 false。 */
   native?: boolean;
+  /** 仅事件 prop:逐参 @param 说明(按参数名对应回调签名里的参数)。 */
+  params?: EventParamDoc[];
 }
 
 // 有意义的标准交互事件白名单(继承自原生元素的也要列进「事件 Events」表;
@@ -59,11 +67,75 @@ for (const dir of dirs) {
   }
 }
 
+// —— 共享 TS 程序:供 @param 抽取与 *Options 抽取复用(避免建两次 program)。
+const program = ts.createProgram(files, {
+  jsx: ts.JsxEmit.ReactJSX,
+  esModuleInterop: true,
+  skipLibCheck: true,
+});
+const checker = program.getTypeChecker();
+
+// 抽「事件 prop 的 @param」:file → propName → EventParamDoc[]。
+// react-docgen 只给 description(JSDoc 首段),逐参 @param 用编译器 API 单独取。
+function extractParamDocs(filePaths: string[]): Record<string, Record<string, EventParamDoc[]>> {
+  const byFile: Record<string, Record<string, EventParamDoc[]>> = {};
+  for (const file of filePaths) {
+    const sf = program.getSourceFile(file);
+    if (!sf) continue;
+    const map: Record<string, EventParamDoc[]> = {};
+    const visit = (node: ts.Node) => {
+      if (
+        (ts.isPropertySignature(node) || ts.isMethodSignature(node)) &&
+        node.name &&
+        ts.isIdentifier(node.name) &&
+        /^on[A-Z]/.test(node.name.text)
+      ) {
+        const sym = checker.getSymbolAtLocation(node.name);
+        const tags = sym?.getJsDocTags(checker) ?? [];
+        const params: EventParamDoc[] = [];
+        for (const tag of tags) {
+          if (tag.name !== 'param' || !tag.text) continue;
+          const namePart = tag.text.find((p) => p.kind === 'parameterName');
+          let pname: string;
+          let desc: string;
+          if (namePart) {
+            pname = namePart.text;
+            desc = tag.text
+              .filter((p) => p !== namePart)
+              .map((p) => p.text)
+              .join('')
+              .trim();
+          } else {
+            const full = ts.displayPartsToString(tag.text).trim();
+            const m = /^(\S+)\s+([\s\S]*)$/.exec(full);
+            pname = m ? m[1] : full;
+            desc = m ? m[2] : '';
+          }
+          desc = desc
+            .replace(/^[\s\-:]+/, '')
+            .replace(/\s+/g, ' ')
+            .trim();
+          if (pname) params.push({ name: pname, description: desc });
+        }
+        if (params.length) map[node.name.text] = params;
+      }
+      ts.forEachChild(node, visit);
+    };
+    ts.forEachChild(sf, visit);
+    if (Object.keys(map).length) byFile[file] = map;
+  }
+  return byFile;
+}
+
+const paramDocs = extractParamDocs(files);
+
 const docs = parser.parse(files);
 
 // displayName → PropRow[](同名多导出合并)。
 const out: Record<string, PropRow[]> = {};
 for (const doc of docs) {
+  const filePath = (doc as { filePath?: string }).filePath ?? '';
+  const fileParams = paramDocs[filePath] ?? {};
   const rows: PropRow[] = Object.values(doc.props).map((p) => {
     // enum 优先用 raw 联合字符串;否则拼字面量;再否则用 name。
     const t = p.type as { name?: string; raw?: string; value?: { value: string }[] };
@@ -78,7 +150,7 @@ for (const doc of docs) {
       typeStr = t.raw;
     }
     const native = p.parent ? p.parent.fileName.includes('node_modules') : false;
-    return {
+    const row: PropRow = {
       name: p.name,
       type: typeStr.replace(/\s+/g, ' ').trim(),
       default: p.defaultValue?.value != null ? String(p.defaultValue.value) : '—',
@@ -86,6 +158,8 @@ for (const doc of docs) {
       required: Boolean(p.required),
       native,
     };
+    if (/^on[A-Z]/.test(p.name) && fileParams[p.name]) row.params = fileParams[p.name];
+    return row;
   });
   if (rows.length === 0) continue;
   // 同 displayName 合并(如 RadioGroup + Radio 各自一条 displayName,这里按名分别存)。
@@ -95,16 +169,11 @@ for (const doc of docs) {
 // —— 额外抽取命令式 API 的 *Options 接口 ——
 // react-docgen 只抓「组件 props」,toast()/confirm() 的 options 是普通接口,用 TS 编译器 API 补抽。
 function extractOptionInterfaces(filePaths: string[]): Record<string, PropRow[]> {
-  const program = ts.createProgram(filePaths, {
-    jsx: ts.JsxEmit.ReactJSX,
-    esModuleInterop: true,
-    skipLibCheck: true,
-  });
-  const checker = program.getTypeChecker();
   const result: Record<string, PropRow[]> = {};
   for (const file of filePaths) {
     const sf = program.getSourceFile(file);
     if (!sf) continue;
+    const fileParams = paramDocs[file] ?? {};
     sf.forEachChild((node) => {
       if (!ts.isInterfaceDeclaration(node) || !/Options$/.test(node.name.text)) return;
       const exported = node.modifiers?.some((m) => m.kind === ts.SyntaxKind.ExportKeyword);
@@ -116,13 +185,16 @@ function extractOptionInterfaces(filePaths: string[]): Record<string, PropRow[]>
         const description = sym
           ? ts.displayPartsToString(sym.getDocumentationComment(checker)).trim()
           : '';
-        rows.push({
-          name: member.name.getText(sf),
+        const name = member.name.getText(sf);
+        const row: PropRow = {
+          name,
           type: member.type ? member.type.getText(sf).replace(/\s+/g, ' ').trim() : 'unknown',
           default: '—',
           description,
           required: !member.questionToken,
-        });
+        };
+        if (/^on[A-Z]/.test(name) && fileParams[name]) row.params = fileParams[name];
+        rows.push(row);
       }
       if (rows.length) result[node.name.text] = rows;
     });

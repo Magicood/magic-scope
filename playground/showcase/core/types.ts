@@ -8,6 +8,12 @@ import type { Control, ControlValues } from '../types';
  *  - props 不在此手写,由 scripts/extract-props.ts 从真实 TS 抽取进 generated/props.json
  */
 
+/** 事件回调的逐参说明(抽自源码 @param)。 */
+export interface EventParamDoc {
+  name: string;
+  description: string;
+}
+
 /** 从真实 TS 抽取的一行 prop(与 extract-props.ts 的 PropRow 对齐)。 */
 export interface PropRow {
   name: string;
@@ -17,6 +23,8 @@ export interface PropRow {
   required: boolean;
   /** 是否继承自原生元素(透传事件);组件自有为 false。 */
   native?: boolean;
+  /** 仅事件 prop:逐参 @param 说明(按参数名对应回调签名参数)。 */
+  params?: EventParamDoc[];
 }
 
 /** 框架无关的组件元数据。 */

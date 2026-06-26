@@ -278,6 +278,8 @@ export function ComponentDocV2({
               {ownEvents.map((e) => {
                 const sig = fmtEventType(e.type);
                 const params = parseEventParams(sig);
+                // @param 逐参说明(抽自源码,按参数名对应回调签名参数)。
+                const paramDoc = (n: string) => e.params?.find((d) => d.name === n)?.description;
                 return (
                   <div key={e.name} className="sc-event">
                     <div className="sc-event__head">
@@ -288,16 +290,20 @@ export function ComponentDocV2({
                       <div className="sc-event__params">
                         <span className="sc-event__plabel">参数</span>
                         <ul>
-                          {params.map((p) => (
-                            <li key={p.name}>
-                              <code className="sc-code-name">
-                                {p.name}
-                                {p.optional ? '?' : ''}
-                              </code>
-                              <span className="sc-event__psep">:</span>
-                              <code className="sc-code-type">{p.type}</code>
-                            </li>
-                          ))}
+                          {params.map((p) => {
+                            const desc = paramDoc(p.name);
+                            return (
+                              <li key={p.name}>
+                                <code className="sc-code-name">
+                                  {p.name}
+                                  {p.optional ? '?' : ''}
+                                </code>
+                                <span className="sc-event__psep">:</span>
+                                <code className="sc-code-type">{p.type}</code>
+                                {desc && <span className="sc-event__pdesc">— {desc}</span>}
+                              </li>
+                            );
+                          })}
                         </ul>
                       </div>
                     )}
