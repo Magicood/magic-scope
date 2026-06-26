@@ -106,4 +106,17 @@ describe('Text', () => {
     expect(link).toHaveClass('ms-text', 'ms-text--size-lg', 'ms-tone-accent');
     expect(link).toHaveAttribute('href', '/x');
   });
+
+  it('animate 动效类 + shimmer/pulse 兜底 tone 槽位', () => {
+    const { rerender } = render(<Text animate="reveal">x</Text>);
+    expect(screen.getByText('x')).toHaveClass('ms-text--anim-reveal');
+    expect(screen.getByText('x')).not.toHaveClass('ms-tone-primary'); // reveal 不需槽位
+    rerender(<Text animate="shimmer">x</Text>);
+    expect(screen.getByText('x')).toHaveClass('ms-text--anim-shimmer', 'ms-tone-primary'); // 需槽位兜底
+  });
+
+  it('writingMode=vertical → 竖排类', () => {
+    render(<Text writingMode="vertical">竖</Text>);
+    expect(screen.getByText('竖')).toHaveClass('ms-text--vertical');
+  });
 });

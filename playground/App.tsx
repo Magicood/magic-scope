@@ -89,10 +89,12 @@ export function App() {
       >
         <h2 style={{ margin: 0 }}>✦ 本会话新成果(Typography 文字分类 + 深度化)</h2>
 
-        <div style={{ display: 'grid', gap: '0.5rem' }}>
+        <div style={{ display: 'grid', gap: '0.75rem' }}>
           <Text size="sm" tone="primary" weight="semibold" transform="uppercase" tracking="wider">
-            Typography · Text(多态 / 全属性 / 魔法文字)
+            Typography · Text(多态 / 全属性 / 魔法 / 动效)
           </Text>
+
+          {/* 魔法静态:display 字体 / 渐变 / 辉光 / 描边 */}
           <div style={row}>
             <Text size="3xl" family="display" weight="bold">
               魔法标题 Aa
@@ -107,26 +109,89 @@ export function App() {
               描边字
             </Text>
           </div>
+
+          {/* 魔法动效:浏览器里是动的(受 motion 档调制) */}
+          <div style={row}>
+            <Text size="2xl" weight="bold" animate="shimmer">
+              流光扫过 shimmer
+            </Text>
+            <Text size="2xl" weight="bold" animate="flow" tone="accent">
+              渐变流动 flow
+            </Text>
+            <Text size="2xl" weight="bold" animate="pulse" tone="danger">
+              辉光呼吸 pulse
+            </Text>
+          </div>
+          <div style={row}>
+            <Text size="lg" animate="reveal" tone="success">
+              上浮淡入 reveal
+            </Text>
+            <Text size="lg" animate="blur-in" tone="info">
+              模糊聚焦 blur-in
+            </Text>
+            <Text dimmed size="sm">
+              (尊重 prefers-reduced-motion / data-ms-motion=off 一键降级)
+            </Text>
+          </div>
+
+          {/* 字号阶梯 */}
+          <div style={{ ...row, alignItems: 'baseline' }}>
+            <Text size="xs">xs</Text>
+            <Text size="sm">sm</Text>
+            <Text size="base">base</Text>
+            <Text size="lg">lg</Text>
+            <Text size="xl">xl</Text>
+            <Text size="2xl">2xl</Text>
+            <Text size="3xl">3xl</Text>
+          </div>
+
+          {/* 变色 / 倾斜 / 装饰 / 数字 / 字族 */}
           <div style={row}>
             <Text tone="success">success</Text>
             <Text tone="danger">danger</Text>
             <Text tone="warning">warning</Text>
+            <Text tone="info">info</Text>
             <Text dimmed>dimmed 次要</Text>
+            <Text italic>倾斜 italic</Text>
+            <Text underline>下划线</Text>
+            <Text strikethrough>删除线</Text>
+            <Text transform="uppercase">uppercase</Text>
+            <Text smallCaps>SmallCaps</Text>
             <Text family="mono" numeric="tabular">
-              1234567890
-            </Text>
-            <Text italic underline>
-              强调
+              等宽 1234567890
             </Text>
             <Text family="serif" size="lg">
               衬线 serif
             </Text>
           </div>
-          <Text lineClamp={2} dimmed style={{ maxWidth: '420px' }}>
-            多行省略
-            lineClamp=2:这是一段刻意写得很长很长的文字,用来演示多行截断——超出两行就显示省略号,
-            而且无论塞进多长的无空格长串都绝不撑破容器边界,这是这次全库加固过的能力。
-          </Text>
+
+          {/* 排列:竖排 + 对齐 */}
+          <div style={{ ...row, alignItems: 'flex-start' }}>
+            <Text writingMode="vertical" family="display" size="lg" style={{ blockSize: '5rem' }}>
+              竖排古风
+            </Text>
+            <div style={{ display: 'grid', gap: 4, flex: 1, minWidth: '200px' }}>
+              <Text align="start" tone="primary">
+                左对齐 start
+              </Text>
+              <Text align="center">居中 center</Text>
+              <Text align="end" dimmed>
+                右对齐 end
+              </Text>
+            </div>
+          </div>
+
+          {/* 截断:单行 + 多行,都收在边界内 */}
+          <div style={{ display: 'grid', gap: 4, maxWidth: '420px' }}>
+            <Text truncate>
+              单行省略
+              truncate:这一长串文字会在末尾以省略号收口,绝不撑破容器,后面这些你应该看不到了对吧对吧
+            </Text>
+            <Text lineClamp={2} dimmed>
+              多行省略
+              lineClamp=2:刻意写得很长很长的文字,演示多行截断——超出两行显示省略号,无论多长的无空格长串都绝不撑破容器边界。
+            </Text>
+          </div>
         </div>
 
         <div style={{ display: 'grid', gap: '0.5rem' }}>

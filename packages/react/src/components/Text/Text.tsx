@@ -12,6 +12,8 @@ export type TextTransform = 'none' | 'uppercase' | 'lowercase' | 'capitalize' | 
 export type TextWrap = 'wrap' | 'nowrap' | 'pretty' | 'balance';
 export type TextWhitespace = 'normal' | 'nowrap' | 'pre' | 'pre-wrap' | 'pre-line' | 'break-spaces';
 export type TextNumeric = 'tabular' | 'oldstyle' | 'lining' | 'proportional' | 'slashed-zero';
+export type TextAnimate = 'reveal' | 'blur-in' | 'shimmer' | 'pulse' | 'flow';
+export type TextWritingMode = 'horizontal' | 'vertical';
 
 export interface TextOwnProps {
   /** 多态渲染标签(默认 span)。语义场景按需 p/strong/em/label 等。 */
@@ -94,6 +96,17 @@ export interface TextOwnProps {
    * 兼容:-webkit-text-stroke 非标准但全主流浏览器(含 FF)支持;镂空态注意对比度。
    */
   stroke?: boolean;
+  /**
+   * 魔法动效:reveal 上浮淡入 / blur-in 模糊聚焦入场;shimmer 流光扫过 / pulse 辉光呼吸 /
+   * flow 渐变流动(持续)。全部受全局 data-ms-motion 与 prefers-reduced-motion 调制,
+   * 关闭时自动降级为静态(入场态直接呈现、不卡在隐藏)。shimmer/pulse/flow 复用 tone 槽位。
+   */
+  animate?: TextAnimate;
+  /**
+   * 书写方向:vertical=竖排(CJK 古籍 / 侧栏标签)。
+   * 兼容:writing-mode 全主流浏览器支持;竖排下西文与标点会旋转,按需配 text-orientation(逃生舱)。
+   */
+  writingMode?: TextWritingMode;
 }
 
 export type TextProps = TextOwnProps & Omit<ComponentPropsWithoutRef<'span'>, keyof TextOwnProps>;
@@ -145,6 +158,8 @@ export const Text = forwardRef<HTMLElement, TextProps>(function Text(
     gradient,
     glow,
     stroke,
+    animate,
+    writingMode,
     className,
     style,
     children,
@@ -153,7 +168,8 @@ export const Text = forwardRef<HTMLElement, TextProps>(function Text(
   ref,
 ) {
   // 魔法效果需要 tone 槽位(--ms-c / --ms-c-glow);未显式给 tone 时兜底 primary
-  const needsSlot = gradient != null || glow != null || stroke != null;
+  const animateNeedsSlot = animate === 'shimmer' || animate === 'pulse' || animate === 'flow';
+  const needsSlot = gradient != null || glow != null || stroke != null || animateNeedsSlot;
   const effectiveTone = tone ?? (needsSlot ? 'primary' : undefined);
 
   const styleVars: Record<string, string | number> = {};
@@ -190,6 +206,8 @@ export const Text = forwardRef<HTMLElement, TextProps>(function Text(
     glow && 'ms-text--glow',
     glow === 'strong' && 'ms-text--glow-strong',
     stroke && 'ms-text--stroke',
+    animate && `ms-text--anim-${animate}`,
+    writingMode === 'vertical' && 'ms-text--vertical',
     className,
   );
 

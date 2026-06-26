@@ -310,3 +310,93 @@
 .ms-text--stroke {
   -webkit-text-stroke: 1px var(--ms-c);
 }
+
+/* —— 竖排(CJK 友好) —— */
+.ms-text--vertical {
+  writing-mode: vertical-rl;
+}
+
+/* —— 魔法动效 —— */
+/* 入场:上浮淡入 */
+@keyframes ms-text-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(0.5em);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.ms-text--anim-reveal {
+  animation: ms-text-reveal 0.5s var(--ms-ease-emphasized, ease-out) both;
+}
+/* 入场:模糊聚焦 */
+@keyframes ms-text-blur-in {
+  from {
+    opacity: 0;
+    filter: blur(10px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+.ms-text--anim-blur-in {
+  animation: ms-text-blur-in 0.6s var(--ms-ease-standard, ease) both;
+}
+/* 持续:辉光呼吸(复用 tone 槽位) */
+@keyframes ms-text-pulse {
+  0%,
+  100% {
+    text-shadow: 0 0 calc(0.25em * var(--ms-fx-glow, 1)) var(--ms-c-glow);
+  }
+  50% {
+    text-shadow: 0 0 calc(0.75em * var(--ms-fx-glow, 1)) var(--ms-c-glow);
+  }
+}
+.ms-text--anim-pulse {
+  animation: ms-text-pulse 2.2s ease-in-out infinite;
+}
+/* 持续:流光扫过(亮带横扫,基于 background-clip:text) */
+.ms-text--anim-shimmer {
+  background-image: linear-gradient(
+    100deg,
+    var(--ms-c) 35%,
+    color-mix(in oklch, var(--ms-c) 35%, white) 50%,
+    var(--ms-c) 65%
+  );
+  background-size: 220% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: ms-text-aurora 2.6s linear infinite;
+}
+/* 持续:渐变流动(tone → glow 全色域漂移) */
+.ms-text--anim-flow {
+  background-image: linear-gradient(100deg, var(--ms-c), var(--ms-c-glow), var(--ms-c));
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: ms-text-aurora 5s linear infinite;
+}
+@supports not ((background-clip: text) or (-webkit-background-clip: text)) {
+  .ms-text--anim-shimmer,
+  .ms-text--anim-flow {
+    color: var(--ms-c);
+    -webkit-text-fill-color: currentcolor;
+  }
+}
+/* 动效降级:reduced-motion 或 data-ms-motion=off 时停所有文字动效
+   (入场动画去掉后回到自然态、不卡在隐藏) */
+@media (prefers-reduced-motion: reduce) {
+  [class*="ms-text--anim-"] {
+    animation: none;
+  }
+}
+[data-ms-motion="off"] [class*="ms-text--anim-"] {
+  animation: none;
+}
