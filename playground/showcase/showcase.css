@@ -692,3 +692,106 @@
   color: var(--ms-color-danger);
   font-weight: 700;
 }
+
+/* —— 顶栏品牌(改 a)与主题画廊入口 —— */
+.sc-topbar__brand {
+  text-decoration: none;
+  color: inherit;
+}
+.sc-topbar__gallery {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  flex: none;
+  padding: 0.28rem 0.7rem;
+  font-size: 0.82rem;
+  color: var(--ms-color-primary);
+  text-decoration: none;
+  border: 1px solid color-mix(in oklab, var(--ms-color-primary) 45%, var(--ms-color-border));
+  border-radius: var(--ms-radius-full);
+  background: color-mix(in oklab, var(--ms-color-primary) 8%, transparent);
+  transition: all var(--ms-dur-fast) var(--ms-ease-standard);
+}
+.sc-topbar__gallery:hover {
+  color: var(--ms-color-on-primary);
+  background: var(--ms-color-primary);
+  box-shadow: 0 0 calc(14px * var(--ms-fx-glow, 0.6))
+    color-mix(in oklab, var(--ms-color-glow, var(--ms-color-primary)) 70%, transparent);
+}
+
+/* —— 预设画廊 —— */
+.sc-swatches {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(7rem, 1fr));
+  gap: 0.85rem;
+}
+.sc-swatch {
+  display: grid;
+  gap: 0.5rem;
+  padding: 0.6rem;
+  border: 1px solid var(--ms-color-border);
+  border-radius: var(--ms-radius-lg);
+  background: var(--ms-color-surface);
+  cursor: pointer;
+  transition: all var(--ms-dur-fast) var(--ms-ease-standard);
+}
+.sc-swatch:hover {
+  border-color: var(--ms-color-primary);
+  transform: translateY(calc(-2px * var(--ms-motion-scale, 1)));
+}
+.sc-swatch[data-active] {
+  border-color: var(--ms-color-primary);
+  box-shadow:
+    0 0 0 1px var(--ms-color-primary),
+    0 0 calc(18px * var(--ms-fx-glow, 0.6))
+    color-mix(in oklab, var(--ms-color-glow, var(--ms-color-primary)) 60%, transparent);
+}
+.sc-swatch__preview {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  justify-content: center;
+  block-size: 2.6rem;
+  border-radius: var(--ms-radius-md);
+  border: 1px solid var(--ms-color-border);
+}
+.sc-swatch__preview > span {
+  inline-size: 1.1rem;
+  block-size: 1.1rem;
+  border-radius: var(--ms-radius-full);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12) inset;
+}
+.sc-swatch__label {
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--ms-color-fg);
+}
+
+.sc-gallery__dials {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.5rem;
+  align-items: center;
+}
+.sc-gallery__diallabel {
+  font-size: 0.74rem;
+  color: var(--ms-color-fg-subtle);
+  padding-inline: 0.2rem 0.4rem;
+}
+
+.sc-sampler {
+  display: grid;
+  gap: 1rem;
+  padding: 1.5rem;
+  border: 1px solid var(--ms-color-border);
+  border-radius: var(--ms-radius-lg);
+  background:
+    linear-gradient(0deg, color-mix(in oklab, var(--ms-color-fg) 2%, transparent), transparent),
+    var(--ms-color-surface);
+}
+.sc-sampler__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.85rem;
+}

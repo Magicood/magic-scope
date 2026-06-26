@@ -1,4 +1,4 @@
-import type { RadioSize } from '@magic-scope/react';
+import type { RadioAppearance, RadioSize, RadioTone } from '@magic-scope/react';
 import { Radio, RadioGroup } from '@magic-scope/react';
 import { type ComponentType, useState } from 'react';
 import { buildDemos } from '../../core/collectDemos';
@@ -20,6 +20,8 @@ function Playground({ values }: { values: ControlValues }) {
       onValueChange={setSchool}
       orientation={values.orientation as 'horizontal' | 'vertical'}
       size={values.size as RadioSize}
+      tone={values.tone as RadioTone}
+      appearance={values.appearance as RadioAppearance}
       disabled={values.disabled as boolean}
       aria-label="法术流派"
     >

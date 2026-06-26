@@ -1,4 +1,10 @@
-import type { ButtonSize, ButtonVariant } from '@magic-scope/react';
+import type {
+  ButtonGlow,
+  ButtonShape,
+  ButtonSize,
+  ButtonTone,
+  ButtonVariant,
+} from '@magic-scope/react';
 import { Button } from '@magic-scope/react';
 import type { ComponentType } from 'react';
 import { buildDemos } from '../../core/collectDemos';
@@ -9,7 +15,12 @@ function Playground({ values }: { values: ControlValues }) {
   return (
     <Button
       variant={values.variant as ButtonVariant}
+      tone={values.tone as ButtonTone}
       size={values.size as ButtonSize}
+      shape={values.shape as ButtonShape}
+      glow={values.glow as ButtonGlow}
+      loading={values.loading as boolean}
+      fullWidth={values.fullWidth as boolean}
       disabled={values.disabled as boolean}
     >
       {values.children as string}

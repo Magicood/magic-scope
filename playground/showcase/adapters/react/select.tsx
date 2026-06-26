@@ -1,4 +1,4 @@
-import type { SelectSize } from '@magic-scope/react';
+import type { SelectSize, SelectTone } from '@magic-scope/react';
 import { Select } from '@magic-scope/react';
 import { type ComponentType, useState } from 'react';
 import { buildDemos } from '../../core/collectDemos';
@@ -20,7 +20,11 @@ function Playground({ values }: { values: ControlValues }) {
       onChange={setTheme}
       options={options}
       size={values.size as SelectSize}
+      tone={values.tone as SelectTone}
       disabled={values.disabled as boolean}
+      clearable={values.clearable as boolean}
+      searchable={values.searchable as boolean}
+      loading={values.loading as boolean}
       aria-label="主题流派"
     />
   );

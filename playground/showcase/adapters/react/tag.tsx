@@ -1,4 +1,4 @@
-import type { TagTone } from '@magic-scope/react';
+import type { TagSize, TagTone, TagVariant } from '@magic-scope/react';
 import { Tag } from '@magic-scope/react';
 import type { ComponentType } from 'react';
 import { buildDemos } from '../../core/collectDemos';
@@ -7,7 +7,14 @@ import type { ControlValues } from '../../types';
 
 function Playground({ values }: { values: ControlValues }) {
   return (
-    <Tag tone={values.tone as TagTone} closable={values.closable as boolean}>
+    <Tag
+      tone={values.tone as TagTone}
+      variant={values.variant as TagVariant}
+      size={values.size as TagSize}
+      closable={values.closable as boolean}
+      checkable={values.checkable as boolean}
+      selected={values.selected as boolean}
+    >
       {values.children as string}
     </Tag>
   );

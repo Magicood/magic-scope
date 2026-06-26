@@ -19,6 +19,23 @@ export const meta: ComponentMeta = {
         { value: 'lg', label: 'lg' },
       ],
     },
+    {
+      type: 'select',
+      prop: 'tone',
+      label: '色调 tone',
+      default: 'primary',
+      options: [
+        { value: 'primary', label: 'primary' },
+        { value: 'accent', label: 'accent' },
+        { value: 'success', label: 'success' },
+        { value: 'warning', label: 'warning' },
+        { value: 'danger', label: 'danger' },
+        { value: 'info', label: 'info' },
+      ],
+    },
     { type: 'boolean', prop: 'disabled', label: '禁用 disabled', default: false },
+    { type: 'boolean', prop: 'clearable', label: '可清除 clearable', default: false },
+    { type: 'boolean', prop: 'searchable', label: '可搜索 searchable', default: false },
+    { type: 'boolean', prop: 'loading', label: '加载态 loading', default: false },
   ],
 };

@@ -1,4 +1,4 @@
-import { Switch } from '@magic-scope/react';
+import { Switch, type SwitchSize, type SwitchTone } from '@magic-scope/react';
 import { type ComponentType, useEffect, useState } from 'react';
 import { buildDemos } from '../../core/collectDemos';
 import type { ReactAdapter } from '../../core/types';
@@ -19,6 +19,9 @@ function Playground({ values }: { values: ControlValues }) {
       <Switch
         checked={checked}
         onChange={(e) => setChecked(e.target.checked)}
+        tone={values.tone as SwitchTone}
+        size={values.size as SwitchSize}
+        loading={values.loading as boolean}
         disabled={values.disabled as boolean}
         aria-label={label}
       />

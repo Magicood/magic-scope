@@ -1,4 +1,4 @@
-import { Checkbox } from '@magic-scope/react';
+import { Checkbox, type CheckboxSize, type CheckboxTone } from '@magic-scope/react';
 import { type ComponentType, useState } from 'react';
 import { buildDemos } from '../../core/collectDemos';
 import type { ReactAdapter } from '../../core/types';
@@ -12,11 +12,15 @@ import type { ControlValues } from '../../types';
 function Playground({ values }: { values: ControlValues }) {
   const initial = values.defaultChecked as boolean;
   const [checked, setChecked] = useState(initial);
+  const description = values.description as string;
   return (
     <Checkbox
       key={String(initial)}
       checked={checked}
       onChange={(e) => setChecked(e.currentTarget.checked)}
+      tone={values.tone as CheckboxTone}
+      size={values.size as CheckboxSize}
+      description={description ? description : undefined}
       indeterminate={values.indeterminate as boolean}
       disabled={values.disabled as boolean}
     >

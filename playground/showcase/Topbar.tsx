@@ -54,13 +54,17 @@ export function Topbar({ query, onQuery }: TopbarProps) {
 
   return (
     <header className="sc-topbar">
-      <div className="sc-topbar__brand">
+      <a className="sc-topbar__brand" href="#/button">
         <span className="sc-topbar__spark" aria-hidden="true">
           ✦
         </span>
         <strong>magic-scope</strong>
         <span className="sc-topbar__tag">组件展示站</span>
-      </div>
+      </a>
+
+      <a className="sc-topbar__gallery" href="#/~theme">
+        ✦ 主题画廊
+      </a>
 
       <label className="sc-search">
         <svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true">

@@ -1,4 +1,4 @@
-import type { NumberInputSize } from '@magic-scope/react';
+import type { NumberInputSize, NumberInputTone } from '@magic-scope/react';
 import { NumberInput } from '@magic-scope/react';
 import { type ComponentType, useState } from 'react';
 import { buildDemos } from '../../core/collectDemos';
@@ -15,6 +15,8 @@ function Playground({ values }: { values: ControlValues }) {
         min={0}
         max={20}
         size={values.size as NumberInputSize}
+        tone={values.tone as NumberInputTone}
+        invalid={values.invalid as boolean}
         disabled={values.disabled as boolean}
         aria-label="数量"
       />

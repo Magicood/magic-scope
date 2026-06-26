@@ -1,4 +1,4 @@
-import type { TextareaSize } from '@magic-scope/react';
+import type { TextareaSize, TextareaTone } from '@magic-scope/react';
 import { Textarea } from '@magic-scope/react';
 import { type ComponentType, useState } from 'react';
 import { buildDemos } from '../../core/collectDemos';
@@ -12,7 +12,10 @@ function Playground({ values }: { values: ControlValues }) {
       value={value}
       onChange={(e) => setValue(e.target.value)}
       size={values.size as TextareaSize}
+      tone={values.tone as TextareaTone}
       rows={values.rows as number}
+      showCount={values.showCount as boolean}
+      maxLength={values.showCount ? 120 : undefined}
       invalid={values.invalid as boolean}
       disabled={values.disabled as boolean}
       placeholder={values.placeholder as string}

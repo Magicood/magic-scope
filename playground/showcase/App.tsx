@@ -3,11 +3,16 @@ import { Component, type ReactNode, useEffect, useState } from 'react';
 import { CATALOG, categoryLabel, findCatalog } from './core/catalog';
 import { getV2 } from './core/registry2';
 import { ComponentDocV2 } from './pages/ComponentDocV2';
+import { ThemeGallery } from './pages/ThemeGallery';
 import { Sidebar } from './Sidebar';
 import { Topbar } from './Topbar';
 
+// 特殊路由(非组件页),如预设画廊。
+export const GALLERY_ROUTE = '~theme';
+
 function currentId(): string {
   const id = window.location.hash.replace(/^#\/?/, '');
+  if (id === GALLERY_ROUTE) return GALLERY_ROUTE;
   return findCatalog(id) ? id : (CATALOG[0]?.id ?? '');
 }
 
@@ -46,8 +51,9 @@ export function App() {
     return () => window.removeEventListener('hashchange', onHash);
   }, []);
 
-  const id = findCatalog(activeId) ? activeId : (CATALOG[0]?.id ?? '');
-  const doc = getV2(id);
+  const isGallery = activeId === GALLERY_ROUTE;
+  const id = isGallery ? GALLERY_ROUTE : findCatalog(activeId) ? activeId : (CATALOG[0]?.id ?? '');
+  const doc = isGallery ? undefined : getV2(id);
 
   return (
     <div className="sc-app">
@@ -55,7 +61,11 @@ export function App() {
       <div className="sc-body">
         <Sidebar activeId={id} query={query} />
         <main className="sc-main">
-          {doc ? (
+          {isGallery ? (
+            <PageBoundary key="gallery">
+              <ThemeGallery />
+            </PageBoundary>
+          ) : doc ? (
             <PageBoundary key={doc.meta.id}>
               <ComponentDocV2 doc={doc} categoryLabel={categoryLabel(doc.meta.category)} />
             </PageBoundary>
