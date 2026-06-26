@@ -86,20 +86,38 @@ export interface ContextMenuProps
   open?: boolean;
   /** 非受控初始开合。默认 false。 */
   defaultOpen?: boolean;
-  /** 开合变化回调(受控 / 非受控双通道都会触发)。 */
+  /**
+   * 开合变化回调(受控 / 非受控双通道都会触发)。
+   * @param open 变化后的开合状态:true=打开,false=关闭。
+   */
   onOpenChange?: (open: boolean) => void;
   /**
    * 菜单打开前回调(右键定位算出坐标后、open 置 true 前触发)。
    * 可 `preventDefault()` 阻止本次打开(便于「按目标决定是否弹菜单」)。
+   * @param event 包裹区右键的原始鼠标事件,可 `preventDefault()` 阻止本次打开。
    */
   onContextMenu?: (event: MouseEvent<HTMLDivElement>) => void;
-  /** 菜单已打开回调,带原生事件与光标坐标(右键坐标对外)。 */
+  /**
+   * 菜单已打开回调,带原生事件与光标坐标(右键坐标对外)。
+   * @param event 触发打开的原始右键鼠标事件。
+   * @param position 菜单打开处的光标坐标 `{ x, y }`(视口坐标系,px)。
+   */
   onOpen?: (event: MouseEvent<HTMLDivElement>, position: { x: number; y: number }) => void;
-  /** 菜单级统一选中回调(任一项被选中都触发,便于集中埋点 / 分发)。 */
+  /**
+   * 菜单级统一选中回调(任一项被选中都触发,便于集中埋点 / 分发)。
+   * @param item 被选中的菜单项数据。
+   * @param index 该项在「可聚焦序列」里的序号。
+   */
   onSelect?: (item: MenuItem, index: number) => void;
-  /** Esc 关闭前回调,可 `preventDefault()` 拦截阻止关闭。 */
+  /**
+   * Esc 关闭前回调,可 `preventDefault()` 拦截阻止关闭。
+   * @param event 触发关闭的 Esc 原生键盘事件,可 `preventDefault()` 拦截。
+   */
   onEscapeKeyDown?: (event: globalThis.KeyboardEvent) => void;
-  /** 点击浮层外部关闭前回调,可 `preventDefault()` 拦截阻止关闭。 */
+  /**
+   * 点击浮层外部关闭前回调,可 `preventDefault()` 拦截阻止关闭。
+   * @param event 浮层外部的原生 pointerdown 事件,可 `preventDefault()` 拦截。
+   */
   onPointerDownOutside?: (event: PointerEvent) => void;
 }
 

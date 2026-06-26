@@ -1,0 +1,138 @@
+/* —— Splitter 基座:flex 主轴排布,面板用 inline flex-basis 受控宽/高 —— */
+.ms-splitter {
+  display: flex;
+  inline-size: 100%;
+  block-size: 100%;
+  min-inline-size: 0;
+  min-block-size: 0;
+  /* gutter 厚度(组件以 --ms-splitter-gutter 注入,默认兜底) */
+  --ms-splitter-gutter: 6px;
+}
+.ms-splitter--horizontal {
+  flex-direction: row;
+}
+.ms-splitter--vertical {
+  flex-direction: column;
+}
+
+/* —— 面板:受 flex-basis 控制尺寸,内容超出可滚动而不撑破 —— */
+.ms-splitter__panel {
+  position: relative;
+  /* 允许在主轴收缩(配合 flex-basis 受控),否则内容会顶破分配尺寸 */
+  flex-shrink: 0;
+  min-inline-size: 0;
+  min-block-size: 0;
+  overflow: auto;
+  /* 折叠/拖拽后尺寸过渡(拖拽中由 inline style 直接驱动,过渡只影响折叠这种离散跳变) */
+  transition: flex-basis var(--ms-dur-base, 0.2s) var(--ms-ease-standard, ease);
+}
+/* 折叠态:隐藏内容、保留窄边 */
+.ms-splitter__panel--collapsed {
+  overflow: hidden;
+}
+.ms-splitter__panel--collapsed > * {
+  opacity: 0;
+}
+
+/* 拖拽进行中:关闭面板过渡,跟手不延迟(组件在容器挂 data-dragging 时生效) */
+.ms-splitter[data-dragging="true"] .ms-splitter__panel {
+  transition: none;
+}
+
+/* —— gutter:固定厚度的可拖拽分隔条,自身不参与伸缩 —— */
+.ms-splitter__gutter {
+  position: relative;
+  flex: 0 0 var(--ms-splitter-gutter);
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--ms-color-border, color-mix(in oklch, currentcolor 14%, transparent));
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+  transition:
+    background-color var(--ms-dur-fast, 0.12s) var(--ms-ease-standard, ease),
+    box-shadow var(--ms-dur-base, 0.2s) var(--ms-ease-standard, ease);
+}
+.ms-splitter--horizontal .ms-splitter__gutter {
+  cursor: col-resize;
+}
+.ms-splitter--vertical .ms-splitter__gutter {
+  cursor: row-resize;
+}
+
+/* 把手装饰:中线一道圆角短杠,提示可拖拽 */
+.ms-splitter__handle {
+  position: relative;
+  display: block;
+  border-radius: var(--ms-radius-full, 999px);
+  background-color: color-mix(in oklch, currentcolor 38%, transparent);
+  transition:
+    background-color var(--ms-dur-fast, 0.12s) var(--ms-ease-standard, ease),
+    transform var(--ms-dur-base, 0.2s) var(--ms-ease-emphasized, ease);
+}
+.ms-splitter--horizontal .ms-splitter__handle {
+  inline-size: 2px;
+  block-size: calc(20px * var(--ms-density-scale, 1));
+}
+.ms-splitter--vertical .ms-splitter__handle {
+  inline-size: calc(20px * var(--ms-density-scale, 1));
+  block-size: 2px;
+}
+
+/* —— hover:染主色 + 发光,把手变长(仅具备 hover 能力的指针) —— */
+@media (hover: hover) {
+  .ms-splitter__gutter:hover {
+    background-color: color-mix(in oklch, var(--ms-c, currentcolor) 40%, transparent);
+    box-shadow: 0 0 calc(10px * var(--ms-fx-glow, 1)) -4px var(--ms-c-glow, transparent);
+  }
+  .ms-splitter__gutter:hover .ms-splitter__handle {
+    background-color: var(--ms-c, currentcolor);
+  }
+  .ms-splitter--horizontal .ms-splitter__gutter:hover .ms-splitter__handle {
+    transform: scaleY(1.4);
+  }
+  .ms-splitter--vertical .ms-splitter__gutter:hover .ms-splitter__handle {
+    transform: scaleX(1.4);
+  }
+}
+
+/* —— focus-visible:tone 发光环,键盘可见 —— */
+.ms-splitter__gutter:focus-visible {
+  outline: none;
+  background-color: color-mix(in oklch, var(--ms-c, currentcolor) 40%, transparent);
+  box-shadow:
+    0 0 0 2px var(--ms-color-bg, transparent),
+    0 0 0 4px var(--ms-color-focus-ring, var(--ms-c, currentcolor)),
+    0 0 calc(12px * var(--ms-fx-glow, 1)) -4px var(--ms-c-glow, transparent);
+}
+.ms-splitter__gutter:focus-visible .ms-splitter__handle {
+  background-color: var(--ms-c, currentcolor);
+}
+
+/* 默认 tone 槽位兜底(未给 ms-tone-* 时仍能取到 --ms-c) */
+.ms-splitter {
+  --ms-c: var(--ms-color-primary, currentcolor);
+}
+
+/* —— 触控:加宽热区到目标尺寸,视觉厚度不变(用 padding 撑大命中区) —— */
+@media (pointer: coarse) {
+  .ms-splitter__gutter {
+    flex-basis: max(var(--ms-splitter-gutter), var(--ms-target-min, 44px));
+  }
+}
+
+/* —— 尊重 reduced-motion / motion=off:折叠过渡降级为即时,把手不再缩放动 —— */
+@media (prefers-reduced-motion: reduce) {
+  .ms-splitter__panel,
+  .ms-splitter__handle {
+    transition: none;
+  }
+}
+.ms-splitter[data-ms-motion="off"] .ms-splitter__panel,
+.ms-splitter[data-ms-motion="off"] .ms-splitter__handle,
+[data-ms-motion="off"] .ms-splitter__panel,
+[data-ms-motion="off"] .ms-splitter__handle {
+  transition: none;
+}

@@ -34,6 +34,9 @@ export interface BreadcrumbItem {
   /**
    * 点击该项链接时的回调(SPA 路由拦截入口):
    * 在用户处理器里 `e.preventDefault()` 即可阻止 <a> 默认跳转,改用 router.push。
+   * @param item 被点击的本项数据
+   * @param index 该项在原始 items 中的下标
+   * @param event 原生鼠标点击事件(可 preventDefault 拦截默认跳转)
    */
   onClick?: (item: BreadcrumbItem, index: number, event: MouseEvent) => void;
   /**
@@ -90,6 +93,9 @@ export interface BreadcrumbProps extends ComponentPropsWithoutRef<'nav'> {
   /**
    * 任意项链接点击时回调(item.onClick 之后触发,二者都会调):
    * 委托式 SPA 拦截入口,`e.preventDefault()` 阻止默认跳转。
+   * @param item 被点击的项数据
+   * @param index 该项在原始 items 中的下标
+   * @param event 原生鼠标点击事件(可 preventDefault 拦截默认跳转)
    */
   onItemClick?: (item: BreadcrumbItem, index: number, event: MouseEvent) => void;
   /** 关键子部件类名钩子。 */

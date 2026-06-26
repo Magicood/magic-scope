@@ -1,0 +1,322 @@
+/* —— Upload:tone 槽位(--ms-c / --ms-c-glow / --ms-c-soft)驱动高亮与进度,密度(--ms-density-scale)接尺寸 —— */
+.ms-upload {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--ms-space-3) * var(--ms-density-scale, 1));
+  inline-size: 100%;
+  max-inline-size: 100%;
+  font-family: var(--ms-font-sans);
+  color: var(--ms-color-fg, currentColor);
+}
+
+/* 隐藏的原生 input:不占位、不可见,但仍能被 .click() 触发 */
+.ms-upload__input {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* —— 拖拽 / 点击触发区 —— */
+.ms-upload__trigger {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--ms-space-2) * var(--ms-density-scale, 1));
+  min-block-size: calc(7rem * var(--ms-density-scale, 1));
+  padding: calc(var(--ms-space-5) * var(--ms-density-scale, 1));
+  text-align: center;
+  border: 1.5px dashed var(--ms-color-border, color-mix(in srgb, currentColor 28%, transparent));
+  border-radius: var(--ms-radius-lg);
+  background: var(--ms-color-surface, transparent);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition:
+    border-color var(--ms-dur-base, 200ms) var(--ms-ease-standard),
+    background-color var(--ms-dur-base, 200ms) var(--ms-ease-standard),
+    box-shadow var(--ms-dur-base, 200ms) var(--ms-ease-standard);
+}
+
+.ms-upload__trigger:hover {
+  border-color: var(--ms-c-soft, var(--ms-c));
+}
+
+.ms-upload__trigger:focus-visible {
+  outline: 2px solid var(--ms-c);
+  outline-offset: 2px;
+}
+
+/* dragover 高亮:tone 色描边 + 柔色底 + 发光 */
+.ms-upload__trigger--dragover,
+.ms-upload__trigger[data-dragover] {
+  border-color: var(--ms-c);
+  border-style: solid;
+  background: color-mix(in srgb, var(--ms-c) 8%, transparent);
+  box-shadow: 0 0 calc(20px * var(--ms-fx-glow, 1)) -6px var(--ms-c-glow);
+}
+
+.ms-upload__trigger--disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.ms-upload__trigger-icon {
+  font-size: calc(1.75rem * var(--ms-density-scale, 1));
+  line-height: 1;
+  color: var(--ms-c);
+}
+
+.ms-upload__trigger-text {
+  font-size: calc(0.95rem * var(--ms-density-scale, 1));
+  font-weight: 600;
+  /* 内容边界:超长主文案换行不撑破 */
+  max-inline-size: 100%;
+  overflow-wrap: anywhere;
+}
+
+.ms-upload__hint {
+  font-size: calc(0.8rem * var(--ms-density-scale, 1));
+  color: var(--ms-color-fg-muted, color-mix(in srgb, currentColor 60%, transparent));
+  max-inline-size: 100%;
+  overflow-wrap: anywhere;
+}
+
+.ms-upload--disabled {
+  opacity: 0.7;
+}
+
+/* —— 文件列表 —— */
+.ms-upload__list {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--ms-space-2) * var(--ms-density-scale, 1));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ms-upload__item {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--ms-space-3) * var(--ms-density-scale, 1));
+  padding: calc(var(--ms-space-2) * var(--ms-density-scale, 1))
+    calc(var(--ms-space-3) * var(--ms-density-scale, 1));
+  border: 1px solid var(--ms-color-border, color-mix(in srgb, currentColor 14%, transparent));
+  border-radius: var(--ms-radius-md);
+  background: var(--ms-color-surface, transparent);
+  min-inline-size: 0;
+  transition: border-color var(--ms-dur-fast, 120ms) var(--ms-ease-standard);
+}
+
+.ms-upload__item--error {
+  border-color: color-mix(in srgb, var(--ms-color-danger, crimson) 55%, transparent);
+}
+
+.ms-upload__item--done {
+  border-color: color-mix(in srgb, var(--ms-c) 35%, transparent);
+}
+
+/* picture 缩略 */
+.ms-upload__thumb {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: calc(2.5rem * var(--ms-density-scale, 1));
+  block-size: calc(2.5rem * var(--ms-density-scale, 1));
+  overflow: hidden;
+  border-radius: var(--ms-radius-sm);
+  background: color-mix(in srgb, currentColor 6%, transparent);
+}
+
+.ms-upload__thumb-img {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+.ms-upload__thumb-placeholder {
+  font-size: 1.1rem;
+  opacity: 0.6;
+}
+
+/* 主信息列:名 / 元信息 / 进度,允许收缩以截断超长名 */
+.ms-upload__item-main {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+
+.ms-upload__item-name {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--ms-space-2) * var(--ms-density-scale, 1));
+  min-inline-size: 0;
+  font-size: calc(0.9rem * var(--ms-density-scale, 1));
+  font-weight: 500;
+}
+
+/* 文件名截断(单行省略号),内容边界硬约束 */
+.ms-upload__name-text,
+.ms-upload__name-btn {
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ms-upload__name-btn {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: var(--ms-c);
+  text-align: start;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.ms-upload__name-btn:focus-visible {
+  outline: 2px solid var(--ms-c);
+  outline-offset: 2px;
+  border-radius: var(--ms-radius-sm);
+}
+
+.ms-upload__status-icon {
+  flex: 0 0 auto;
+  font-size: 0.85em;
+  line-height: 1;
+}
+
+.ms-upload__status-icon--done {
+  color: var(--ms-c);
+}
+
+.ms-upload__status-icon--error {
+  color: var(--ms-color-danger, crimson);
+}
+
+.ms-upload__status-icon--uploading {
+  color: var(--ms-c);
+  display: inline-block;
+  animation: ms-upload-spin 1s linear infinite;
+}
+
+.ms-upload__item-meta {
+  font-size: calc(0.75rem * var(--ms-density-scale, 1));
+  color: var(--ms-color-fg-muted, color-mix(in srgb, currentColor 58%, transparent));
+}
+
+/* —— 进度条 —— */
+.ms-upload__progress {
+  display: block;
+  inline-size: 100%;
+  block-size: 4px;
+  margin-block-start: 4px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: color-mix(in srgb, currentColor 12%, transparent);
+}
+
+.ms-upload__progress-bar {
+  display: block;
+  block-size: 100%;
+  border-radius: inherit;
+  background: var(--ms-c);
+  box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) -2px var(--ms-c-glow);
+  transition: inline-size var(--ms-dur-base, 200ms) var(--ms-ease-standard);
+}
+
+.ms-upload__item--error .ms-upload__progress-bar {
+  background: var(--ms-color-danger, crimson);
+  box-shadow: none;
+}
+
+/* —— 操作按钮区 —— */
+.ms-upload__actions {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--ms-space-1) * var(--ms-density-scale, 1));
+}
+
+.ms-upload__action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* 触控热区达标(随密度,但不低于 --ms-target-min) */
+  inline-size: max(var(--ms-target-min, 2rem), calc(1.75rem * var(--ms-density-scale, 1)));
+  block-size: max(var(--ms-target-min, 2rem), calc(1.75rem * var(--ms-density-scale, 1)));
+  padding: 0;
+  border: 0;
+  border-radius: var(--ms-radius-sm);
+  background: none;
+  color: var(--ms-color-fg-muted, color-mix(in srgb, currentColor 60%, transparent));
+  font-size: 0.95rem;
+  line-height: 1;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    color var(--ms-dur-fast, 120ms) var(--ms-ease-standard),
+    background-color var(--ms-dur-fast, 120ms) var(--ms-ease-standard);
+}
+
+.ms-upload__action:hover {
+  background: color-mix(in srgb, currentColor 8%, transparent);
+  color: var(--ms-color-fg, currentColor);
+}
+
+.ms-upload__action--retry:hover {
+  color: var(--ms-c);
+}
+
+.ms-upload__action--remove:hover {
+  color: var(--ms-color-danger, crimson);
+}
+
+.ms-upload__action:focus-visible {
+  outline: 2px solid var(--ms-c);
+  outline-offset: 1px;
+}
+
+.ms-upload__action:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+@keyframes ms-upload-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 尊重 reduced-motion / motion=off:停掉旋转与过渡 */
+@media (prefers-reduced-motion: reduce) {
+  .ms-upload__status-icon--uploading {
+    animation: none;
+  }
+  .ms-upload__progress-bar,
+  .ms-upload__trigger {
+    transition: none;
+  }
+}
+
+[data-ms-motion="off"] .ms-upload__status-icon--uploading {
+  animation: none;
+}
+
+[data-ms-motion="off"] .ms-upload__progress-bar,
+[data-ms-motion="off"] .ms-upload__trigger {
+  transition: none;
+}

@@ -66,9 +66,16 @@ export interface SegmentedProps
   value?: string | undefined;
   /** 默认选中值(非受控)。省略时默认首个可用项。 */
   defaultValue?: string | undefined;
-  /** 选中变化:单参 value、双参完整 item。 */
+  /**
+   * 选中变化。
+   * @param value 选中后的新值。
+   * @param item 选中项对应的完整 SegmentedOption(含 label / icon / disabled 等)。
+   */
   onChange?: (value: string, item: SegmentedOption) => void;
-  /** 选中变化(仅 value)双通道之一,便于受控简写。 */
+  /**
+   * 选中变化(仅 value)双通道之一,便于受控简写。
+   * @param value 选中后的新值。
+   */
   onValueChange?: (value: string) => void;
   /** 尺寸(随 data-ms-density 缩放)。默认 md。 */
   size?: SegmentedSize;

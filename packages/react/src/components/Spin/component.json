@@ -1,0 +1,17 @@
+{
+  "id": "spin",
+  "name": "Spin",
+  "description": "加载遮罩:包裹内容,spinning 时在其上盖半透明遮罩 + 居中加载符文,内容不卸载(保留布局、降透明度/模糊、屏蔽交互)。支持 tip 文字、size、tone、delay 防闪烁、自定义指示器与 fullscreen 全屏遮罩;无 children 时退化为独立指示器。",
+  "category": "feedback",
+  "tags": ["spin", "loading", "overlay", "mask", "feedback", "spinner", "fullscreen", "delay"],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-26",
+    "requirements": "需要一个在异步加载期间「就地」遮盖任意区域的反馈层:不能卸载内容(否则布局抖动、滚动位置丢失),而是盖一层半透明遮罩 + 居中加载符文并屏蔽交互。要能防止短促请求让遮罩一闪而过(delay 防闪烁,判定抽成纯函数可单测),要能复用既有 Spinner 符文或换上自定义指示器,要能选语义色调,并提供整页 fullscreen 变体。无障碍上加载区需 aria-busy/aria-live 播报,被遮内容要 aria-hidden + inert 防止读屏与键盘穿透到不可见交互。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Spin.tsx", "Spin.css", "logic.ts", "logic.test.ts", "Spin.test.tsx", "index.ts"]
+}

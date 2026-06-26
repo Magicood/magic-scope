@@ -65,7 +65,11 @@ export interface SelectProps
   value?: string | string[] | undefined;
   /** 默认选中值(非受控)。 */
   defaultValue?: string | string[] | undefined;
-  /** 选中变化回调。单参为 value、双参为完整 option(多选时为被切换的 option)。 */
+  /**
+   * 选中变化回调。
+   * @param value 选中后的新值;单选为 string,多选为 string[]。
+   * @param option 本次选中/切换涉及的完整 option;多选为被切换的那一项,清除时为 undefined。
+   */
   onChange?: (value: string | string[], option?: SelectOption) => void;
   /** 选项列表。 */
   options: SelectOption[];
@@ -96,21 +100,43 @@ export interface SelectProps
 
   /** 受控/非受控开合状态(受控时配 onOpenChange)。 */
   open?: boolean | undefined;
-  /** 开合变化回调(受控/非受控双通道)。 */
+  /**
+   * 开合变化回调(受控/非受控双通道)。
+   * @param open 变化后的开合状态;true 为展开,false 为收起。
+   */
   onOpenChange?: (open: boolean) => void;
-  /** 关闭时回调,reason 区分来源。 */
+  /**
+   * 关闭时回调。
+   * @param reason 关闭来源,区分 select/trigger/escape/tab/outside 等触发路径,便于按来源分别处理。
+   */
   onClose?: (reason: SelectCloseReason) => void;
-  /** Esc 关闭可拦截:在回调里 preventDefault 阻断关闭。 */
+  /**
+   * Esc 关闭可拦截:在回调里 preventDefault 阻断关闭。
+   * @param event 触发关闭的键盘事件;调用 event.preventDefault() 可阻止本次 Esc 关闭。
+   */
   onEscapeKeyDown?: (event: KeyboardEvent<HTMLDivElement>) => void;
-  /** 点外关闭可拦截:在回调里 preventDefault 阻断关闭。 */
+  /**
+   * 点外关闭可拦截:在回调里 preventDefault 阻断关闭。
+   * @param event 点击浮层外部触发的原生 pointerdown 事件;调用 event.preventDefault() 可阻止本次点外关闭。
+   */
   onPointerDownOutside?: (event: Event) => void;
-  /** listbox 高亮项变化(高亮即预览类联动)。 */
+  /**
+   * listbox 高亮项变化(高亮即预览类联动)。
+   * @param index 当前高亮项在可见选项中的索引;无高亮时为 -1。
+   * @param option 当前高亮项对应的完整 option;无高亮(index 为 -1)时为 undefined。
+   */
   onHighlightChange?: (index: number, option?: SelectOption) => void;
-  /** 拿到完整 option 的选中回调(选中即触发,多选每次切换都触发)。 */
+  /**
+   * 拿到完整 option 的选中回调(选中即触发,多选每次切换都触发)。
+   * @param option 本次被选中/切换的完整 option。
+   */
   onSelect?: (option: SelectOption) => void;
-  /** 清除回调。 */
+  /** 清除回调(点击清除按钮、清空已选值时触发,无参数)。 */
   onClear?: () => void;
-  /** 搜索 query 变化回调。 */
+  /**
+   * 搜索 query 变化回调。
+   * @param query 搜索框当前的查询文本。
+   */
   onSearch?: (query: string) => void;
   /** trigger 获焦(表单聚焦校验)。 */
   onFocus?: (event: FocusEvent<HTMLButtonElement>) => void;

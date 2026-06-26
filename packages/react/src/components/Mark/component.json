@@ -1,0 +1,17 @@
+{
+  "id": "mark",
+  "name": "Mark",
+  "description": "文本高亮:把纯文本里命中搜索词的片段包进语义化 <mark>,支持多词 / 大小写 / 整词 / 重叠合并,着色走 tone 槽位。",
+  "category": "typography",
+  "tags": ["mark", "highlight", "search", "keyword", "typography", "text"],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-26",
+    "requirements": "搜索结果 / 文档检索场景需要把命中关键词高亮出来。要求:命中规则(多词、是否区分大小写、是否整词)做成纯函数可独立测试与跨框架复用;搜索词里的正则元字符按字面量处理不报错;多词命中区间重叠时合并、不产生嵌套包裹;高亮用原生 <mark> 保证无障碍语义;着色复用全库 tone 槽位以随主题换肤联动;空搜索词与超长内容都要安全降级不撑破布局。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Mark.tsx", "Mark.css", "logic.ts", "index.ts"]
+}

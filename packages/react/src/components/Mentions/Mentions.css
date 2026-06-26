@@ -1,0 +1,231 @@
+/* —— Mentions:textarea + @候选浮层(锚控件下方)。外观贴近 Textarea,发光读 tone 槽位 —— */
+.ms-mentions {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  inline-size: 100%;
+  max-inline-size: 100%;
+  font-family: var(--ms-font-sans);
+}
+
+/* —— textarea 自身 —— */
+.ms-mentions__textarea {
+  inline-size: 100%;
+  max-inline-size: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--ms-color-border);
+  border-radius: var(--ms-radius-md);
+  background-color: var(--ms-color-surface);
+  background-image: linear-gradient(
+    180deg,
+    color-mix(in oklch, var(--ms-c-glow, var(--ms-color-glow)) 4%, transparent),
+    transparent 60%
+  );
+  color: var(--ms-color-fg);
+  font: inherit;
+  line-height: 1.6;
+  resize: vertical;
+  /* 内容边界:长串 / 长单词不撑破 */
+  overflow-wrap: anywhere;
+  box-shadow: inset 0 0 calc(12px * var(--ms-fx-glow, 1)) -10px
+    var(--ms-c-glow, var(--ms-color-glow));
+  transition:
+    border-color var(--ms-dur-fast) var(--ms-ease-standard),
+    box-shadow var(--ms-dur-base) var(--ms-ease-standard),
+    background-color var(--ms-dur-fast) var(--ms-ease-standard);
+}
+
+.ms-mentions__textarea::placeholder {
+  color: var(--ms-color-fg-subtle);
+}
+
+.ms-mentions__textarea:hover:not(:disabled) {
+  border-color: var(--ms-color-border-strong);
+}
+
+.ms-mentions__textarea:focus-visible {
+  outline: none;
+  border-color: var(--ms-c, var(--ms-color-primary));
+  box-shadow:
+    0 0 0 3px color-mix(in oklch, var(--ms-c-glow, var(--ms-color-focus-ring)) 35%, transparent),
+    0 0 calc(16px * var(--ms-fx-glow, 1)) -6px var(--ms-c-glow, var(--ms-color-glow)),
+    inset 0 0 calc(18px * var(--ms-fx-glow, 1)) -12px var(--ms-c, var(--ms-color-primary));
+}
+
+.ms-mentions__textarea--invalid {
+  border-color: var(--ms-color-danger, var(--ms-c, var(--ms-color-primary)));
+}
+
+.ms-mentions__textarea:disabled,
+.ms-mentions--disabled .ms-mentions__textarea {
+  cursor: not-allowed;
+  opacity: 0.5;
+  background-image: none;
+  box-shadow: none;
+  resize: none;
+}
+
+/* —— 尺寸(逻辑属性 + 随密度缩放) —— */
+.ms-mentions__textarea--sm {
+  min-block-size: calc(4rem * var(--ms-density-scale, 1));
+  padding-block: var(--ms-space-2);
+  padding-inline: var(--ms-space-3);
+  font-size: 0.833rem;
+}
+.ms-mentions__textarea--md {
+  min-block-size: calc(5rem * var(--ms-density-scale, 1));
+  padding-block: var(--ms-space-2);
+  padding-inline: var(--ms-space-4);
+  font-size: 1rem;
+}
+.ms-mentions__textarea--lg {
+  min-block-size: calc(6rem * var(--ms-density-scale, 1));
+  padding-block: var(--ms-space-3);
+  padding-inline: var(--ms-space-4);
+  font-size: 1.2rem;
+}
+
+/* —— 候选浮层 listbox:锚在控件下方(v1 不贴 caret) —— */
+.ms-mentions__list {
+  position: absolute;
+  inset-block-start: 100%;
+  inset-inline-start: 0;
+  z-index: 50;
+  margin: 0;
+  margin-block-start: var(--ms-space-1);
+  padding: var(--ms-space-1);
+  /* 末项避让底部安全区 */
+  padding-block-end: calc(var(--ms-space-1) + var(--ms-safe-bottom));
+  border: 1px solid var(--ms-color-border);
+  border-radius: var(--ms-radius-lg);
+  background-color: var(--ms-color-surface-raised);
+  color: var(--ms-color-fg);
+  inline-size: max-content;
+  min-inline-size: min(14rem, 100%);
+  max-inline-size: min(calc(100dvw - var(--ms-space-4) * 2), 22rem);
+  max-block-size: min(16rem, calc(var(--ms-viewport-h) - var(--ms-space-8)));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  box-shadow:
+    0 24px 64px -24px rgb(0 0 0 / 0.45),
+    0 0 calc(40px * var(--ms-fx-glow, 1)) -16px var(--ms-c-glow, var(--ms-color-glow));
+  /* 入场动画 */
+  animation: ms-mentions-in var(--ms-dur-base) var(--ms-ease-emphasized);
+}
+
+@keyframes ms-mentions-in {
+  from {
+    opacity: 0;
+    transform: translateY(calc(-6px * var(--ms-motion-scale, 1))) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* —— 空态 / 加载态 —— */
+.ms-mentions__status {
+  padding-block: var(--ms-space-3);
+  padding-inline: var(--ms-space-2);
+  color: var(--ms-color-fg-subtle);
+  font-size: 0.9em;
+  text-align: center;
+  user-select: none;
+}
+
+/* —— 单个候选 —— */
+.ms-mentions__option {
+  display: flex;
+  align-items: center;
+  gap: var(--ms-space-2);
+  padding-block: var(--ms-space-2);
+  padding-inline: var(--ms-space-2);
+  border-radius: var(--ms-radius-sm);
+  color: var(--ms-color-fg);
+  cursor: pointer;
+  user-select: none;
+  transition:
+    background-color var(--ms-dur-fast) var(--ms-ease-standard),
+    color var(--ms-dur-fast) var(--ms-ease-standard);
+}
+
+/* 键盘 / 指针高亮态(读 tone 槽位) */
+.ms-mentions__option[data-active]:not(.ms-mentions__option--disabled) {
+  background-color: var(--ms-c-soft, color-mix(in oklch, var(--ms-color-primary) 18%, transparent));
+  color: var(--ms-color-fg);
+  box-shadow: inset 0 0 calc(16px * var(--ms-fx-glow, 1)) -12px var(--ms-c, var(--ms-color-primary));
+}
+
+.ms-mentions__option--disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.ms-mentions__option-icon {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  color: var(--ms-color-fg-muted);
+}
+
+.ms-mentions__option-body {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.ms-mentions__option-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ms-mentions__option-desc {
+  color: var(--ms-color-fg-subtle);
+  font-size: 0.82em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* —— 触控设备:抬高热区到目标尺寸 —— */
+@media (pointer: coarse) {
+  .ms-mentions__option {
+    min-block-size: var(--ms-target-min);
+    padding-block: var(--ms-space-3);
+  }
+}
+
+/* 尊重减少动效偏好 */
+@media (prefers-reduced-motion: reduce) {
+  .ms-mentions__textarea,
+  .ms-mentions__option {
+    transition-duration: 0.01ms;
+  }
+  .ms-mentions__list {
+    animation-duration: 0.01ms;
+  }
+}
+
+/* 一键降级:data-ms-motion=off 关掉浮层入场与过渡 */
+[data-ms-motion="off"] .ms-mentions__textarea,
+[data-ms-motion="off"] .ms-mentions__option {
+  transition-duration: 0.01ms;
+}
+[data-ms-motion="off"] .ms-mentions__list {
+  animation: none;
+}
+
+/* fx 总闸:关断所有发光 */
+[data-ms-fx="off"] .ms-mentions__textarea,
+[data-ms-fx="off"] .ms-mentions__textarea:focus-visible,
+[data-ms-fx="off"] .ms-mentions__list,
+[data-ms-fx="off"] .ms-mentions__option[data-active] {
+  box-shadow: none;
+}
+[data-ms-fx="off"] .ms-mentions__textarea:focus-visible {
+  box-shadow: 0 0 0 3px
+    color-mix(in oklch, var(--ms-c-glow, var(--ms-color-focus-ring)) 35%, transparent);
+}

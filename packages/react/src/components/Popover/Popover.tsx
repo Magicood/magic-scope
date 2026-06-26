@@ -68,13 +68,25 @@ export interface PopoverProps extends PopoverRootProps {
   tone?: PopoverTone;
   /** 受控:是否打开。传入即进入受控模式。 */
   open?: boolean;
-  /** 显隐变化回调(受控 / 非受控均触发)。 */
+  /**
+   * 显隐变化回调(受控 / 非受控均触发)。
+   * @param open 浮层变化后的目标显隐状态:true 为打开,false 为关闭。
+   */
   onOpenChange?: (open: boolean) => void;
-  /** Esc 键按下回调;在回调内 preventDefault 可阻止默认的关闭。 */
+  /**
+   * Esc 键按下回调;在回调内 preventDefault 可阻止默认的关闭。
+   * @param event 触发关闭的原生键盘事件(Esc),在其上调用 preventDefault 可拦截默认关闭。
+   */
   onEscapeKeyDown?: (event: KeyboardEvent) => void;
-  /** 点击浮层外部(pointerdown)回调;preventDefault 可阻止关闭。 */
+  /**
+   * 点击浮层外部(pointerdown)回调;preventDefault 可阻止关闭。
+   * @param event 浮层外部按下的原生指针事件,在其上调用 preventDefault 可拦截关闭。
+   */
   onPointerDownOutside?: (event: PointerEvent) => void;
-  /** 任意外部交互(点外 / Esc)导致关闭前回调;preventDefault 可阻止关闭。 */
+  /**
+   * 任意外部交互(点外 / Esc)导致关闭前回调;preventDefault 可阻止关闭。
+   * @param event 引发关闭的原生交互事件:点外为 PointerEvent,Esc 为 KeyboardEvent;在其上调用 preventDefault 可拦截关闭。
+   */
   onInteractOutside?: (event: PointerEvent | KeyboardEvent) => void;
   /** 浮层根容器附加 className。 */
   className?: string;

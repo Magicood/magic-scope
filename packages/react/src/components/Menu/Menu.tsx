@@ -69,13 +69,26 @@ export interface MenuProps extends Omit<ComponentPropsWithoutRef<'div'>, 'childr
   open?: boolean;
   /** 非受控初始开合。默认 false。 */
   defaultOpen?: boolean;
-  /** 开合变化回调(受控/非受控双通道都会触发)。 */
+  /**
+   * 开合变化回调(受控/非受控双通道都会触发)。
+   * @param open 变化后的开合状态:true=打开,false=关闭。
+   */
   onOpenChange?: (open: boolean) => void;
-  /** 菜单级统一选中回调(任一项被选中都触发,便于集中埋点/分发)。 */
+  /**
+   * 菜单级统一选中回调(任一项被选中都触发,便于集中埋点/分发)。
+   * @param item 被选中的菜单项数据。
+   * @param index 该项在「可聚焦序列」里的序号。
+   */
   onSelect?: (item: MenuItem, index: number) => void;
-  /** Esc 关闭前回调,可 `preventDefault()` 拦截阻止关闭。 */
+  /**
+   * Esc 关闭前回调,可 `preventDefault()` 拦截阻止关闭。
+   * @param event 触发关闭的 Esc 键盘事件,可 `preventDefault()` 拦截。
+   */
   onEscapeKeyDown?: (event: KeyboardEvent<HTMLElement>) => void;
-  /** 点击浮层外部关闭前回调,可 `preventDefault()` 拦截阻止关闭。 */
+  /**
+   * 点击浮层外部关闭前回调,可 `preventDefault()` 拦截阻止关闭。
+   * @param event 浮层外部的原生 pointerdown 事件,可 `preventDefault()` 拦截。
+   */
   onPointerDownOutside?: (event: PointerEvent) => void;
   /** 自定义渲染每一项(render-prop)。返回的元素会替换默认项的内部内容。 */
   renderItem?: (ctx: MenuItemRenderContext) => ReactNode;

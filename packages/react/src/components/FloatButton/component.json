@@ -1,0 +1,31 @@
+{
+  "id": "float-button",
+  "name": "FloatButton",
+  "description": "悬浮操作钮(固定定位):单钮(circle/square × default/primary × 7 色调 tone 只读 6 槽位)+ FloatButton.Group 堆叠/可展开菜单。单钮支持 icon、方形内 description 文字(超长截断不撑破)、数字/点 badge(超 overflowCount 截为 N+);传 href 渲染 <a>(导航语义,_blank 自动补 rel)、否则 <button>;传 tooltip 自动 Tooltip 包裹。Group:click/hover 触发展开,子项沿 direction(up/down/left/right)错峰弹出,受控 open + onOpenChange / 非受控双通道,触发钮收/展图标切换、aria-expanded/aria-controls 关联、收起态 inert + 移出 tab 序、Esc 收起。固定 right/bottom(默认 24)叠加 safe-area;尺寸随 data-ms-density,focus-visible 发光环;事件 composeEventHandlers 合并不丢用户处理器;错峰入场在 reduced-motion / data-ms-motion=off 下降级。",
+  "category": "navigation",
+  "tags": [
+    "float-button",
+    "fab",
+    "fixed",
+    "speed-dial",
+    "expandable",
+    "badge",
+    "tooltip",
+    "tone",
+    "controlled",
+    "compound",
+    "anchor",
+    "a11y",
+    "reduced-motion"
+  ],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-26",
+    "requirements": "需要一个生产级悬浮操作钮(对标 Ant Design FloatButton / Material FAB 且做出 magic 差异化):单钮要覆盖 circle/square 形状、default/primary 类型、全库 tone 槽位配色与发光、方形内文字 description、数字/点 badge、href 多态(导航语义)与可选 tooltip 包裹;复合形态 FloatButton.Group 要支持点击/悬停展开的纵向(及横向)speed-dial 菜单,带受控/非受控双通道、子项错峰入场、收/展图标切换。a11y 必须到位:触发钮 aria-expanded/aria-controls、收起态子项 inert 且不可聚焦、Esc 收起、键盘可达。固定定位叠加安全区,尺寸随密度缩放,动效在 prefers-reduced-motion 与 data-ms-motion=off 下优雅降级。可抽取的纯逻辑(badge 规整、错峰延时、reduced-motion 判定)落 logic.ts 以便平移其它框架。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["FloatButton.tsx", "FloatButton.css", "logic.ts", "index.ts"]
+}

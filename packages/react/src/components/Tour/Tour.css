@@ -1,0 +1,294 @@
+/* —— Tour 引导漫游 ——
+ * 遮罩覆盖全页,在目标处镂空高亮(spotlight)。镂空靠 box-shadow 巨大 spread 实现:
+ * 高亮框自身透明、不接收指针,但其超大投影把整页铺成半透明暗罩,洞内(框内)透出目标。
+ * 引导卡相对高亮洞的四向定位由 --ms-tour-{x,y,w,h} 驱动,无目标走 --center 居中。
+ */
+
+.ms-tour {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  /* 容器本身不拦截指针:让高亮洞内目标可点;卡片 / 命中层各自重新开启 */
+  pointer-events: none;
+  color: var(--ms-color-fg);
+  font-family: var(--ms-font-sans);
+}
+
+/* —— 镂空高亮框:透明本体 + 超大投影铺暗整页 —— */
+.ms-tour__spotlight {
+  position: absolute;
+  inset-block-start: var(--ms-tour-y, 0);
+  inset-inline-start: var(--ms-tour-x, 0);
+  inline-size: var(--ms-tour-w, 0);
+  block-size: var(--ms-tour-h, 0);
+  border-radius: var(--ms-radius-md);
+  /* 洞内点透;洞边一圈 tone 高亮描边 + 发光 */
+  pointer-events: none;
+  outline: 2px solid color-mix(in oklch, var(--ms-c, var(--ms-color-focus-ring)) 70%, transparent);
+  outline-offset: 2px;
+  box-shadow:
+    0 0 0 9999px var(--ms-color-overlay, rgb(10 7 16 / 0.66)),
+    0 0 calc(24px * var(--ms-fx-glow, 1)) 0
+    color-mix(in oklch, var(--ms-c-glow, var(--ms-color-glow)) 60%, transparent);
+  transition:
+    inset-block-start var(--ms-dur-base) var(--ms-ease-emphasized),
+    inset-inline-start var(--ms-dur-base) var(--ms-ease-emphasized),
+    inline-size var(--ms-dur-base) var(--ms-ease-emphasized),
+    block-size var(--ms-dur-base) var(--ms-ease-emphasized);
+}
+
+[data-ms-fx="off"] .ms-tour__spotlight {
+  box-shadow: 0 0 0 9999px var(--ms-color-overlay, rgb(10 7 16 / 0.66));
+}
+
+/* 无目标时的整页暗罩(spotlight 不渲染时兜底) */
+.ms-tour__backdrop {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: var(--ms-color-overlay, rgb(10 7 16 / 0.66));
+}
+
+/* —— 点遮罩关闭命中层(maskClosable):铺满、置于卡片之下、接收指针 —— */
+.ms-tour__mask-hit {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  pointer-events: auto;
+  cursor: default;
+  appearance: none;
+}
+
+/* —— 引导卡 —— */
+.ms-tour__card {
+  position: absolute;
+  z-index: 1;
+  inline-size: min(92vw, calc(20rem * var(--ms-density-scale, 1) + 4rem));
+  max-inline-size: calc(100dvw - 2 * var(--ms-space-4));
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--ms-space-2) * var(--ms-density-scale, 1));
+  /* 卡片本身要可交互(按钮 / 聚焦) */
+  pointer-events: auto;
+  background-color: var(--ms-color-surface-raised);
+  border: 1px solid color-mix(in oklch, var(--ms-color-border) 76%, var(--ms-c) 24%);
+  border-radius: var(--ms-radius-lg);
+  padding: calc(var(--ms-space-4) * var(--ms-density-scale, 1));
+  box-shadow:
+    0 20px 56px -22px rgb(0 0 0 / 0.5),
+    0 0 calc(34px * var(--ms-fx-glow, 1)) -16px var(--ms-c-glow, var(--ms-color-glow));
+  /* 入场过渡 */
+  transition:
+    inset-block-start var(--ms-dur-base) var(--ms-ease-emphasized),
+    inset-inline-start var(--ms-dur-base) var(--ms-ease-emphasized),
+    opacity var(--ms-dur-base) var(--ms-ease-standard);
+}
+
+[data-ms-fx="off"] .ms-tour__card {
+  box-shadow: 0 20px 56px -22px rgb(0 0 0 / 0.5);
+}
+
+.ms-tour__card:focus-visible {
+  outline: 2px solid var(--ms-c, var(--ms-color-focus-ring));
+  outline-offset: 3px;
+}
+
+/* —— 卡片相对高亮洞的四向定位 —— */
+/* bottom:卡片在洞下方,左对齐洞 */
+.ms-tour--bottom .ms-tour__card {
+  inset-block-start: calc(var(--ms-tour-y) + var(--ms-tour-h) + var(--ms-space-3));
+  inset-inline-start: clamp(
+    var(--ms-space-4),
+    var(--ms-tour-x),
+    calc(100dvw - 100% - var(--ms-space-4))
+  );
+}
+
+/* top:卡片在洞上方 —— 用 translateY(-100%) 让卡片底缘贴洞顶 */
+.ms-tour--top .ms-tour__card {
+  inset-block-start: calc(var(--ms-tour-y) - var(--ms-space-3));
+  inset-inline-start: clamp(
+    var(--ms-space-4),
+    var(--ms-tour-x),
+    calc(100dvw - 100% - var(--ms-space-4))
+  );
+  transform: translateY(-100%);
+}
+
+/* right:卡片在洞右侧,顶对齐洞 */
+.ms-tour--right .ms-tour__card {
+  inset-block-start: clamp(
+    var(--ms-space-4),
+    var(--ms-tour-y),
+    calc(100dvh - 100% - var(--ms-space-4))
+  );
+  inset-inline-start: calc(var(--ms-tour-x) + var(--ms-tour-w) + var(--ms-space-3));
+}
+
+/* left:卡片在洞左侧 —— translateX(-100%) 让卡片右缘贴洞左 */
+.ms-tour--left .ms-tour__card {
+  inset-block-start: clamp(
+    var(--ms-space-4),
+    var(--ms-tour-y),
+    calc(100dvh - 100% - var(--ms-space-4))
+  );
+  inset-inline-start: calc(var(--ms-tour-x) - var(--ms-space-3));
+  transform: translateX(-100%);
+}
+
+/* center:无目标 / 显式 center,卡片视口居中 */
+.ms-tour--center .ms-tour__card {
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* —— 卡片内容 —— */
+.ms-tour__title {
+  font-size: var(--ms-font-size-lg, 1.0625rem);
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--ms-color-fg);
+  /* 给右上角关闭按钮让位 */
+  padding-inline-end: var(--ms-space-6);
+  min-inline-size: 0;
+  overflow-wrap: break-word;
+}
+
+.ms-tour__desc {
+  font-size: var(--ms-font-size-sm, 0.875rem);
+  line-height: 1.6;
+  color: var(--ms-color-fg-muted);
+  min-inline-size: 0;
+  overflow-wrap: break-word;
+  /* 超长描述不撑破:自身可滚 */
+  max-block-size: 40dvh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.ms-tour__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ms-space-3);
+  margin-block-start: var(--ms-space-2);
+}
+
+.ms-tour__counter {
+  font-size: var(--ms-font-size-xs, 0.75rem);
+  color: var(--ms-color-fg-muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.ms-tour__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ms-space-2);
+  margin-inline-start: auto;
+}
+
+/* —— 按钮 —— */
+.ms-tour__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: calc(var(--ms-target-min) * 0.82);
+  padding-block: calc(var(--ms-space-2) * var(--ms-density-scale, 1));
+  padding-inline: calc(var(--ms-space-3) * var(--ms-density-scale, 1));
+  border-radius: var(--ms-radius-md);
+  border: 1px solid transparent;
+  font: inherit;
+  font-size: var(--ms-font-size-sm, 0.875rem);
+  font-weight: 500;
+  line-height: 1;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    color var(--ms-dur-fast) var(--ms-ease-standard),
+    border-color var(--ms-dur-base) var(--ms-ease-standard),
+    background-color var(--ms-dur-base) var(--ms-ease-standard),
+    box-shadow var(--ms-dur-base) var(--ms-ease-standard);
+}
+
+.ms-tour__btn:focus-visible {
+  outline: 2px solid var(--ms-c, var(--ms-color-focus-ring));
+  outline-offset: 2px;
+}
+
+.ms-tour__btn--ghost {
+  background: transparent;
+  color: var(--ms-color-fg-muted);
+  border-color: transparent;
+}
+
+.ms-tour__btn--ghost:hover {
+  color: var(--ms-color-fg);
+  background-color: var(--ms-color-surface-sunken);
+}
+
+.ms-tour__btn--primary {
+  background-color: var(--ms-c, var(--ms-color-primary));
+  color: var(--ms-color-on-accent, #fff);
+  border-color: transparent;
+  box-shadow: 0 0 calc(18px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow, var(--ms-color-glow));
+}
+
+.ms-tour__btn--primary:hover {
+  filter: brightness(1.06);
+}
+
+[data-ms-fx="off"] .ms-tour__btn--primary {
+  box-shadow: none;
+}
+
+/* —— 右上角跳过(×) —— */
+.ms-tour__skip-x {
+  position: absolute;
+  inset-block-start: var(--ms-space-2);
+  inset-inline-end: var(--ms-space-2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--ms-space-7, 1.75rem);
+  block-size: var(--ms-space-7, 1.75rem);
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: var(--ms-radius-md);
+  background: transparent;
+  color: var(--ms-color-fg-muted);
+  cursor: pointer;
+  transition:
+    color var(--ms-dur-fast) var(--ms-ease-standard),
+    background-color var(--ms-dur-base) var(--ms-ease-standard);
+}
+
+.ms-tour__skip-x:hover {
+  color: var(--ms-color-fg);
+  background-color: var(--ms-color-surface-sunken);
+}
+
+.ms-tour__skip-x:focus-visible {
+  outline: 2px solid var(--ms-c, var(--ms-color-focus-ring));
+  outline-offset: 2px;
+}
+
+/* —— 降级:reduced-motion 与 motion 总闸 —— */
+@media (prefers-reduced-motion: reduce) {
+  .ms-tour__spotlight,
+  .ms-tour__card {
+    transition-duration: 0.01ms;
+  }
+}
+
+[data-ms-motion="off"] .ms-tour__spotlight,
+[data-ms-motion="off"] .ms-tour__card {
+  transition-duration: 0.01ms;
+}

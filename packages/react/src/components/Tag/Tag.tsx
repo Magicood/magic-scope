@@ -25,8 +25,8 @@ export interface TagProps extends ComponentPropsWithoutRef<'span'> {
   /** 是否可关闭:为真时在末尾渲染移除按钮。 */
   closable?: boolean;
   /**
-   * 点击移除按钮时触发,携带原生鼠标事件(可据修饰键分支 / stopPropagation)。
-   * 关闭按钮内部已 `stopPropagation`,不会冒泡触发根 `onClick`。
+   * 点击移除按钮时触发(关闭按钮内部已 `stopPropagation`,不会冒泡触发根 `onClick`)。
+   * @param event 关闭按钮的原生鼠标点击事件(可据修饰键分支 / 进一步 stopPropagation)
    */
   onRemove?: (event: ReactMouseEvent<HTMLButtonElement>) => void;
   /** 前缀槽:图标 / 头像(`.ms-tag__icon`)。 */

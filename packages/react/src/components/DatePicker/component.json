@@ -1,0 +1,17 @@
+{
+  "id": "date-picker",
+  "name": "DatePicker",
+  "description": "日期选择器:single/range 双模、date/month/year 三视图日历、min/max/disabledDate、范围预设、可清除、键盘导航、Intl 本地化、tone 发光与 invalid 态(供 Form 集成)。",
+  "category": "forms",
+  "tags": ["date", "calendar", "range", "picker", "form-control", "i18n", "a11y"],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-26",
+    "requirements": "做一个生产级日期选择器。硬约束:① 所有日期数学(月历矩阵、加减月/年、范围判定、夹取、ISO 解析)纯 TS 进 logic.ts,零 React/零 locale 硬编码,可平移 @magic-scope/core;② 月名/周名/显示格式经 Intl.DateTimeFormat 按 locale 取(不硬编码中文),UI 文案(今天/清除/上下月)走全库 i18n 字典;③ 日期一律按本地时区年月日处理(toISO 用本地 Y-M-D 非 UTC),避免跨时区偏一天;④ 复用全库 Popover 做浮层(点外/Esc/12 向 placement 复用,不重造);⑤ single + range 双模,range 带悬停预览 + 预设;⑥ date/month/year 三视图导航 + 完整键盘操作(方向键/PageUp-Down/Home-End/Enter);⑦ 日历用 ARIA grid 模式(role=grid/gridcell、aria-selected、aria-current);⑧ tone 聚焦发光 + invalid→danger,trigger 仿 Input,便于嵌进 Form(经 render-prop 或显式 control)。诚实取舍:v1 trigger 为只读式(点开日历选择),自由文本输入解析延后;时间选择(时分秒)延后。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["DatePicker.tsx", "Calendar.tsx", "logic.ts", "DatePicker.css", "index.ts"]
+}

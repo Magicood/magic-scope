@@ -1,0 +1,137 @@
+/* —— Spin:加载遮罩 ——
+ * 三态布局:wrap 包裹内容(遮罩绝对定位盖其上)/ bare 独立指示器(行内块)/ fullscreen 全屏浮层。
+ * 遮罩用 --ms-color-overlay 半透明底 + 轻模糊;指示器默认复用 Spinner(读 tone 槽位 --ms-c / --ms-c-glow)。
+ * 被遮内容降透明度 + 轻模糊 + 屏蔽交互(组件已加 inert / pointer-events,这里只管视觉降级)。
+ * 动效(模糊/淡入)受 prefers-reduced-motion 与 data-ms-motion=off 调制;发光随 data-ms-fx。 */
+
+.ms-spin {
+  box-sizing: border-box;
+  /* tip 与遮罩排版的间距基线随密度缩放 */
+  --ms-spin-gap: calc(var(--ms-space-3) * var(--ms-density-scale, 1));
+}
+
+/* —— 包裹模式:根为定位上下文,遮罩绝对盖满 —— */
+.ms-spin--wrap {
+  position: relative;
+  display: block;
+  /* 内容边界:超长无空格串也换行,不撑破 */
+  max-inline-size: 100%;
+}
+
+.ms-spin__content {
+  /* 承接任意内容;spinning 时由下方降级类降透明度 + 模糊 */
+  min-inline-size: 0;
+  transition:
+    opacity var(--ms-dur-base) var(--ms-ease-standard),
+    filter var(--ms-dur-base) var(--ms-ease-standard);
+}
+
+.ms-spin--spinning > .ms-spin__content {
+  /* 降透明度 + 轻模糊,保留布局但弱化;交互屏蔽由组件 inert/pointer-events 负责 */
+  opacity: 0.5;
+  filter: blur(0.6px);
+  user-select: none;
+}
+
+/* —— 遮罩层:盖在内容之上,居中指示器 —— */
+.ms-spin__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* 半透明底,弱化下层内容,引导视线到指示器 */
+  background-color: color-mix(in oklch, var(--ms-color-overlay) 40%, transparent);
+  backdrop-filter: blur(1px);
+  border-radius: inherit;
+  /* 淡入:遮罩出现不突兀 */
+  animation: ms-spin-overlay-in var(--ms-dur-base) var(--ms-ease-standard);
+}
+
+@keyframes ms-spin-overlay-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* —— 指示器 + tip 盒(纵向居中堆叠) —— */
+.ms-spin__indicator {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ms-spin-gap);
+  /* 指示器盒不被超长 tip 撑破 */
+  max-inline-size: min(100%, 16rem);
+  text-align: center;
+}
+
+.ms-spin__tip {
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  color: var(--ms-c, var(--ms-color-fg-muted));
+  font-family: var(--ms-font-sans);
+  font-size: var(--ms-type-step--1, 0.875rem);
+  line-height: var(--ms-leading-snug, 1.3);
+  /* 超长 tip 换行不溢出 */
+  overflow-wrap: anywhere;
+}
+
+/* tip 颜色:无 tone 时回退柔和前景色(避免裸 --ms-c 在无 tone 时落到 primary) */
+.ms-spin:not([class*="ms-tone-"]) .ms-spin__tip {
+  color: var(--ms-color-fg-muted);
+}
+
+/* —— bare:无 children 的独立指示器(行内块,跟随文字流) —— */
+.ms-spin--bare {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  max-inline-size: 100%;
+}
+
+/* —— fullscreen:盖满视口的全屏浮层 —— */
+.ms-spin--fullscreen {
+  position: fixed;
+  inset: 0;
+  z-index: var(--ms-z-modal, 1000);
+  display: block;
+}
+.ms-spin--fullscreen > .ms-spin__overlay {
+  /* 全屏遮罩更厚一些,确保盖住整页 */
+  background-color: var(--ms-color-overlay, rgb(10 7 16 / 0.72));
+  backdrop-filter: blur(2px);
+  border-radius: 0;
+}
+
+/* —— 触控:全屏遮罩吞掉穿透点击(指示器盒本身不可交互) —— */
+.ms-spin--fullscreen,
+.ms-spin--fullscreen > .ms-spin__overlay {
+  touch-action: none;
+}
+
+/* —— 动效降级:reduced-motion 或 data-ms-motion=off 时去模糊/淡入(避免眩晕),保留透明度弱化 —— */
+@media (prefers-reduced-motion: reduce) {
+  .ms-spin__content,
+  .ms-spin--spinning > .ms-spin__content {
+    transition-duration: 0.01ms;
+    filter: none;
+  }
+  .ms-spin__overlay {
+    animation: none;
+    backdrop-filter: none;
+  }
+}
+[data-ms-motion="off"] .ms-spin__content,
+[data-ms-motion="off"] .ms-spin--spinning > .ms-spin__content {
+  transition-duration: 0.01ms;
+  filter: none;
+}
+[data-ms-motion="off"] .ms-spin__overlay {
+  animation: none;
+  backdrop-filter: none;
+}

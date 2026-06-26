@@ -72,11 +72,25 @@ export interface RowSelection<T = Record<string, ReactNode>> {
   type?: 'checkbox' | 'radio';
   /** 受控:已选行 key 列表。 */
   selectedKeys: RowKey[];
-  /** 选择变化回调,入参为新 key 列表与当前数据中对应的行。 */
+  /**
+   * 选择变化回调(选择态变更的统一出口)。
+   * @param keys 变更后全量已选行的 key 列表
+   * @param rows 这些 key 在当前数据中对应的行对象数组
+   */
   onChange: (keys: RowKey[], rows: T[]) => void;
-  /** 单行勾选/取消时触发(细分回调):带本行、是否选中、变更后全量已选行。 */
+  /**
+   * 单行勾选/取消时触发(细分回调)。
+   * @param row 被勾选/取消的本行数据
+   * @param selected 该行变更后是否为选中
+   * @param selectedRows 变更后全量已选行对象数组
+   */
   onSelect?: (row: T, selected: boolean, selectedRows: T[]) => void;
-  /** 全选/取消全选时触发(细分回调):是否全选、变更后全量已选行、本次受影响的行。 */
+  /**
+   * 全选/取消全选时触发(细分回调)。
+   * @param selected 是否为全选(true 全选 / false 取消全选)
+   * @param selectedRows 变更后全量已选行对象数组
+   * @param changeRows 本次操作受影响的行对象数组(当前页全部行)
+   */
   onSelectAll?: (selected: boolean, selectedRows: T[], changeRows: T[]) => void;
   /** 定制某行选择框(禁用 / aria-label)。 */
   getCheckboxProps?: (row: T) => { disabled?: boolean; 'aria-label'?: string };
@@ -94,7 +108,10 @@ export interface Expandable<T = Record<string, ReactNode>> {
   expandedKeys?: RowKey[];
   /** 非受控初始展开 key 列表。 */
   defaultExpandedKeys?: RowKey[];
-  /** 展开变化回调,入参为新的 key 列表。 */
+  /**
+   * 展开变化回调(展开态变更的统一出口)。
+   * @param keys 变更后全量已展开行的 key 列表
+   */
   onExpandedChange?: (keys: RowKey[]) => void;
   /** 判断某行是否可展开(false 则不渲染展开按钮)。缺省全部可展开。 */
   rowExpandable?: (row: T) => boolean;
@@ -147,18 +164,41 @@ export interface TableProps<T = Record<string, ReactNode>>
   /** —— 排序(受控:传 sortState 含 null;非受控:用 defaultSortState)。 */
   sortState?: SortState | null;
   defaultSortState?: SortState | null;
+  /**
+   * 排序状态变化回调。
+   * @param next 新的排序状态(含 columnKey 与 direction);取消排序时为 null
+   */
   onSortChange?: (next: SortState | null) => void;
   /** —— 行选择(受控)。 */
   rowSelection?: RowSelection<T>;
   /** —— 可展开行(受控/非受控)。 */
   expandable?: Expandable<T>;
-  /** —— 行级点击。 */
+  /**
+   * —— 行级点击。
+   * @param row 被点击的行数据
+   * @param index 该行在当前渲染数据中的下标
+   * @param e 原生鼠标点击事件
+   */
   onRowClick?: (row: T, index: number, e: ReactMouseEvent<HTMLTableRowElement>) => void;
-  /** —— 行级双击(双击编辑场景)。 */
+  /**
+   * —— 行级双击(双击编辑场景)。
+   * @param row 被双击的行数据
+   * @param index 该行在当前渲染数据中的下标
+   * @param e 原生鼠标双击事件
+   */
   onRowDoubleClick?: (row: T, index: number, e: ReactMouseEvent<HTMLTableRowElement>) => void;
-  /** —— 行级右键(右键菜单场景)。 */
+  /**
+   * —— 行级右键(右键菜单场景)。
+   * @param row 触发右键菜单的行数据
+   * @param index 该行在当前渲染数据中的下标
+   * @param e 原生右键(contextmenu)事件
+   */
   onRowContextMenu?: (row: T, index: number, e: ReactMouseEvent<HTMLTableRowElement>) => void;
-  /** —— Ant 式行事件工厂:返回该行的多个事件处理器。 */
+  /**
+   * —— Ant 式行事件工厂:返回该行的多个事件处理器。
+   * @param row 当前行数据
+   * @param index 该行在当前渲染数据中的下标
+   */
   onRow?: (row: T, index: number) => RowEventHandlers;
   /** —— 加载态:覆盖一层 Spinner 遮罩(aria-busy)。 */
   loading?: boolean;

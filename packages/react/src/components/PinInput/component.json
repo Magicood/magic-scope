@@ -1,0 +1,24 @@
+{
+  "id": "pin-input",
+  "name": "PinInput",
+  "description": "OTP/验证码分段输入,逐格单字符、自动跳格与整串粘贴分填,受控/非受控两用。",
+  "category": "forms",
+  "tags": ["pin", "otp", "verification-code", "segmented", "form", "a11y"],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-26",
+    "requirements": "验证码/一次性口令场景的分段输入:length 个单字符格,合法字符即时跳下一格、Backspace 在空格回退并清前一格、粘贴整串自动分填到各格、←→/Home/End 焦点导航;type 限定收字范围(numeric 仅数字 / alphanumeric),mask 掩码敏感口令,invalid 染 danger 发光环;填满触发 onComplete。硬约束:字符过滤/串↔格数组互转必须是零 React 纯函数(logic.ts,可平移 core)且各端复用同一语义;a11y 必达——外层 role=group + i18n aria-label,每格独立 aria-label(第 N 位)与 aria-invalid,键盘完全可达;尺寸随 data-ms-density 缩放、触控热区抬到 --ms-target-min,动效在 prefers-reduced-motion 与 data-ms-motion=off 下降级。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": [
+    "PinInput.tsx",
+    "PinInput.css",
+    "logic.ts",
+    "logic.test.ts",
+    "PinInput.test.tsx",
+    "index.ts"
+  ]
+}

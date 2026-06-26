@@ -1,0 +1,26 @@
+{
+  "id": "splitter",
+  "name": "Splitter",
+  "description": "可拖拽分栏布局。复合 Splitter + Splitter.Panel,面板间自动生成可拖拽分隔条,支持水平/垂直、min/max(px 或 %)、defaultSize、双击折叠,受控 sizes 与 onResize/onResizeEnd 回调,键盘方向键步进,a11y separator 语义。",
+  "category": "layout",
+  "tags": [
+    "splitter",
+    "split-pane",
+    "resizable",
+    "panel",
+    "layout",
+    "drag",
+    "gutter",
+    "collapsible"
+  ],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-26",
+    "requirements": "需要一个可把容器分成多块、用户能拖拽中缝实时调整各块占比的布局原语,用于代码编辑器/文件管理器/仪表盘这类双栏或多栏界面。拖拽数值语义(delta 分摊两侧、夹 min/max、总和守恒)必须抽成框架无关纯函数 logic.ts 以便平移 core;尺寸约束允许像素或百分比混写;支持受控(外部托管 sizes)与非受控;面板可设折叠;分隔条要可键盘操作并带 separator 无障碍语义。拖拽跟手不卡顿(拖拽中关闭过渡),折叠这类离散跳变才走过渡且尊重 reduced-motion / motion=off。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Splitter.tsx", "Splitter.css", "logic.ts", "index.ts"]
+}

@@ -1,0 +1,289 @@
+/**
+ * DatePicker + Calendar 样式 —— 消费 @magic-scope/tokens 的 --ms-* 变量。
+ * trigger 仿 Input(tone 聚焦发光环、invalid→danger);日历 date/month/year 三视图网格、
+ * 单元格态(today/selected/in-range/range 端点/outside/disabled)、范围预览、密度缩放、魔法过渡。
+ * 尊重 prefers-reduced-motion 与 data-ms-motion=off。
+ */
+
+.ms-datepicker {
+  display: inline-flex;
+  min-inline-size: 0;
+  font-family: var(--ms-font-sans);
+}
+
+/* ── trigger(仿 Input) ── */
+.ms-datepicker__trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ms-space-2);
+  inline-size: 100%;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  padding: calc(var(--ms-space-2) * var(--ms-density-scale, 1)) var(--ms-space-3);
+  font: inherit;
+  color: var(--ms-color-fg);
+  background: var(--ms-color-surface);
+  border: 1px solid var(--ms-color-border);
+  border-radius: var(--ms-radius-md);
+  cursor: pointer;
+  transition:
+    border-color var(--ms-dur-fast, 0.15s) var(--ms-ease-standard, ease),
+    box-shadow var(--ms-dur-fast, 0.15s) var(--ms-ease-standard, ease);
+}
+.ms-datepicker--sm .ms-datepicker__trigger {
+  padding-block: calc(var(--ms-space-1) * var(--ms-density-scale, 1));
+  font-size: 0.875em;
+}
+.ms-datepicker--lg .ms-datepicker__trigger {
+  padding-block: calc(var(--ms-space-3) * var(--ms-density-scale, 1));
+  font-size: 1.0625em;
+}
+.ms-datepicker__trigger:hover:not(:disabled) {
+  border-color: var(--ms-color-border-strong);
+}
+.ms-datepicker__trigger:focus-visible {
+  outline: none;
+  border-color: var(--ms-c, var(--ms-color-primary));
+  box-shadow:
+    0 0 0 3px color-mix(in oklab, var(--ms-c, var(--ms-color-primary)) 25%, transparent),
+    0 0 calc(8px * var(--ms-fx-glow, 1)) var(--ms-c-glow, transparent);
+}
+.ms-datepicker--invalid .ms-datepicker__trigger {
+  border-color: var(--ms-color-danger);
+}
+.ms-datepicker--invalid .ms-datepicker__trigger:focus-visible {
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--ms-color-danger) 25%, transparent);
+}
+.ms-datepicker__trigger:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+.ms-datepicker__value {
+  flex: 1;
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: start;
+}
+.ms-datepicker__placeholder {
+  color: var(--ms-color-fg-subtle);
+}
+.ms-datepicker__icon {
+  flex: none;
+  font-size: 0.95em;
+  opacity: 0.75;
+}
+
+/* ── 浮层面板 ── */
+.ms-datepicker__panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ms-space-2);
+}
+.ms-datepicker__presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ms-space-1);
+  padding-block-end: var(--ms-space-2);
+  border-block-end: 1px solid var(--ms-color-border);
+}
+.ms-datepicker__preset {
+  font: inherit;
+  font-size: 0.85em;
+  padding: var(--ms-space-1) var(--ms-space-2);
+  border: 1px solid var(--ms-color-border);
+  border-radius: var(--ms-radius-sm);
+  background: transparent;
+  color: var(--ms-color-fg);
+  cursor: pointer;
+}
+.ms-datepicker__preset:hover {
+  border-color: var(--ms-c, var(--ms-color-primary));
+  color: var(--ms-c, var(--ms-color-primary));
+}
+.ms-datepicker__footer {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--ms-space-2);
+  padding-block-start: var(--ms-space-2);
+  border-block-start: 1px solid var(--ms-color-border);
+}
+.ms-datepicker__footer:empty {
+  display: none;
+}
+.ms-datepicker__today,
+.ms-datepicker__clear-btn {
+  font: inherit;
+  font-size: 0.85em;
+  padding: var(--ms-space-1) var(--ms-space-2);
+  background: none;
+  border: none;
+  border-radius: var(--ms-radius-sm);
+  color: var(--ms-c, var(--ms-color-primary));
+  cursor: pointer;
+}
+.ms-datepicker__clear-btn {
+  color: var(--ms-color-fg-muted);
+}
+.ms-datepicker__today:hover,
+.ms-datepicker__clear-btn:hover {
+  background: var(--ms-color-surface-sunken);
+}
+
+/* ── Calendar ── */
+.ms-calendar {
+  --ms-cal-cell: calc(2.25rem * var(--ms-density-scale, 1));
+  display: flex;
+  flex-direction: column;
+  gap: var(--ms-space-2);
+  min-inline-size: calc(var(--ms-cal-cell) * 7);
+}
+.ms-calendar__header {
+  display: flex;
+  align-items: center;
+  gap: var(--ms-space-1);
+}
+.ms-calendar__nav {
+  flex: none;
+  inline-size: var(--ms-cal-cell);
+  block-size: var(--ms-cal-cell);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font: inherit;
+  background: none;
+  border: none;
+  border-radius: var(--ms-radius-sm);
+  color: var(--ms-color-fg-muted);
+  cursor: pointer;
+}
+.ms-calendar__nav:hover:not(:disabled) {
+  background: var(--ms-color-surface-sunken);
+  color: var(--ms-color-fg);
+}
+.ms-calendar__nav:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.ms-calendar__label {
+  flex: 1;
+  font: inherit;
+  font-weight: 600;
+  padding: var(--ms-space-1);
+  background: none;
+  border: none;
+  border-radius: var(--ms-radius-sm);
+  color: var(--ms-color-fg);
+  cursor: pointer;
+}
+.ms-calendar__label--static {
+  cursor: default;
+  text-align: center;
+}
+.ms-calendar__label:not(.ms-calendar__label--static):hover {
+  background: var(--ms-color-surface-sunken);
+}
+
+.ms-calendar__grid {
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+.ms-calendar__weekday {
+  inline-size: var(--ms-cal-cell);
+  block-size: calc(var(--ms-cal-cell) * 0.8);
+  font-size: 0.8em;
+  font-weight: 400;
+  color: var(--ms-color-fg-subtle);
+}
+.ms-calendar__cell-wrap {
+  padding: 0;
+  text-align: center;
+}
+.ms-calendar__cell {
+  inline-size: var(--ms-cal-cell);
+  block-size: var(--ms-cal-cell);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font: inherit;
+  font-size: 0.9em;
+  background: none;
+  border: none;
+  border-radius: var(--ms-radius-sm);
+  color: var(--ms-color-fg);
+  cursor: pointer;
+  position: relative;
+  transition: background var(--ms-dur-fast, 0.12s) var(--ms-ease-standard, ease);
+}
+.ms-calendar__cell:hover:not(:disabled):not(.ms-calendar__cell--selected) {
+  background: var(--ms-color-surface-sunken);
+}
+.ms-calendar__cell--outside {
+  color: var(--ms-color-fg-subtle);
+}
+.ms-calendar__cell--today {
+  font-weight: 700;
+  box-shadow: inset 0 0 0 1px var(--ms-c, var(--ms-color-primary));
+}
+.ms-calendar__cell--in-range {
+  background: color-mix(in oklab, var(--ms-c, var(--ms-color-primary)) 14%, transparent);
+  border-radius: 0;
+}
+.ms-calendar__cell--selected {
+  background: var(--ms-c, var(--ms-color-primary));
+  color: var(--ms-c-on, #fff);
+  font-weight: 600;
+  box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) var(--ms-c-glow, transparent);
+}
+.ms-calendar__cell--range-start {
+  border-start-start-radius: var(--ms-radius-sm);
+  border-end-start-radius: var(--ms-radius-sm);
+}
+.ms-calendar__cell--range-end {
+  border-start-end-radius: var(--ms-radius-sm);
+  border-end-end-radius: var(--ms-radius-sm);
+}
+.ms-calendar__cell:disabled {
+  color: var(--ms-color-fg-subtle);
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* month / year 视图 */
+.ms-calendar__panel {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--ms-space-1);
+  min-block-size: calc(var(--ms-cal-cell) * 6);
+}
+.ms-calendar__panel-cell {
+  block-size: calc(var(--ms-cal-cell) * 1.4);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font: inherit;
+  background: none;
+  border: none;
+  border-radius: var(--ms-radius-sm);
+  color: var(--ms-color-fg);
+  cursor: pointer;
+}
+.ms-calendar__panel-cell:hover:not(:disabled):not(.ms-calendar__cell--selected) {
+  background: var(--ms-color-surface-sunken);
+}
+.ms-calendar__panel-cell:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ms-calendar__cell,
+  .ms-datepicker__trigger {
+    transition: none;
+  }
+}
+[data-ms-motion="off"] .ms-calendar__cell,
+[data-ms-motion="off"] .ms-datepicker__trigger {
+  transition: none;
+}

@@ -1,0 +1,446 @@
+/* —— Prose:富文本 / HTML 内容容器排版。
+ * 组件本体轻,重头在这里:用后代选择器为 .ms-prose 内已渲染的语义元素统一排版。
+ * 全部消费 --ms-* token、随 data-ms-density 缩放;tone 经全库 tone 槽位(.ms-tone-*)驱动着色。
+ *
+ * 设计取舍(不藏着):
+ * - 用 --ms-prose-base 作「正文基准字号」,size 档只改这一个变量,
+ *   其余元素一律以 em 相对它推导 → 整体缩放只需调一处,层级关系恒定。
+ * - 用 --ms-prose-gap 作「块间距基准」,随密度缩放;块级元素 margin 以它为单位。
+ * - 后代选择器只命中「未带 ms- 类」的裸元素,避免污染嵌套进来的本库组件
+ *   (如内容里嵌 <Button class="ms-button">,不会被 prose 的 a/button 规则染上)。 */
+
+.ms-prose {
+  /* —— 可调基准(size 档与密度在此汇入) —— */
+  --ms-prose-base: var(--ms-type-step-0);
+  --ms-prose-gap: calc(var(--ms-space-4) * var(--ms-density-scale, 1));
+  --ms-prose-lead: var(--ms-leading-relaxed);
+
+  color: var(--ms-color-fg);
+  font-family: var(--ms-font-serif);
+  font-size: var(--ms-prose-base);
+  line-height: var(--ms-prose-lead);
+  /* 容器边界:任意内容不撑破;长串/URL 在任意处断行 */
+  max-inline-size: 100%;
+  overflow-wrap: anywhere;
+  /* 西文连字符断词(需内容/祖先有 lang 才生效;CJK 无副作用) */
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  text-wrap: pretty;
+}
+
+/* —— size 档:只改基准字号(其余元素以 em 推导,层级关系不变) —— */
+.ms-prose--sm {
+  --ms-prose-base: var(--ms-type-step--1);
+  --ms-prose-gap: calc(var(--ms-space-3) * var(--ms-density-scale, 1));
+}
+.ms-prose--md {
+  --ms-prose-base: var(--ms-type-step-0);
+}
+.ms-prose--lg {
+  --ms-prose-base: var(--ms-type-step-1);
+  --ms-prose-gap: calc(var(--ms-space-5, var(--ms-space-4)) * var(--ms-density-scale, 1));
+  --ms-prose-lead: 1.8;
+}
+
+/* —— 首尾元素塌边:容器自身不靠 margin 顶出空白,交给外部布局 —— */
+.ms-prose > :first-child {
+  margin-block-start: 0;
+}
+.ms-prose > :last-child {
+  margin-block-end: 0;
+}
+
+/* ============================================================
+ * 标题 h1-h6 —— 装饰 sans、紧行高、上紧下松、流式字阶
+ * (用 :where 降权,方便调用方/上层用一个类就能覆写) ============================================================ */
+.ms-prose :where(h1, h2, h3, h4, h5, h6) {
+  margin-block: calc(var(--ms-prose-gap) * 1.6) var(--ms-prose-gap);
+  font-family: var(--ms-font-sans);
+  font-weight: var(--ms-font-weight-semibold, 600);
+  line-height: var(--ms-leading-tight);
+  letter-spacing: var(--ms-tracking-tight, -0.015em);
+  /* 标题里长词不撑破,但保留连字符可读性 */
+  text-wrap: balance;
+  color: var(--ms-color-fg);
+}
+.ms-prose :where(h1) {
+  font-size: var(--ms-type-step-4);
+  font-weight: var(--ms-font-weight-bold, 700);
+}
+.ms-prose :where(h2) {
+  font-size: var(--ms-type-step-3);
+  /* h2 作分节,带一道细分隔线增强结构感 */
+  padding-block-end: calc(var(--ms-prose-gap) * 0.4);
+  border-block-end: 1px solid var(--ms-color-border);
+}
+.ms-prose :where(h3) {
+  font-size: var(--ms-type-step-2);
+}
+.ms-prose :where(h4) {
+  font-size: var(--ms-type-step-1);
+}
+.ms-prose :where(h5) {
+  font-size: var(--ms-type-step-0);
+}
+.ms-prose :where(h6) {
+  font-size: var(--ms-type-step--1);
+  color: var(--ms-color-fg-muted);
+  text-transform: uppercase;
+  letter-spacing: var(--ms-tracking-wide, 0.02em);
+}
+/* 标题紧跟标题时收紧上间距(避免双倍空档) */
+.ms-prose :where(h1, h2, h3, h4, h5, h6) + :where(h1, h2, h3, h4, h5, h6) {
+  margin-block-start: calc(var(--ms-prose-gap) * 0.6);
+}
+
+/* ============================================================
+ * 正文段落 / 引导句 ============================================================ */
+.ms-prose :where(p) {
+  margin-block: 0 var(--ms-prose-gap);
+}
+/* 首段引导(lead):紧跟标题的第一段稍大、稍淡,作导语 */
+.ms-prose :where(p).lead,
+.ms-prose :where([data-prose-lead]) {
+  font-size: 1.15em;
+  color: var(--ms-color-fg-muted);
+  line-height: var(--ms-leading-normal);
+}
+
+/* —— 强调 —— */
+.ms-prose :where(strong, b) {
+  font-weight: var(--ms-font-weight-bold, 700);
+  color: var(--ms-color-fg);
+}
+.ms-prose :where(em, i) {
+  font-style: italic;
+}
+.ms-prose :where(small) {
+  font-size: 0.85em;
+  color: var(--ms-color-fg-muted);
+}
+.ms-prose :where(sub, sup) {
+  font-size: 0.75em;
+  line-height: 0;
+}
+.ms-prose :where(del, s) {
+  color: var(--ms-color-fg-muted);
+  text-decoration-line: line-through;
+}
+.ms-prose :where(ins, u) {
+  text-decoration-line: underline;
+  text-underline-offset: 0.18em;
+}
+.ms-prose :where(abbr[title]) {
+  text-decoration: underline dotted;
+  cursor: help;
+}
+/* <mark> 高亮:走全库 selection 槽位,不硬编码黄底 */
+.ms-prose :where(mark) {
+  padding-inline: 0.15em;
+  border-radius: var(--ms-radius-sm);
+  background-color: var(--ms-c-soft);
+  color: var(--ms-color-fg);
+}
+
+/* ============================================================
+ * 链接 —— tone 着色,hover/visited 走角色;焦点环全库统一 ============================================================ */
+.ms-prose :where(a) {
+  color: var(--ms-color-link, var(--ms-c));
+  text-decoration-line: underline;
+  text-decoration-color: color-mix(in oklch, var(--ms-c) 40%, transparent);
+  text-decoration-thickness: from-font;
+  text-underline-offset: 0.18em;
+  border-radius: var(--ms-radius-sm);
+  transition:
+    color var(--ms-dur-fast, 0.12s) var(--ms-ease-standard),
+    text-decoration-color var(--ms-dur-fast, 0.12s) var(--ms-ease-standard);
+}
+@media (hover: hover) {
+  .ms-prose :where(a):hover {
+    color: var(--ms-color-link-hover, var(--ms-c-hover));
+    text-decoration-color: currentColor;
+  }
+}
+.ms-prose :where(a):visited {
+  color: var(--ms-color-link-visited, var(--ms-color-link, var(--ms-c)));
+}
+.ms-prose :where(a):focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--ms-color-bg),
+    0 0 0 4px var(--ms-color-focus-ring);
+}
+
+/* ============================================================
+ * 列表 ul / ol / li —— 含嵌套与定义列表 ============================================================ */
+.ms-prose :where(ul, ol) {
+  margin-block: 0 var(--ms-prose-gap);
+  padding-inline-start: 1.6em;
+}
+.ms-prose :where(ul) {
+  list-style-type: disc;
+}
+.ms-prose :where(ol) {
+  list-style-type: decimal;
+}
+.ms-prose :where(li) {
+  margin-block: calc(var(--ms-prose-gap) * 0.3);
+  padding-inline-start: 0.25em;
+}
+/* 列表标记着 tone 色,呼应 magic 主题 */
+.ms-prose :where(li)::marker {
+  color: var(--ms-c);
+}
+/* 嵌套列表:换标记符号 + 收紧上下间距 */
+.ms-prose :where(ul ul) {
+  list-style-type: circle;
+}
+.ms-prose :where(ul ul ul) {
+  list-style-type: square;
+}
+.ms-prose :where(li > ul, li > ol) {
+  margin-block: calc(var(--ms-prose-gap) * 0.3) 0;
+}
+/* 紧凑列表(无内段落):段间距归零 */
+.ms-prose :where(li > p) {
+  margin-block: 0;
+}
+.ms-prose :where(li > p:not(:last-child)) {
+  margin-block-end: calc(var(--ms-prose-gap) * 0.4);
+}
+/* 任务列表(GFM 输出的 checkbox) */
+.ms-prose :where(li):has(> input[type="checkbox"]) {
+  list-style: none;
+  margin-inline-start: -1.35em;
+}
+.ms-prose :where(li) > input[type="checkbox"] {
+  margin-inline-end: 0.5em;
+  accent-color: var(--ms-c);
+}
+
+/* —— 定义列表 dl / dt / dd —— */
+.ms-prose :where(dl) {
+  margin-block: 0 var(--ms-prose-gap);
+}
+.ms-prose :where(dt) {
+  font-weight: var(--ms-font-weight-semibold, 600);
+  color: var(--ms-color-fg);
+}
+.ms-prose :where(dd) {
+  margin-inline-start: 1.6em;
+  margin-block-end: calc(var(--ms-prose-gap) * 0.5);
+  color: var(--ms-color-fg-muted);
+}
+
+/* ============================================================
+ * 引用 blockquote —— 左条(tone 色)+ 柔底 + 缩进 ============================================================ */
+.ms-prose :where(blockquote) {
+  margin-block: var(--ms-prose-gap);
+  margin-inline: 0;
+  padding-block: calc(var(--ms-prose-gap) * 0.6);
+  padding-inline: var(--ms-prose-gap);
+  border-inline-start: 3px solid var(--ms-c);
+  border-start-end-radius: var(--ms-radius-md);
+  border-end-end-radius: var(--ms-radius-md);
+  background-color: var(--ms-c-soft);
+  color: var(--ms-color-fg);
+  font-style: italic;
+}
+.ms-prose :where(blockquote) :where(p):last-child {
+  margin-block-end: 0;
+}
+/* 引用署名(GFM/常见约定:blockquote 内 cite/footer) */
+.ms-prose :where(blockquote) :where(cite, footer) {
+  display: block;
+  margin-block-start: calc(var(--ms-prose-gap) * 0.4);
+  font-size: 0.9em;
+  font-style: normal;
+  color: var(--ms-color-fg-muted);
+}
+.ms-prose :where(blockquote) :where(cite, footer)::before {
+  content: "— ";
+}
+
+/* ============================================================
+ * 行内 code 与块级 pre —— 等宽 + sunken 底 + 横向滚动 ============================================================ */
+.ms-prose :where(code, kbd, samp) {
+  font-family: var(--ms-font-mono);
+  font-size: 0.875em;
+  font-variant-ligatures: none;
+}
+/* 行内 code:柔底 + 不撑破行 */
+.ms-prose :where(code):not(pre code) {
+  padding-inline: 0.4em;
+  padding-block: 0.12em;
+  border-radius: var(--ms-radius-sm);
+  background-color: var(--ms-color-surface-sunken);
+  color: var(--ms-c);
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+/* 行内 code 前后避免与文字粘连过紧(细微视觉留白由 padding 已给) */
+.ms-prose :where(a) :where(code) {
+  color: inherit;
+}
+
+/* 块级 pre:sunken 底 + 横向滚动(不换行,长行不撑破) */
+.ms-prose :where(pre) {
+  margin-block: 0 var(--ms-prose-gap);
+  padding: var(--ms-prose-gap);
+  border: 1px solid var(--ms-color-border);
+  border-radius: var(--ms-radius-md);
+  background-color: var(--ms-color-surface-sunken);
+  color: var(--ms-color-fg);
+  overflow-x: auto;
+  white-space: pre;
+  line-height: var(--ms-leading-relaxed);
+  font-variant-numeric: tabular-nums;
+  scrollbar-width: thin;
+  /* 内容边界:pre 自身不撑破容器,溢出走横向滚动 */
+  max-inline-size: 100%;
+}
+/* pre 内 code 去掉行内态的底/内边距(继承 pre 的) */
+.ms-prose :where(pre) :where(code) {
+  display: inline;
+  padding: 0;
+  background: none;
+  color: inherit;
+  font-size: 1em;
+  white-space: inherit;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+/* —— kbd:按键样式 —— */
+.ms-prose :where(kbd) {
+  padding-inline: 0.4em;
+  padding-block: 0.1em;
+  border: 1px solid var(--ms-color-border-strong, var(--ms-color-border));
+  border-block-end-width: 2px;
+  border-radius: var(--ms-radius-sm);
+  background-color: var(--ms-color-surface-raised);
+  color: var(--ms-color-fg);
+  font-size: 0.8em;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* ============================================================
+ * 分隔线 hr —— 细发丝线,带 tone 微光过渡 ============================================================ */
+.ms-prose :where(hr) {
+  margin-block: calc(var(--ms-prose-gap) * 2);
+  border: none;
+  block-size: 1px;
+  background-image: linear-gradient(
+    to right,
+    transparent,
+    var(--ms-color-border) 20%,
+    color-mix(in oklch, var(--ms-c) 50%, var(--ms-color-border)) 50%,
+    var(--ms-color-border) 80%,
+    transparent
+  );
+}
+
+/* ============================================================
+ * 表格 table / th / td —— 边框 + 表头底 + 横向滚动包裹 ============================================================ */
+.ms-prose :where(table) {
+  display: block;
+  /* 宽表横向滚动,不撑破容器 */
+  max-inline-size: 100%;
+  overflow-x: auto;
+  margin-block: 0 var(--ms-prose-gap);
+  border-collapse: collapse;
+  font-size: 0.95em;
+  line-height: var(--ms-leading-normal);
+  scrollbar-width: thin;
+}
+.ms-prose :where(thead) {
+  border-block-end: 2px solid var(--ms-color-border-strong, var(--ms-color-border));
+}
+.ms-prose :where(th, td) {
+  padding-block: calc(var(--ms-prose-gap) * 0.5);
+  padding-inline: calc(var(--ms-prose-gap) * 0.75);
+  border-block-end: 1px solid var(--ms-color-border);
+  text-align: start;
+  vertical-align: top;
+}
+.ms-prose :where(th) {
+  font-weight: var(--ms-font-weight-semibold, 600);
+  color: var(--ms-color-fg);
+  white-space: nowrap;
+}
+/* 斑马纹:偶数行轻微 sunken,长表更易读 */
+.ms-prose :where(tbody tr):nth-child(even) {
+  background-color: color-mix(in oklch, var(--ms-color-surface-sunken) 50%, transparent);
+}
+.ms-prose :where(caption) {
+  margin-block-end: calc(var(--ms-prose-gap) * 0.5);
+  color: var(--ms-color-fg-muted);
+  font-size: 0.9em;
+  text-align: start;
+  caption-side: top;
+}
+
+/* ============================================================
+ * 媒体 img / figure / figcaption / video / picture ============================================================ */
+.ms-prose :where(img, video, svg, picture) {
+  max-inline-size: 100%;
+  block-size: auto;
+}
+.ms-prose :where(img, video) {
+  display: block;
+  margin-block: var(--ms-prose-gap);
+  border-radius: var(--ms-radius-md);
+}
+.ms-prose :where(figure) {
+  margin-block: var(--ms-prose-gap);
+  margin-inline: 0;
+}
+.ms-prose :where(figure) :where(img, video) {
+  margin-block: 0;
+}
+.ms-prose :where(figcaption) {
+  margin-block-start: calc(var(--ms-prose-gap) * 0.5);
+  color: var(--ms-color-fg-muted);
+  font-size: 0.875em;
+  line-height: var(--ms-leading-normal);
+  text-align: center;
+}
+
+/* ============================================================
+ * 其它 ============================================================ */
+.ms-prose :where(details) {
+  margin-block: 0 var(--ms-prose-gap);
+  padding: calc(var(--ms-prose-gap) * 0.6) var(--ms-prose-gap);
+  border: 1px solid var(--ms-color-border);
+  border-radius: var(--ms-radius-md);
+  background-color: var(--ms-color-surface-sunken);
+}
+.ms-prose :where(summary) {
+  cursor: pointer;
+  font-weight: var(--ms-font-weight-semibold, 600);
+  color: var(--ms-color-fg);
+}
+.ms-prose :where(summary):focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--ms-color-bg),
+    0 0 0 4px var(--ms-color-focus-ring);
+  border-radius: var(--ms-radius-sm);
+}
+
+/* 选区高亮:接全库 selection 槽位 */
+.ms-prose ::selection {
+  background: var(--ms-color-selection);
+  color: var(--ms-color-on-selection);
+}
+
+/* —— 动效降级:链接过渡尊重 reduced-motion / data-ms-motion=off —— */
+@media (prefers-reduced-motion: reduce) {
+  .ms-prose :where(a) {
+    transition-duration: 0.01ms;
+  }
+}
+[data-ms-motion="off"] .ms-prose :where(a) {
+  transition-duration: 0.01ms;
+}
