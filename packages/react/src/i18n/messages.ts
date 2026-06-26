@@ -51,6 +51,9 @@ export type MessageKey =
   | 'alertDialog.cancel'
   | 'popconfirm.confirm'
   | 'popconfirm.cancel'
+  | 'table.expandRow'
+  | 'table.collapseRow'
+  | 'table.expandColumn'
   | 'tag.remove'
   | 'timeline.pending'
   | 'toast.close'
@@ -102,6 +105,9 @@ export const defaultMessages: Messages = {
   'alertDialog.cancel': '取消',
   'popconfirm.confirm': '确定',
   'popconfirm.cancel': '取消',
+  'table.expandRow': '展开第 {index} 行',
+  'table.collapseRow': '收起第 {index} 行',
+  'table.expandColumn': '展开',
   'tag.remove': '移除',
   'timeline.pending': '进行中…',
   'toast.close': '关闭',

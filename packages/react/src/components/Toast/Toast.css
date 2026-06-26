@@ -77,11 +77,15 @@
   background-color: var(--ms-color-surface-raised);
   color: var(--ms-color-fg);
   font-family: var(--ms-font-sans);
-  /* 起始边强调条(inset 阴影)+ 立体投影 + 变体着色的奥术辉光 */
+  /* 起始边强调条(inset 阴影)+ 立体投影 + 变体着色的奥术辉光。
+     强调色 / 辉光色读统一 tone 槽位(--ms-c / --ms-c-glow),随 tone resolver 换肤联动。
+     default 走 ms-tone-neutral,强调条回退中性 border-strong(无语义色干扰)。 */
+  --ms-toast-accent: var(--ms-c);
+  --ms-toast-glow: var(--ms-c-glow);
   box-shadow:
-    inset 3px 0 0 var(--ms-toast-accent, var(--ms-color-border-strong)),
+    inset 3px 0 0 var(--ms-toast-accent),
     0 12px 32px -16px rgb(0 0 0 / 0.4),
-    0 0 calc(24px * var(--ms-fx-glow, 1)) -12px var(--ms-toast-glow, var(--ms-color-glow));
+    0 0 calc(24px * var(--ms-fx-glow, 1)) -12px var(--ms-toast-glow);
   /* 退场用平滑 standard 曲线(非过冲),避免淡出时先回弹进画面 */
   transition:
     opacity var(--ms-dur-base) var(--ms-ease-standard),
@@ -110,22 +114,68 @@
     scale(calc(1 - 0.03 * var(--ms-motion-scale, 1)));
 }
 
-/* —— 变体:注入强调色 + 辉光色 —— */
-.ms-toast--success {
-  --ms-toast-accent: var(--ms-color-success);
-  --ms-toast-glow: var(--ms-color-success);
+/* —— default 变体:无语义色,强调条回退中性,辉光压低(不抢眼) —— */
+.ms-toast--default {
+  --ms-toast-accent: var(--ms-color-border-strong);
+  --ms-toast-glow: var(--ms-color-glow);
 }
-.ms-toast--danger {
-  --ms-toast-accent: var(--ms-color-danger);
-  --ms-toast-glow: var(--ms-color-danger);
+
+/* 发光总闸:data-ms-fx="off" 时彻底关断辉光层(仅留强调条 + 立体投影) */
+[data-ms-fx="off"] .ms-toast {
+  box-shadow:
+    inset 3px 0 0 var(--ms-toast-accent),
+    0 12px 32px -16px rgb(0 0 0 / 0.4);
 }
-.ms-toast--warning {
-  --ms-toast-accent: var(--ms-color-warning);
-  --ms-toast-glow: var(--ms-color-warning);
+
+/* —— 整条可点击(onClick 透传):指针态 + 悬停微提亮,内部按钮 stopPropagation 不触发 —— */
+.ms-toast--clickable {
+  cursor: pointer;
 }
-.ms-toast--info {
-  --ms-toast-accent: var(--ms-color-primary);
-  --ms-toast-glow: var(--ms-color-primary);
+@media (hover: hover) {
+  .ms-toast--clickable:hover {
+    border-color: var(--ms-color-border-strong);
+    background-color: var(--ms-color-surface-overlay, var(--ms-color-surface-raised));
+  }
+}
+
+/* —— 图标列:读 tone 主色,与变体强调条 / 辉光同源 —— */
+.ms-toast__icon {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  margin-block-start: 0.0625rem;
+  color: var(--ms-c);
+  font-size: 1rem;
+  line-height: 1;
+}
+.ms-toast--default .ms-toast__icon {
+  color: var(--ms-color-fg-muted);
+}
+
+/* loading 旋转符文:奥术细环,reduced-motion / motion=off 下停转(仍可见静态环) */
+.ms-toast__spinner {
+  inline-size: 1rem;
+  block-size: 1rem;
+  border: 2px solid var(--ms-c-soft);
+  border-block-start-color: var(--ms-c);
+  border-radius: var(--ms-radius-full);
+  animation: ms-toast-spin 0.7s linear infinite;
+}
+@keyframes ms-toast-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ms-toast__spinner {
+    animation: none;
+  }
+}
+[data-ms-motion="off"] .ms-toast__spinner {
+  animation: none;
 }
 
 /* —— 内容 —— */
@@ -157,7 +207,7 @@
   border: 1px solid var(--ms-color-border-strong);
   border-radius: var(--ms-radius-md);
   background: transparent;
-  color: var(--ms-color-primary);
+  color: var(--ms-c);
   font: inherit;
   font-size: 0.8125rem;
   font-weight: 600;
@@ -166,14 +216,18 @@
     background-color var(--ms-dur-fast) var(--ms-ease-standard),
     border-color var(--ms-dur-fast) var(--ms-ease-standard);
 }
+/* default 变体的 action 用中性强调,避免无语义场景下读到 muted 灰 */
+.ms-toast--default .ms-toast__action {
+  color: var(--ms-color-fg);
+}
 @media (hover: hover) {
   .ms-toast__action:hover {
-    border-color: var(--ms-color-primary);
-    background-color: color-mix(in oklch, var(--ms-color-primary) 14%, transparent);
+    border-color: var(--ms-c);
+    background-color: var(--ms-c-soft);
   }
 }
 .ms-toast__action:focus-visible {
-  outline: 2px solid var(--ms-color-primary);
+  outline: 2px solid var(--ms-c);
   outline-offset: 2px;
 }
 
@@ -205,7 +259,7 @@
   }
 }
 .ms-toast__close:focus-visible {
-  outline: 2px solid var(--ms-color-primary);
+  outline: 2px solid var(--ms-c);
   outline-offset: 2px;
 }
 

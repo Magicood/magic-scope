@@ -1,15 +1,58 @@
+/* —— Spinner:加载旋转器 ——
+ * 根 .ms-spinner 是容器(role=status,可挂可见旁注 label);视觉指示器在 .ms-spinner__indicator。
+ * 配色读全库 tone 槽位 --ms-c / --ms-c-glow;不带 .ms-tone-* 时回退 currentColor(跟随父级文字色,
+ * 放进彩色 Button / success / danger 语境会自动随之)。
+ * 动效受 --ms-motion-scale 与 prefers-reduced-motion 调制(关闭时停,保留 aria 语义)。
+ * 发光受 --ms-fx-glow 调制,data-ms-fx=off 时消失。 */
 .ms-spinner {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
   box-sizing: border-box;
+  max-inline-size: 100%;
+  /* tone 槽位的回退:无 .ms-tone-* 时用 currentColor,保证彩色语境跟随 */
+  --ms-spinner-c: var(--ms-c, currentColor);
+  --ms-spinner-glow: var(--ms-c-glow, currentColor);
+  /* 旋转/跳动周期随 motion-scale 缩放:关动效(scale=0)时周期→0 → 由下方降级规则停帧 */
+  --ms-spinner-speed: 0.7s;
+}
+
+.ms-spinner__indicator {
+  display: inline-flex;
   flex: none;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  inline-size: var(--ms-spinner-d);
+  block-size: var(--ms-spinner-d);
+}
+
+/* —— 尺寸(直径 + 边宽 / 点径,随密度缩放) —— */
+.ms-spinner--sm {
+  --ms-spinner-d: calc(1rem * var(--ms-density-scale, 1));
+  --ms-spinner-bw: 2px;
+}
+.ms-spinner--md {
+  --ms-spinner-d: calc(1.5rem * var(--ms-density-scale, 1));
+  --ms-spinner-bw: 3px;
+}
+.ms-spinner--lg {
+  --ms-spinner-d: calc(2.5rem * var(--ms-density-scale, 1));
+  --ms-spinner-bw: 4px;
+}
+
+/* ===== 变体 ring:旋转的奥术发光圆环 ===== */
+.ms-spinner--ring .ms-spinner__indicator {
   border-style: solid;
+  border-width: var(--ms-spinner-bw);
   border-color: transparent;
-  border-block-start-color: var(--ms-color-primary);
-  border-inline-end-color: var(--ms-color-glow);
+  border-block-start-color: var(--ms-spinner-c);
+  border-inline-end-color: var(--ms-spinner-glow);
   border-radius: var(--ms-radius-full);
-  filter: drop-shadow(0 0 calc(4px * var(--ms-fx-glow, 1)) var(--ms-color-glow))
-    drop-shadow(0 0 calc(10px * var(--ms-fx-glow, 1)) var(--ms-color-primary));
-  animation: ms-spin 0.7s linear infinite;
+  filter: drop-shadow(0 0 calc(4px * var(--ms-fx-glow, 1)) var(--ms-spinner-glow))
+    drop-shadow(0 0 calc(10px * var(--ms-fx-glow, 1)) var(--ms-spinner-c));
+  animation: ms-spin var(--ms-spinner-speed) linear infinite;
 }
 
 @keyframes ms-spin {
@@ -18,26 +61,125 @@
   }
 }
 
-/* —— 尺寸(直径 + 边宽) —— */
-.ms-spinner--sm {
-  inline-size: 1rem;
-  block-size: 1rem;
-  border-width: 2px;
+/* ===== 变体 dots:三点依次跳动 ===== */
+.ms-spinner--dots .ms-spinner__indicator {
+  gap: calc(var(--ms-spinner-bw) * 0.9);
 }
-.ms-spinner--md {
-  inline-size: 1.5rem;
-  block-size: 1.5rem;
-  border-width: 3px;
+.ms-spinner__dot {
+  inline-size: calc(var(--ms-spinner-d) * 0.26);
+  block-size: calc(var(--ms-spinner-d) * 0.26);
+  border-radius: var(--ms-radius-full);
+  background: var(--ms-spinner-c);
+  filter: drop-shadow(0 0 calc(3px * var(--ms-fx-glow, 1)) var(--ms-spinner-glow));
+  animation: ms-spinner-bounce calc(var(--ms-spinner-speed) * 1.7) ease-in-out infinite;
 }
-.ms-spinner--lg {
-  inline-size: 2.5rem;
-  block-size: 2.5rem;
-  border-width: 4px;
+.ms-spinner__dot:nth-child(2) {
+  animation-delay: calc(var(--ms-spinner-speed) * 0.2);
+}
+.ms-spinner__dot:nth-child(3) {
+  animation-delay: calc(var(--ms-spinner-speed) * 0.4);
 }
 
-/* —— 尊重 reduced-motion:放慢旋转,保留「加载中」语义,不完全静止 —— */
-@media (prefers-reduced-motion: reduce) {
-  .ms-spinner {
-    animation-duration: 3s;
+@keyframes ms-spinner-bounce {
+  0%,
+  80%,
+  100% {
+    transform: scale(0.5);
+    opacity: 0.4;
   }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* ===== 变体 bars:四条波动 ===== */
+.ms-spinner--bars .ms-spinner__indicator {
+  gap: calc(var(--ms-spinner-bw) * 0.7);
+}
+.ms-spinner__bar {
+  inline-size: calc(var(--ms-spinner-d) * 0.16);
+  block-size: 100%;
+  border-radius: var(--ms-radius-sm, 2px);
+  background: var(--ms-spinner-c);
+  filter: drop-shadow(0 0 calc(3px * var(--ms-fx-glow, 1)) var(--ms-spinner-glow));
+  transform-origin: center;
+  animation: ms-spinner-wave calc(var(--ms-spinner-speed) * 1.6) ease-in-out infinite;
+}
+.ms-spinner__bar:nth-child(2) {
+  animation-delay: calc(var(--ms-spinner-speed) * 0.15);
+}
+.ms-spinner__bar:nth-child(3) {
+  animation-delay: calc(var(--ms-spinner-speed) * 0.3);
+}
+.ms-spinner__bar:nth-child(4) {
+  animation-delay: calc(var(--ms-spinner-speed) * 0.45);
+}
+
+@keyframes ms-spinner-wave {
+  0%,
+  100% {
+    transform: scaleY(0.4);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+/* —— 可见旁注 label —— */
+.ms-spinner__label {
+  min-inline-size: 0;
+  color: var(--ms-color-fg-muted);
+  font-size: 0.875em;
+  line-height: 1.2;
+}
+/* 四向放置:end(默认,水平排在指示器后)/ start / top / bottom */
+.ms-spinner--label-start {
+  flex-direction: row-reverse;
+}
+.ms-spinner--label-top {
+  flex-direction: column-reverse;
+}
+.ms-spinner--label-bottom {
+  flex-direction: column;
+}
+
+/* —— 发光总闸关断 —— */
+[data-ms-fx="off"] .ms-spinner--ring .ms-spinner__indicator,
+[data-ms-fx="off"] .ms-spinner__dot,
+[data-ms-fx="off"] .ms-spinner__bar {
+  filter: none;
+}
+
+/* —— 动效降级:reduced-motion 或 data-ms-motion=off 时停转,保留 aria=status 语义 ——
+ * ring 停在当前帧(静止环可读);dots/bars 复位到「全亮静态」避免卡在隐藏/塌缩帧。 */
+@media (prefers-reduced-motion: reduce) {
+  .ms-spinner__indicator,
+  .ms-spinner__dot,
+  .ms-spinner__bar {
+    animation: none;
+  }
+  .ms-spinner__dot {
+    transform: none;
+    opacity: 1;
+  }
+  .ms-spinner__bar {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+[data-ms-motion="off"] .ms-spinner__indicator,
+[data-ms-motion="off"] .ms-spinner__dot,
+[data-ms-motion="off"] .ms-spinner__bar {
+  animation: none;
+}
+[data-ms-motion="off"] .ms-spinner__dot {
+  transform: none;
+  opacity: 1;
+}
+[data-ms-motion="off"] .ms-spinner__bar {
+  transform: scaleY(1);
+  opacity: 1;
 }

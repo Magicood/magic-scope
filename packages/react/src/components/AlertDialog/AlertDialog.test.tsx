@@ -4,14 +4,16 @@ import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { AlertDialogHost, alert, confirm, prompt } from './AlertDialog';
 
-// 模块级队列在用例间共享:每个用例后清空残留弹窗
+// 模块级队列在用例间共享:每个用例后清空残留弹窗(确认按钮可能因校验/loading 被禁用时改点取消)
 afterEach(() => {
   act(() => {
     let guard = 0;
-    let btn = document.querySelector<HTMLButtonElement>('.ms-alert-dialog__confirm');
-    while (btn && guard++ < 10) {
-      btn.click();
-      btn = document.querySelector<HTMLButtonElement>('.ms-alert-dialog__confirm');
+    while (document.querySelector('.ms-alert-dialog__panel') && guard++ < 10) {
+      const confirmBtn = document.querySelector<HTMLButtonElement>('.ms-alert-dialog__confirm');
+      const cancelBtn = document.querySelector<HTMLButtonElement>('.ms-alert-dialog__cancel');
+      if (confirmBtn && !confirmBtn.disabled) confirmBtn.click();
+      else if (cancelBtn && !cancelBtn.disabled) cancelBtn.click();
+      else break;
     }
   });
   cleanup();
@@ -177,5 +179,174 @@ describe('confirm / alert + AlertDialogHost', () => {
       fireEvent.keyDown(input, { key: 'Enter' });
     });
     expect(result).toBe('X');
+  });
+
+  // —— 补强能力 ——
+
+  it('i18n:默认确认/取消文案走字典(单例),非硬编码', () => {
+    render(<AlertDialogHost />);
+    act(() => {
+      confirm('内容');
+    });
+    // defaultMessages 的 alertDialog.confirm/cancel = 确定/取消
+    expect(screen.getByRole('button', { name: '确定' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '取消' })).toBeInTheDocument();
+  });
+
+  it('tone:variant 扩成完整色调,面板挂 ms-tone-* 并带强调条 class', () => {
+    render(<AlertDialogHost />);
+    act(() => {
+      confirm('警告内容', { variant: 'warning' });
+    });
+    const panel = screen.getByRole('alertdialog');
+    expect(panel).toHaveClass('ms-tone-warning');
+    expect(panel).toHaveClass('ms-alert-dialog__panel--accent');
+  });
+
+  it('icon:危险弹窗渲染警示图标槽位', () => {
+    render(<AlertDialogHost />);
+    act(() => {
+      confirm('删除?', { variant: 'danger', icon: <span data-testid="warn-icon">!</span> });
+    });
+    expect(screen.getByTestId('warn-icon')).toBeInTheDocument();
+    expect(document.querySelector('.ms-alert-dialog__icon')).toBeInTheDocument();
+  });
+
+  it('events:onConfirm / onCancel 回调与 Promise 双轨,都触发', async () => {
+    render(<AlertDialogHost />);
+    const onConfirm = vi.fn();
+    let promiseResult: boolean | undefined;
+    act(() => {
+      confirm('继续?', { onConfirm }).then((r) => {
+        promiseResult = r;
+      });
+    });
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: '确定' }));
+    });
+    expect(onConfirm).toHaveBeenCalledTimes(1);
+    expect(promiseResult).toBe(true);
+
+    const onCancel = vi.fn();
+    let cancelResult: boolean | undefined;
+    act(() => {
+      confirm('继续?', { onCancel }).then((r) => {
+        cancelResult = r;
+      });
+    });
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: '取消' }));
+    });
+    expect(onCancel).toHaveBeenCalledTimes(1);
+    expect(cancelResult).toBe(false);
+  });
+
+  it('events:异步 onConfirm 期间确认按钮 loading + 禁用,resolve 后才关闭', async () => {
+    render(<AlertDialogHost />);
+    let resolveConfirm: (() => void) | undefined;
+    const onConfirm = vi.fn(
+      () =>
+        new Promise<void>((res) => {
+          resolveConfirm = res;
+        }),
+    );
+    let promiseResult: boolean | undefined;
+    act(() => {
+      confirm('保存?', { confirmText: '保存', onConfirm }).then((r) => {
+        promiseResult = r;
+      });
+    });
+    const confirmBtn = screen.getByRole('button', { name: '保存' });
+    await act(async () => {
+      fireEvent.click(confirmBtn);
+    });
+    // 异步进行中:loading + 禁用,弹窗仍在
+    expect(confirmBtn).toBeDisabled();
+    expect(confirmBtn).toHaveClass('ms-button--loading');
+    expect(screen.getByRole('alertdialog')).toBeInTheDocument();
+    expect(promiseResult).toBeUndefined();
+    // resolve 后才关闭、Promise 才 settle
+    await act(async () => {
+      resolveConfirm?.();
+    });
+    expect(promiseResult).toBe(true);
+  });
+
+  it('depth:prompt validate 无效时拦截确认、展示提示、禁用按钮', async () => {
+    render(<AlertDialogHost />);
+    let result: string | null | undefined;
+    act(() => {
+      prompt('输入邮箱', {
+        validate: (v) => (v.includes('@') ? undefined : '需包含 @'),
+      }).then((r) => {
+        result = r;
+      });
+    });
+    const input = document.querySelector('.ms-alert-dialog__input') as HTMLInputElement;
+    await act(async () => {
+      fireEvent.change(input, { target: { value: 'bad' } });
+    });
+    // 无效:提示出现 + 确认禁用 + Enter 不提交
+    expect(screen.getByText('需包含 @')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '确定' })).toBeDisabled();
+    await act(async () => {
+      fireEvent.keyDown(input, { key: 'Enter' });
+    });
+    expect(result).toBeUndefined();
+    // 改为有效后可提交
+    await act(async () => {
+      fireEvent.change(input, { target: { value: 'a@b.com' } });
+      fireEvent.click(screen.getByRole('button', { name: '确定' }));
+    });
+    expect(result).toBe('a@b.com');
+  });
+
+  it('depth:prompt inputType 平移到原生 input type;onValueChange 实时触发', async () => {
+    render(<AlertDialogHost />);
+    const onValueChange = vi.fn();
+    act(() => {
+      prompt('设置密码', { inputType: 'password', onValueChange });
+    });
+    const input = document.querySelector('.ms-alert-dialog__input') as HTMLInputElement;
+    expect(input.type).toBe('password');
+    await act(async () => {
+      fireEvent.change(input, { target: { value: 'pw' } });
+    });
+    expect(onValueChange).toHaveBeenCalledWith('pw');
+  });
+
+  it('events:onEscapeKeyDown preventDefault 可拦截关闭(危险操作禁 Esc)', async () => {
+    render(<AlertDialogHost />);
+    let result: boolean | undefined;
+    const onEscapeKeyDown = vi.fn((e: Event) => e.preventDefault());
+    act(() => {
+      confirm('禁 Esc', { variant: 'danger', onEscapeKeyDown }).then((r) => {
+        result = r;
+      });
+    });
+    await act(async () => {
+      fireEvent(dialogEl(), new Event('cancel', { cancelable: true, bubbles: true }));
+    });
+    expect(onEscapeKeyDown).toHaveBeenCalledTimes(1);
+    // 被拦截:弹窗仍在、Promise 未 settle
+    expect(screen.getByRole('alertdialog')).toBeInTheDocument();
+    expect(result).toBeUndefined();
+  });
+
+  it('events:onPointerDownOutside preventDefault 可拦截点外关闭', async () => {
+    render(<AlertDialogHost />);
+    let result: boolean | undefined;
+    const onPointerDownOutside = vi.fn((e: MouseEvent) => e.preventDefault());
+    act(() => {
+      confirm('禁点外关', { onPointerDownOutside }).then((r) => {
+        result = r;
+      });
+    });
+    await act(async () => {
+      fireEvent.click(dialogEl()); // e.target === dialog → 遮罩
+    });
+    expect(onPointerDownOutside).toHaveBeenCalledTimes(1);
+    expect(screen.getByRole('alertdialog')).toBeInTheDocument();
+    expect(result).toBeUndefined();
   });
 });
