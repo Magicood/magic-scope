@@ -1,0 +1,27 @@
+{
+  "id": "center",
+  "name": "Center",
+  "description": "居中盒:用 flex + place-items 把子内容在水平/垂直/双轴上居中。支持 axis(both/horizontal/vertical)、inline(inline-flex)、gap/padding(间距 token 档)、minBlockSize(撑高度,常用于整屏垂直居中);多态 as 与 asChild(Slot)。axis/gap/padding/minBlockSize 均支持单值或断点对象(如 { base, md, lg })响应式形式。",
+  "category": "layout",
+  "tags": [
+    "layout",
+    "center",
+    "centering",
+    "flexbox",
+    "place-items",
+    "vertical-center",
+    "responsive",
+    "polymorphic",
+    "rtl"
+  ],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-26",
+    "requirements": "需要一个纯结构性的居中盒:把子内容水平+垂直居中(display flex/grid place-items center),可选 inline(inline-flex)、axis(both/horizontal/vertical)切换居中轴、minBlockSize 撑高度。多态 as + asChild + ...rest 透传。对齐 magic-scope layout 标准:间距 token 化、CSS 逻辑属性 RTL 友好、axis/gap/padding/minBlockSize 支持断点对象响应式(断点对象解析在 logic.ts 零 React)。对标 Chakra/Mantine 的 Center,叠加响应式断点对象与多态留口的优势。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Center.tsx", "Center.css", "logic.ts", "index.ts"]
+}

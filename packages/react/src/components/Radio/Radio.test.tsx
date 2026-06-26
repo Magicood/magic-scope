@@ -64,7 +64,8 @@ describe('RadioGroup + Radio', () => {
 
     fireEvent.click(b);
     expect(onValueChange).toHaveBeenCalledTimes(1);
-    expect(onValueChange).toHaveBeenCalledWith('b');
+    // 二参签名:第一参仍是 value(向后兼容只读 value 的旧消费者),第二参为原生事件
+    expect(onValueChange).toHaveBeenCalledWith('b', expect.anything());
     expect(b).toBeChecked();
     expect(a).not.toBeChecked();
   });
@@ -84,7 +85,7 @@ describe('RadioGroup + Radio', () => {
 
     // 受控下点击 b:回调触发,但父级未改 value → 仍是 a 选中
     fireEvent.click(b);
-    expect(onValueChange).toHaveBeenCalledWith('b');
+    expect(onValueChange).toHaveBeenCalledWith('b', expect.anything());
     expect(a).toBeChecked();
     expect(b).not.toBeChecked();
 
@@ -181,5 +182,152 @@ describe('RadioGroup + Radio', () => {
 
     fireEvent.click(radio);
     expect(onChange).toHaveBeenCalledTimes(1);
+  });
+
+  it('tone:组 tone 下发到根 label 类名,单项 tone 可覆盖;默认 primary', () => {
+    render(
+      <RadioGroup tone="success">
+        <Radio value="a">A</Radio>
+        <Radio value="b" tone="danger">
+          B
+        </Radio>
+        <Radio value="c">C</Radio>
+      </RadioGroup>,
+    );
+    expect(screen.getByText('A').closest('label')).toHaveClass('ms-tone-success');
+    expect(screen.getByText('B').closest('label')).toHaveClass('ms-tone-danger');
+    expect(screen.getByText('C').closest('label')).toHaveClass('ms-tone-success');
+  });
+
+  it('appearance=card:组与根都加 card 类,单项可覆盖外观', () => {
+    render(
+      <RadioGroup appearance="card" defaultValue="a">
+        <Radio value="a">A</Radio>
+        <Radio value="b" appearance="control">
+          B
+        </Radio>
+      </RadioGroup>,
+    );
+    expect(screen.getByRole('radiogroup')).toHaveClass('ms-radio-group--card');
+    expect(screen.getByText('A').closest('label')).toHaveClass('ms-radio--card');
+    // 单项覆盖回 control:不带 card 类
+    expect(screen.getByText('B').closest('label')).not.toHaveClass('ms-radio--card');
+  });
+
+  it('options 数据驱动:渲染选项、label 缺省回退 value、disabled 生效,选中可切换', () => {
+    const onValueChange = vi.fn();
+    render(
+      <RadioGroup
+        defaultValue="a"
+        onValueChange={onValueChange}
+        options={[
+          { value: 'a', label: 'A' },
+          { value: 'b', label: 'B', disabled: true },
+          { value: 'c' }, // 无 label,回退到 value
+        ]}
+      />,
+    );
+    expect(screen.getByRole('radio', { name: 'A' })).toBeChecked();
+    expect(screen.getByRole('radio', { name: 'B' })).toBeDisabled();
+    // label 缺省回退 value
+    expect(screen.getByRole('radio', { name: 'c' })).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('radio', { name: 'c' }));
+    expect(onValueChange).toHaveBeenCalledWith('c', expect.anything());
+    expect(screen.getByRole('radio', { name: 'c' })).toBeChecked();
+  });
+
+  it('onValueChange 二参带原生事件,onChange 原生回调同时触发', () => {
+    const onValueChange = vi.fn();
+    const onChange = vi.fn();
+    render(
+      <RadioGroup defaultValue="a" onValueChange={onValueChange} onChange={onChange}>
+        <Radio value="a">A</Radio>
+        <Radio value="b">B</Radio>
+      </RadioGroup>,
+    );
+
+    fireEvent.click(screen.getByRole('radio', { name: 'B' }));
+    expect(onValueChange).toHaveBeenCalledTimes(1);
+    const call = onValueChange.mock.calls[0];
+    expect(call).toBeDefined();
+    const [value, event] = call as [string, { target: unknown }];
+    expect(value).toBe('b');
+    expect(event).toBeTruthy();
+    expect(event.target).toBeInstanceOf(HTMLInputElement);
+    // 原生 onChange 透传也触发
+    expect(onChange).toHaveBeenCalledTimes(1);
+    const changeCall = onChange.mock.calls[0] as [{ target: unknown }];
+    expect(changeCall[0].target).toBeInstanceOf(HTMLInputElement);
+  });
+
+  it('用户 input.onChange 与内部选中都触发(compose 不丢用户处理器)', () => {
+    const userOnChange = vi.fn();
+    const onValueChange = vi.fn();
+    render(
+      <RadioGroup defaultValue="a" onValueChange={onValueChange}>
+        <Radio value="a">A</Radio>
+        <Radio value="b" onChange={userOnChange}>
+          B
+        </Radio>
+      </RadioGroup>,
+    );
+
+    fireEvent.click(screen.getByRole('radio', { name: 'B' }));
+    // 用户处理器与内部 onSelect 都执行
+    expect(userOnChange).toHaveBeenCalledTimes(1);
+    expect(onValueChange).toHaveBeenCalledWith('b', expect.anything());
+  });
+
+  it('用户在 onChange 里 preventDefault 可拦截内部选中(Radix 范式)', () => {
+    const onValueChange = vi.fn();
+    render(
+      <RadioGroup defaultValue="a" onValueChange={onValueChange}>
+        <Radio value="a">A</Radio>
+        <Radio
+          value="b"
+          onChange={(e) => {
+            e.preventDefault();
+          }}
+        >
+          B
+        </Radio>
+      </RadioGroup>,
+    );
+
+    fireEvent.click(screen.getByRole('radio', { name: 'B' }));
+    // preventDefault 后内部 onSelect 不执行
+    expect(onValueChange).not.toHaveBeenCalled();
+  });
+
+  it('根 label 事件透传:onMouseEnter/onClick 摊到根 label(...rest)', () => {
+    const onMouseEnter = vi.fn();
+    const onClick = vi.fn();
+    render(
+      <RadioGroup>
+        <Radio value="a" onMouseEnter={onMouseEnter} onClick={onClick}>
+          A
+        </Radio>
+      </RadioGroup>,
+    );
+    const label = screen.getByText('A').closest('label') as HTMLLabelElement;
+    fireEvent.mouseEnter(label);
+    expect(onMouseEnter).toHaveBeenCalledTimes(1);
+    // 点 label 时浏览器会再合成关联 input 的 click 冒泡回 label,故 ≥1 次即证明 ...rest 已摊到根
+    fireEvent.click(label);
+    expect(onClick).toHaveBeenCalled();
+  });
+
+  it('留口:labelClassName 落到根 label、controlClassName 落到圆点控件', () => {
+    render(
+      <RadioGroup>
+        <Radio value="a" labelClassName="my-label" controlClassName="my-control">
+          A
+        </Radio>
+      </RadioGroup>,
+    );
+    const label = screen.getByText('A').closest('label') as HTMLLabelElement;
+    expect(label).toHaveClass('ms-radio', 'my-label');
+    expect(label.querySelector('.ms-radio__control')).toHaveClass('my-control');
   });
 });

@@ -1,8 +1,11 @@
+/* —— Kbd 键帽:tone 槽位驱动(只读 6 槽位,不写死语义色)+ 密度 + 发光/动效可降级 —— */
 .ms-kbd {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-inline-size: 1.5em;
+  gap: var(--ms-space-1);
+  max-inline-size: 100%;
+  min-inline-size: calc(1.5em * var(--ms-density-scale, 1));
   border: 1px solid var(--ms-color-border);
   /* 加粗底边,模拟键帽的立体感 */
   border-block-end-width: 3px;
@@ -21,8 +24,8 @@
   font-weight: 600;
   line-height: 1;
   white-space: nowrap;
-  /* idle 态:键帽边缘的奥术微光 */
-  box-shadow: 0 0 calc(6px * var(--ms-fx-glow, 1)) -3px var(--ms-color-glow);
+  /* idle 态:键帽边缘的奥术微光,发光色用 tone 槽位 --ms-c-glow */
+  box-shadow: 0 0 calc(6px * var(--ms-fx-glow, 1)) -3px var(--ms-c-glow);
   /* 无交互态,但保留过渡以备未来 */
   transition:
     background-color var(--ms-dur-fast) var(--ms-ease-standard),
@@ -32,28 +35,166 @@
     color var(--ms-dur-fast) var(--ms-ease-standard);
 }
 
-/* —— hover:微光强化,键帽边框点亮 —— */
+/* —— hover:微光强化,键帽边框点亮(用 tone 主色) —— */
 .ms-kbd:hover {
-  border-color: var(--ms-color-border-strong);
-  box-shadow: 0 0 calc(14px * var(--ms-fx-glow, 1)) -3px var(--ms-color-glow);
+  border-color: var(--ms-c);
+  box-shadow: 0 0 calc(14px * var(--ms-fx-glow, 1)) -3px var(--ms-c-glow);
 }
 
-/* —— active:模拟按键下压的触感反馈 —— */
+/* —— active:模拟按键下压的触感反馈;必要位移用固定值,motion-scale 仅调装饰强度 —— */
 .ms-kbd:active {
-  transform: translateY(calc(1px * var(--ms-motion-scale, 1)))
-    scale(calc(1 - 0.015 * var(--ms-motion-scale, 1)));
+  transform: translateY(1px) scale(calc(1 - 0.015 * var(--ms-motion-scale, 1)));
+}
+
+/* —— 着语义色调:非 neutral 时键面用 tone 柔底 + tone 文字,危险/确认键位更醒目 —— */
+.ms-kbd:not(.ms-tone-neutral) {
+  border-color: color-mix(in oklch, var(--ms-c) 40%, var(--ms-color-border));
+  border-block-end-color: var(--ms-c);
+  background-image: linear-gradient(
+    to bottom,
+    color-mix(in oklch, var(--ms-c-soft) 60%, var(--ms-color-surface-raised)),
+    var(--ms-c-soft)
+  );
+  color: var(--ms-c);
+}
+.ms-kbd:not(.ms-tone-neutral):hover {
+  box-shadow: 0 0 calc(16px * var(--ms-fx-glow, 1)) -3px var(--ms-c-glow);
+}
+
+/* —— 多键帽(combo):每键帽是独立 .ms-kbd__key,外壳收口为容纳容器 —— */
+.ms-kbd--combo {
+  gap: var(--ms-space-1);
+  padding-block: 0;
+  padding-inline: 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+}
+.ms-kbd--combo:active {
+  transform: none;
+}
+.ms-kbd--combo:hover {
+  box-shadow: none;
+}
+
+/* combo 下,样式落到每个键帽,继承外壳的尺寸/色调上下文 */
+.ms-kbd__key {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ms-space-1);
+  min-inline-size: calc(1.5em * var(--ms-density-scale, 1));
+  padding-block: var(--ms-space-1);
+  padding-inline: var(--ms-space-2);
+  border: 1px solid var(--ms-color-border);
+  border-block-end-width: 3px;
+  border-block-end-color: var(--ms-color-border-strong);
+  border-radius: var(--ms-radius-sm);
+  background-color: var(--ms-color-surface-raised);
+  background-image: linear-gradient(
+    to bottom,
+    var(--ms-color-surface-raised),
+    var(--ms-color-surface)
+  );
+  color: var(--ms-color-fg);
+  line-height: 1;
+  box-shadow: 0 0 calc(6px * var(--ms-fx-glow, 1)) -3px var(--ms-c-glow);
+  transition:
+    border-color var(--ms-dur-fast) var(--ms-ease-standard),
+    box-shadow var(--ms-dur-base) var(--ms-ease-standard),
+    transform var(--ms-dur-fast) var(--ms-ease-emphasized);
+}
+
+/* combo 着语义色:键帽接 tone 柔底 + tone 文字 */
+.ms-kbd--combo:not(.ms-tone-neutral) .ms-kbd__key {
+  border-color: color-mix(in oklch, var(--ms-c) 40%, var(--ms-color-border));
+  border-block-end-color: var(--ms-c);
+  background-image: linear-gradient(
+    to bottom,
+    color-mix(in oklch, var(--ms-c-soft) 60%, var(--ms-color-surface-raised)),
+    var(--ms-c-soft)
+  );
+  color: var(--ms-c);
+}
+
+.ms-kbd--combo:hover .ms-kbd__key {
+  border-color: var(--ms-c);
+  box-shadow: 0 0 calc(14px * var(--ms-fx-glow, 1)) -3px var(--ms-c-glow);
+}
+.ms-kbd--combo:active .ms-kbd__key {
+  transform: translateY(1px) scale(calc(1 - 0.015 * var(--ms-motion-scale, 1)));
+}
+
+/* —— 分隔符:在键帽之间,弱化色、不参与键帽描边 —— */
+.ms-kbd__sep {
+  display: inline-flex;
+  align-items: center;
+  color: var(--ms-color-fg-muted);
+  font-weight: 400;
 }
 
 /* —— sm:更紧凑、更小字号 —— */
 .ms-kbd--sm {
+  font-size: 0.6875rem;
+}
+.ms-kbd--sm:not(.ms-kbd--combo) {
   padding-block: var(--ms-space-1);
   padding-inline: var(--ms-space-1);
-  font-size: 0.6875rem;
+}
+.ms-kbd--sm .ms-kbd__key {
+  padding-block: calc(var(--ms-space-1) * 0.75);
+  padding-inline: var(--ms-space-1);
 }
 
 /* —— md:默认尺寸 —— */
 .ms-kbd--md {
+  font-size: 0.8125rem;
+}
+.ms-kbd--md:not(.ms-kbd--combo) {
   padding-block: var(--ms-space-1);
   padding-inline: var(--ms-space-2);
-  font-size: 0.8125rem;
+}
+
+/* —— lg:放大档,字号/内边距随密度上抬 —— */
+.ms-kbd--lg {
+  font-size: 0.9375rem;
+}
+.ms-kbd--lg:not(.ms-kbd--combo) {
+  padding-block: var(--ms-space-2);
+  padding-inline: var(--ms-space-3);
+}
+.ms-kbd--lg .ms-kbd__key {
+  padding-block: var(--ms-space-2);
+  padding-inline: var(--ms-space-3);
+}
+
+/* —— 发光总闸关断:data-ms-fx="off" 时熄灭所有辉光 —— */
+[data-ms-fx="off"] .ms-kbd,
+[data-ms-fx="off"] .ms-kbd:hover,
+[data-ms-fx="off"] .ms-kbd__key {
+  box-shadow: none;
+}
+
+/* —— 动效降级:系统偏好 / data-ms-motion 关断下压动画与过渡 —— */
+@media (prefers-reduced-motion: reduce) {
+  .ms-kbd,
+  .ms-kbd__key {
+    transition-duration: 0.01ms;
+  }
+  .ms-kbd:active,
+  .ms-kbd--combo:active .ms-kbd__key {
+    transform: none;
+  }
+}
+[data-ms-motion="off"] .ms-kbd:active,
+[data-ms-motion="off"] .ms-kbd--combo:active .ms-kbd__key {
+  transform: none;
+}
+
+/* —— 触控:键帽热区不低于目标尺寸 —— */
+@media (pointer: coarse) {
+  .ms-kbd:not(.ms-kbd--combo),
+  .ms-kbd__key {
+    min-block-size: max(calc(1.5em * var(--ms-density-scale, 1)), var(--ms-target-min));
+  }
 }

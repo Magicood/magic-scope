@@ -1,17 +1,29 @@
 {
   "id": "textarea",
   "name": "Textarea",
-  "description": "多行文本输入框,支持 sm/md/lg 尺寸与 invalid 校验态,仅允许垂直调整高度,样式与 Input 一致。",
+  "description": "多行文本输入框(深度组件):sm/md/lg 尺寸(随密度缩放)、tone 聚焦发光环(invalid 强制 danger)、showCount 字数(超限染 danger)、autosize 随内容调高(true 自由 / {minRows,maxRows} 限幅)、footer 底部槽、onPressEnter/onSubmitShortcut 提交语义。样式与 Input 一致,仅垂直 resize,尊重 prefers-reduced-motion。",
   "category": "forms",
-  "tags": ["textarea", "form", "input", "multiline", "field", "validation"],
+  "tags": [
+    "textarea",
+    "form",
+    "input",
+    "multiline",
+    "field",
+    "validation",
+    "autosize",
+    "char-count",
+    "tone",
+    "glow",
+    "submit-shortcut"
+  ],
   "status": "stable",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "frameworks": ["react"],
   "source": {
     "type": "original",
     "capturedAt": "2026-06-24",
-    "requirements": "多行文本输入框,支持 sm/md/lg 尺寸与 invalid 校验态,仅允许垂直调整高度,样式与 Input 一致。。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-* 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion。"
+    "requirements": "多行文本输入框,从最小版补强到生产级深度,对标旗舰 Button/Input/Text。支持 sm/md/lg 尺寸(随 --ms-density-scale 缩放)、tone 色调发光环(读 --ms-c/--ms-c-glow 槽位,invalid 强制 danger)、showCount 字数计数(配合 maxLength,超限染 danger)、autosize 自动调高(布尔或 {minRows,maxRows})、footer 底部槽、onPressEnter/onSubmitShortcut 提交快捷键(IME 安全)、classNames 细粒度留口。内部 onChange/onKeyDown 用 composeEventHandlers 合并用户处理器,...rest 透传所有原生属性与事件。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-* 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion 与 data-ms-motion/data-ms-fx 关断。autosize 与键盘判定逻辑抽成框架无关纯函数(logic.ts),便于平移 core。"
   },
   "dependencies": ["@magic-scope/tokens"],
-  "files": ["Textarea.tsx", "Textarea.css", "index.ts"]
+  "files": ["Textarea.tsx", "Textarea.css", "logic.ts", "index.ts"]
 }

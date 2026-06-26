@@ -1,9 +1,9 @@
 {
   "id": "dialog",
   "name": "Dialog",
-  "description": "模态对话框,基于原生 <dialog> + showModal:焦点陷阱 / Esc / 遮罩 / top-layer,带入场动画与点遮罩关闭",
+  "description": "模态对话框,基于原生 <dialog> + showModal:焦点陷阱 / Esc / 遮罩 / top-layer。Header/Title/Description/Body/Footer 子部件自动关联 aria;size(sm/md/lg/full)× placement(center/top)变体;tone 语义色 + 槽位辉光;onOpenChange 双通道、onEscapeKeyDown/onPointerDownOutside/onInteractOutside 可拦截关闭;classNames / panelProps / asChild / renderPanel 留口;closeIcon / hideCloseButton;尊重 reduced-motion 与 motion/fx 总闸",
   "category": "overlay",
-  "tags": ["dialog", "modal", "overlay"],
+  "tags": ["dialog", "modal", "overlay", "tone", "compound", "a11y", "controlled", "asChild"],
   "status": "stable",
   "version": "0.1.0",
   "frameworks": ["react"],

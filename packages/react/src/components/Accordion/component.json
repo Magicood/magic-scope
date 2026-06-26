@@ -1,7 +1,7 @@
 {
   "id": "accordion",
   "name": "Accordion",
-  "description": "手风琴:可折叠面板组,grid-template-rows 0fr→1fr 平滑展开、▸ 图标旋转、深色奥术发光,支持 single/multiple 与键盘 ↑↓ 导航。",
+  "description": "手风琴:可折叠面板组。受控(value+onValueChange)/非受控双模式,single(可配 collapsible 全收)/multiple;tone 色调系统(读 6 槽位发光配色);grid 0fr→1fr 平滑展开 + 内容淡入、指示符旋转(可替换 icon),收起项 inert + 延迟 visibility 保双向动画与可达性;全量语义回调(onValueChange/onExpandedChange/onTriggerClick/onKeyDown,皆 compose 不丢用户处理器),根透传原生事件/data-*,classNames 细粒度插槽;键盘 ↑↓/Home/End 导航;fx/motion/density 一键降级。",
   "category": "layout",
   "tags": [
     "accordion",
@@ -12,7 +12,12 @@
     "react",
     "zero-dependency",
     "accessible",
-    "keyboard"
+    "keyboard",
+    "controlled",
+    "tone",
+    "collapsible",
+    "inert",
+    "compose-events"
   ],
   "status": "stable",
   "version": "0.1.0",
@@ -20,8 +25,8 @@
   "source": {
     "type": "original",
     "capturedAt": "2026-06-25",
-    "requirements": "手风琴:可折叠面板组,grid-template-rows 0fr→1fr 平滑展开、▸ 图标旋转、深色奥术发光,支持 single/multiple 与键盘 ↑↓ 导航。。magic-scope 结构/导航组件:自研、消费 tokens,完整状态、键盘可达、fx/motion 开关、逻辑属性。"
+    "requirements": "手风琴:可折叠面板组,grid-template-rows 0fr→1fr 平滑展开、▸ 图标旋转、深色奥术发光,支持 single/multiple 与键盘 ↑↓ 导航。。magic-scope 结构/导航组件:自研、消费 tokens,完整状态、键盘可达、fx/motion 开关、逻辑属性。补强到旗舰深度:受控/非受控双模式、collapsible 全收、tone 色调、全量语义事件回调与原生事件透传、classNames 插槽、可替换指示符、inert+延迟 visibility 修复 hidden 与 grid 过渡冲突。"
   },
   "dependencies": ["@magic-scope/tokens"],
-  "files": ["Accordion.tsx", "Accordion.css", "index.ts"]
+  "files": ["Accordion.tsx", "Accordion.css", "logic.ts", "index.ts"]
 }

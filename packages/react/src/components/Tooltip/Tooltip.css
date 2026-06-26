@@ -1,30 +1,41 @@
-/* —— Tooltip:提示气泡。Popover API(top-layer)+ CSS Anchor Positioning 定位 —— */
+/* —— Tooltip:提示气泡。Popover API(top-layer)+ CSS Anchor Positioning 定位。
+ *    12 向定位(四主轴 × 居中/start/end)+ offset 间距 + 可选箭头 + tone 槽位驱动配色。—— */
 
 .ms-tooltip {
   /* popover 元素默认 fixed + margin:auto 居中,清零以交给 anchor 定位 */
-  position: fixed;
+  position: absolute;
   margin: 0;
   inset: auto;
   z-index: 1;
+  overflow: visible;
 
-  max-inline-size: min(18rem, 90dvw);
+  max-inline-size: min(
+    18rem,
+    calc(100dvw - 2 * var(--ms-space-4) - var(--ms-safe-left) - var(--ms-safe-right))
+  );
   padding-block: var(--ms-space-1);
   padding-inline: var(--ms-space-2);
 
   background-color: var(--ms-color-surface-raised);
-  border: 1px solid var(--ms-color-border);
+  /* tone 着色的描边:中性边框叠一层 tone 主色(neutral 时几乎无感,danger 即警示气泡) */
+  border: 1px solid color-mix(in oklch, var(--ms-color-border) 76%, var(--ms-c) 24%);
   border-radius: var(--ms-radius-md);
   color: var(--ms-color-fg);
   font-family: var(--ms-font-sans);
   font-size: 0.8125rem;
   line-height: 1.4;
+  /* 内容边界:超长内容/无空格长串换行,不撑破气泡 */
+  overflow-wrap: anywhere;
 
-  /* 奥术微光:边缘的 glow,受 fx 开关门控 */
+  /* —— 锚定定位:position-area 由 JS 按 12 向写入(--ms-tooltip-area) —— */
+  position-area: var(--ms-tooltip-area, block-start span-inline);
+
+  /* 奥术微光:tone 发光色的 glow,受 fx 总闸门控 */
   box-shadow:
     0 8px 24px -12px rgb(0 0 0 / 0.4),
-    0 0 calc(18px * var(--ms-fx-glow, 1)) -8px var(--ms-color-glow);
+    0 0 calc(18px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow);
 
-  /* 入场前的终态归零,真正的入场态见各 placement 与 @starting-style */
+  /* 入场前的终态归零,真正的入场态见各主轴位移与 @starting-style */
   opacity: 0;
   pointer-events: none;
   transition:
@@ -35,64 +46,185 @@
   transition-behavior: allow-discrete;
 }
 
-/* —— 定位:position-area 把气泡贴到 trigger 上下,并留出间隙 —— */
-.ms-tooltip--top {
-  position-area: block-start;
-  margin-block-end: var(--ms-space-2);
+/* —— offset 间距 + 入场微移:按主轴方位推开,逻辑属性 RTL 友好 —— */
+.ms-tooltip[data-ms-side="top"] {
+  margin-block-end: var(--ms-tooltip-offset, 8px);
   transform: translateY(calc(4px * var(--ms-motion-scale, 1)));
 }
-
-.ms-tooltip--bottom {
-  position-area: block-end;
-  margin-block-start: var(--ms-space-2);
+.ms-tooltip[data-ms-side="bottom"] {
+  margin-block-start: var(--ms-tooltip-offset, 8px);
   transform: translateY(calc(-4px * var(--ms-motion-scale, 1)));
 }
+.ms-tooltip[data-ms-side="left"] {
+  margin-inline-end: var(--ms-tooltip-offset, 8px);
+  transform: translateX(calc(4px * var(--ms-motion-scale, 1)));
+}
+.ms-tooltip[data-ms-side="right"] {
+  margin-inline-start: var(--ms-tooltip-offset, 8px);
+  transform: translateX(calc(-4px * var(--ms-motion-scale, 1)));
+}
 
-/* —— 显示态:popover open 时由原生 :popover-open 命中;
- *    data-open 兜底(不支持 Popover API 时仍可见) —— */
+/* 贴边自动翻转 + trigger 不可见时隐藏气泡(渐进增强,治贴边溢出不翻转) */
+@supports (position-try-fallbacks: flip-block) {
+  .ms-tooltip {
+    position-try-fallbacks:
+      flip-block,
+      flip-inline,
+      flip-block flip-inline;
+    position-visibility: anchors-visible;
+  }
+}
+
+/* —— 显示态:popover open 时由原生 :popover-open 命中;data-open 兜底(不支持 Popover API 时仍可见) —— */
 .ms-tooltip:popover-open,
 .ms-tooltip[data-open] {
   opacity: 1;
-  transform: translateY(0);
+  transform: translate(0, 0);
 }
 
 /* 首次显示即过渡(入场淡入 + 微移);不支持 @starting-style 的浏览器直接以终态出现 */
 @starting-style {
-  .ms-tooltip:popover-open,
-  .ms-tooltip[data-open] {
+  .ms-tooltip:popover-open[data-ms-side="top"],
+  .ms-tooltip[data-open][data-ms-side="top"] {
     opacity: 0;
-  }
-  .ms-tooltip--top:popover-open,
-  .ms-tooltip--top[data-open] {
     transform: translateY(calc(4px * var(--ms-motion-scale, 1)));
   }
-  .ms-tooltip--bottom:popover-open,
-  .ms-tooltip--bottom[data-open] {
+  .ms-tooltip:popover-open[data-ms-side="bottom"],
+  .ms-tooltip[data-open][data-ms-side="bottom"] {
+    opacity: 0;
     transform: translateY(calc(-4px * var(--ms-motion-scale, 1)));
+  }
+  .ms-tooltip:popover-open[data-ms-side="left"],
+  .ms-tooltip[data-open][data-ms-side="left"] {
+    opacity: 0;
+    transform: translateX(calc(4px * var(--ms-motion-scale, 1)));
+  }
+  .ms-tooltip:popover-open[data-ms-side="right"],
+  .ms-tooltip[data-open][data-ms-side="right"] {
+    opacity: 0;
+    transform: translateX(calc(-4px * var(--ms-motion-scale, 1)));
   }
 }
 
+/* —— 指向箭头:旋转方块,贴在气泡对应边外缘,随主轴翻面;副轴对齐定横向/纵向 —— */
+.ms-tooltip__arrow {
+  position: absolute;
+  inline-size: 0.5rem;
+  block-size: 0.5rem;
+  background-color: var(--ms-color-surface-raised);
+  border: 1px solid color-mix(in oklch, var(--ms-color-border) 76%, var(--ms-c) 24%);
+  transform: rotate(45deg);
+  pointer-events: none;
+}
+
+/* 主轴方位 → 箭头贴边(用 inset + 负 margin 把方块一半探出气泡外缘) */
+.ms-tooltip[data-ms-side="bottom"] .ms-tooltip__arrow {
+  inset-block-start: 0;
+  margin-block-start: -0.28rem;
+  border-block-end: none;
+  border-inline-end: none;
+}
+.ms-tooltip[data-ms-side="top"] .ms-tooltip__arrow {
+  inset-block-end: 0;
+  margin-block-end: -0.28rem;
+  border-block-start: none;
+  border-inline-start: none;
+}
+.ms-tooltip[data-ms-side="right"] .ms-tooltip__arrow {
+  inset-inline-start: 0;
+  margin-inline-start: -0.28rem;
+  border-block-start: none;
+  border-inline-end: none;
+}
+.ms-tooltip[data-ms-side="left"] .ms-tooltip__arrow {
+  inset-inline-end: 0;
+  margin-inline-end: -0.28rem;
+  border-block-end: none;
+  border-inline-start: none;
+}
+
+/* 副轴对齐 → 箭头横向(top/bottom)/ 纵向(left/right)位置 */
+.ms-tooltip[data-ms-side="top"] .ms-tooltip__arrow,
+.ms-tooltip[data-ms-side="bottom"] .ms-tooltip__arrow {
+  inset-inline-start: 50%;
+  translate: -50% 0;
+}
+.ms-tooltip[data-ms-align="start"][data-ms-side="top"] .ms-tooltip__arrow,
+.ms-tooltip[data-ms-align="start"][data-ms-side="bottom"] .ms-tooltip__arrow {
+  inset-inline-start: var(--ms-space-3);
+  translate: 0 0;
+}
+.ms-tooltip[data-ms-align="end"][data-ms-side="top"] .ms-tooltip__arrow,
+.ms-tooltip[data-ms-align="end"][data-ms-side="bottom"] .ms-tooltip__arrow {
+  inset-inline-start: auto;
+  inset-inline-end: var(--ms-space-3);
+  translate: 0 0;
+}
+.ms-tooltip[data-ms-side="left"] .ms-tooltip__arrow,
+.ms-tooltip[data-ms-side="right"] .ms-tooltip__arrow {
+  inset-block-start: 50%;
+  translate: 0 -50%;
+}
+.ms-tooltip[data-ms-align="start"][data-ms-side="left"] .ms-tooltip__arrow,
+.ms-tooltip[data-ms-align="start"][data-ms-side="right"] .ms-tooltip__arrow {
+  inset-block-start: var(--ms-space-3);
+  translate: 0 0;
+}
+.ms-tooltip[data-ms-align="end"][data-ms-side="left"] .ms-tooltip__arrow,
+.ms-tooltip[data-ms-align="end"][data-ms-side="right"] .ms-tooltip__arrow {
+  inset-block-start: auto;
+  inset-block-end: var(--ms-space-3);
+  translate: 0 0;
+}
+
 /* —— 降级:不支持 CSS Anchor Positioning 时,position-area 失效。
- *    退化为相对 trigger 的简单贴近:气泡 absolute 于触发元素附近、水平居中。
- *    需要 trigger 侧为定位上下文——本组件不强加,故用 fixed 居中兜底保证可见可读。—— */
+ *    退化为屏底固定:叠加安全区,避免被 home indicator / 圆角遮挡;箭头无意义则隐藏。—— */
 @supports not (anchor-name: --x) {
   .ms-tooltip {
     position: fixed;
-    /* 降级到屏底固定:叠加安全区,避免被 home indicator / 圆角遮挡 */
     inset-block-end: calc(var(--ms-space-8) + var(--ms-safe-bottom));
     inset-inline: 0;
     margin-inline: auto;
     inline-size: max-content;
     max-inline-size: min(18rem, 90dvw);
+    transform: none;
+  }
+  .ms-tooltip__arrow {
+    display: none;
   }
 }
 
-/* —— 降低动态效果:去过渡 / 去位移(覆盖 placement 上的入场微移) —— */
+/* —— fx 总闸:关断发光的模糊光晕,保留可读的实色投影 —— */
+[data-ms-fx="off"] .ms-tooltip {
+  box-shadow: 0 8px 24px -12px rgb(0 0 0 / 0.4);
+}
+
+/* —— 尊重 reduced-motion:去过渡 / 去位移(覆盖各主轴入场微移) —— */
 @media (prefers-reduced-motion: reduce) {
   .ms-tooltip,
-  .ms-tooltip--top,
-  .ms-tooltip--bottom {
+  .ms-tooltip[data-ms-side="top"],
+  .ms-tooltip[data-ms-side="bottom"],
+  .ms-tooltip[data-ms-side="left"],
+  .ms-tooltip[data-ms-side="right"] {
     transition: none;
     transform: none;
   }
+  @starting-style {
+    .ms-tooltip:popover-open,
+    .ms-tooltip[data-open] {
+      transform: none;
+    }
+  }
+}
+
+/* —— motion 总闸:一键关断入场动画(去位移、去过渡时长) —— */
+[data-ms-motion="off"] .ms-tooltip {
+  transition-duration: 0.01ms;
+}
+[data-ms-motion="off"] .ms-tooltip,
+[data-ms-motion="off"] .ms-tooltip[data-ms-side="top"],
+[data-ms-motion="off"] .ms-tooltip[data-ms-side="bottom"],
+[data-ms-motion="off"] .ms-tooltip[data-ms-side="left"],
+[data-ms-motion="off"] .ms-tooltip[data-ms-side="right"] {
+  transform: none;
 }

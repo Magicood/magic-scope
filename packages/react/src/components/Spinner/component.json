@@ -1,17 +1,30 @@
 {
   "id": "spinner",
   "name": "Spinner",
-  "description": "奥术发光的加载旋转器,role=status,提供 sm/md/lg 三档尺寸与无障碍文案。",
+  "description": "加载旋转器(旗舰深度):role=status + i18n aria-label,三形态变体(ring 发光圆环 / dots 三点 / bars 波动),接全库 tone 槽位(不传则随 currentColor),sm/md/lg 三档随密度缩放,可选可见旁注 label(四向放置),动效与发光全局可一键降级。",
   "category": "feedback",
-  "tags": ["spinner", "loader", "loading", "feedback", "progress", "status", "indicator"],
+  "tags": [
+    "spinner",
+    "loader",
+    "loading",
+    "feedback",
+    "progress",
+    "status",
+    "indicator",
+    "ring",
+    "dots",
+    "bars",
+    "tone",
+    "i18n"
+  ],
   "status": "stable",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "frameworks": ["react"],
   "source": {
     "type": "original",
     "capturedAt": "2026-06-24",
-    "requirements": "奥术发光的加载旋转器,role=status,提供 sm/md/lg 三档尺寸与无障碍文案。。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-* 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion。"
+    "requirements": "加载旋转器,role=status。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-* 变量。补强为旗舰深度:形态变体(ring/dots/bars)、tone 色调系统(读 6 槽位,不传随 currentColor)、可见旁注 label(showLabel/labelPlacement/labelContent)、i18n aria-label(spinner.label)、密度缩放、发光与动效全局一键降级、...rest 留口透传。"
   },
   "dependencies": ["@magic-scope/tokens"],
-  "files": ["Spinner.tsx", "Spinner.css", "index.ts"]
+  "files": ["Spinner.tsx", "Spinner.css", "Spinner.test.tsx", "index.ts"]
 }

@@ -16,6 +16,7 @@
     "test": "vitest run --passWithNoTests",
     "new": "tsx scripts/new-component.ts",
     "registry": "tsx registry/build-index.ts",
+    "size": "tsx scripts/check-size.ts",
     "gen:docs-tokens": "tsx scripts/gen-docs-tokens.ts",
     "docs:dev": "pnpm gen:docs-tokens && vitepress dev docs",
     "docs:build": "pnpm gen:docs-tokens && vitepress build docs",

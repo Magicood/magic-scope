@@ -35,6 +35,16 @@ export function App() {
 
 组件清单与实时预览见 [magic-scope 文档站](https://github.com/Magicood/magic-scope)。
 
+## 溯源(随包)
+
+每个组件的溯源元数据随包发布,读 `@magic-scope/react/registry.json` 即可查全部组件的来源、收录日期与需求:
+
+```ts
+const registry = require('@magic-scope/react/registry.json');
+// ESM(Node 20+):import registry from '@magic-scope/react/registry.json' with { type: 'json' };
+// registry[i] = { id, name, source: { type, app?, url?, capturedAt, requirements }, ... }
+```
+
 ## 许可
 
 MIT · 仓库 [magic-scope](https://github.com/Magicood/magic-scope)

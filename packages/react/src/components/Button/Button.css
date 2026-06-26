@@ -1,20 +1,24 @@
+/* —— Button 基座:tone 槽位驱动 + 密度(--ms-density-scale)接活 —— */
 .ms-button {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--ms-space-2);
-  appearance: none;
-  background-color: transparent;
+  min-block-size: calc(2.5rem * var(--ms-density-scale, 1));
+  max-inline-size: 100%;
+  padding-inline: calc(var(--ms-space-4) * var(--ms-density-scale, 1));
   border: 1px solid transparent;
   border-radius: var(--ms-radius-md);
   font-family: var(--ms-font-sans);
+  font-size: 1rem;
   font-weight: 600;
-  line-height: 1;
+  line-height: 1.2;
   white-space: nowrap;
   cursor: pointer;
   user-select: none;
-  touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
   transition:
     background-color var(--ms-dur-fast) var(--ms-ease-standard),
     border-color var(--ms-dur-fast) var(--ms-ease-standard),
@@ -22,82 +26,216 @@
     box-shadow var(--ms-dur-base) var(--ms-ease-standard),
     transform var(--ms-dur-fast) var(--ms-ease-emphasized);
 }
+.ms-button__content {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ms-space-2);
+  /* 允许在 flex 中收缩,使超长 label 能截断而非撑破按钮 */
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+.ms-button__icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  font-size: 1.15em;
+  line-height: 0;
+}
+/* 内容边界:超长文案单行省略号,绝不溢出按钮/容器 */
+.ms-button__label {
+  min-inline-size: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
 
+/* —— 变体:全部只读 tone 槽位(--ms-c / --ms-c-hover / ...),零硬编码配色 —— */
+.ms-button--solid {
+  background-color: var(--ms-c);
+  border-color: var(--ms-c);
+  color: var(--ms-on-c);
+  box-shadow: 0 0 calc(14px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow);
+}
+.ms-button--soft {
+  background-color: var(--ms-c-soft);
+  color: var(--ms-c);
+}
+.ms-button--outline {
+  color: var(--ms-c);
+  border-color: color-mix(in oklch, var(--ms-c) 50%, transparent);
+}
+.ms-button--ghost {
+  color: var(--ms-c);
+}
+.ms-button--link {
+  min-block-size: auto;
+  padding-inline: 0;
+  color: var(--ms-c);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* —— hover(仅具备 hover 能力的指针) —— */
+@media (hover: hover) {
+  .ms-button--solid:hover:not(:disabled) {
+    background-color: var(--ms-c-hover);
+    border-color: var(--ms-c-hover);
+    box-shadow: 0 0 calc(20px * var(--ms-fx-glow, 1)) -6px var(--ms-c-glow);
+    transform: translateY(-1px);
+  }
+  .ms-button--soft:hover:not(:disabled) {
+    background-color: color-mix(in oklch, var(--ms-c) 26%, transparent);
+  }
+  .ms-button--outline:hover:not(:disabled) {
+    background-color: var(--ms-c-soft);
+    border-color: var(--ms-c);
+  }
+  .ms-button--ghost:hover:not(:disabled) {
+    background-color: var(--ms-c-soft);
+  }
+  .ms-button--link:hover:not(:disabled) {
+    color: var(--ms-c-hover);
+  }
+}
+
+/* —— active —— */
+.ms-button:active:not(:disabled) {
+  transform: scale(calc(1 - 0.02 * var(--ms-motion-scale, 1)));
+}
+.ms-button--solid:active:not(:disabled) {
+  background-color: var(--ms-c-active);
+  border-color: var(--ms-c-active);
+}
+
+/* —— focus-visible:tone 发光环 —— */
 .ms-button:focus-visible {
   outline: none;
   box-shadow:
     0 0 0 2px var(--ms-color-bg),
-    0 0 0 4px var(--ms-color-focus-ring);
+    0 0 0 4px var(--ms-color-focus-ring),
+    0 0 calc(16px * var(--ms-fx-glow, 1)) -4px var(--ms-c-glow);
 }
 
-.ms-button:active:not(:disabled) {
-  transform: translateY(calc(1px * var(--ms-motion-scale, 1)))
-    scale(calc(1 - 0.01 * var(--ms-motion-scale, 1)));
-}
-
+/* —— disabled —— */
 .ms-button:disabled {
   cursor: not-allowed;
   opacity: 0.5;
+  box-shadow: none;
+  transform: none;
 }
 
-/* —— 尺寸 —— */
+/* —— 尺寸(随密度缩放) —— */
 .ms-button--sm {
-  min-block-size: 2rem;
-  padding-inline: var(--ms-space-3);
-  font-size: 0.833rem;
-}
-.ms-button--md {
-  min-block-size: 2.5rem;
-  padding-inline: var(--ms-space-4);
-  font-size: 1rem;
+  min-block-size: calc(2rem * var(--ms-density-scale, 1));
+  padding-inline: calc(var(--ms-space-3) * var(--ms-density-scale, 1));
+  font-size: 0.875rem;
 }
 .ms-button--lg {
-  min-block-size: 3rem;
-  padding-inline: var(--ms-space-6);
-  font-size: 1.2rem;
+  min-block-size: calc(3rem * var(--ms-density-scale, 1));
+  padding-inline: calc(var(--ms-space-5) * var(--ms-density-scale, 1));
+  font-size: 1.125rem;
 }
 
-/* —— 触控:抬高各档热区到触控目标尺寸,允许内容换行 —— */
+/* —— 纯图标:正方形 —— */
+.ms-button--icon-only {
+  padding-inline: 0;
+  inline-size: calc(2.5rem * var(--ms-density-scale, 1));
+}
+.ms-button--icon-only.ms-button--sm {
+  inline-size: calc(2rem * var(--ms-density-scale, 1));
+}
+.ms-button--icon-only.ms-button--lg {
+  inline-size: calc(3rem * var(--ms-density-scale, 1));
+}
+
+/* —— 块级 / 形状 —— */
+.ms-button--full {
+  inline-size: 100%;
+}
+.ms-button--pill {
+  border-radius: var(--ms-radius-full);
+}
+.ms-button--square {
+  border-radius: 0;
+}
+
+/* —— 实例级发光覆盖 —— */
+.ms-button--glow-off {
+  box-shadow: none;
+}
+.ms-button--glow-always.ms-button--solid {
+  box-shadow: 0 0 calc(22px * var(--ms-fx-glow, 1)) -6px var(--ms-c-glow);
+}
+.ms-button--glow-hover:not(:hover) {
+  box-shadow: none;
+}
+
+/* —— loading:保持宽度(内容透明)+ 居中旋转环 —— */
+.ms-button--loading .ms-button__content {
+  opacity: 0;
+}
+.ms-button__spinner {
+  position: absolute;
+  inset: 50%;
+  inline-size: 1.15em;
+  block-size: 1.15em;
+  translate: -50% -50%;
+  border-radius: var(--ms-radius-full);
+  border: 2px solid color-mix(in oklch, currentcolor 28%, transparent);
+  border-block-start-color: currentcolor;
+  animation: ms-button-spin 0.7s linear infinite;
+}
+@keyframes ms-button-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ms-button__spinner {
+    animation-duration: 1.6s;
+  }
+}
+
+/* —— 触控:热区不低于目标尺寸 —— */
 @media (pointer: coarse) {
+  .ms-button {
+    min-block-size: max(calc(2.5rem * var(--ms-density-scale, 1)), var(--ms-target-min));
+  }
   .ms-button--sm {
-    min-block-size: max(2rem, var(--ms-target-min));
-  }
-  .ms-button--md {
-    min-block-size: max(2.5rem, var(--ms-target-min));
-  }
-  .ms-button--lg {
-    min-block-size: max(3rem, var(--ms-target-min));
+    min-block-size: max(calc(2rem * var(--ms-density-scale, 1)), var(--ms-target-min));
   }
 }
 
-/* —— solid:主色实底,hover 发光(受 --ms-fx-glow 门控) —— */
-.ms-button--solid {
-  background-color: var(--ms-color-primary);
-  color: var(--ms-color-on-primary);
+/* —— ButtonGroup:吸附相邻按钮 —— */
+.ms-button-group {
+  display: inline-flex;
 }
-.ms-button--solid:hover:not(:disabled) {
-  background-color: var(--ms-color-primary-hover);
-  box-shadow: 0 0 calc(20px * var(--ms-fx-glow, 1)) -2px var(--ms-color-glow);
+.ms-button-group--vertical {
+  flex-direction: column;
 }
-.ms-button--solid:active:not(:disabled) {
-  background-color: var(--ms-color-primary-active);
+.ms-button-group:not(.ms-button-group--attached) {
+  gap: var(--ms-space-2);
 }
-
-/* —— outline:描边,hover 染主色 + 微光 —— */
-.ms-button--outline {
-  border-color: var(--ms-color-border-strong);
-  color: var(--ms-color-fg);
+.ms-button-group--attached.ms-button-group--horizontal .ms-button:not(:first-child) {
+  margin-inline-start: -1px;
+  border-start-start-radius: 0;
+  border-end-start-radius: 0;
 }
-.ms-button--outline:hover:not(:disabled) {
-  border-color: var(--ms-color-primary);
-  color: var(--ms-color-primary-hover);
-  box-shadow: 0 0 calc(16px * var(--ms-fx-glow, 1)) -4px var(--ms-color-glow);
+.ms-button-group--attached.ms-button-group--horizontal .ms-button:not(:last-child) {
+  border-start-end-radius: 0;
+  border-end-end-radius: 0;
 }
-
-/* —— ghost:无底,hover 浮起表面 —— */
-.ms-button--ghost {
-  color: var(--ms-color-fg);
+.ms-button-group--attached.ms-button-group--vertical .ms-button:not(:first-child) {
+  margin-block-start: -1px;
+  border-start-start-radius: 0;
+  border-start-end-radius: 0;
 }
-.ms-button--ghost:hover:not(:disabled) {
-  background-color: var(--ms-color-surface-raised);
+.ms-button-group--attached.ms-button-group--vertical .ms-button:not(:last-child) {
+  border-end-start-radius: 0;
+  border-end-end-radius: 0;
+}
+/* 吸附时 hover 项提到上层,发光不被相邻盖住 */
+.ms-button-group--attached .ms-button:hover:not(:disabled),
+.ms-button-group--attached .ms-button:focus-visible {
+  z-index: 1;
 }

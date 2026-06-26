@@ -1,0 +1,197 @@
+/* —— Blockquote 基座 ——
+   语义 <blockquote>:强调条/底块读全库 tone 槽位(--ms-c / --ms-c-soft / --ms-c-glow),
+   尺寸走 typography.css 的 --ms-type-step-* / --ms-leading-*。内容边界:不撑破容器。 */
+.ms-blockquote {
+  --ms-bq-accent: var(--ms-bq-accent-w, 0.1875rem); /* 强调条宽 ≈3px */
+  --ms-bq-pad-i: var(--ms-bq-pad-inline, 1.15em); /* 内联内边距 */
+  --ms-bq-pad-b: var(--ms-bq-pad-block, 0.6em); /* 块向内边距 */
+  position: relative;
+  display: flex;
+  gap: 0.6em;
+  margin: 0; /* 复位 UA 默认外边距,交给布局/调用方 */
+  max-inline-size: 100%;
+  box-sizing: border-box;
+  color: var(--ms-color-fg);
+  line-height: var(--ms-leading-relaxed);
+  overflow-wrap: break-word; /* 超长 URL/无空格串不撑破 */
+  word-break: break-word;
+}
+
+/* —— 尺寸档(字号 + 块向内边距随档缩放) —— */
+.ms-blockquote--sm {
+  font-size: var(--ms-type-step--1);
+  --ms-bq-pad-block: 0.5em;
+}
+.ms-blockquote--md {
+  font-size: var(--ms-type-step-0);
+}
+.ms-blockquote--lg {
+  font-size: var(--ms-type-step-1);
+  --ms-bq-pad-block: 0.75em;
+  line-height: var(--ms-leading-normal);
+}
+
+/* —— 正文容器:吃满剩余宽度,min-inline-size:0 让长内容能收缩省略 —— */
+.ms-blockquote__content {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+.ms-blockquote__content > :first-child {
+  margin-block-start: 0;
+}
+.ms-blockquote__content > :last-child {
+  margin-block-end: 0;
+}
+
+/* —— 出处(footer + cite) —— */
+.ms-blockquote__footer {
+  margin-block-start: 0.6em;
+  font-size: 0.85em;
+  font-style: normal;
+  color: var(--ms-color-fg-muted);
+}
+.ms-blockquote__footer::before {
+  content: "—\00a0"; /* em dash + 不断行空格 */
+}
+.ms-blockquote__cite {
+  font-style: inherit;
+}
+
+/* —— 装饰大引号 —— */
+.ms-blockquote__mark {
+  flex: none;
+  font-family: var(--ms-font-serif, Georgia, serif);
+  font-size: 2.6em;
+  line-height: 0.8;
+  color: var(--ms-c, var(--ms-color-fg-muted));
+  opacity: 0.5;
+  user-select: none;
+  align-self: flex-start;
+  margin-block-start: -0.1em;
+}
+
+/* —— 图标槽 —— */
+.ms-blockquote__icon {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25em;
+  line-height: 1;
+  color: var(--ms-c, var(--ms-color-fg-muted));
+  align-self: flex-start;
+}
+
+/* —— 变体:bordered(默认,左强调条 + 微缩进) —— */
+.ms-blockquote--bordered {
+  padding-inline-start: var(--ms-bq-pad-i);
+  border-inline-start: var(--ms-bq-accent) solid var(--ms-c);
+}
+
+/* —— 变体:filled(柔底块 + 强调条) —— */
+.ms-blockquote--filled {
+  padding: var(--ms-bq-pad-b) var(--ms-bq-pad-i);
+  border-inline-start: var(--ms-bq-accent) solid var(--ms-c);
+  border-start-end-radius: var(--ms-radius-md, 0.5rem);
+  border-end-end-radius: var(--ms-radius-md, 0.5rem);
+  background: var(--ms-c-soft);
+}
+
+/* —— 变体:card(卡片化:柔底 + 边框 + 阴影,无强调条) —— */
+.ms-blockquote--card {
+  padding: calc(var(--ms-bq-pad-b) + 0.3em) var(--ms-bq-pad-i);
+  border: 1px solid var(--ms-color-border, color-mix(in oklch, var(--ms-c) 30%, transparent));
+  border-radius: var(--ms-radius-lg, 0.75rem);
+  background: var(--ms-c-soft);
+  box-shadow: var(--ms-shadow-sm, 0 1px 2px rgb(0 0 0 / 0.06));
+}
+
+/* —— 变体:plain(纯文字,无边框无底,仅缩进) —— */
+.ms-blockquote--plain {
+  padding-inline-start: var(--ms-bq-pad-i);
+}
+
+/* —— 强调侧翻转到 end(RTL 友好的逻辑切换) —— */
+.ms-blockquote--accent-end.ms-blockquote--bordered,
+.ms-blockquote--accent-end.ms-blockquote--plain {
+  padding-inline-start: 0;
+  padding-inline-end: var(--ms-bq-pad-i);
+}
+.ms-blockquote--accent-end.ms-blockquote--bordered {
+  border-inline-start: none;
+  border-inline-end: var(--ms-bq-accent) solid var(--ms-c);
+}
+.ms-blockquote--accent-end.ms-blockquote--filled {
+  border-inline-start: none;
+  border-inline-end: var(--ms-bq-accent) solid var(--ms-c);
+  border-radius: 0;
+  border-start-start-radius: var(--ms-radius-md, 0.5rem);
+  border-end-start-radius: var(--ms-radius-md, 0.5rem);
+}
+.ms-blockquote--accent-end {
+  flex-direction: row-reverse;
+}
+
+/* —— 魔法:渐变强调条(tone → glow) —— */
+.ms-blockquote--gradient.ms-blockquote--bordered,
+.ms-blockquote--gradient.ms-blockquote--filled {
+  border-image: linear-gradient(to bottom, var(--ms-c), var(--ms-c-glow)) 1;
+}
+/* 不支持 border-image 渐变的环境回退实色边(border 已是 --ms-c,无需额外处理) */
+
+/* —— 魔法:辉光(强调条/底块外发光,受 --ms-fx-glow 调制) —— */
+.ms-blockquote--glow-soft {
+  box-shadow: 0 0 calc(0.5rem * var(--ms-fx-glow, 1)) var(--ms-c-soft);
+}
+.ms-blockquote--glow-strong {
+  box-shadow:
+    0 0 calc(0.9rem * var(--ms-fx-glow, 1)) var(--ms-c-glow),
+    0 0 calc(0.35rem * var(--ms-fx-glow, 1)) var(--ms-c-soft);
+}
+/* card 变体本就有阴影:辉光叠加到其上 */
+.ms-blockquote--card.ms-blockquote--glow-soft {
+  box-shadow:
+    var(--ms-shadow-sm, 0 1px 2px rgb(0 0 0 / 0.06)),
+    0 0 calc(0.5rem * var(--ms-fx-glow, 1)) var(--ms-c-soft);
+}
+.ms-blockquote--card.ms-blockquote--glow-strong {
+  box-shadow:
+    var(--ms-shadow-sm, 0 1px 2px rgb(0 0 0 / 0.06)),
+    0 0 calc(0.9rem * var(--ms-fx-glow, 1)) var(--ms-c-glow);
+}
+/* fx 总闸关闭:彻底去辉光 */
+[data-ms-fx="off"] .ms-blockquote--glow-soft,
+[data-ms-fx="off"] .ms-blockquote--glow-strong {
+  box-shadow: none;
+}
+[data-ms-fx="off"] .ms-blockquote--card.ms-blockquote--glow-soft,
+[data-ms-fx="off"] .ms-blockquote--card.ms-blockquote--glow-strong {
+  box-shadow: var(--ms-shadow-sm, 0 1px 2px rgb(0 0 0 / 0.06));
+}
+
+/* —— 入场动效:左强调条/底块淡入上浮(仅有色块变体有意义) —— */
+@keyframes ms-blockquote-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.35em);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.ms-blockquote--filled,
+.ms-blockquote--card {
+  animation: ms-blockquote-in 0.45s var(--ms-ease-standard, ease-out) both;
+}
+/* 动效降级:reduced-motion 或 data-ms-motion=off 时直接呈现最终态(不卡在隐藏) */
+@media (prefers-reduced-motion: reduce) {
+  .ms-blockquote--filled,
+  .ms-blockquote--card {
+    animation: none;
+  }
+}
+[data-ms-motion="off"] .ms-blockquote--filled,
+[data-ms-motion="off"] .ms-blockquote--card {
+  animation: none;
+}

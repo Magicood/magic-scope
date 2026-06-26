@@ -1,0 +1,29 @@
+{
+  "id": "code",
+  "name": "Code",
+  "description": "代码原语。行内默认 <code>,block 切到 <pre><code>(保留空白 white-space:pre + 横向滚动 overflow-x:auto + tabSize)。变体 solid/soft/outline/ghost × tone 走全库 tone resolver(只读 6 槽位,零硬编码配色);mono 等宽字体(--ms-font-mono)、size 走流式字阶随密度缩放。块级支持 copyable(剪贴板复制 + 已复制反馈,文案走 i18n typography.copy/copied,onCopy 语义回调)、lineNumbers(CSS counter,不污染复制内容);glow 辉光点缀尊重 data-ms-fx / prefers-reduced-motion。留口:...rest 透传 / forwardRef 到根 / asChild 多态(行内) / classNames 定制内层 code 与复制按钮 / className·style 合并。复制与抽文本纯逻辑在 logic.ts(零 React,可平移 core)。",
+  "category": "typography",
+  "tags": [
+    "code",
+    "typography",
+    "inline-code",
+    "code-block",
+    "pre",
+    "monospace",
+    "copy",
+    "clipboard",
+    "syntax",
+    "tone",
+    "magic-glow"
+  ],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-26",
+    "requirements": "代码组件:默认行内 <code>;block 切块级 <pre><code>(white-space:pre + overflow-x:auto + tabSize)。variant solid/soft/outline/ghost(Radix 式读 tone 槽位)+ tone;块级支持 copyable(走 typography.copy/copied);mono 字体(--ms-font-mono)、size。对标旗舰 Button/Text:tone resolver、魔法辉光双降级、forwardRef/...rest/as·asChild/classNames 留口、i18n、strict TS、内容边界。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Code.tsx", "Code.css", "logic.ts", "index.ts"]
+}

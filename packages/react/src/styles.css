@@ -14,8 +14,12 @@
 
 /* 设备适配地基:横向 token + 密度闭环 + 热区工具(文件内部已自带 @layer 归位) */
 @import "./device.css";
+/* tone resolver:当前语义色 → 6 槽位(文件内部已自带 @layer ms.theme) */
+@import "./tone.css";
 /* 效果开关:动效 / 发光乘子 */
 @import "./effects.css" layer(ms.motion);
+/* 文字排版共享尺度 token:字号阶梯 / 行高 / 字距(文件内部已自带 @layer ms.tokens) */
+@import "./typography.css";
 
 @import "./components/Button/Button.css" layer(ms.components);
 @import "./components/Input/Input.css" layer(ms.components);
@@ -52,3 +56,22 @@
 @import "./components/Drawer/Drawer.css" layer(ms.components);
 @import "./components/Popconfirm/Popconfirm.css" layer(ms.components);
 @import "./components/ContextMenu/ContextMenu.css" layer(ms.components);
+@import "./components/Text/Text.css" layer(ms.components);
+@import "./components/Heading/Heading.css" layer(ms.components);
+@import "./components/Paragraph/Paragraph.css" layer(ms.components);
+@import "./components/Code/Code.css" layer(ms.components);
+@import "./components/Link/Link.css" layer(ms.components);
+@import "./components/Blockquote/Blockquote.css" layer(ms.components);
+@import "./components/List/List.css" layer(ms.components);
+@import "./components/Stack/Stack.css" layer(ms.components);
+@import "./components/Flex/Flex.css" layer(ms.components);
+@import "./components/Grid/Grid.css" layer(ms.components);
+@import "./components/Container/Container.css" layer(ms.components);
+@import "./components/Center/Center.css" layer(ms.components);
+@import "./components/AspectRatio/AspectRatio.css" layer(ms.components);
+@import "./components/Segmented/Segmented.css" layer(ms.components);
+@import "./components/Empty/Empty.css" layer(ms.components);
+@import "./components/Result/Result.css" layer(ms.components);
+@import "./components/Rate/Rate.css" layer(ms.components);
+@import "./components/Descriptions/Descriptions.css" layer(ms.components);
+@import "./components/Steps/Steps.css" layer(ms.components);

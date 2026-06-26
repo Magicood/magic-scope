@@ -1,9 +1,24 @@
 {
   "id": "pagination",
   "name": "Pagination",
-  "description": "分页导航:上一页/下一页 + 页码,当前页主色实底发光,过多页用省略号折叠,键盘可达且 focus-visible 显示发光环。",
+  "description": "分页导航(旗舰深度):tone 色调 × size(随密度缩放),当前页主色实底奥术发光(读 tone 6 槽位,fx/motion 可一键降级);过多页省略号折叠、simple 精简变体;每页条数选择器 + 快速跳页 + showTotal 区间文案;renderItem / itemRender(包成 <a>)/ onItemClick / prevIcon·nextIcon 留口;onPageChange + onPageSizeChange + onChange 聚合 + onQuickJump 全事件,内部点击 composeEventHandlers 合并用户处理器、根 nav 透传原生属性;键盘可达且 focus-visible 显示发光环。",
   "category": "navigation",
-  "tags": ["navigation", "pagination", "pager", "page", "nav", "dark", "arcane"],
+  "tags": [
+    "navigation",
+    "pagination",
+    "pager",
+    "page",
+    "nav",
+    "page-size",
+    "quick-jumper",
+    "simple",
+    "tone",
+    "size",
+    "render-item",
+    "i18n",
+    "dark",
+    "arcane"
+  ],
   "status": "stable",
   "version": "0.1.0",
   "frameworks": ["react"],
@@ -13,5 +28,5 @@
     "requirements": "分页导航:上一页/下一页 + 页码,当前页主色实底发光,过多页用省略号折叠,键盘可达且 focus-visible 显示发光环。。magic-scope 结构/导航组件:自研、消费 tokens,完整状态、键盘可达、fx/motion 开关、逻辑属性。"
   },
   "dependencies": ["@magic-scope/tokens"],
-  "files": ["Pagination.tsx", "Pagination.css", "index.ts"]
+  "files": ["Pagination.tsx", "Pagination.css", "logic.ts", "index.ts"]
 }

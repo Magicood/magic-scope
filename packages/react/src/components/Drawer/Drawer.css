@@ -13,18 +13,44 @@
     display var(--ms-dur-base) allow-discrete;
 }
 
+/* —— size 档位:横向(start/end)控 inline-size、纵向(top/bottom)控 block-size —— */
+.ms-drawer--start,
+.ms-drawer--end {
+  --ms-drawer-inline: min(24rem, 100vw);
+}
+.ms-drawer--start.ms-drawer--sm,
+.ms-drawer--end.ms-drawer--sm {
+  --ms-drawer-inline: min(18rem, 100vw);
+}
+.ms-drawer--start.ms-drawer--lg,
+.ms-drawer--end.ms-drawer--lg {
+  --ms-drawer-inline: min(32rem, 100vw);
+}
+.ms-drawer--top,
+.ms-drawer--bottom {
+  --ms-drawer-block: min(20rem, 85dvh);
+}
+.ms-drawer--top.ms-drawer--sm,
+.ms-drawer--bottom.ms-drawer--sm {
+  --ms-drawer-block: min(14rem, 85dvh);
+}
+.ms-drawer--top.ms-drawer--lg,
+.ms-drawer--bottom.ms-drawer--lg {
+  --ms-drawer-block: min(30rem, 85dvh);
+}
+
 /* —— 方向:贴边 + 尺寸 + 关闭态位移 —— */
 .ms-drawer--end {
   margin-block: 0;
   margin-inline: auto 0;
-  inline-size: min(24rem, 100vw);
+  inline-size: var(--ms-drawer-inline);
   block-size: 100dvh;
   transform: translateX(100%);
 }
 .ms-drawer--start {
   margin-block: 0;
   margin-inline: 0 auto;
-  inline-size: min(24rem, 100vw);
+  inline-size: var(--ms-drawer-inline);
   block-size: 100dvh;
   transform: translateX(-100%);
 }
@@ -32,6 +58,7 @@
   margin-block: 0 auto;
   margin-inline: 0;
   inline-size: 100vw;
+  block-size: var(--ms-drawer-block);
   max-block-size: 85dvh;
   transform: translateY(-100%);
 }
@@ -39,6 +66,7 @@
   margin-block: auto 0;
   margin-inline: 0;
   inline-size: 100vw;
+  block-size: var(--ms-drawer-block);
   max-block-size: 85dvh;
   transform: translateY(100%);
 }
@@ -78,17 +106,19 @@
   }
 }
 
-/* —— 面板:满抽屉、纵向布局,body 滚动 —— */
+/* —— 面板:满抽屉、纵向布局,body 滚动;辉光读 tone 槽位 —— */
 .ms-drawer__panel {
+  position: relative;
   display: flex;
   flex-direction: column;
   block-size: 100%;
   inline-size: 100%;
+  max-inline-size: 100%;
   background-color: var(--ms-color-surface-raised);
   font-family: var(--ms-font-sans);
-  box-shadow: 0 0 calc(40px * var(--ms-fx-glow, 1)) -16px var(--ms-color-glow);
+  box-shadow: 0 0 calc(40px * var(--ms-fx-glow, 1)) -16px var(--ms-c-glow);
 }
-/* 各方向贴边的那条描边,强调与背景分隔 */
+/* 各方向贴边的那条描边,用 tone 软色强调与背景分隔 */
 .ms-drawer--end .ms-drawer__panel {
   border-inline-start: 1px solid var(--ms-color-border);
 }
@@ -102,8 +132,9 @@
   border-block-start: 1px solid var(--ms-color-border);
 }
 
-/* —— 头部:标题 + 关闭 —— */
+/* —— 头部:标题 / 自定义整块 + 关闭 —— */
 .ms-drawer__header {
+  flex: 0 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -113,11 +144,21 @@
     max(var(--ms-space-5), var(--ms-safe-right, 0px));
   border-block-end: 1px solid var(--ms-color-border);
 }
+/* 自定义 header 整块:占满剩余宽、内容不撑破 */
+.ms-drawer__header-content {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
 .ms-drawer__title {
   margin: 0;
   font-size: 1.0625rem;
   font-weight: 650;
   line-height: 1.3;
+  /* 内容边界:超长标题单行省略,不撑破头部 */
+  min-inline-size: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 /* —— 关闭按钮 —— */
@@ -126,8 +167,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-inline-size: var(--ms-target-min);
-  min-block-size: var(--ms-target-min);
+  min-inline-size: max(2.25rem, var(--ms-target-min));
+  min-block-size: max(2.25rem, var(--ms-target-min));
   padding: 0;
   border: 1px solid transparent;
   border-radius: var(--ms-radius-md);
@@ -153,29 +194,64 @@
     background-color: var(--ms-color-surface-sunken);
   }
 }
+/* 触控:热区抬到目标最小尺寸 */
+@media (pointer: coarse) {
+  .ms-drawer__close {
+    min-inline-size: var(--ms-target-min);
+    min-block-size: var(--ms-target-min);
+  }
+}
 .ms-drawer__close:focus-visible {
-  outline: 2px solid var(--ms-color-primary);
+  outline: 2px solid var(--ms-color-focus-ring);
   outline-offset: 2px;
 }
 
 /* —— 正文:滚动 + 安全区避让 —— */
 .ms-drawer__body {
   flex: 1 1 auto;
+  min-block-size: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
   padding-block: var(--ms-space-5);
   padding-inline: max(var(--ms-space-5), var(--ms-safe-left, 0px))
     max(var(--ms-space-5), var(--ms-safe-right, 0px));
-  padding-block-end: max(var(--ms-space-5), var(--ms-safe-bottom, 0px));
   color: var(--ms-color-fg);
 }
-.ms-drawer__panel {
-  position: relative;
+/* 无 footer 时,body 自己吃底部安全区 */
+.ms-drawer__body:last-child {
+  padding-block-end: max(var(--ms-space-5), var(--ms-safe-bottom, 0px));
 }
 
+/* —— 固定底栏:sticky 在面板底部 + 安全区避让,常放主/次操作 —— */
+.ms-drawer__footer {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--ms-space-3);
+  flex-wrap: wrap;
+  padding-block: var(--ms-space-4);
+  padding-inline: max(var(--ms-space-5), var(--ms-safe-left, 0px))
+    max(var(--ms-space-5), var(--ms-safe-right, 0px));
+  padding-block-end: max(var(--ms-space-4), var(--ms-safe-bottom, 0px));
+  border-block-start: 1px solid var(--ms-color-border);
+  background-color: var(--ms-color-surface-raised);
+}
+
+/* —— 发光总闸关断:data-ms-fx="off" 时熄灭面板辉光 —— */
+[data-ms-fx="off"] .ms-drawer__panel {
+  box-shadow: none;
+}
+
+/* —— 动效降级:reduced-motion 与 data-ms-motion="off" 都瞬时切换(位移为必要位置,
+ * 不能靠 motion-scale 关掉,否则抽屉会停在屏外,这里只把过渡时长压到近 0) —— */
 @media (prefers-reduced-motion: reduce) {
   .ms-drawer,
   .ms-drawer::backdrop {
     transition-duration: 0.01ms;
   }
+}
+[data-ms-motion="off"] .ms-drawer,
+[data-ms-motion="off"] .ms-drawer::backdrop {
+  transition-duration: 0.01ms;
 }

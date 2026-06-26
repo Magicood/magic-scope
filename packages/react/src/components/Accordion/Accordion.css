@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: column;
   inline-size: 100%;
+  max-inline-size: 100%;
   font-family: var(--ms-font-sans);
   color: var(--ms-color-fg);
   border: 1px solid var(--ms-color-border);
@@ -11,6 +12,10 @@
 }
 
 /* —— 单项:相邻项之间用细分隔线 —— */
+.ms-accordion__item {
+  min-inline-size: 0;
+}
+
 .ms-accordion__item + .ms-accordion__item {
   border-block-start: 1px solid var(--ms-color-border);
 }
@@ -20,14 +25,16 @@
   font: inherit;
 }
 
-/* —— 头部按钮 —— */
+/* —— 头部按钮:padding / 最小高度接密度缩放 —— */
 .ms-accordion__trigger {
   display: flex;
   align-items: center;
   gap: var(--ms-space-3);
   inline-size: 100%;
+  min-inline-size: 0;
+  min-block-size: calc(2.75rem * var(--ms-density-scale, 1));
   margin: 0;
-  padding-block: var(--ms-space-3);
+  padding-block: calc(var(--ms-space-3) * var(--ms-density-scale, 1));
   padding-inline: var(--ms-space-4);
   border: none;
   background-color: transparent;
@@ -43,11 +50,11 @@
     box-shadow var(--ms-dur-base) var(--ms-ease-standard);
 }
 
-/* —— hover:面板微亮 + 文字提亮 + 头部内侧暖辉 —— */
+/* —— hover:面板微亮 + 文字提亮(tone) + 头部内侧暖辉(tone glow) —— */
 .ms-accordion__trigger:not(:disabled):hover {
   background-color: var(--ms-color-surface-raised);
-  color: var(--ms-color-primary-hover);
-  box-shadow: inset 0 0 calc(20px * var(--ms-fx-glow, 1)) -14px var(--ms-color-glow);
+  color: var(--ms-c-hover);
+  box-shadow: inset 0 0 calc(20px * var(--ms-fx-glow, 1)) -14px var(--ms-c-glow);
 }
 
 /* —— focus-visible:发光环(可达性,模糊半径不参与开关) —— */
@@ -55,7 +62,15 @@
   outline: none;
   box-shadow:
     inset 0 0 0 2px var(--ms-color-focus-ring),
-    inset 0 0 calc(24px * var(--ms-fx-glow, 1)) -10px var(--ms-color-glow);
+    inset 0 0 calc(24px * var(--ms-fx-glow, 1)) -10px var(--ms-c-glow);
+}
+
+/* —— fx 总闸关闭:去掉装饰性辉光,只留可达性焦点环 —— */
+[data-ms-fx="off"] .ms-accordion__trigger:not(:disabled):hover {
+  box-shadow: none;
+}
+[data-ms-fx="off"] .ms-accordion__trigger:focus-visible {
+  box-shadow: inset 0 0 0 2px var(--ms-color-focus-ring);
 }
 
 .ms-accordion__trigger:disabled {
@@ -65,6 +80,9 @@
 
 /* —— 展开图标:▸ 旋转,展开时转 90deg(旋转量乘 motion-scale) —— */
 .ms-accordion__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   flex: none;
   inline-size: 0.75rem;
   block-size: 0.75rem;
@@ -74,7 +92,8 @@
     color var(--ms-dur-fast) var(--ms-ease-standard);
 }
 
-.ms-accordion__icon::before {
+/* 默认指示符 ▸(未通过 item.icon 覆盖时显示) */
+.ms-accordion__icon:empty::before {
   content: "▸";
   display: block;
   line-height: 0.75rem;
@@ -82,12 +101,18 @@
 }
 
 .ms-accordion__trigger:not(:disabled):hover .ms-accordion__icon {
-  color: var(--ms-color-primary-hover);
+  color: var(--ms-c-hover);
 }
 
 .ms-accordion__item--open .ms-accordion__icon {
   transform: rotate(calc(90deg * var(--ms-motion-scale, 1)));
-  color: var(--ms-color-primary);
+  color: var(--ms-c);
+}
+
+/* motion 关闭:图标不旋转(指示靠 aria-expanded + 颜色变化,不依赖位移) */
+[data-ms-motion="off"] .ms-accordion__icon {
+  transition: none;
+  transform: none;
 }
 
 .ms-accordion__title {
@@ -95,23 +120,36 @@
   overflow-wrap: anywhere;
 }
 
-/* —— 折叠容器:grid-template-rows 0fr → 1fr 过渡(现代、平滑) —— */
+/* —— 折叠容器:grid-template-rows 0fr → 1fr 过渡(现代、平滑) ——
+ * 收起:grid-template-rows 与 visibility 一起过渡,但 visibility 延迟 = 动画时长,
+ * 让收起动画完整播放后再 visibility:hidden(从渲染树/AT 移除),双向动画都完整。
+ * inert(JS 即时挂)负责焦点/AT 语义,visibility 负责绘制与动画完整性。 */
 .ms-accordion__panel {
   display: grid;
   grid-template-rows: 0fr;
-  transition: grid-template-rows var(--ms-dur-base) var(--ms-ease-emphasized);
+  visibility: hidden;
+  transition:
+    grid-template-rows var(--ms-dur-base) var(--ms-ease-emphasized),
+    visibility 0s linear var(--ms-dur-base);
 }
 
 .ms-accordion__item--open .ms-accordion__panel {
   grid-template-rows: 1fr;
+  visibility: visible;
+  /* 展开:visibility 立刻可见(延迟 0),内容随网格撑开 */
+  transition:
+    grid-template-rows var(--ms-dur-base) var(--ms-ease-emphasized),
+    visibility 0s linear 0s;
 }
 
 /* 1fr 网格行配合 min-block-size: 0 + overflow 才能从 0 平滑撑开 */
 .ms-accordion__panel-inner {
   min-block-size: 0;
+  min-inline-size: 0;
   overflow: hidden;
 }
 
+/* —— 展开内容:在网格撑开的同时叠加淡入(magic;受 motion 调制) —— */
 .ms-accordion__content {
   padding-block: var(--ms-space-3) var(--ms-space-4);
   padding-inline: var(--ms-space-4);
@@ -119,15 +157,45 @@
   font-size: 0.875rem;
   line-height: 1.6;
   overflow-wrap: anywhere;
+  opacity: 0;
+  transform: translateY(calc(-0.25rem * var(--ms-motion-scale, 1)));
+  transition:
+    opacity var(--ms-dur-base) var(--ms-ease-standard),
+    transform var(--ms-dur-base) var(--ms-ease-emphasized);
+}
+
+.ms-accordion__item--open .ms-accordion__content {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .ms-accordion__item--disabled {
   opacity: 0.6;
 }
 
-/* —— 触控设备:触发头达到最小可点击高度(桌面精确指针不受影响) —— */
+/* —— 触控设备:触发头达到最小可点击高度(与密度取较大值) —— */
 @media (pointer: coarse) {
   .ms-accordion__trigger {
-    min-block-size: var(--ms-target-min);
+    min-block-size: max(calc(2.75rem * var(--ms-density-scale, 1)), var(--ms-target-min));
   }
+}
+
+/* —— 一键降级:无障碍偏好 / 全局开关都把展开收起动画压到瞬时,但保持最终态正确 —— */
+@media (prefers-reduced-motion: reduce) {
+  .ms-accordion__panel,
+  .ms-accordion__icon,
+  .ms-accordion__content {
+    transition-duration: 0.01ms;
+  }
+  .ms-accordion__icon {
+    transform: none;
+  }
+}
+
+[data-ms-motion="off"] .ms-accordion__panel,
+[data-ms-motion="off"] .ms-accordion__content {
+  transition-duration: 0.01ms;
+}
+[data-ms-motion="off"] .ms-accordion__content {
+  transform: none;
 }

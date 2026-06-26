@@ -1,17 +1,33 @@
 {
   "id": "menu",
   "name": "Menu",
-  "description": "下拉菜单:Popover API 进 top-layer + CSS Anchor Positioning 锚定 trigger,支持 ↑↓/Enter/Esc 键盘操作、danger 项与禁用项,带奥术发光入场动画,锚定位不支持时优雅降级。",
+  "description": "下拉菜单(旗舰深度):Popover API 进 top-layer + CSS Anchor Positioning(placement/align/offset)锚定 trigger。项支持 item/separator/group(带标题)、icon、shortcut(Kbd)、checked(menuitemcheckbox/radio)、href 链接多态;7 色调 tone 只读 6 槽位;受控 open/defaultOpen + onOpenChange 双通道、菜单级 onSelect、可拦截 onEscapeKeyDown/onPointerDownOutside;trigger 全事件+ref compose、...rest 透传、组合式 Menu.Item/Separator/Group/Trigger + renderItem;↑↓/Home/End/Enter/Esc + typeahead 类型搜索;奥术发光入场动画,fx/motion 一键降级,锚定位不支持时优雅降级。",
   "category": "overlay",
-  "tags": ["menu", "dropdown", "popover", "overlay", "anchor-positioning"],
+  "tags": [
+    "menu",
+    "dropdown",
+    "popover",
+    "overlay",
+    "anchor-positioning",
+    "tone",
+    "checkbox",
+    "radio",
+    "group",
+    "separator",
+    "shortcut",
+    "typeahead",
+    "controlled",
+    "composable",
+    "keyboard"
+  ],
   "status": "stable",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "frameworks": ["react"],
   "source": {
     "type": "original",
     "capturedAt": "2026-06-25",
-    "requirements": "下拉菜单:Popover API 进 top-layer + CSS Anchor Positioning 锚定 trigger,支持 ↑↓/Enter/Esc 键盘操作、danger 项与禁用项,带奥术发光入场动画,锚定位不支持时优雅降级。。magic-scope overlay 组件:用满平台原生能力(Popover API + CSS Anchor Positioning)自研,带降级、键盘可达、fx/motion 开关、入场动画。"
+    "requirements": "下拉菜单:Popover API 进 top-layer + CSS Anchor Positioning 锚定 trigger,支持 ↑↓/Enter/Esc 键盘操作、danger 项与禁用项,带奥术发光入场动画,锚定位不支持时优雅降级。magic-scope overlay 组件:用满平台原生能力(Popover API + CSS Anchor Positioning)自研,带降级、键盘可达、fx/motion 开关、入场动画。补强到旗舰深度:对标 Button/Input/Text —— item/separator/group/icon/shortcut/checkbox/radio/href、tone 槽位、受控双通道、菜单级与项级回调、可拦截浮层关闭、trigger/根全事件 compose 与透传、组合式 API + renderItem、typeahead。"
   },
   "dependencies": ["@magic-scope/tokens"],
-  "files": ["Menu.tsx", "Menu.css", "index.ts"]
+  "files": ["Menu.tsx", "Menu.css", "logic.ts", "index.ts"]
 }

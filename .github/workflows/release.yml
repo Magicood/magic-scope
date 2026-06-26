@@ -1,0 +1,58 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+
+# 串行,避免两次发布并发
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+permissions:
+  contents: write # 推送 version 提交 / tag
+  pull-requests: write # 开 "Version Packages" PR
+  id-token: write # OIDC:npm Trusted Publishing(免 token 发布)
+
+jobs:
+  release:
+    name: Version PR / Publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      # 有 changeset → 开/更新 "Version Packages" PR;
+      # 无 changeset(version PR 已合并)→ 执行 pnpm release 发布。
+      - name: Changesets (Version PR or Publish)
+        uses: changesets/action@v1
+        with:
+          version: pnpm run version
+          publish: pnpm release
+          commit: "chore(release): version packages"
+          title: "chore(release): version packages"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # —— 发布鉴权,二选一(见 .github/RELEASING.md)——
+          # A) Trusted Publishing(推荐,免 token):在 npmjs 给两个包各配一个
+          #    GitHub Actions trusted publisher(repo=Magicood/magic-scope, workflow=release.yml)。
+          #    上面 id-token: write 已就位,无需其它 secret。
+          # B) Automation Token(回退):在 repo Secrets 配 NPM_TOKEN(granular, 勾 bypass-2FA),
+          #    并取消下一行注释:
+          # NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          #
+          # provenance(公开可验证溯源)需要 **public 仓库**,当前仓库为 private,
+          # 故暂不开启;仓库转 public 后取消下一行注释即可:
+          # NPM_CONFIG_PROVENANCE: true

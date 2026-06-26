@@ -1,0 +1,161 @@
+/* Center —— 居中盒。flex + place-items 把子内容在水平/垂直/双轴居中。
+ * 响应式:组件层把每个 prop 的「base + 各断点档」注入成 --ms-center-<key>(-<bp>) 变量,
+ * 这里在各 viewport 媒体查询里把当前生效档赋给真正消费的变量(--c-*)。
+ * @media 条件用静态断点值(对齐 device.css「构建期常量注入」:媒体查询条件里 var() 不生效),
+ * 断点刻度同 @magic-scope/tokens 的 breakpoints.viewport(30/48/64/80/96rem)。
+ * 全部用 CSS 逻辑属性(place-items / gap / padding / min-block-size),RTL 友好。
+ *
+ * 级联回退链:每档的消费变量回退到「上一个更小断点」的同名变量,base(无后缀)为链尾,
+ * 末端再兜默认值。绝不让 var() 回退到消费变量自身(CSS 自定义属性自引用会整体失效)。 */
+
+.ms-center {
+  /* base 档:断点变量逐级覆盖,缺省时落到默认值 */
+  --c-place: var(--ms-center-axis, center center);
+  --c-gap: var(--ms-center-gap, 0);
+  --c-pad: var(--ms-center-pad, 0);
+  --c-minh: var(--ms-center-minh, auto);
+
+  display: flex;
+  place-items: var(--c-place);
+  min-block-size: var(--c-minh);
+}
+
+.ms-center--inline {
+  display: inline-flex;
+}
+
+/* 仅在显式给了对应 prop 时才接管该属性,避免无谓覆盖用户/继承样式 */
+.ms-center--has-gap {
+  gap: var(--c-gap);
+}
+.ms-center--has-pad {
+  padding: var(--c-pad);
+}
+
+/* —— 响应式逐档覆盖 —— 更大断点在源码靠后、天然胜出;
+ * 每档:有该档变量则用,否则回退到上一更小档的同名断点变量(最终回退到 base)。 */
+
+/* sm ≥ 30rem,回退到 base */
+@media (min-width: 30rem) {
+  .ms-center {
+    --c-place: var(--ms-center-axis-sm, var(--ms-center-axis, center center));
+    --c-gap: var(--ms-center-gap-sm, var(--ms-center-gap, 0));
+    --c-pad: var(--ms-center-pad-sm, var(--ms-center-pad, 0));
+    --c-minh: var(--ms-center-minh-sm, var(--ms-center-minh, auto));
+  }
+}
+
+/* md ≥ 48rem,回退到 sm→base */
+@media (min-width: 48rem) {
+  .ms-center {
+    --c-place: var(
+      --ms-center-axis-md,
+      var(--ms-center-axis-sm, var(--ms-center-axis, center center))
+    );
+    --c-gap: var(--ms-center-gap-md, var(--ms-center-gap-sm, var(--ms-center-gap, 0)));
+    --c-pad: var(--ms-center-pad-md, var(--ms-center-pad-sm, var(--ms-center-pad, 0)));
+    --c-minh: var(--ms-center-minh-md, var(--ms-center-minh-sm, var(--ms-center-minh, auto)));
+  }
+}
+
+/* lg ≥ 64rem,回退到 md→sm→base */
+@media (min-width: 64rem) {
+  .ms-center {
+    --c-place: var(
+      --ms-center-axis-lg,
+      var(--ms-center-axis-md, var(--ms-center-axis-sm, var(--ms-center-axis, center center)))
+    );
+    --c-gap: var(
+      --ms-center-gap-lg,
+      var(--ms-center-gap-md, var(--ms-center-gap-sm, var(--ms-center-gap, 0)))
+    );
+    --c-pad: var(
+      --ms-center-pad-lg,
+      var(--ms-center-pad-md, var(--ms-center-pad-sm, var(--ms-center-pad, 0)))
+    );
+    --c-minh: var(
+      --ms-center-minh-lg,
+      var(--ms-center-minh-md, var(--ms-center-minh-sm, var(--ms-center-minh, auto)))
+    );
+  }
+}
+
+/* xl ≥ 80rem,回退到 lg→…→base */
+@media (min-width: 80rem) {
+  .ms-center {
+    --c-place: var(
+      --ms-center-axis-xl,
+      var(
+        --ms-center-axis-lg,
+        var(--ms-center-axis-md, var(--ms-center-axis-sm, var(--ms-center-axis, center center)))
+      )
+    );
+    --c-gap: var(
+      --ms-center-gap-xl,
+      var(
+        --ms-center-gap-lg,
+        var(--ms-center-gap-md, var(--ms-center-gap-sm, var(--ms-center-gap, 0)))
+      )
+    );
+    --c-pad: var(
+      --ms-center-pad-xl,
+      var(
+        --ms-center-pad-lg,
+        var(--ms-center-pad-md, var(--ms-center-pad-sm, var(--ms-center-pad, 0)))
+      )
+    );
+    --c-minh: var(
+      --ms-center-minh-xl,
+      var(
+        --ms-center-minh-lg,
+        var(--ms-center-minh-md, var(--ms-center-minh-sm, var(--ms-center-minh, auto)))
+      )
+    );
+  }
+}
+
+/* 2xl ≥ 96rem,回退到 xl→…→base */
+@media (min-width: 96rem) {
+  .ms-center {
+    --c-place: var(
+      --ms-center-axis-2xl,
+      var(
+        --ms-center-axis-xl,
+        var(
+          --ms-center-axis-lg,
+          var(--ms-center-axis-md, var(--ms-center-axis-sm, var(--ms-center-axis, center center)))
+        )
+      )
+    );
+    --c-gap: var(
+      --ms-center-gap-2xl,
+      var(
+        --ms-center-gap-xl,
+        var(
+          --ms-center-gap-lg,
+          var(--ms-center-gap-md, var(--ms-center-gap-sm, var(--ms-center-gap, 0)))
+        )
+      )
+    );
+    --c-pad: var(
+      --ms-center-pad-2xl,
+      var(
+        --ms-center-pad-xl,
+        var(
+          --ms-center-pad-lg,
+          var(--ms-center-pad-md, var(--ms-center-pad-sm, var(--ms-center-pad, 0)))
+        )
+      )
+    );
+    --c-minh: var(
+      --ms-center-minh-2xl,
+      var(
+        --ms-center-minh-xl,
+        var(
+          --ms-center-minh-lg,
+          var(--ms-center-minh-md, var(--ms-center-minh-sm, var(--ms-center-minh, auto)))
+        )
+      )
+    );
+  }
+}

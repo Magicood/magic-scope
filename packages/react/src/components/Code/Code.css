@@ -1,0 +1,206 @@
+/* —— Code 基座:tone 槽位驱动 + 流式字阶 + 等宽字体 —— */
+.ms-code {
+  /* 容器边界:超长内容不撑破(行内随文流、块级横向滚动) */
+  max-inline-size: 100%;
+  border-radius: var(--ms-radius-sm);
+  font-family: inherit;
+  font-variant-ligatures: none;
+  tab-size: var(--ms-code-tab-size, 2);
+  -moz-tab-size: var(--ms-code-tab-size, 2);
+}
+
+/* 等宽字体(默认开;mono=false 时走继承字体) */
+.ms-code--mono {
+  font-family: var(--ms-font-mono);
+}
+
+/* —— 字号档(流式字阶,行内略小于正文显得紧致) —— */
+.ms-code--sm {
+  font-size: var(--ms-type-step--2);
+}
+.ms-code--md {
+  font-size: var(--ms-type-step--1);
+}
+.ms-code--lg {
+  font-size: var(--ms-type-step-0);
+}
+
+/* ============ 行内 <code> ============ */
+.ms-code--inline {
+  display: inline;
+  padding-inline: 0.4em;
+  padding-block: 0.12em;
+  /* 长串/URL 不撑破行,允许在任意处断行 */
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  white-space: break-spaces;
+  line-height: var(--ms-leading-snug);
+}
+
+/* ============ 块级 <pre><code> ============ */
+.ms-code--block {
+  position: relative;
+  display: block;
+  margin: 0;
+  padding: var(--ms-space-4, 1rem);
+  overflow-x: auto;
+  /* 保留空白与缩进;横向滚动而非换行 */
+  white-space: pre;
+  line-height: var(--ms-leading-relaxed);
+  /* 等宽数字/制表对齐更稳 */
+  font-variant-numeric: tabular-nums;
+  /* 滚动时给复制按钮留呼吸位 */
+  scrollbar-width: thin;
+}
+.ms-code--block.ms-code--copyable {
+  padding-inline-end: calc(var(--ms-space-4, 1rem) + 2rem);
+}
+.ms-code__code {
+  display: block;
+  font: inherit;
+  color: inherit;
+}
+
+/* —— 变体:全部只读 tone 槽位(--ms-c / --ms-c-soft / ...),零硬编码配色 —— */
+/* soft:柔色底(行内默认,块级也克制) */
+.ms-code--soft {
+  background-color: var(--ms-c-soft);
+  color: var(--ms-c);
+}
+/* solid:实底 + tone 前景 + 轻辉光 */
+.ms-code--solid {
+  background-color: var(--ms-c);
+  color: var(--ms-on-c);
+  box-shadow: 0 0 calc(10px * var(--ms-fx-glow, 1)) -6px var(--ms-c-glow);
+}
+/* outline:描边,无底 */
+.ms-code--outline {
+  border: 1px solid color-mix(in oklch, var(--ms-c) 45%, transparent);
+  color: var(--ms-c);
+}
+/* ghost:无底无边,仅着色(嵌进正文最轻量) */
+.ms-code--ghost {
+  background-color: transparent;
+  color: var(--ms-c);
+}
+/* neutral tone 下 soft/outline 的前景压回正文色更易读(代码主体不该是低对比的 muted) */
+.ms-tone-neutral.ms-code--soft,
+.ms-tone-neutral.ms-code--outline,
+.ms-tone-neutral.ms-code--ghost {
+  color: var(--ms-color-fg);
+}
+.ms-tone-neutral.ms-code--soft {
+  background-color: var(--ms-color-surface-sunken);
+}
+.ms-tone-neutral.ms-code--outline {
+  border-color: var(--ms-color-border);
+}
+
+/* —— 行号(CSS counter,不进选区,复制仍得纯代码) —— */
+.ms-code--numbered .ms-code__code {
+  counter-reset: ms-code-line;
+}
+.ms-code--numbered .ms-code__code {
+  /* 用 white-space:pre 下的换行做行;每行前缀计数槽。
+     注意:依赖内容是文本行(\n 分隔),复杂嵌套结构请关 lineNumbers。 */
+  display: block;
+}
+
+/* —— 复制按钮 —— */
+.ms-code__copy {
+  position: absolute;
+  inset-block-start: var(--ms-space-2, 0.5rem);
+  inset-inline-end: var(--ms-space-2, 0.5rem);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 1.85rem;
+  block-size: 1.85rem;
+  padding: 0;
+  border: 1px solid var(--ms-color-border);
+  border-radius: var(--ms-radius-sm);
+  background-color: var(--ms-color-surface-raised);
+  color: var(--ms-color-fg-muted);
+  font-size: 0.95em;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0;
+  transition:
+    opacity var(--ms-dur-base, 0.2s) var(--ms-ease-standard),
+    color var(--ms-dur-fast, 0.12s) var(--ms-ease-standard),
+    border-color var(--ms-dur-fast, 0.12s) var(--ms-ease-standard),
+    transform var(--ms-dur-fast, 0.12s) var(--ms-ease-emphasized);
+}
+/* hover/focus 容器或按钮时浮现(指针设备靠悬停,键盘靠 focus-within,触屏常驻可见) */
+.ms-code--block:hover .ms-code__copy,
+.ms-code--block:focus-within .ms-code__copy {
+  opacity: 1;
+}
+@media (hover: none) {
+  .ms-code__copy {
+    opacity: 1;
+  }
+}
+@media (hover: hover) {
+  .ms-code__copy:hover {
+    color: var(--ms-c);
+    border-color: color-mix(in oklch, var(--ms-c) 50%, transparent);
+  }
+}
+.ms-code__copy:focus-visible {
+  opacity: 1;
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--ms-color-bg),
+    0 0 0 4px var(--ms-color-focus-ring);
+}
+.ms-code__copy:active {
+  transform: scale(calc(1 - 0.06 * var(--ms-motion-scale, 1)));
+}
+/* 已复制:着成功色 + 轻辉光 */
+.ms-code__copy[data-copied] {
+  color: var(--ms-color-success, var(--ms-c));
+  border-color: color-mix(in oklch, var(--ms-color-success, var(--ms-c)) 50%, transparent);
+}
+.ms-code__copy-icon {
+  display: inline-flex;
+  line-height: 0;
+}
+
+/* —— 魔法:辉光(text-shadow,受 --ms-fx-glow 调制) —— */
+.ms-code--glow {
+  text-shadow: 0 0 calc(0.35em * var(--ms-fx-glow, 1)) var(--ms-c-glow);
+}
+.ms-code--glow-strong {
+  text-shadow:
+    0 0 calc(0.6em * var(--ms-fx-glow, 1)) var(--ms-c-glow),
+    0 0 calc(0.25em * var(--ms-fx-glow, 1)) var(--ms-c-glow);
+}
+/* fx 总闸关闭时去辉光 */
+[data-ms-fx="off"] .ms-code--glow,
+[data-ms-fx="off"] .ms-code--glow-strong {
+  text-shadow: none;
+}
+
+/* —— 选区高亮(接全库 selection 槽位) —— */
+.ms-code::selection,
+.ms-code *::selection {
+  background: var(--ms-color-selection);
+  color: var(--ms-color-on-selection);
+}
+
+/* —— 动效降级:复制按钮过渡尊重 reduced-motion / data-ms-motion —— */
+@media (prefers-reduced-motion: reduce) {
+  .ms-code__copy {
+    transition: opacity var(--ms-dur-base, 0.2s) linear;
+  }
+  .ms-code__copy:active {
+    transform: none;
+  }
+}
+[data-ms-motion="off"] .ms-code__copy {
+  transition: opacity var(--ms-dur-base, 0.2s) linear;
+}
+[data-ms-motion="off"] .ms-code__copy:active {
+  transform: none;
+}

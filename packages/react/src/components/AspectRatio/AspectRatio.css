@@ -1,0 +1,127 @@
+/* AspectRatio —— 宽高比盒。比例值经 --ms-ar-ratio 驱动;子内容绝对铺满;旧引擎 padding-top 兜底。
+ * 响应式:断点档写成 --ms-ar-ratio-<bp>,在对应 @media (min-width) 内把 --ms-ar-ratio 重指过去。
+ * 条件里不出现 var()(@media 不支持),只在「值」里替换,故合法且零运行时。 */
+
+.ms-aspect-ratio {
+  /* 默认比例兜底(组件侧也会写入,这里保证纯 CSS 使用也不塌) */
+  --ms-ar-ratio: 16 / 9;
+  --ms-ar-object-pos: center;
+
+  position: relative;
+  display: block;
+  inline-size: 100%;
+  /* 现代路径:用 aspect-ratio 维持比例,块高由比例算出 */
+  aspect-ratio: var(--ms-ar-ratio);
+  /* 比例盒本身不应被内容撑高(内容是绝对定位的);min-block-size 0 防 flex/grid 父级拉伸 */
+  min-block-size: 0;
+  overflow: visible;
+}
+
+/* 内容包裹层:绝对铺满整个比例盒,媒体子元素在其内 100% 填充 */
+.ms-aspect-ratio__content {
+  position: absolute;
+  inset: 0;
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+/* 直接子媒体(img/video/iframe/picture>img/canvas/svg):铺满 + 继承 object 行为 */
+.ms-aspect-ratio__content > :where(img, video, iframe, canvas, svg, picture, embed, object) {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-position: var(--ms-ar-object-pos);
+}
+
+/* object-fit 档(仅替换元素生效) */
+.ms-aspect-ratio--fit-cover .ms-aspect-ratio__content
+  > :where(img, video, iframe, canvas, svg, picture, embed, object) {
+  object-fit: cover;
+}
+.ms-aspect-ratio--fit-contain
+  .ms-aspect-ratio__content
+  > :where(img, video, iframe, canvas, svg, picture, embed, object) {
+  object-fit: contain;
+}
+.ms-aspect-ratio--fit-fill
+  .ms-aspect-ratio__content
+  > :where(img, video, iframe, canvas, svg, picture, embed, object) {
+  object-fit: fill;
+}
+.ms-aspect-ratio--fit-none
+  .ms-aspect-ratio__content
+  > :where(img, video, iframe, canvas, svg, picture, embed, object) {
+  object-fit: none;
+}
+.ms-aspect-ratio--fit-scale-down
+  .ms-aspect-ratio__content
+  > :where(img, video, iframe, canvas, svg, picture, embed, object) {
+  object-fit: scale-down;
+}
+
+/* 裁剪 + 圆角(token 档):圆角自动需要裁剪才能让媒体跟随圆角 */
+.ms-aspect-ratio--clip {
+  overflow: hidden;
+}
+.ms-aspect-ratio--rounded-sm {
+  border-radius: var(--ms-radius-sm);
+}
+.ms-aspect-ratio--rounded-md {
+  border-radius: var(--ms-radius-md);
+}
+.ms-aspect-ratio--rounded-lg {
+  border-radius: var(--ms-radius-lg);
+}
+.ms-aspect-ratio--rounded-xl {
+  border-radius: var(--ms-radius-xl);
+}
+.ms-aspect-ratio--rounded-full {
+  border-radius: var(--ms-radius-full);
+}
+
+/* —— 响应式断点:仅对组件标注了 --bp-<x> 的实例生效,把 --ms-ar-ratio 重指到该档 —— */
+/* sm: 30rem / 480px */
+@media (min-width: 30rem) {
+  .ms-aspect-ratio--bp-sm {
+    --ms-ar-ratio: var(--ms-ar-ratio-sm);
+  }
+}
+/* md: 48rem / 768px */
+@media (min-width: 48rem) {
+  .ms-aspect-ratio--bp-md {
+    --ms-ar-ratio: var(--ms-ar-ratio-md);
+  }
+}
+/* lg: 64rem / 1024px */
+@media (min-width: 64rem) {
+  .ms-aspect-ratio--bp-lg {
+    --ms-ar-ratio: var(--ms-ar-ratio-lg);
+  }
+}
+/* xl: 80rem / 1280px */
+@media (min-width: 80rem) {
+  .ms-aspect-ratio--bp-xl {
+    --ms-ar-ratio: var(--ms-ar-ratio-xl);
+  }
+}
+/* 2xl: 96rem / 1536px */
+@media (min-width: 96rem) {
+  .ms-aspect-ratio--bp-2xl {
+    --ms-ar-ratio: var(--ms-ar-ratio-2xl);
+  }
+}
+
+/* —— 旧引擎兜底:不支持 aspect-ratio 时,用 padding-top 百分比技巧 ——
+ * padding 百分比按「包含块宽度」计算,故 padding-block-start: calc(100% / (w/h)) 即得正确高度。
+ * 这里用 tan(atan2()) 把 --ms-ar-ratio 当作数值参与计算;为最大兼容,直接用 calc 配合
+ * 自定义属性数值。注:此分支主要服务远古引擎,evergreen 浏览器走上面的 aspect-ratio 主路径。 */
+@supports not (aspect-ratio: 1 / 1) {
+  .ms-aspect-ratio {
+    aspect-ratio: auto;
+    block-size: 0;
+    /* 默认 16:9 兜底高度;断点档无法在此安全计算时退回此默认,保证不塌 */
+    padding-block-start: 56.25%;
+  }
+  /* 内容层在 padding 撑出的盒内绝对铺满(inset:0 已在主规则给出) */
+}

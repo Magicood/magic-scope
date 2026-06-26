@@ -1,9 +1,21 @@
 {
   "id": "breadcrumb",
   "name": "Breadcrumb",
-  "description": "面包屑导航:nav>ol>li 结构,链接项用 link 色加 hover 微光,当前项 aria-current=\"page\" 用 fg 色不可点,项间插装饰性分隔符。",
+  "description": "面包屑导航(生产级):nav>ol>li 结构,链接项读 tone 槽位加可降级 hover 微光,当前项 aria-current=\"page\" 不可点。支持 tone 色调、maxItems 折叠省略(可展开)、itemRender/item.render/linkAs 自定义渲染(接路由库)、onItemClick/item.onClick 路由拦截(preventDefault)、item.icon、classNames 子部件类名钩子、...rest 透传 nav 原生事件、i18n aria-label。",
   "category": "navigation",
-  "tags": ["navigation", "breadcrumb", "nav", "link", "dark", "arcane"],
+  "tags": [
+    "navigation",
+    "breadcrumb",
+    "nav",
+    "link",
+    "dark",
+    "arcane",
+    "tone",
+    "collapse",
+    "router",
+    "i18n",
+    "a11y"
+  ],
   "status": "stable",
   "version": "0.1.0",
   "frameworks": ["react"],
@@ -13,5 +25,5 @@
     "requirements": "面包屑导航:nav>ol>li 结构,链接项用 link 色加 hover 微光,当前项 aria-current=\"page\" 用 fg 色不可点,项间插装饰性分隔符。。magic-scope 结构/导航组件:自研、消费 tokens,完整状态、键盘可达、fx/motion 开关、逻辑属性。"
   },
   "dependencies": ["@magic-scope/tokens"],
-  "files": ["Breadcrumb.tsx", "Breadcrumb.css", "index.ts"]
+  "files": ["Breadcrumb.tsx", "Breadcrumb.css", "logic.ts", "index.ts"]
 }

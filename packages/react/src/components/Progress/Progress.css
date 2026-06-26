@@ -1,35 +1,112 @@
+/* —— Progress 根:线性默认是 inline 流式条;有 label 时与文本横向排布 —— */
 .ms-progress {
+  --ms-progress-h: 0.5rem;
   display: block;
   inline-size: 100%;
-  block-size: 0.5rem;
+  max-inline-size: 100%;
+  color: var(--ms-c);
+}
+
+/* 有 label 的线性:条 + 文本横排,文本不挤压 */
+.ms-progress--linear.ms-progress--has-label {
+  display: flex;
+  align-items: center;
+  gap: var(--ms-space-2, 0.5rem);
+}
+
+/* —— 尺寸:线性改条高,并按密度缩放 —— */
+.ms-progress--sm {
+  --ms-progress-h: calc(0.25rem * var(--ms-density-scale, 1));
+  --ms-progress-glow: 4px;
+}
+.ms-progress--md {
+  --ms-progress-h: calc(0.5rem * var(--ms-density-scale, 1));
+  --ms-progress-glow: 8px;
+}
+.ms-progress--lg {
+  --ms-progress-h: calc(0.875rem * var(--ms-density-scale, 1));
+  --ms-progress-glow: 14px;
+}
+
+/* —— 线性轨道:底槽 —— */
+.ms-progress__track {
+  position: relative;
+  display: block;
+  inline-size: 100%;
+  min-inline-size: 0;
+  flex: 1 1 auto;
+  block-size: var(--ms-progress-h);
   overflow: hidden;
   background-color: var(--ms-color-surface-sunken);
   border-radius: var(--ms-radius-full);
-  box-shadow: inset 0 0 calc(4px * var(--ms-fx-glow, 1)) -1px var(--ms-color-glow);
+  box-shadow: inset 0 0 calc(4px * var(--ms-fx-glow, 1)) -1px var(--ms-c-glow);
 }
 
-.ms-progress__fill {
+/* —— 线性填充:tone 槽位渐变 + 奥术发光 —— */
+.ms-progress--linear .ms-progress__fill {
+  position: relative;
   display: block;
   block-size: 100%;
   inline-size: 0%;
-  background-color: var(--ms-color-primary);
-  background-image: linear-gradient(90deg, var(--ms-color-primary), var(--ms-color-glow));
+  background-color: var(--ms-c);
+  background-image: linear-gradient(90deg, var(--ms-c), var(--ms-c-glow));
   border-radius: var(--ms-radius-full);
   box-shadow:
-    0 0 calc(8px * var(--ms-fx-glow, 1)) -1px var(--ms-color-glow),
-    0 0 calc(16px * var(--ms-fx-glow, 1)) -4px var(--ms-color-glow);
+    0 0 calc(var(--ms-progress-glow, 8px) * var(--ms-fx-glow, 1)) -1px var(--ms-c-glow),
+    0 0 calc(var(--ms-progress-glow, 8px) * 2 * var(--ms-fx-glow, 1)) -4px var(--ms-c-glow);
   transition:
     inline-size var(--ms-dur-base) var(--ms-ease-emphasized),
     box-shadow var(--ms-dur-base) var(--ms-ease-standard);
 }
 
-/* —— 不确定态:一段填充左右往返流动 —— */
-.ms-progress--indeterminate .ms-progress__fill {
-  inline-size: 40%;
-  transition: none;
-  animation: ms-progress-slide 1.4s var(--ms-ease-standard) infinite;
+/* —— 缓冲段:fill 之下、track 之上的弱色段 —— */
+.ms-progress__buffer {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  block-size: 100%;
+  inline-size: 0%;
+  background-color: var(--ms-c-soft);
+  border-radius: var(--ms-radius-full);
+  transition: inline-size var(--ms-dur-base) var(--ms-ease-standard);
 }
 
+/* —— 条纹:斜向 repeating 渐变叠在 fill 上 —— */
+.ms-progress--striped .ms-progress__fill {
+  background-image:
+    linear-gradient(90deg, var(--ms-c), var(--ms-c-glow)),
+    repeating-linear-gradient(
+      45deg,
+      color-mix(in oklch, var(--ms-on-c) 22%, transparent) 0,
+      color-mix(in oklch, var(--ms-on-c) 22%, transparent) 0.5rem,
+      transparent 0.5rem,
+      transparent 1rem
+    );
+  background-size:
+    100% 100%,
+    1.414rem 1.414rem;
+}
+
+/* 条纹流动:位移用 motion-scale 门控(关闭即静止,不影响进度可读) */
+.ms-progress--animated .ms-progress__fill {
+  animation: ms-progress-stripes 1s linear infinite;
+}
+@keyframes ms-progress-stripes {
+  to {
+    background-position:
+      0 0,
+      calc(1.414rem * var(--ms-motion-scale, 1)) 0;
+  }
+}
+
+/* —— 不确定态(线性):一段填充左右往返流动 —— */
+.ms-progress--linear.ms-progress--indeterminate .ms-progress__fill {
+  inline-size: 40%;
+  transition: none;
+  /* duration 随 motion-scale:档位越低越慢,off(scale=0)趋近静止;另有显式 off 兜底 */
+  animation: ms-progress-slide calc(1.4s / max(var(--ms-motion-scale, 1), 0.01))
+    var(--ms-ease-standard) infinite;
+}
 @keyframes ms-progress-slide {
   0% {
     transform: translateX(-110%);
@@ -39,9 +116,116 @@
   }
 }
 
-/* —— 尊重 reduced-motion:放慢往返,保留「进行中」语义,不完全静止 —— */
-@media (prefers-reduced-motion: reduce) {
-  .ms-progress--indeterminate .ms-progress__fill {
-    animation-duration: 4s;
+/* —— 环形:SVG 容器 —— */
+.ms-progress--circular {
+  --ms-progress-d: 3rem;
+  position: relative;
+  display: inline-flex;
+  inline-size: var(--ms-progress-d);
+  block-size: var(--ms-progress-d);
+  align-items: center;
+  justify-content: center;
+}
+.ms-progress--circular.ms-progress--sm {
+  --ms-progress-d: calc(2.25rem * var(--ms-density-scale, 1));
+}
+.ms-progress--circular.ms-progress--md {
+  --ms-progress-d: calc(3rem * var(--ms-density-scale, 1));
+}
+.ms-progress--circular.ms-progress--lg {
+  --ms-progress-d: calc(4.5rem * var(--ms-density-scale, 1));
+}
+
+.ms-progress__svg {
+  inline-size: 100%;
+  block-size: 100%;
+  /* 从 12 点起、顺时针绘制 */
+  transform: rotate(-90deg);
+}
+
+.ms-progress--circular .ms-progress__track {
+  /* 覆盖线性 track 的盒模型,作 SVG circle 用 */
+  display: revert;
+  inline-size: revert;
+  block-size: revert;
+  overflow: revert;
+  background: none;
+  box-shadow: none;
+  stroke: var(--ms-color-surface-sunken);
+}
+
+.ms-progress--circular .ms-progress__fill {
+  stroke: var(--ms-c);
+  filter: drop-shadow(
+    0 0 calc(var(--ms-progress-glow, 8px) * var(--ms-fx-glow, 1)) var(--ms-c-glow)
+  );
+  transition: stroke-dashoffset var(--ms-dur-base) var(--ms-ease-emphasized);
+}
+
+/* 不确定态(环形):整个 SVG 旋转,弧固定 25% */
+.ms-progress--circular.ms-progress--indeterminate .ms-progress__svg {
+  animation: ms-progress-spin calc(1s / max(var(--ms-motion-scale, 1), 0.01)) linear infinite;
+}
+.ms-progress--circular.ms-progress--indeterminate .ms-progress__fill {
+  stroke-dashoffset: calc(var(--ms-progress-circ, 100) * 0.7);
+  transition: none;
+}
+@keyframes ms-progress-spin {
+  from {
+    transform: rotate(-90deg);
   }
+  to {
+    transform: rotate(270deg);
+  }
+}
+
+/* —— label / 数值文本 —— */
+.ms-progress__label {
+  flex: 0 0 auto;
+  min-inline-size: 0;
+  font-size: var(--ms-type-step--1, 0.875em);
+  font-variant-numeric: tabular-nums;
+  color: var(--ms-color-fg-muted);
+  white-space: nowrap;
+}
+.ms-progress__label--center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ms-c);
+  text-shadow: 0 0 calc(0.4em * var(--ms-fx-glow, 1)) var(--ms-c-glow);
+}
+
+/* —— 实例级发光关断 + 全局 fx 总闸关断 —— */
+.ms-progress--glow-off .ms-progress__fill,
+[data-ms-fx="off"] .ms-progress__fill {
+  box-shadow: none;
+  filter: none;
+}
+.ms-progress--glow-off .ms-progress__track,
+[data-ms-fx="off"] .ms-progress__track {
+  box-shadow: none;
+}
+.ms-progress--glow-off .ms-progress__label--center,
+[data-ms-fx="off"] .ms-progress__label--center {
+  text-shadow: none;
+}
+
+/* —— 动效一键降级:reduced-motion 或 data-ms-motion=off 停所有进度动画 —— */
+@media (prefers-reduced-motion: reduce) {
+  .ms-progress .ms-progress__fill {
+    transition-duration: 0.01ms;
+  }
+  .ms-progress--animated .ms-progress__fill,
+  .ms-progress--linear.ms-progress--indeterminate .ms-progress__fill,
+  .ms-progress--circular.ms-progress--indeterminate .ms-progress__svg {
+    animation: none;
+  }
+}
+[data-ms-motion="off"] .ms-progress--animated .ms-progress__fill,
+[data-ms-motion="off"] .ms-progress--linear.ms-progress--indeterminate .ms-progress__fill,
+[data-ms-motion="off"] .ms-progress--circular.ms-progress--indeterminate .ms-progress__svg {
+  animation: none;
 }
