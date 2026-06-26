@@ -34,9 +34,9 @@ describe('themes', () => {
 });
 
 describe('engine / varName', () => {
-  it('themeToVars 生成 48 个变量且 kebab 命名正确', () => {
+  it('themeToVars 生成 55 个变量且 kebab 命名正确', () => {
     const vars = themeToVars(arcaneDark);
-    expect(Object.keys(vars).length).toBe(48);
+    expect(Object.keys(vars).length).toBe(55);
     expect(vars['--ms-color-surface-raised']).toBe(arcaneDark.color.surfaceRaised);
     expect(vars['--ms-color-primary']).toBe('#8B5CF6');
     expect(vars['--ms-ease-emphasized']).toBe(arcaneDark.motion.easingEmphasized);
