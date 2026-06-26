@@ -1,0 +1,24 @@
+{
+  "id": "collapsible",
+  "name": "Collapsible",
+  "description": "单项折叠原语:Trigger 切换按钮 + Content 可折叠区,受控/非受控,高度过渡平滑展开收起,Content 常驻挂载保活子树。",
+  "category": "data-display",
+  "tags": ["collapsible", "disclosure", "expandable", "toggle", "primitive", "show-hide"],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-26",
+    "requirements": "需要一个比 Accordion 更底层的单个开合原语:没有 single/multiple 互斥分组,只管「一段内容的展开与收起」,供使用方自由拼装(FAQ 行、设置项、详情展开块、侧栏分区等)。对标 Radix Collapsible 的复合 API(Root + Trigger + Content),提供受控/非受控双通道、disabled 整体禁用。高度过渡用 grid-template-rows 0fr↔1fr 平滑撑高,并随 reduced-motion / data-ms-motion=off 降级为瞬时。a11y:Trigger 原生 button + aria-expanded/aria-controls,Content role=region + aria-labelledby。兼容性取舍(透明备注):Content 始终常驻挂载(对齐 Accordion),靠 data-state 切换网格行高 + visibility 延迟过渡播双向动画、inert={!open} 隐藏交互/读屏。此设计取代了早期「收起即卸载 + 退场暂留 + 硬编码 400ms 兜底定时器」实现——后者有三个真实 bug:收起那拍渲染守卫先于 effect 卸载又重挂(收起动画不播 + Content 子树及其 state/输入值/滚动/焦点被销毁)、首次展开带 open 态直接插入 DOM 无样式变化(展开动画被跳过)、兜底定时器硬编码 400ms(覆盖 --ms-dur-base≥400ms 时收起动画被提前卸载截断)。常驻挂载一并根治三者且无需任何兜底定时器。代价:forceMount 属性(根 + Content 实例级)因 Content 已恒挂载而成为 no-op,标 @deprecated 仅为不破坏既有 API;不再有「收起后从 DOM 卸载」行为,依赖收起卸载省渲染开销者需自行条件渲染整个 Collapsible。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": [
+    "Collapsible.tsx",
+    "Collapsible.css",
+    "logic.ts",
+    "logic.test.ts",
+    "Collapsible.test.tsx",
+    "index.ts"
+  ]
+}

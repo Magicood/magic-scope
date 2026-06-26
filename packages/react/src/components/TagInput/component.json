@@ -1,0 +1,18 @@
+{
+  "id": "tag-input",
+  "name": "TagInput",
+  "description": "标签 / 令牌输入:输入框内把已添加项渲染成可删除芯片,回车或分隔符把当前输入转成标签,空输入 Backspace 删尾。支持受控/非受控、maxTags 上限、去重、validate 校验、粘贴多标签切分、双击编辑、失焦提交、清空全部与 renderTag 自绘留口。",
+  "category": "forms",
+  "tags": ["tag", "token", "chips", "input", "multi-value", "form", "tagging", "keywords"],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-26",
+    "requirements": "表单里需要一个把自由文本切成多枚可删除标签的输入控件:回车 / 自定义分隔符(默认逗号)成 tag、空输入 Backspace 删尾、粘贴含分隔符的串一次性切多枚;约束侧要能限数量(maxTags)、默认去重(大小写不敏感可配)、接业务 validate 否决,被拒走 onReject 而非静默吞掉。要受控/非受控双通道接 Form(invalid + aria-invalid)。差异化深度:双击改写标签(editable)、失焦自动提交残留(addOnBlur)、清空全部(clearable 复用 input.clear)、renderTag 完全自绘留口。可达性:外层 role=group、输入 role=combobox、每枚移除按钮 aria-label 走 tag.remove、← 进入标签导航 + ←→/Backspace 在标签间操作;多标签换行不撑破。纯算法(规整/分隔/能否新增)抽进 logic.ts 便于平移其它框架内核。",
+    "notes": "复用全库 tone resolver 与 --ms-* token,观感对齐 Tag(soft)与 Input(聚焦发光环);i18n 复用既有 key(tag.remove / input.clear),本组件不新增文案 key。兼容性边界(透明备注):(1) 回车提交守卫 IME 组合态(nativeEvent.isComposing / keyCode===229),复用 Textarea 同范式,CJK 选词确认的 Enter 不误提交。(2) 键入触发分隔符:单字符走 keydown 即时命中;多字符分隔符(如 '::')keydown 命中不了(键盘事件 key 永远单字符),改由 onChange 检测 draft 末尾后缀切分,行为与单字符一致;粘贴路径对单/多字符一视同仁。(3) renderTag 自绘模式:列表项 key 由组件负责(用户无需自写);← / → / Backspace 标签键盘导航需用户把 RenderTagContext.ref 挂到自绘的可聚焦元素上才生效,未挂则该标签不参与键盘导航(已知契约)。(4) 粘贴被全部去重/超限拒掉(无净新增)时保留输入框已有草稿,不吞用户正在编辑的文本。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["TagInput.tsx", "TagInput.css", "logic.ts", "index.ts"]
+}

@@ -1,0 +1,166 @@
+/* —— Editable:行内编辑(展示态 ↔ 编辑态)。消费 tone 槽位做编辑态聚焦发光。 —— */
+.ms-editable {
+  display: inline-flex;
+  align-items: stretch;
+  inline-size: 100%;
+  /* 内容边界:shrink-to-fit 父容器下不漫出 */
+  max-inline-size: 100%;
+  min-inline-size: 0;
+  color: var(--ms-color-fg);
+  font-family: var(--ms-font-sans);
+}
+
+/* —— 展示态:看似纯文本,hover 透出可编辑暗示(虚线 / 浅底) —— */
+.ms-editable__preview {
+  display: inline-flex;
+  align-items: center;
+  inline-size: 100%;
+  min-inline-size: 0;
+  margin: 0;
+  border: 1px solid transparent;
+  border-radius: var(--ms-radius-md);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: text;
+  /* 内容边界:超长文本截断省略,不撑破容器 */
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  transition:
+    border-color var(--ms-dur-fast) var(--ms-ease-standard),
+    background-color var(--ms-dur-fast) var(--ms-ease-standard),
+    box-shadow var(--ms-dur-base) var(--ms-ease-standard);
+}
+
+@media (hover: hover) {
+  .ms-editable__preview:hover {
+    border-color: var(--ms-color-border);
+    background: var(--ms-color-surface-sunken);
+  }
+}
+
+.ms-editable__preview:focus-visible {
+  outline: none;
+  border-color: var(--ms-c, var(--ms-color-primary));
+  box-shadow:
+    0 0 0 3px color-mix(in oklch, var(--ms-c-glow, var(--ms-color-focus-ring)) 35%, transparent),
+    0 0 calc(14px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow, var(--ms-color-glow));
+}
+
+/* 空值:占位文本染弱化前景 */
+.ms-editable__preview[data-empty] {
+  color: var(--ms-color-fg-subtle);
+}
+
+/* —— 编辑态输入:带框、聚焦发光环(读 tone 槽位) —— */
+.ms-editable__input {
+  display: block;
+  inline-size: 100%;
+  min-inline-size: 0;
+  margin: 0;
+  border: 1px solid var(--ms-color-border);
+  border-radius: var(--ms-radius-md);
+  background-color: var(--ms-color-surface);
+  background-image: linear-gradient(
+    180deg,
+    color-mix(in oklch, var(--ms-color-glow) 4%, transparent),
+    transparent 60%
+  );
+  color: inherit;
+  font: inherit;
+  box-shadow: inset 0 0 calc(12px * var(--ms-fx-glow, 1)) -10px var(--ms-color-glow);
+  transition:
+    border-color var(--ms-dur-fast) var(--ms-ease-standard),
+    box-shadow var(--ms-dur-base) var(--ms-ease-standard);
+}
+
+textarea.ms-editable__input {
+  resize: vertical;
+  min-block-size: calc(4rem * var(--ms-density-scale, 1));
+  line-height: 1.5;
+}
+
+.ms-editable__input::placeholder {
+  color: var(--ms-color-fg-subtle);
+}
+
+.ms-editable__input:focus {
+  outline: none;
+  border-color: var(--ms-c, var(--ms-color-primary));
+  box-shadow:
+    0 0 0 3px color-mix(in oklch, var(--ms-c-glow, var(--ms-color-focus-ring)) 35%, transparent),
+    0 0 calc(16px * var(--ms-fx-glow, 1)) -6px var(--ms-c-glow, var(--ms-color-glow)),
+    inset 0 0 calc(18px * var(--ms-fx-glow, 1)) -12px var(--ms-c, var(--ms-color-primary));
+}
+
+/* —— invalid:染 danger 环(组件已挂 ms-tone-danger,--ms-c* 自动变 danger) —— */
+.ms-editable--invalid .ms-editable__input {
+  border-color: var(--ms-color-danger);
+}
+.ms-editable--invalid .ms-editable__preview {
+  border-color: color-mix(in oklch, var(--ms-color-danger) 40%, transparent);
+}
+
+/* —— disabled —— */
+.ms-editable--disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+.ms-editable--disabled .ms-editable__preview,
+.ms-editable--disabled .ms-editable__input {
+  cursor: not-allowed;
+}
+
+/* —— 尺寸(逻辑属性 + 随密度缩放;preview 与 input 内边距对齐,切换不跳动) —— */
+.ms-editable--sm .ms-editable__preview,
+.ms-editable--sm .ms-editable__input {
+  min-block-size: calc(2rem * var(--ms-density-scale, 1));
+  padding-inline: var(--ms-space-2);
+  padding-block: var(--ms-space-1);
+  font-size: 0.833rem;
+}
+.ms-editable--md .ms-editable__preview,
+.ms-editable--md .ms-editable__input {
+  min-block-size: calc(2.5rem * var(--ms-density-scale, 1));
+  padding-inline: var(--ms-space-3);
+  padding-block: var(--ms-space-2);
+  font-size: 1rem;
+}
+.ms-editable--lg .ms-editable__preview,
+.ms-editable--lg .ms-editable__input {
+  min-block-size: calc(3rem * var(--ms-density-scale, 1));
+  padding-inline: var(--ms-space-4);
+  padding-block: var(--ms-space-2);
+  font-size: 1.2rem;
+}
+
+/* —— 触控:热区抬到 --ms-target-min;sm 字号抬到 ≥16px 防 iOS 聚焦缩放 —— */
+@media (pointer: coarse) {
+  .ms-editable--sm .ms-editable__preview,
+  .ms-editable--sm .ms-editable__input {
+    min-block-size: max(calc(2rem * var(--ms-density-scale, 1)), var(--ms-target-min));
+    font-size: max(16px, 0.833rem);
+  }
+  .ms-editable--md .ms-editable__preview,
+  .ms-editable--md .ms-editable__input {
+    min-block-size: max(calc(2.5rem * var(--ms-density-scale, 1)), var(--ms-target-min));
+  }
+  .ms-editable--lg .ms-editable__preview,
+  .ms-editable--lg .ms-editable__input {
+    min-block-size: max(calc(3rem * var(--ms-density-scale, 1)), var(--ms-target-min));
+  }
+}
+
+/* —— 尊重 reduced-motion 与全局动效开关 —— */
+@media (prefers-reduced-motion: reduce) {
+  .ms-editable__preview,
+  .ms-editable__input {
+    transition: none;
+  }
+}
+[data-ms-motion="off"] .ms-editable__preview,
+[data-ms-motion="off"] .ms-editable__input {
+  transition: none;
+}

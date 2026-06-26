@@ -1,0 +1,191 @@
+/* —— Toggle 双态切换按钮 —— Radix 风单按钮,aria-pressed 表达按下 / 未按下两态。
+ * 未按下走「静默」基底(读 fg-muted),按下态(.ms-toggle--pressed)点亮 tone 槽位(--ms-c*)实底 / 柔底 / 描边并叠发光;
+ * 复用 Button 的视觉语言(variant × tone × size × shape),零硬编码配色,尺寸随密度,动效随 motion 双降级。 */
+
+.ms-toggle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  gap: var(--ms-space-2);
+  min-block-size: calc(2.5rem * var(--ms-density-scale, 1));
+  max-inline-size: 100%;
+  padding-inline: calc(var(--ms-space-4) * var(--ms-density-scale, 1));
+  border: 1px solid transparent;
+  border-radius: var(--ms-radius-md);
+  background-color: transparent;
+  color: var(--ms-color-fg-muted);
+  font-family: var(--ms-font-sans);
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition:
+    background-color var(--ms-dur-fast) var(--ms-ease-standard),
+    border-color var(--ms-dur-fast) var(--ms-ease-standard),
+    color var(--ms-dur-fast) var(--ms-ease-standard),
+    box-shadow var(--ms-dur-base) var(--ms-ease-standard),
+    transform var(--ms-dur-fast) var(--ms-ease-emphasized);
+}
+
+.ms-toggle__content {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ms-space-2);
+  /* 允许在 flex 中收缩,使超长 label 截断而非撑破按钮 */
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+/* 内容边界:超长文案单行省略号,绝不溢出按钮 / 容器 */
+.ms-toggle__label {
+  min-inline-size: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* —— 未按下(off)态的静默基底:各变体仅以微弱描边 / 透明区分,前景统一走 muted —— */
+.ms-toggle--outline {
+  border-color: color-mix(in oklch, var(--ms-color-fg) 18%, transparent);
+}
+
+/* —— hover(仅具备 hover 能力的指针,未按下态):浮起一层 tone 浅底,前景升到 --ms-c —— */
+@media (hover: hover) {
+  .ms-toggle:hover:not(:disabled):not(.ms-toggle--pressed) {
+    background-color: var(--ms-c-soft);
+    color: var(--ms-c);
+  }
+  .ms-toggle--outline:hover:not(:disabled):not(.ms-toggle--pressed) {
+    border-color: color-mix(in oklch, var(--ms-c) 50%, transparent);
+  }
+}
+
+/* —— 按下(on / pressed)态:点亮 tone 槽位,按变体分实底 / 柔底 / 描边 / 幽灵 —— */
+.ms-toggle--pressed {
+  color: var(--ms-c);
+}
+.ms-toggle--solid.ms-toggle--pressed {
+  background-color: var(--ms-c);
+  border-color: var(--ms-c);
+  color: var(--ms-on-c);
+}
+.ms-toggle--soft.ms-toggle--pressed {
+  background-color: var(--ms-c-soft);
+  color: var(--ms-c);
+}
+.ms-toggle--outline.ms-toggle--pressed {
+  border-color: var(--ms-c);
+  background-color: var(--ms-c-soft);
+  color: var(--ms-c);
+}
+.ms-toggle--ghost.ms-toggle--pressed {
+  background-color: var(--ms-c-soft);
+  color: var(--ms-c);
+}
+
+/* 按下态发光高亮(glow 开启时);实底用 on-c 描边外发光,其余用 soft 光晕 */
+.ms-toggle--glow.ms-toggle--pressed {
+  box-shadow: 0 0 calc(16px * var(--ms-fx-glow, 1)) -6px var(--ms-c-glow);
+}
+.ms-toggle--glow.ms-toggle--solid.ms-toggle--pressed {
+  box-shadow: 0 0 calc(20px * var(--ms-fx-glow, 1)) -6px var(--ms-c-glow);
+}
+
+/* 按下态 hover 微调:实底加深、其余加重浅底 */
+@media (hover: hover) {
+  .ms-toggle--solid.ms-toggle--pressed:hover:not(:disabled) {
+    background-color: var(--ms-c-hover);
+    border-color: var(--ms-c-hover);
+  }
+  .ms-toggle--soft.ms-toggle--pressed:hover:not(:disabled),
+  .ms-toggle--ghost.ms-toggle--pressed:hover:not(:disabled),
+  .ms-toggle--outline.ms-toggle--pressed:hover:not(:disabled) {
+    background-color: color-mix(in oklch, var(--ms-c) 26%, transparent);
+  }
+}
+
+/* —— active:轻微下压(随 motion 缩放) —— */
+.ms-toggle:active:not(:disabled) {
+  transform: scale(calc(1 - 0.03 * var(--ms-motion-scale, 1)));
+}
+
+/* —— focus-visible:tone 发光环 —— */
+.ms-toggle:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--ms-color-bg),
+    0 0 0 4px var(--ms-color-focus-ring),
+    0 0 calc(16px * var(--ms-fx-glow, 1)) -4px var(--ms-c-glow);
+}
+
+/* —— disabled —— */
+.ms-toggle:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  box-shadow: none;
+  transform: none;
+}
+
+/* —— 尺寸(随密度缩放) —— */
+.ms-toggle--sm {
+  min-block-size: calc(2rem * var(--ms-density-scale, 1));
+  padding-inline: calc(var(--ms-space-3) * var(--ms-density-scale, 1));
+  font-size: 0.875rem;
+}
+.ms-toggle--lg {
+  min-block-size: calc(3rem * var(--ms-density-scale, 1));
+  padding-inline: calc(var(--ms-space-5) * var(--ms-density-scale, 1));
+  font-size: 1.125rem;
+}
+
+/* —— 纯图标:正方形 —— */
+.ms-toggle--icon-only {
+  padding-inline: 0;
+  inline-size: calc(2.5rem * var(--ms-density-scale, 1));
+}
+.ms-toggle--icon-only.ms-toggle--sm {
+  inline-size: calc(2rem * var(--ms-density-scale, 1));
+}
+.ms-toggle--icon-only.ms-toggle--lg {
+  inline-size: calc(3rem * var(--ms-density-scale, 1));
+}
+
+/* —— 形状 —— */
+.ms-toggle--pill {
+  border-radius: var(--ms-radius-full);
+}
+.ms-toggle--square {
+  border-radius: 0;
+}
+
+/* —— 触控:热区不低于目标尺寸 —— */
+@media (pointer: coarse) {
+  .ms-toggle {
+    min-block-size: max(calc(2.5rem * var(--ms-density-scale, 1)), var(--ms-target-min));
+  }
+  .ms-toggle--sm {
+    min-block-size: max(calc(2rem * var(--ms-density-scale, 1)), var(--ms-target-min));
+  }
+}
+
+/* —— 动效降级:无过渡 / 不缩放(尊重 prefers-reduced-motion 与 [data-ms-motion=off]) —— */
+@media (prefers-reduced-motion: reduce) {
+  .ms-toggle {
+    transition: none;
+  }
+  .ms-toggle:active:not(:disabled) {
+    transform: none;
+  }
+}
+[data-ms-motion="off"] .ms-toggle {
+  transition: none;
+}
+[data-ms-motion="off"] .ms-toggle:active:not(:disabled) {
+  transform: none;
+}

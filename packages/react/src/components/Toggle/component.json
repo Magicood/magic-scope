@@ -1,0 +1,27 @@
+{
+  "id": "toggle",
+  "name": "Toggle",
+  "description": "双态切换按钮:单个 pressed / unpressed 两态按钮,用 aria-pressed 表达,典型用于工具栏里可保持「激活」的图标按钮(加粗 / 斜体 / 静音)。复用 Button 视觉语言,受控 / 非受控双模式。",
+  "category": "actions",
+  "tags": [
+    "toggle",
+    "button",
+    "pressed",
+    "two-state",
+    "icon-button",
+    "toolbar",
+    "controlled",
+    "a11y"
+  ],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "inspired",
+    "url": "https://www.radix-ui.com/primitives/docs/components/toggle",
+    "capturedAt": "2026-06-26",
+    "requirements": "需要一个区别于 Switch(开 / 关)与 Segmented(多选其一)的单按钮双态控件:按下 / 未按下两态,语义走 aria-pressed 而非 checkbox / radio,适配工具栏里加粗 B / 斜体 I / 静音这类要保持激活态的图标按钮。视觉沿用 Button 的 variant × tone × size × shape,使其与按钮族一致;未按下时静默(读 fg-muted),按下时点亮 tone 实底 / 柔底 / 描边并叠发光高亮。受控(pressed + onPressedChange)与非受控(defaultPressed)双通道,键盘 Enter/Space 由原生 button 接管,disabled 与 reduced-motion 降级齐备。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Toggle.tsx", "Toggle.css", "index.ts", "Toggle.test.tsx"]
+}
