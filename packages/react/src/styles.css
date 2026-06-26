@@ -111,3 +111,7 @@
 @import "./components/Dropdown/Dropdown.css" layer(ms.components);
 @import "./components/Collapsible/Collapsible.css" layer(ms.components);
 @import "./components/Toggle/Toggle.css" layer(ms.components);
+@import "./components/Menubar/Menubar.css" layer(ms.components);
+@import "./components/NavigationMenu/NavigationMenu.css" layer(ms.components);
+@import "./components/HoverCard/HoverCard.css" layer(ms.components);
+@import "./components/Calendar/Calendar.css" layer(ms.components);

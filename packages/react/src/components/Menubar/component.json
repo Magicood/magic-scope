@@ -1,0 +1,30 @@
+{
+  "id": "menubar",
+  "name": "Menubar",
+  "description": "应用菜单栏:横向一排顶级菜单触发器(文件 / 编辑 / 视图…),各自打开一个 Menu 面板,同一时刻至多一个打开;复合用法 Menubar + Menubar.Menu,items 数据驱动或 children 复合,复用 Menu 渲染契约与 Popover 浮层定位,带顶层 roving、相邻菜单切换、typeahead、一层子菜单与受控开合,完整 ARIA APG menubar 键盘交互。",
+  "category": "navigation",
+  "tags": [
+    "menubar",
+    "menu",
+    "navigation",
+    "application-menu",
+    "popover",
+    "overlay",
+    "submenu",
+    "roving",
+    "keyboard",
+    "a11y"
+  ],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "inspired",
+    "url": "https://www.radix-ui.com/primitives/docs/components/menubar",
+    "capturedAt": "2026-06-26",
+    "requirements": "桌面级应用(编辑器 / 设计工具 / IDE)需要顶部一条应用菜单栏:横向排布若干顶级菜单名(文件 / 编辑 / 视图…),点击或键盘打开各自的下拉菜单,且同一时刻至多一个展开、在相邻顶级菜单间能用 ←→ 直接平移切换打开态——这是 Dropdown 这种单触发器下拉给不了的『一排联动菜单』语义。要把 ARIA APG menubar 的键盘模型做全:顶层触发器之间 roving(←→ 回绕、Home/End 跳首尾)、↓/Enter/Space 打开并落焦首项、↑ 打开并落焦末项;菜单内 ↑↓ 移焦(跳 disabled、回绕)/Home/End/typeahead/Esc 关闭回焦触发器/Tab 关闭不抢焦/←→ 在子菜单与父级或相邻顶级菜单间穿梭。数据驱动(MenuItem:label/icon/onClick/disabled/danger/separator/group/checked/shortcut/href + 一层 submenu)或 children 复合二选一;受控(value=打开的菜单 id / onValueChange)与非受控双通道。复用全库既有契约不另起炉灶:菜单面板的拍平 / typeahead / 方向键直接 import Menu/logic 纯函数,浮层定位复用 Popover/logic 的 placement→position-area,浮层进 top-layer 用原生 popover=auto + CSS Anchor Positioning 自包含(刻意不套 Popover/Dropdown 组件,以免触发器的 aria-haspopup=menu 被覆盖)。",
+    "notes": "顶层注册:每个 Menubar.Menu 在渲染期同步向根注册(register 幂等),确保 roving tabIndex 与顶层键盘导航首帧即拿到正确索引;注册表变更经 commit 后 effect 统一 bump,避免渲染中 setState 告警。关闭的菜单不挂载面板内容——既不向 AT 暴露 phantom role=menu/menuitem,也保证一条菜单栏里多个 Menubar.Menu 不会同时出现多个 role=menu。选中态项口径与 Dropdown 一致:任意 checked!==undefined 的项按 menuitemcheckbox/menuitemradio 渲染且选中后保持菜单打开便于连续切换。诚实备注:子菜单仅一层(hover/→ 展开、← 收起),深层嵌套留 TODO;children 复合用法走原生 light-dismiss,不接管 roving/typeahead(自定义内容自负键盘可达)。根 role=menubar 为 a11y 契约固定标注 aria-orientation=horizontal。参考 Radix Menubar 的交互与 a11y 语义,实现与配色 / 动效 / 浮层栈均为本库自有。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Menubar.tsx", "Menubar.css", "logic.ts", "index.ts"]
+}
