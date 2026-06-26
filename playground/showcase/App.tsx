@@ -2,17 +2,20 @@ import { AlertDialogHost, Toaster } from '@magic-scope/react';
 import { Component, type ReactNode, useEffect, useState } from 'react';
 import { CATALOG, categoryLabel, findCatalog } from './core/catalog';
 import { getV2 } from './core/registry2';
+import { CommonEvents } from './pages/CommonEvents';
 import { ComponentDocV2 } from './pages/ComponentDocV2';
 import { ThemeGallery } from './pages/ThemeGallery';
 import { Sidebar } from './Sidebar';
 import { Topbar } from './Topbar';
 
-// 特殊路由(非组件页),如预设画廊。
+// 特殊路由(非组件页):预设画廊、通用事件参考。
 export const GALLERY_ROUTE = '~theme';
+export const EVENTS_ROUTE = '~events';
+const SPECIAL_ROUTES = new Set([GALLERY_ROUTE, EVENTS_ROUTE]);
 
 function currentId(): string {
   const id = window.location.hash.replace(/^#\/?/, '');
-  if (id === GALLERY_ROUTE) return GALLERY_ROUTE;
+  if (SPECIAL_ROUTES.has(id)) return id;
   return findCatalog(id) ? id : (CATALOG[0]?.id ?? '');
 }
 
@@ -51,9 +54,9 @@ export function App() {
     return () => window.removeEventListener('hashchange', onHash);
   }, []);
 
-  const isGallery = activeId === GALLERY_ROUTE;
-  const id = isGallery ? GALLERY_ROUTE : findCatalog(activeId) ? activeId : (CATALOG[0]?.id ?? '');
-  const doc = isGallery ? undefined : getV2(id);
+  const special = SPECIAL_ROUTES.has(activeId) ? activeId : undefined;
+  const id = special ? special : findCatalog(activeId) ? activeId : (CATALOG[0]?.id ?? '');
+  const doc = special ? undefined : getV2(id);
 
   return (
     <div className="sc-app">
@@ -61,9 +64,13 @@ export function App() {
       <div className="sc-body">
         <Sidebar activeId={id} query={query} />
         <main className="sc-main">
-          {isGallery ? (
+          {special === GALLERY_ROUTE ? (
             <PageBoundary key="gallery">
               <ThemeGallery />
+            </PageBoundary>
+          ) : special === EVENTS_ROUTE ? (
+            <PageBoundary key="events">
+              <CommonEvents />
             </PageBoundary>
           ) : doc ? (
             <PageBoundary key={doc.meta.id}>

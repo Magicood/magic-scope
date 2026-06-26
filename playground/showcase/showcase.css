@@ -806,3 +806,77 @@
 .sc-proptable tr[data-native] .sc-code-name {
   color: var(--ms-color-fg-muted);
 }
+
+/* —— 专有事件卡片 —— */
+.sc-events {
+  display: grid;
+  gap: 0.85rem;
+}
+.sc-event {
+  border: 1px solid var(--ms-color-border);
+  border-radius: var(--ms-radius-lg);
+  background: var(--ms-color-surface);
+  overflow: hidden;
+}
+.sc-event__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 0.75rem;
+  padding: 0.65rem 0.9rem;
+  border-block-end: 1px solid var(--ms-color-border);
+  background: color-mix(in oklab, var(--ms-color-primary) 6%, transparent);
+}
+.sc-event__head .sc-code-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+.sc-event__params {
+  display: flex;
+  gap: 0.6rem;
+  padding: 0.6rem 0.9rem 0;
+  font-size: 0.85rem;
+}
+.sc-event__plabel {
+  flex: none;
+  color: var(--ms-color-fg-subtle);
+  font-size: 0.74rem;
+  padding-block-start: 0.15rem;
+}
+.sc-event__params ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.25rem;
+}
+.sc-event__psep {
+  color: var(--ms-color-fg-subtle);
+  margin-inline: 0.15rem;
+}
+.sc-event__desc {
+  margin: 0.55rem 0 0.2rem;
+  padding-inline: 0.9rem;
+  color: var(--ms-color-fg-muted);
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+.sc-event__native {
+  margin-block-start: 1rem;
+  padding: 0.75rem 0.9rem;
+  border: 1px dashed color-mix(in oklab, var(--ms-color-primary) 40%, var(--ms-color-border));
+  border-radius: var(--ms-radius-md);
+  color: var(--ms-color-fg-muted);
+  font-size: 0.86rem;
+  line-height: 1.7;
+}
+.sc-event__native a,
+.sc-event__desc a {
+  color: var(--ms-color-link, var(--ms-color-primary));
+}
+
+.sc-topbar__gallery--alt {
+  color: var(--ms-color-fg-muted);
+  border-color: var(--ms-color-border);
+  background: transparent;
+}

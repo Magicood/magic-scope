@@ -65,6 +65,9 @@ export function Topbar({ query, onQuery }: TopbarProps) {
       <a className="sc-topbar__gallery" href="#/~theme">
         ✦ 主题画廊
       </a>
+      <a className="sc-topbar__gallery sc-topbar__gallery--alt" href="#/~events">
+        通用事件
+      </a>
 
       <label className="sc-search">
         <svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true">
