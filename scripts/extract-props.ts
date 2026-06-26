@@ -18,7 +18,14 @@ export interface PropRow {
   default: string;
   description: string;
   required: boolean;
+  /** 是否继承自原生元素(透传事件 / 属性);组件自有为 false。 */
+  native?: boolean;
 }
+
+// 有意义的标准交互事件白名单(继承自原生元素的也要列进「事件 Events」表;
+// 排除 media / image / animation / transition / *Capture 等对交互组件无关或重复的)。
+const KEEP_NATIVE_EVENT =
+  /^on(Click|DoubleClick|Mouse(Down|Up|Enter|Leave|Move|Over|Out)|ContextMenu|Key(Down|Up|Press)|Focus|Blur|Pointer(Down|Up|Move|Enter|Leave|Over|Out|Cancel)|Touch(Start|Move|End|Cancel)|Wheel|Scroll|Change|Input|BeforeInput|Submit|Reset|Invalid|Select|Copy|Cut|Paste|Composition(Start|Update|End)|Drag(Start|End|Enter|Leave|Over)?|Drop)$/;
 
 const parser = withCompilerOptions(
   { jsx: 4 /* react-jsx */, esModuleInterop: true, skipLibCheck: true },
@@ -26,8 +33,13 @@ const parser = withCompilerOptions(
     savePropValueAsString: true,
     shouldExtractLiteralValuesFromEnum: true,
     shouldRemoveUndefinedFromOptional: true,
-    // 只保留组件自己声明的 props,排除来自 node_modules 的原生 HTML 属性(它们用 ...props 一行概括)。
-    propFilter: (prop) => (prop.parent ? !prop.parent.fileName.includes('node_modules') : true),
+    propFilter: (prop) => {
+      const own = prop.parent ? !prop.parent.fileName.includes('node_modules') : true;
+      // 事件处理器:组件自有的(onValueChange 等)全留;继承自原生元素的只留白名单内的标准交互事件。
+      if (/^on[A-Z]/.test(prop.name)) return own || KEEP_NATIVE_EVENT.test(prop.name);
+      // 非事件 props:仍只保留组件自有(继承的原生属性用 ...props 一行概括)。
+      return own;
+    },
   },
 );
 
@@ -65,12 +77,14 @@ for (const doc of docs) {
     } else if (t.raw && t.name === undefined) {
       typeStr = t.raw;
     }
+    const native = p.parent ? p.parent.fileName.includes('node_modules') : false;
     return {
       name: p.name,
       type: typeStr.replace(/\s+/g, ' ').trim(),
       default: p.defaultValue?.value != null ? String(p.defaultValue.value) : '—',
       description: (p.description ?? '').trim(),
       required: Boolean(p.required),
+      native,
     };
   });
   if (rows.length === 0) continue;

@@ -795,3 +795,14 @@
   align-items: center;
   gap: 0.85rem;
 }
+
+/* —— 事件表:自有/原生分隔行 + 原生事件名稍弱化 —— */
+.sc-events-sep td {
+  padding: 0.5rem 0.85rem;
+  font-size: 0.78rem;
+  color: var(--ms-color-fg-subtle);
+  background: color-mix(in oklab, var(--ms-color-fg) 4%, transparent);
+}
+.sc-proptable tr[data-native] .sc-code-name {
+  color: var(--ms-color-fg-muted);
+}

@@ -15,6 +15,8 @@ export interface PropRow {
   default: string;
   description: string;
   required: boolean;
+  /** 是否继承自原生元素(透传事件);组件自有为 false。 */
+  native?: boolean;
 }
 
 /** 框架无关的组件元数据。 */

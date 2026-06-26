@@ -1,4 +1,4 @@
-import { Component, type ReactNode, useState } from 'react';
+import { Component, Fragment, type ReactNode, useState } from 'react';
 import { getProps } from '../core/props';
 import type { ComponentDoc } from '../core/types';
 import type { Control } from '../types';
@@ -11,6 +11,22 @@ const VIEWPORTS = [
   { id: 'tablet', label: '平板 768', width: 'min(768px, 100%)' },
   { id: 'mobile', label: '移动 390', width: 'min(390px, 100%)' },
 ] as const;
+
+// meta.spread 元素 → 对应 HTMLElement 类型(校正继承事件签名的元素泛型)。
+const NATIVE_EL: Record<string, string> = {
+  button: 'HTMLButtonElement',
+  input: 'HTMLInputElement',
+  textarea: 'HTMLTextAreaElement',
+  a: 'HTMLAnchorElement',
+  select: 'HTMLSelectElement',
+  label: 'HTMLLabelElement',
+  span: 'HTMLSpanElement',
+  hr: 'HTMLHRElement',
+  ul: 'HTMLUListElement',
+  ol: 'HTMLOListElement',
+  table: 'HTMLTableElement',
+  kbd: 'HTMLElement',
+};
 
 class DemoBoundary extends Component<{ children: ReactNode }, { error: Error | null }> {
   state = { error: null as Error | null };
@@ -104,10 +120,21 @@ export function ComponentDocV2({
   const { values, set, reset } = useControls(meta.controls);
   const [vp, setVp] = useState<string>('full');
   const props = getProps(meta.propsName ?? meta.name, meta.alsoProps, meta.spread);
-  // 事件(on* 回调)单独成「事件 Events」表,按方法名 + 回调参数展示。
+  // 事件(on* 回调)单独成「事件 Events」表,按方法名 + 回调参数展示;组件自有事件排前、透传的原生事件排后。
   const isEvent = (n: string) => /^on[A-Z]/.test(n);
-  const eventRows = props.filter((p) => isEvent(p.name));
+  // 原生事件只对「真正透传原生元素(meta.spread)」的组件展示;自研组件(无 spread)只列自有事件,不虚报。
+  const eventRows = props
+    .filter((p) => isEvent(p.name))
+    .filter((p) => !p.native || Boolean(meta.spread))
+    .sort((a, b) => Number(a.native ?? false) - Number(b.native ?? false));
+  const ownEventCount = eventRows.filter((p) => !p.native).length;
   const propRows = props.filter((p) => !isEvent(p.name));
+  // react-docgen 把继承事件的元素泛型统一抽成 HTMLDivElement;按组件真实根元素(meta.spread)校正。
+  const elType = meta.spread ? (NATIVE_EL[meta.spread] ?? 'HTMLElement') : undefined;
+  const fmtEventType = (type: string) => {
+    const fixed = elType ? type.replace(/HTMLDivElement/g, elType) : type;
+    return fixed.replace(/^\((.+)\)$/, '$1');
+  };
   const width = VIEWPORTS.find((v) => v.id === vp)?.width ?? '100%';
 
   return (
@@ -243,43 +270,44 @@ export function ComponentDocV2({
         </section>
       )}
 
-      {(eventRows.length > 0 || meta.spread) && (
+      {eventRows.length > 0 && (
         <section className="sc-section">
-          <h2 className="sc-h2">事件 Events（方法 + 回调参数，自动抽取自 TS）</h2>
+          <h2 className="sc-h2">
+            事件 Events（方法 + 回调参数，自动抽取自 TS · 共 {eventRows.length} 个
+            {ownEventCount > 0 ? `，含 ${ownEventCount} 个组件专有` : ''}）
+          </h2>
           <div className="sc-table-wrap">
             <table className="sc-proptable">
               <thead>
                 <tr>
                   <th>事件</th>
-                  <th>回调参数</th>
+                  <th>回调参数(签名)</th>
                   <th>说明</th>
                 </tr>
               </thead>
               <tbody>
-                {eventRows.map((p) => (
-                  <tr key={p.name}>
-                    <td>
-                      <code className="sc-code-name">{p.name}</code>
-                    </td>
-                    <td>
-                      <code className="sc-code-type">{p.type.replace(/^\((.+)\)$/, '$1')}</code>
-                    </td>
-                    <td>{p.description}</td>
-                  </tr>
+                {eventRows.map((p, i) => (
+                  <Fragment key={p.name}>
+                    {i === ownEventCount && p.native && (
+                      <tr className="sc-events-sep">
+                        <td colSpan={3}>
+                          ↓ 透传原生 &lt;{meta.spread ?? 'element'}&gt; 的标准 React 事件（
+                          {eventRows.length - ownEventCount} 个，绑定方式同上,如{' '}
+                          <code>{`onClick={(e) => …}`}</code>)
+                        </td>
+                      </tr>
+                    )}
+                    <tr data-native={p.native ? '' : undefined}>
+                      <td>
+                        <code className="sc-code-name">{p.name}</code>
+                      </td>
+                      <td>
+                        <code className="sc-code-type">{fmtEventType(p.type)}</code>
+                      </td>
+                      <td>{p.description}</td>
+                    </tr>
+                  </Fragment>
                 ))}
-                {meta.spread && (
-                  <tr>
-                    <td>
-                      <code className="sc-code-name">原生事件</code>
-                    </td>
-                    <td>
-                      <code className="sc-code-type">{`on*: ${meta.spread} 元素事件`}</code>
-                    </td>
-                    <td>
-                      透传原生 &lt;{meta.spread}&gt; 的全部事件(onClick / onFocus / onKeyDown 等)。
-                    </td>
-                  </tr>
-                )}
               </tbody>
             </table>
           </div>
