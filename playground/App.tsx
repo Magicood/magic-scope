@@ -4,6 +4,7 @@ import {
   Alert,
   AlertDialogHost,
   Avatar,
+  AvatarGroup,
   alert,
   Badge,
   Breadcrumb,
@@ -226,6 +227,57 @@ export function App() {
           <Input type="password" placeholder="密码" defaultValue="secret" />
           <Input showCount maxLength={20} placeholder="带计数" defaultValue="魔法文字" />
           <Input addonBefore="https://" addonAfter=".com" placeholder="域名" />
+        </div>
+
+        <div style={{ display: 'grid', gap: '0.75rem' }}>
+          <Text size="sm" tone="primary" weight="semibold" transform="uppercase" tracking="wider">
+            Wave1 补强 · Switch / Avatar / Kbd / Alert / Progress / Badge
+          </Text>
+          <div style={row}>
+            <Switch defaultChecked tone="success" size="sm" />
+            <Switch defaultChecked tone="primary" />
+            <Switch defaultChecked tone="danger" size="lg">
+              大号开关
+            </Switch>
+            <Switch loading defaultChecked />
+          </div>
+          <div style={row}>
+            <Avatar name="Zhao Chen" status="online" />
+            <Avatar name="Li Si" tone="accent" status="busy" statusPulse />
+            <Avatar name="Wang Wu" shape="rounded" ring />
+            <AvatarGroup max={3}>
+              <Avatar name="A B" />
+              <Avatar name="C D" />
+              <Avatar name="E F" />
+              <Avatar name="G H" />
+              <Avatar name="I J" />
+            </AvatarGroup>
+          </div>
+          <div style={row}>
+            <Kbd keys="cmd+shift+k" />
+            <Kbd keys="ctrl+c" platform="win" />
+            <Kbd keys={['esc']} tone="danger" />
+            <Badge dot tone="success" />
+            <Badge count={5} tone="danger" />
+            <Badge count={120} max={99} />
+            <Badge variant="soft" tone="accent">
+              soft
+            </Badge>
+            <Badge variant="glow" tone="primary">
+              glow
+            </Badge>
+          </div>
+          <div style={{ display: 'grid', gap: 8, maxWidth: '320px' }}>
+            <Progress value={62} tone="success" />
+            <Progress value={40} striped animated />
+            <div style={row}>
+              <Progress value={75} variant="circular" tone="accent" />
+              <Progress indeterminate />
+            </div>
+          </div>
+          <Alert variant="success" title="补强成功" dismissible>
+            6 个组件已对标旗舰补厚:tone / 光影 / 动效降级 / 留口全到位。
+          </Alert>
         </div>
       </section>
 
