@@ -21,6 +21,7 @@ export * from './Divider';
 export * from './Drawer';
 export * from './Empty';
 export * from './Flex';
+export * from './Form';
 export * from './Grid';
 export * from './Heading';
 export * from './Input';

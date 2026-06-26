@@ -75,3 +75,4 @@
 @import "./components/Rate/Rate.css" layer(ms.components);
 @import "./components/Descriptions/Descriptions.css" layer(ms.components);
 @import "./components/Steps/Steps.css" layer(ms.components);
+@import "./components/Form/Form.css" layer(ms.components);

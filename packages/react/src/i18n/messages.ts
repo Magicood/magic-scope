@@ -71,7 +71,18 @@ export type MessageKey =
   | 'timeline.pending'
   | 'toast.close'
   | 'toaster.region'
-  | 'spinner.label';
+  | 'spinner.label'
+  | 'form.required'
+  | 'form.min'
+  | 'form.max'
+  | 'form.minLength'
+  | 'form.maxLength'
+  | 'form.pattern'
+  | 'form.email'
+  | 'form.url'
+  | 'form.validating'
+  | 'form.submitError'
+  | 'form.errorSummary';
 
 /** 完整字典:每个 key 都有值。 */
 export type Messages = Record<MessageKey, Message>;
@@ -139,6 +150,17 @@ export const defaultMessages: Messages = {
   'toast.close': '关闭',
   'toaster.region': '通知',
   'spinner.label': '加载中',
+  'form.required': '此项为必填项',
+  'form.min': '不能小于 {min}',
+  'form.max': '不能大于 {max}',
+  'form.minLength': '至少需要 {min} 个字符',
+  'form.maxLength': '最多 {max} 个字符',
+  'form.pattern': '格式不正确',
+  'form.email': '请输入有效的邮箱地址',
+  'form.url': '请输入有效的网址',
+  'form.validating': '校验中…',
+  'form.submitError': '提交失败,请检查表单',
+  'form.errorSummary': '表单有 {count} 处错误',
 };
 
 const TEMPLATE = /\{(\w+)\}/g;
