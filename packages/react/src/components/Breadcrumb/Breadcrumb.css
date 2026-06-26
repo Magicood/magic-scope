@@ -2,6 +2,8 @@
   font-family: var(--ms-font-sans);
   font-size: 0.875rem;
   line-height: 1.25;
+  /* 内容边界:整体不撑破父容器 */
+  max-inline-size: 100%;
 }
 
 /* 横向排布,允许换行,各项之间留出与分隔符匹配的呼吸感 */
@@ -22,17 +24,26 @@
   min-inline-size: 0;
 }
 
-/* 非当前项的链接:link 色,hover 转 link-hover 并泛起克制的奥术微光 */
+/* 项内图标:跟随文本基线,不参与可读语义 */
+.ms-breadcrumb__icon {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  margin-inline-end: var(--ms-space-1);
+}
+
+/* 非当前项的链接:读 tone 槽位(--ms-c),hover 转 hover 槽位并泛起克制的奥术微光 */
 .ms-breadcrumb__link {
   display: inline-flex;
   align-items: center;
   border-radius: var(--ms-radius-sm);
   padding-block: var(--ms-space-1);
   padding-inline: var(--ms-space-2);
-  color: var(--ms-color-link);
+  color: var(--ms-c);
   text-decoration: none;
   cursor: pointer;
   /* 长标签 / URL 片段可在任意处断行,避免撑破容器导致横向溢出 */
+  min-inline-size: 0;
   overflow-wrap: anywhere;
   transition:
     color var(--ms-dur-fast) var(--ms-ease-standard),
@@ -41,11 +52,15 @@
 }
 
 .ms-breadcrumb__link:hover {
-  color: var(--ms-color-link-hover);
-  background-color: color-mix(in oklch, var(--ms-color-link) 12%, transparent);
-  /* hover 微光,可被 --ms-fx-glow 关闭 */
+  color: var(--ms-c-hover);
+  background-color: var(--ms-c-soft);
+  /* hover 微光,模糊半径乘 --ms-fx-glow,可被总闸关断 */
   box-shadow: 0 0 calc(10px * var(--ms-fx-glow, 1)) -4px
-    color-mix(in oklch, var(--ms-color-link) 70%, transparent);
+    color-mix(in oklch, var(--ms-c-glow) 70%, transparent);
+}
+
+.ms-breadcrumb__link:active {
+  color: var(--ms-c-active);
 }
 
 .ms-breadcrumb__link:focus-visible {
@@ -60,6 +75,8 @@
 
 /* 无 href 的中间项:静态文本,弱化处理 */
 .ms-breadcrumb__text {
+  display: inline-flex;
+  align-items: center;
   padding-block: var(--ms-space-1);
   padding-inline: var(--ms-space-2);
   color: var(--ms-color-fg-muted);
@@ -70,6 +87,8 @@
 
 /* 当前页:fg 高对比、不可点,微微加重字重以示落点 */
 .ms-breadcrumb__current {
+  display: inline-flex;
+  align-items: center;
   padding-block: var(--ms-space-1);
   padding-inline: var(--ms-space-2);
   color: var(--ms-color-fg);
@@ -80,20 +99,85 @@
   overflow-wrap: anywhere;
 }
 
+/* 省略占位:折叠中间项的可展开触发器,样式贴近链接但读 muted 色 */
+.ms-breadcrumb__ellipsis {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: var(--ms-radius-sm);
+  padding-block: var(--ms-space-1);
+  padding-inline: var(--ms-space-2);
+  background: transparent;
+  color: var(--ms-color-fg-muted);
+  font: inherit;
+  line-height: 1;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition:
+    color var(--ms-dur-fast) var(--ms-ease-standard),
+    background-color var(--ms-dur-fast) var(--ms-ease-standard),
+    box-shadow var(--ms-dur-base) var(--ms-ease-standard);
+}
+
+.ms-breadcrumb__ellipsis:hover {
+  color: var(--ms-c-hover);
+  background-color: var(--ms-c-soft);
+  box-shadow: 0 0 calc(10px * var(--ms-fx-glow, 1)) -4px
+    color-mix(in oklch, var(--ms-c-glow) 70%, transparent);
+}
+
+.ms-breadcrumb__ellipsis:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--ms-color-bg),
+    0 0 0 4px var(--ms-color-focus-ring),
+    0 0 calc(12px * var(--ms-fx-glow, 1)) 0
+    color-mix(in oklch, var(--ms-color-focus-ring) 60%, transparent);
+}
+
 /* 分隔符:装饰性,subtle 色,不参与可读语义 */
 .ms-breadcrumb__separator {
   color: var(--ms-color-fg-subtle);
   user-select: none;
 }
 
-/* 触屏:链接命中区抬到 --ms-target-min(48px),换行后各行间也加大呼吸感。
+/* 触屏:链接 / 省略触发器命中区抬到 --ms-target-min(48px),换行后各行间也加大呼吸感。
  * 视觉字号/着色不变;桌面(精确指针)逐像素不受影响。 */
 @media (pointer: coarse) {
   .ms-breadcrumb__list {
     gap: var(--ms-space-2);
   }
 
-  .ms-breadcrumb__link {
+  .ms-breadcrumb__link,
+  .ms-breadcrumb__ellipsis {
     min-block-size: var(--ms-target-min);
   }
+}
+
+/* 动效降级:系统级减弱动画时,过渡近乎瞬时(保留终态着色,不丢可视反馈) */
+@media (prefers-reduced-motion: reduce) {
+  .ms-breadcrumb__link,
+  .ms-breadcrumb__ellipsis {
+    transition-duration: 0.01ms;
+  }
+}
+
+/* 实例级总闸关断动效:过渡置 none */
+[data-ms-motion="off"] .ms-breadcrumb__link,
+[data-ms-motion="off"] .ms-breadcrumb__ellipsis {
+  transition: none;
+}
+
+/* 实例级总闸关断发光:hover/focus 辉光去掉,仅保留聚焦双环的纯隔断(可见性不丢) */
+[data-ms-fx="off"] .ms-breadcrumb__link:hover,
+[data-ms-fx="off"] .ms-breadcrumb__ellipsis:hover {
+  box-shadow: none;
+}
+
+[data-ms-fx="off"] .ms-breadcrumb__link:focus-visible,
+[data-ms-fx="off"] .ms-breadcrumb__ellipsis:focus-visible {
+  box-shadow:
+    0 0 0 2px var(--ms-color-bg),
+    0 0 0 4px var(--ms-color-focus-ring);
 }

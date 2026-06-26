@@ -1,17 +1,28 @@
 {
   "id": "popover",
   "name": "Popover",
-  "description": "点击浮层,基于原生 Popover API(top-layer / 点外 / Esc 关闭)+ CSS Anchor Positioning 锚定 trigger,支持受控/非受控、四向定位与入场动画,并对不支持锚定的浏览器优雅降级。",
+  "description": "浮层(生产级深度):原生 Popover API(top-layer)+ CSS Anchor Positioning 锚定 trigger。12 向定位(主轴×居中/start/end)、offset 间距、可选指向箭头(随 placement 翻面)、4 种触发方式(click/hover 带桥接区/focus/manual)+ openDelay/closeDelay、tone 色调驱动 panel 边框/发光。受控/非受控双通道;onEscapeKeyDown / onPointerDownOutside / onInteractOutside 可拦截关闭;trigger 全事件 compose 合并 + ref 合并,浮层根透传原生属性/事件;classNames 细粒度槽位;fx/motion/density 开关;不支持锚定时优雅降级为居中。",
   "category": "overlay",
-  "tags": ["popover", "overlay", "anchor", "popover-api", "top-layer"],
+  "tags": [
+    "popover",
+    "overlay",
+    "anchor",
+    "popover-api",
+    "top-layer",
+    "placement",
+    "arrow",
+    "hover",
+    "tone",
+    "controllable"
+  ],
   "status": "stable",
   "version": "0.1.0",
   "frameworks": ["react"],
   "source": {
     "type": "original",
     "capturedAt": "2026-06-25",
-    "requirements": "点击浮层,基于原生 Popover API(top-layer / 点外 / Esc 关闭)+ CSS Anchor Positioning 锚定 trigger,支持受控/非受控、四向定位与入场动画,并对不支持锚定的浏览器优雅降级。。magic-scope overlay 组件:用满平台原生能力(Popover API + CSS Anchor Positioning)自研,带降级、键盘可达、fx/motion 开关、入场动画。"
+    "requirements": "浮层,基于原生 Popover API(top-layer)+ CSS Anchor Positioning 锚定 trigger。补强到生产级深度:12 向定位 + offset + 指向箭头 + click/hover/focus/manual 触发(带延时与 hover 桥接区)+ tone 色调。事件留口对齐旗舰规范:trigger 全事件 compose、浮层根透传 ...rest、onEscapeKeyDown/onPointerDownOutside/onInteractOutside 可拦截关闭、classNames 槽位。fx/motion/density 一键降级,键盘可达,不支持锚定时优雅降级。"
   },
   "dependencies": ["@magic-scope/tokens"],
-  "files": ["Popover.tsx", "Popover.css", "index.ts"]
+  "files": ["Popover.tsx", "Popover.css", "logic.ts", "index.ts"]
 }

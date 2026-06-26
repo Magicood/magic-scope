@@ -1,22 +1,51 @@
 /* —— Tabs 标签页 ——
- * underline 变体:选中项下方主色条 + 发光;pill 变体:选中项 primary 实底。
- * roving tabIndex + 方向键切换,样式靠 aria-selected / 修饰类驱动。
+ * 配色只读全库 tone 槽位(--ms-c / --ms-c-hover / --ms-on-c / --ms-c-glow),不写死语义色。
+ * underline 变体:单条滑块 indicator 跨 tab 平滑位移;pill 变体:选中项实底胶囊。
+ * 朝向 horizontal / vertical、尺寸 sm/md/lg(随密度缩放)、可编辑(关闭/新增)。
+ * 发光半径乘 var(--ms-fx-glow);动画 prefers-reduced-motion / data-ms-motion 可一键降级。
  */
 .ms-tabs {
   display: flex;
   flex-direction: column;
+  max-inline-size: 100%;
   inline-size: 100%;
   font-family: var(--ms-font-sans);
   color: var(--ms-color-fg);
+  /* 尺寸基准(被 size 修饰类覆盖) */
+  --ms-tabs-pad-block: var(--ms-space-2);
+  --ms-tabs-pad-inline: var(--ms-space-3);
+  --ms-tabs-font: 0.95rem;
+  --ms-tabs-min: 2rem;
+}
+
+/* —— size:缩放 padding / 字号 / 最小高度(随密度) —— */
+.ms-tabs--sm {
+  --ms-tabs-pad-block: var(--ms-space-1);
+  --ms-tabs-pad-inline: var(--ms-space-2);
+  --ms-tabs-font: 0.85rem;
+  --ms-tabs-min: 1.75rem;
+}
+.ms-tabs--lg {
+  --ms-tabs-pad-block: var(--ms-space-3);
+  --ms-tabs-pad-inline: var(--ms-space-4);
+  --ms-tabs-font: 1.05rem;
+  --ms-tabs-min: 2.5rem;
+}
+
+/* —— 竖排:整体改为横向排布(list 在侧,panel 在旁) —— */
+.ms-tabs--vertical {
+  flex-direction: row;
+  align-items: flex-start;
 }
 
 /* —— tablist 容器 —— */
 .ms-tabs__list {
+  position: relative;
   display: flex;
   align-items: stretch;
   gap: var(--ms-space-1);
-  /* 标签多了横向溢出时可滑动到达,而非被裁切不可达。
-   * 桌面未溢出时滚动条不出现、观感不变;隐藏滚动条避免占位。 */
+  min-inline-size: 0;
+  /* 标签多了横向溢出时可滑动到达,而非被裁切不可达;隐藏滚动条避免占位。 */
   flex-wrap: nowrap;
   overflow-x: auto;
   scroll-snap-type: x proximity;
@@ -27,7 +56,7 @@
   display: none;
 }
 
-/* underline 变体:底部一条分隔线,选中条覆盖其上 */
+/* underline 变体:底部一条分隔线,滑块覆盖其上 */
 .ms-tabs--underline .ms-tabs__list {
   gap: var(--ms-space-2);
   border-block-end: 1px solid var(--ms-color-border);
@@ -42,22 +71,96 @@
   background-color: var(--ms-color-surface-sunken);
 }
 
+/* 竖排:list 改纵向流,溢出改纵向滚动 */
+.ms-tabs--vertical .ms-tabs__list {
+  flex-direction: column;
+  align-items: stretch;
+  flex: 0 0 auto;
+  overflow-x: visible;
+  overflow-y: auto;
+  scroll-snap-type: y proximity;
+}
+.ms-tabs--vertical.ms-tabs--underline .ms-tabs__list {
+  border-block-end: none;
+  border-inline-end: 1px solid var(--ms-color-border);
+}
+.ms-tabs--vertical.ms-tabs--pill .ms-tabs__list {
+  border-radius: var(--ms-radius-lg);
+}
+
+/* —— 单条滑块 indicator:测当前 tab 的 offset/size 写 CSS 变量驱动平移 —— */
+.ms-tabs__indicator {
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+  /* JS 写入 --ms-tabs-ind-pos(偏移) / --ms-tabs-ind-size(沿主轴长度) */
+  transition:
+    transform var(--ms-dur-base) var(--ms-ease-emphasized),
+    width var(--ms-dur-base) var(--ms-ease-emphasized),
+    height var(--ms-dur-base) var(--ms-ease-emphasized),
+    opacity var(--ms-dur-fast) var(--ms-ease-standard);
+}
+/* 无选中(size=0)时淡出,避免悬空残留 */
+.ms-tabs__indicator {
+  opacity: 1;
+}
+
+/* underline:滑块 = 底部主色条 + 发光,沿横轴平移 */
+.ms-tabs--underline .ms-tabs__indicator {
+  inset-block-end: -1px;
+  inline-size: var(--ms-tabs-ind-size, 0px);
+  block-size: 2px;
+  border-radius: var(--ms-radius-full);
+  background-color: var(--ms-c);
+  box-shadow: 0 0 calc(10px * var(--ms-fx-glow, 1)) -1px var(--ms-c-glow);
+  transform: translateX(var(--ms-tabs-ind-pos, 0px));
+}
+.ms-tabs--underline.ms-tabs--vertical .ms-tabs__indicator {
+  inset-block-end: auto;
+  inset-inline-end: -1px;
+  inline-size: 2px;
+  block-size: var(--ms-tabs-ind-size, 0px);
+  transform: translateY(var(--ms-tabs-ind-pos, 0px));
+}
+
+/* pill:滑块 = 实底胶囊,落在选中项下方,沿横轴平移 */
+.ms-tabs--pill .ms-tabs__indicator {
+  inset-block: var(--ms-space-1);
+  inline-size: var(--ms-tabs-ind-size, 0px);
+  border-radius: var(--ms-radius-full);
+  background-color: var(--ms-c);
+  box-shadow:
+    0 0 calc(16px * var(--ms-fx-glow, 1)) -4px var(--ms-c-glow),
+    inset 0 0 calc(6px * var(--ms-fx-glow, 1)) -2px var(--ms-c-glow);
+  transform: translateX(var(--ms-tabs-ind-pos, 0px));
+}
+.ms-tabs--pill.ms-tabs--vertical .ms-tabs__indicator {
+  inset-block: auto;
+  inset-inline: var(--ms-space-1);
+  block-size: var(--ms-tabs-ind-size, 0px);
+  inline-size: auto;
+  transform: translateY(var(--ms-tabs-ind-pos, 0px));
+}
+
 /* —— 单个 tab —— */
 .ms-tabs__tab {
   position: relative;
+  z-index: 1;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: var(--ms-space-2);
   /* 溢出滚动下不被压缩,各自作为滚动吸附点 */
   flex: 0 0 auto;
   scroll-snap-align: start;
-  padding-block: var(--ms-space-2);
-  padding-inline: var(--ms-space-3);
+  min-block-size: calc(var(--ms-tabs-min) * var(--ms-density-scale, 1));
+  padding-block: var(--ms-tabs-pad-block);
+  padding-inline: var(--ms-tabs-pad-inline);
   border: none;
   background: transparent;
   color: var(--ms-color-fg-muted);
   font: inherit;
-  font-size: 0.95rem;
+  font-size: var(--ms-tabs-font);
   line-height: 1.2;
   white-space: nowrap;
   cursor: pointer;
@@ -69,81 +172,139 @@
 }
 
 .ms-tabs--underline .ms-tabs__tab {
-  /* 让选中条贴住底线,负外边距盖住列表边框 */
-  margin-block-end: -1px;
   border-radius: var(--ms-radius-sm) var(--ms-radius-sm) 0 0;
 }
-
+.ms-tabs--vertical.ms-tabs--underline .ms-tabs__tab {
+  justify-content: flex-start;
+  border-radius: var(--ms-radius-sm) 0 0 var(--ms-radius-sm);
+}
 .ms-tabs--pill .ms-tabs__tab {
   border-radius: var(--ms-radius-full);
 }
 
-/* hover:字色提亮,未选中项预热背景 */
-.ms-tabs__tab:hover:not(:disabled):not(.ms-tabs__tab--selected) {
+/* hover:字色提亮,pill 未选项预热背景(div role=tab 用 --disabled 修饰类排除) */
+.ms-tabs__tab:hover:not(.ms-tabs__tab--disabled):not(.ms-tabs__tab--selected) {
   color: var(--ms-color-fg);
 }
-.ms-tabs--pill .ms-tabs__tab:hover:not(:disabled):not(.ms-tabs__tab--selected) {
+.ms-tabs--pill .ms-tabs__tab:hover:not(.ms-tabs__tab--disabled):not(.ms-tabs__tab--selected) {
   background-color: var(--ms-color-surface);
 }
 
-/* —— underline 选中条:用伪元素绘制,主色 + 发光 —— */
-.ms-tabs--underline .ms-tabs__tab::after {
-  content: "";
-  position: absolute;
-  inset-inline: var(--ms-space-2);
-  inset-block-end: 0;
-  block-size: 2px;
-  border-radius: var(--ms-radius-full);
-  background-color: var(--ms-color-primary);
-  /* 默认收拢为 0,选中时横向展开(位移受 motion-scale 门控) */
-  transform: scaleX(0);
-  transform-origin: center;
-  box-shadow: 0 0 calc(10px * var(--ms-fx-glow, 1)) -1px var(--ms-color-glow);
-  transition: transform var(--ms-dur-base) var(--ms-ease-emphasized);
-}
+/* 选中态字色 */
 .ms-tabs--underline .ms-tabs__tab--selected {
-  color: var(--ms-color-primary-hover);
+  color: var(--ms-c-hover);
 }
-.ms-tabs--underline .ms-tabs__tab--selected::after {
-  transform: scaleX(1);
+.ms-tabs--pill .ms-tabs__tab--selected {
+  color: var(--ms-on-c);
 }
 
-/* —— pill 选中:primary 实底 + idle 微光 —— */
-.ms-tabs--pill .ms-tabs__tab--selected {
-  background-color: var(--ms-color-primary);
-  color: var(--ms-color-on-primary);
-  box-shadow:
-    0 0 calc(16px * var(--ms-fx-glow, 1)) -4px var(--ms-color-glow),
-    inset 0 0 calc(6px * var(--ms-fx-glow, 1)) -2px var(--ms-color-glow);
+/* —— icon / label / badge —— */
+.ms-tabs__icon {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  font-size: 1em;
+  line-height: 0;
 }
-.ms-tabs--pill .ms-tabs__tab--selected:hover:not(:disabled) {
-  background-color: var(--ms-color-primary-hover);
+.ms-tabs__label {
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ms-tabs__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  min-inline-size: 1.25em;
+  padding-inline: 0.35em;
+  border-radius: var(--ms-radius-full);
+  background-color: var(--ms-c-soft);
+  color: var(--ms-c);
+  font-size: 0.75em;
+  line-height: 1.4;
+}
+.ms-tabs--pill .ms-tabs__tab--selected .ms-tabs__badge {
+  background-color: color-mix(in oklch, var(--ms-on-c) 22%, transparent);
+  color: var(--ms-on-c);
+}
+
+/* —— 关闭按钮(closable) —— */
+.ms-tabs__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  margin-inline-start: calc(-1 * var(--ms-space-1));
+  inline-size: 1.15em;
+  block-size: 1.15em;
+  border-radius: var(--ms-radius-full);
+  color: inherit;
+  opacity: 0.6;
+  cursor: pointer;
+  transition:
+    opacity var(--ms-dur-fast) var(--ms-ease-standard),
+    background-color var(--ms-dur-fast) var(--ms-ease-standard);
+}
+.ms-tabs__close:hover {
+  opacity: 1;
+  background-color: var(--ms-c-soft);
+}
+
+/* —— 新增按钮(addable) —— */
+.ms-tabs__add {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  min-block-size: calc(var(--ms-tabs-min) * var(--ms-density-scale, 1));
+  min-inline-size: calc(var(--ms-tabs-min) * var(--ms-density-scale, 1));
+  padding-inline: var(--ms-space-2);
+  border: none;
+  background: transparent;
+  color: var(--ms-color-fg-muted);
+  border-radius: var(--ms-radius-sm);
+  cursor: pointer;
+  transition:
+    color var(--ms-dur-fast) var(--ms-ease-standard),
+    background-color var(--ms-dur-fast) var(--ms-ease-standard);
+}
+.ms-tabs__add:hover {
+  color: var(--ms-c);
+  background-color: var(--ms-c-soft);
+}
+.ms-tabs__add:focus-visible {
+  outline: none;
+  color: var(--ms-c);
   box-shadow:
-    0 0 calc(22px * var(--ms-fx-glow, 1)) -3px var(--ms-color-glow),
-    inset 0 0 calc(8px * var(--ms-fx-glow, 1)) -2px var(--ms-color-glow);
+    0 0 0 2px var(--ms-color-bg),
+    0 0 0 4px var(--ms-color-focus-ring);
 }
 
 /* —— focus-visible:发光环(可达性,模糊半径不参与开关) —— */
 .ms-tabs__tab:focus-visible {
   outline: none;
+  border-radius: var(--ms-radius-sm);
   box-shadow:
     0 0 0 2px var(--ms-color-bg),
     0 0 0 4px var(--ms-color-focus-ring);
 }
-.ms-tabs--underline .ms-tabs__tab:focus-visible {
-  border-radius: var(--ms-radius-sm);
-}
 
-/* —— disabled —— */
-.ms-tabs__tab:disabled {
+/* —— disabled(div role=tab 用修饰类 / aria-disabled) —— */
+.ms-tabs__tab--disabled,
+.ms-tabs__tab[aria-disabled="true"] {
   cursor: not-allowed;
   opacity: 0.45;
 }
 
-/* —— 触屏:抬高单个 tab 到触控目标基线,桌面观感不变 —— */
+/* —— 触屏:抬高 tab / 关闭 / 新增到触控目标基线,桌面观感不变 —— */
 @media (pointer: coarse) {
-  .ms-tabs__tab {
-    min-block-size: var(--ms-target-min);
+  .ms-tabs__tab,
+  .ms-tabs__add {
+    min-block-size: max(
+      calc(var(--ms-tabs-min) * var(--ms-density-scale, 1)),
+      var(--ms-target-min)
+    );
   }
 }
 
@@ -154,10 +315,20 @@
   color: var(--ms-color-fg);
   animation: ms-tabs-panel-in var(--ms-dur-base) var(--ms-ease-emphasized);
 }
+.ms-tabs--vertical .ms-tabs__panel {
+  margin-block-start: 0;
+  margin-inline-start: var(--ms-space-4);
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
 .ms-tabs__panel:focus-visible {
   outline: none;
   border-radius: var(--ms-radius-md);
   box-shadow: 0 0 0 2px var(--ms-color-focus-ring);
+}
+/* keepMounted 隐藏项:不占位、不进焦 */
+.ms-tabs__panel[hidden] {
+  display: none;
 }
 
 @keyframes ms-tabs-panel-in {
@@ -171,9 +342,23 @@
   }
 }
 
-/* 关键帧动画自带 reduced-motion 兜底(过渡已由全局 motion-scale 门控) */
+/* —— 动效一键降级:reduced-motion 与 data-ms-motion="off" 都关 —— */
 @media (prefers-reduced-motion: reduce) {
   .ms-tabs__panel {
     animation: none;
   }
+  .ms-tabs__indicator {
+    transition-duration: 0.01ms;
+  }
+}
+[data-ms-motion="off"] .ms-tabs__panel {
+  animation: none;
+}
+[data-ms-motion="off"] .ms-tabs__indicator {
+  transition: none;
+}
+
+/* —— 发光总闸关断 —— */
+[data-ms-fx="off"] .ms-tabs__indicator {
+  box-shadow: none;
 }
