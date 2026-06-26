@@ -35,6 +35,17 @@ export interface PropRow {
 const KEEP_NATIVE_EVENT =
   /^on(Click|DoubleClick|Mouse(Down|Up|Enter|Leave|Move|Over|Out)|ContextMenu|Key(Down|Up|Press)|Focus|Blur|Pointer(Down|Up|Move|Enter|Leave|Over|Out|Cancel)|Touch(Start|Move|End|Cancel)|Wheel|Scroll|Change|Input|BeforeInput|Submit|Reset|Invalid|Select|Copy|Cut|Paste|Composition(Start|Update|End)|Drag(Start|End|Enter|Leave|Over)?|Drop)$/;
 
+// react-docgen 会把 @param/@returns 等 JSDoc 块级标签原文折进 description。
+// 事件参数已由 @param 单独抽取并渲染,这里把说明截到第一个块级标签为止,只留摘要,避免重复。
+function cleanDescription(raw: string): string {
+  return raw
+    .replace(
+      /\s*@(param|returns?|example|see|deprecated|remarks|default|defaultValue|template|typeParam|throws)\b[\s\S]*$/i,
+      '',
+    )
+    .trim();
+}
+
 const parser = withCompilerOptions(
   { jsx: 4 /* react-jsx */, esModuleInterop: true, skipLibCheck: true },
   {
@@ -154,7 +165,7 @@ for (const doc of docs) {
       name: p.name,
       type: typeStr.replace(/\s+/g, ' ').trim(),
       default: p.defaultValue?.value != null ? String(p.defaultValue.value) : '—',
-      description: (p.description ?? '').trim(),
+      description: cleanDescription((p.description ?? '').trim()),
       required: Boolean(p.required),
       native,
     };
@@ -183,7 +194,7 @@ function extractOptionInterfaces(filePaths: string[]): Record<string, PropRow[]>
         if (!ts.isPropertySignature(member) || !member.name) continue;
         const sym = checker.getSymbolAtLocation(member.name);
         const description = sym
-          ? ts.displayPartsToString(sym.getDocumentationComment(checker)).trim()
+          ? cleanDescription(ts.displayPartsToString(sym.getDocumentationComment(checker)).trim())
           : '';
         const name = member.name.getText(sf);
         const row: PropRow = {
