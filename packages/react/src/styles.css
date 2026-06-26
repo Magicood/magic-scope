@@ -93,3 +93,8 @@
 @import "./components/Mentions/Mentions.css" layer(ms.components);
 @import "./components/Carousel/Carousel.css" layer(ms.components);
 @import "./components/FloatButton/FloatButton.css" layer(ms.components);
+@import "./components/Tour/Tour.css" layer(ms.components);
+@import "./components/AutoComplete/AutoComplete.css" layer(ms.components);
+@import "./components/Image/Image.css" layer(ms.components);
+@import "./components/Mark/Mark.css" layer(ms.components);
+@import "./components/VisuallyHidden/VisuallyHidden.css" layer(ms.components);

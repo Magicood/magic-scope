@@ -1,0 +1,30 @@
+{
+  "id": "auto-complete",
+  "name": "AutoComplete",
+  "description": "自动完成(自由文本 + 补全建议):input role=combobox(aria-autocomplete=list)+ Popover API 补全浮层进 top-layer、CSS Anchor Positioning 定位并优雅降级。与 Select 区别是「值就是输入串」,候选项只是补全提示不强制选取。options 平铺/分组、filterOption(false 关内置过滤配 onSearch 做受控远程搜索,或传谓词自定义命中)、loading 加载态、空态、allowClear、disabled、size、invalid(供 Form)。接全库 tone 槽位(高亮/发光只读 --ms-c*,invalid 强制 danger)、i18n 文案;键盘 ↑↓ 高亮 / Enter 选中填入 / Esc 关、选中后输入框填该候选 value;留口 prefix、renderOption、classNames 部件定制、原生属性透传、composeEventHandlers 合并用户处理器;受控/非受控(value+onChange / open+onOpenChange)双通道;密度缩放、motion/fx 一键降级。可抽取纯逻辑(filterOptions/defaultFilter/findEnabledIndex/optionText)落 logic.ts 零 React 依赖。",
+  "category": "forms",
+  "tags": [
+    "autocomplete",
+    "combobox",
+    "typeahead",
+    "input",
+    "suggestion",
+    "forms",
+    "filter",
+    "async",
+    "clearable",
+    "tone",
+    "i18n",
+    "controlled"
+  ],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-26",
+    "requirements": "需要一个「自由文本 + 补全建议」的自动完成控件,补 Select(强制从选项选取)之外的空缺:值即输入串、候选项只作补全提示不强制选取,典型用于搜索框联想、远程异步搜索(filterOption=false + onSearch + loading)。要达到与旗舰 Input/Select 对齐的生产级深度:options 平铺/分组、内置/自定义/关闭三档过滤、loading/空态/allowClear/disabled/size/invalid(供 Form)、tone 槽位与 i18n、完整键盘(↑↓/Enter/Esc)与 combobox a11y(aria-autocomplete=list / aria-expanded / aria-activedescendant / option aria-selected)、受控+非受控双通道、prefix/renderOption/classNames 留口、motion/fx 一键降级。overlay 用满平台原生能力(Popover API + CSS Anchor Positioning)自研并带降级。纯过滤/导航逻辑抽进 logic.ts(零 React)以便平移到 vue/core。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["AutoComplete.tsx", "AutoComplete.css", "logic.ts", "index.ts"]
+}

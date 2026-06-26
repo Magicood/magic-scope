@@ -1,0 +1,287 @@
+/* —— Image —— 图片(data-display)。消费 @magic-scope/tokens 的 --ms-* 变量。 */
+
+.ms-image {
+  position: relative;
+  display: inline-block;
+  /* 内容边界:超长固有尺寸不撑破容器 */
+  max-inline-size: 100%;
+  overflow: hidden;
+  /* 圆角默认无,变体覆盖 */
+  border-radius: 0;
+  /* 给骨架/错误态当背景底色 */
+  background-color: var(--ms-color-surface-sunken, transparent);
+  line-height: 0;
+  font-family: var(--ms-font-sans);
+  margin: 0;
+}
+
+.ms-image__img {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  /* 没显式高时按图片固有比例 */
+  max-inline-size: 100%;
+  object-fit: cover;
+  /* 加载淡入:先透明,loaded 后浮现 */
+  opacity: 0;
+  transition: opacity var(--ms-dur-base, 200ms) var(--ms-ease-standard, ease);
+}
+
+.ms-image__img--loaded {
+  opacity: 1;
+}
+
+/* —— object-fit 变体 —— */
+.ms-image__img--fit-cover {
+  object-fit: cover;
+}
+.ms-image__img--fit-contain {
+  object-fit: contain;
+}
+.ms-image__img--fit-fill {
+  object-fit: fill;
+}
+.ms-image__img--fit-none {
+  object-fit: none;
+}
+.ms-image__img--fit-scale-down {
+  object-fit: scale-down;
+}
+
+/* —— 圆角档(走 --ms-radius-*),full=圆形 —— */
+.ms-image--rounded-sm {
+  border-radius: var(--ms-radius-sm);
+}
+.ms-image--rounded-md {
+  border-radius: var(--ms-radius-md);
+}
+.ms-image--rounded-lg {
+  border-radius: var(--ms-radius-lg);
+}
+.ms-image--rounded-xl {
+  border-radius: var(--ms-radius-xl, var(--ms-radius-lg));
+}
+.ms-image--rounded-full {
+  border-radius: var(--ms-radius-full, 9999px);
+}
+
+/* —— 可预览:鼠标态提示 + 轻微放大 —— */
+.ms-image--previewable .ms-image__img {
+  cursor: zoom-in;
+  transition:
+    opacity var(--ms-dur-base, 200ms) var(--ms-ease-standard, ease),
+    transform var(--ms-dur-base, 200ms) var(--ms-ease-standard, ease);
+}
+
+.ms-image--previewable:hover .ms-image__img--loaded {
+  transform: scale(1.03);
+}
+
+.ms-image__img:focus-visible {
+  outline: 2px solid var(--ms-color-focus-ring);
+  outline-offset: 2px;
+}
+
+/* —— 加载中骨架:脉冲 —— */
+.ms-image__skeleton {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    var(--ms-color-surface-sunken) 30%,
+    var(--ms-color-surface-raised) 50%,
+    var(--ms-color-surface-sunken) 70%
+  );
+  background-size: 200% 100%;
+  animation: ms-image-shimmer 1.4s ease-in-out infinite;
+}
+
+@keyframes ms-image-shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+.ms-image__placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* —— 错误占位态 —— */
+.ms-image__error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ms-space-2);
+  inline-size: 100%;
+  block-size: 100%;
+  min-block-size: var(--ms-space-16, 4rem);
+  padding: var(--ms-space-4);
+  color: var(--ms-color-fg-muted);
+  background-color: var(--ms-color-surface-sunken);
+  line-height: 1.4;
+  text-align: center;
+}
+
+.ms-image__error-text {
+  font-size: var(--ms-font-size-sm, 0.875rem);
+  overflow-wrap: break-word;
+  max-inline-size: 100%;
+}
+
+/* —— 预览灯箱:自渲染 fixed 遮罩 —— */
+.ms-image__lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: var(--ms-z-modal, 1000);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* 横向/底部安全区:刘海 / 圆角不裁工具栏 */
+  padding: max(var(--ms-space-6), var(--ms-safe-top, 0px))
+    calc(var(--ms-space-6) + var(--ms-safe-right, 0px))
+    max(var(--ms-space-6), var(--ms-safe-bottom, 0px))
+    calc(var(--ms-space-6) + var(--ms-safe-left, 0px));
+  background: var(--ms-color-overlay, rgb(10 7 16 / 0.82));
+  backdrop-filter: blur(3px);
+  animation: ms-image-fade-in var(--ms-dur-base, 200ms) var(--ms-ease-standard, ease);
+}
+
+@keyframes ms-image-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.ms-image__lightbox-label {
+  /* 可见标题挂 aria-labelledby;视觉上低调置顶 */
+  position: absolute;
+  inset-block-start: max(var(--ms-space-4), var(--ms-safe-top, 0px));
+  inset-inline: var(--ms-space-6);
+  color: rgb(255 255 255 / 0.9);
+  font-size: var(--ms-font-size-sm, 0.875rem);
+  text-align: center;
+  pointer-events: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ms-image__stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1 1 auto;
+  inline-size: 100%;
+  min-block-size: 0;
+  overflow: hidden;
+}
+
+.ms-image__preview-img {
+  max-inline-size: 100%;
+  max-block-size: 100%;
+  object-fit: contain;
+  transform-origin: center;
+  transition: transform var(--ms-dur-base, 200ms) var(--ms-ease-emphasized, ease);
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* —— 灯箱工具栏 —— */
+.ms-image__toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--ms-space-2);
+  margin-block-start: var(--ms-space-4);
+  padding: var(--ms-space-2);
+  border-radius: var(--ms-radius-full, 9999px);
+  background: var(--ms-color-surface-raised, rgb(0 0 0 / 0.5));
+  border: 1px solid var(--ms-color-border, transparent);
+  box-shadow:
+    0 12px 32px -16px rgb(0 0 0 / 0.6),
+    0 0 calc(28px * var(--ms-fx-glow, 1)) -12px var(--ms-color-glow, transparent);
+}
+
+[data-ms-fx="off"] .ms-image__toolbar {
+  box-shadow: 0 12px 32px -16px rgb(0 0 0 / 0.6);
+}
+
+.ms-image__tool {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* 触控热区 */
+  min-inline-size: var(--ms-target-min);
+  min-block-size: var(--ms-target-min);
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: var(--ms-radius-full, 9999px);
+  background: transparent;
+  color: var(--ms-color-fg-muted);
+  cursor: pointer;
+  transition:
+    color var(--ms-dur-fast, 120ms) var(--ms-ease-standard, ease),
+    background-color var(--ms-dur-base, 200ms) var(--ms-ease-standard, ease),
+    border-color var(--ms-dur-base, 200ms) var(--ms-ease-standard, ease);
+}
+
+.ms-image__tool:hover:not(:disabled) {
+  color: var(--ms-color-fg);
+  background-color: var(--ms-color-surface-sunken);
+  border-color: var(--ms-color-border);
+}
+
+.ms-image__tool:focus-visible {
+  outline: 2px solid var(--ms-color-focus-ring);
+  outline-offset: 2px;
+}
+
+.ms-image__tool:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.ms-image__tool--close {
+  color: var(--ms-color-fg);
+}
+
+/* —— 降级:reduced-motion 与 motion 总闸 —— */
+@media (prefers-reduced-motion: reduce) {
+  .ms-image__img,
+  .ms-image__skeleton,
+  .ms-image__lightbox,
+  .ms-image__preview-img,
+  .ms-image--previewable:hover .ms-image__img--loaded {
+    transition-duration: 0.01ms;
+    animation-duration: 0.01ms;
+    animation-iteration-count: 1;
+    transform: none;
+  }
+
+  .ms-image--previewable:hover .ms-image__img--loaded {
+    transform: none;
+  }
+}
+
+[data-ms-motion="off"] .ms-image__img,
+[data-ms-motion="off"] .ms-image__skeleton,
+[data-ms-motion="off"] .ms-image__lightbox,
+[data-ms-motion="off"] .ms-image__preview-img {
+  transition-duration: 0.01ms;
+  animation: none;
+}
+
+[data-ms-motion="off"] .ms-image--previewable:hover .ms-image__img--loaded {
+  transform: none;
+}

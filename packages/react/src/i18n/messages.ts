@@ -111,7 +111,14 @@ export type MessageKey =
   | 'carousel.next'
   | 'carousel.goToSlide'
   | 'transfer.search'
-  | 'transfer.empty';
+  | 'transfer.empty'
+  | 'tour.next'
+  | 'tour.prev'
+  | 'tour.skip'
+  | 'tour.finish'
+  | 'tour.stepOf'
+  | 'image.error'
+  | 'image.preview';
 
 /** 完整字典:每个 key 都有值。 */
 export type Messages = Record<MessageKey, Message>;
@@ -219,6 +226,13 @@ export const defaultMessages: Messages = {
   'carousel.goToSlide': '跳到第 {index} 张',
   'transfer.search': '搜索',
   'transfer.empty': '列表为空',
+  'tour.next': '下一步',
+  'tour.prev': '上一步',
+  'tour.skip': '跳过',
+  'tour.finish': '完成',
+  'tour.stepOf': '第 {current} / {total} 步',
+  'image.error': '图片加载失败',
+  'image.preview': '预览',
 };
 
 const TEMPLATE = /\{(\w+)\}/g;

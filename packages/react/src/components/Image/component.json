@@ -1,0 +1,17 @@
+{
+  "id": "image",
+  "name": "Image",
+  "description": "图片组件:原生懒加载、加载骨架、失败兜底链、object-fit/圆角,内建点击预览灯箱(缩放/旋转/还原)。",
+  "category": "data-display",
+  "tags": ["image", "img", "lazy", "fallback", "preview", "lightbox", "zoom", "media"],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-26",
+    "requirements": "需要一个生产级图片组件:用原生 loading=lazy 做懒加载、加载中给脉冲骨架避免布局跳动;主图加载失败时沿 fallbackSrc 链逐级降级,全部失败再落到错误占位态;支持 width/height/object-fit/圆角(含圆形)。点击进入全屏预览灯箱,带缩放/旋转/还原/关闭工具栏,支持键盘(Esc 关、+/- 缩放、r 旋转、0 还原)与受控开合。把预览的变换状态机(缩放/旋转步进与夹取)和来源回退解析抽成零依赖纯函数便于单测与跨框架平移。多图组预览(ImageGroup:一处打开、整组左右切换)留待后续作为复合组件,本组件先做单图。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Image.tsx", "Image.css", "logic.ts", "logic.test.ts", "Image.test.tsx", "index.ts"]
+}
