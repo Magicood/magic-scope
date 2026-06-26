@@ -82,7 +82,17 @@ export type MessageKey =
   | 'form.url'
   | 'form.validating'
   | 'form.submitError'
-  | 'form.errorSummary';
+  | 'form.errorSummary'
+  | 'datePicker.placeholder'
+  | 'datePicker.rangeStart'
+  | 'datePicker.rangeEnd'
+  | 'datePicker.clear'
+  | 'datePicker.today'
+  | 'datePicker.prevMonth'
+  | 'datePicker.nextMonth'
+  | 'datePicker.prevYear'
+  | 'datePicker.nextYear'
+  | 'datePicker.selectMonthYear';
 
 /** 完整字典:每个 key 都有值。 */
 export type Messages = Record<MessageKey, Message>;
@@ -161,6 +171,16 @@ export const defaultMessages: Messages = {
   'form.validating': '校验中…',
   'form.submitError': '提交失败,请检查表单',
   'form.errorSummary': '表单有 {count} 处错误',
+  'datePicker.placeholder': '请选择日期',
+  'datePicker.rangeStart': '开始日期',
+  'datePicker.rangeEnd': '结束日期',
+  'datePicker.clear': '清除',
+  'datePicker.today': '今天',
+  'datePicker.prevMonth': '上个月',
+  'datePicker.nextMonth': '下个月',
+  'datePicker.prevYear': '上一年',
+  'datePicker.nextYear': '下一年',
+  'datePicker.selectMonthYear': '选择年月',
 };
 
 const TEMPLATE = /\{(\w+)\}/g;

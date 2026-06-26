@@ -15,6 +15,7 @@ export * from './Checkbox';
 export * from './Code';
 export * from './Container';
 export * from './ContextMenu';
+export * from './DatePicker';
 export * from './Descriptions';
 export * from './Dialog';
 export * from './Divider';
