@@ -168,8 +168,7 @@ const SegmentedRoot = forwardRef<HTMLDivElement, SegmentedProps>((props, ref) =>
     ...rest
   } = props;
 
-  // i18n:面向用户文案统一走 useMessages;segmented.label 尚未登记进 messages.ts(子组件不改字典),
-  // 故用第三参 fallback 中文字面量兜底,等主会话补 key 后自动生效(已在交付 notes 登记)。
+  // i18n:无可见 label 时的无障碍名走字典 segmented.label(默认「分段选择」)。
   const t = useMessages();
   const reactId = useId();
   const baseId = `ms-segmented-${reactId.replace(/[^a-zA-Z0-9]/g, '')}`;
