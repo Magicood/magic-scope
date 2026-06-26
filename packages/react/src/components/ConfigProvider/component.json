@@ -1,0 +1,34 @@
+{
+  "id": "config-provider",
+  "name": "ConfigProvider",
+  "description": "全局配置上下文(utility):在一处统一设置全库设计开关——density(密度档)/ motion(动效总闸)/ fx(装饰发光总闸)/ tone(默认色调),经 data-ms-* 属性沿 CSS 级联下发(CSS-first,组件读祖先属性,不靠 JS prop 钻透)。可嵌套就近覆盖、可只设部分开关。同时 createContext 暴露 density/size/tone 默认值,经 useConfig() 供少数需 JS 默认值的组件兜底。给 messages 时内部用 i18n MessagesProvider 包裹下发/合并文案;locale 写到根 lang。as 多态根 / asChild Slot 把开关挂到已有节点,透明包裹不破坏文档语义。",
+  "category": "utility",
+  "tags": [
+    "config",
+    "provider",
+    "context",
+    "global",
+    "theme",
+    "density",
+    "motion",
+    "fx",
+    "tone",
+    "locale",
+    "i18n",
+    "css-cascade",
+    "data-attribute",
+    "as-child",
+    "polymorphic",
+    "utility"
+  ],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-26",
+    "requirements": "需要一个全库级的配置入口:把分散的设计开关(密度、动效强度、装饰发光、默认色调、默认尺寸、文案/语种)收到一处统一设置,避免每个组件各传一遍。架构定为 CSS-first——视觉开关经 data-ms-density/data-ms-motion/data-ms-fx/data-ms-tone 属性沿 CSS 级联下发,组件读祖先属性即可生效(消费 device.css/effects.css 已定义的 token),不再靠 JS prop 逐层钻透;这与项目「多框架对等、适配契约框架无关」的硬性约定一致(同一套 data 属性可平移到 vue/web component)。需支持嵌套就近覆盖与只设部分开关。少数组件需在渲染逻辑里读默认值(如 size 缺省兜底全局默认),故额外 createContext + useConfig() 暴露 density/size/tone——诚实定位:这是 JS 默认值通道,不是视觉开关的下发通道,绝大多数视觉开关靠 CSS data 属性。messages 经内部 MessagesProvider 合并下发(import 复用,不改共享 i18n)。留口:as 多态 / asChild Slot(把开关直接挂到布局根/html 镜像,免多包一层 div)、forwardRef、原生属性透传、className/style 合并;a11y 上默认透明包裹(div + display:contents)不引入额外盒子、不强加 role。把可抽取的「props→data 属性」纯映射放 logic.ts 便于平移其它框架。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["ConfigProvider.tsx", "ConfigProvider.css", "logic.ts", "logic.test.ts", "index.ts"]
+}

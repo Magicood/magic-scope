@@ -1,0 +1,17 @@
+{
+  "id": "prose",
+  "name": "Prose",
+  "description": "富文本 / HTML 内容容器排版:给一段已渲染的 HTML/JSX(markdown 输出、CMS 富文本、MDX)套上全库排版样式,通过后代选择器统一规范标题、段落、列表、引用、代码、表格、链接、媒体等元素。",
+  "category": "typography",
+  "tags": ["prose", "typography", "rich-text", "html", "markdown", "content", "article", "mdx"],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-26",
+    "requirements": "需要一个轻量容器把外部来源的成块 HTML/JSX(markdown 渲染结果、CMS 富文本、MDX 文档)一键套上整套排版规范,无需为每个元素手写类。组件本体只负责多态渲染与留口(as/asChild/className/classNames),排版规则全部沉到 Prose.css 的后代选择器并消费 --ms-* token、随 data-ms-density 缩放、用 tone 槽位着色链接/引用/列表标记。安全决策(是否 dangerouslySetInnerHTML)交还调用方,不内置注入。size 三档只调正文基准字号、其余元素以 em 相对推导,保证整体缩放时层级关系恒定。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Prose.tsx", "Prose.css", "Prose.test.tsx", "index.ts"]
+}

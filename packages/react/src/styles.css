@@ -98,3 +98,6 @@
 @import "./components/Image/Image.css" layer(ms.components);
 @import "./components/Mark/Mark.css" layer(ms.components);
 @import "./components/VisuallyHidden/VisuallyHidden.css" layer(ms.components);
+@import "./components/ConfigProvider/ConfigProvider.css" layer(ms.components);
+@import "./components/Prose/Prose.css" layer(ms.components);
+@import "./components/Spin/Spin.css" layer(ms.components);

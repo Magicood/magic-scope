@@ -1,0 +1,9 @@
+/* —— ConfigProvider —— 全局配置上下文根。
+ * 透明包裹:本身不画任何视觉,只作为 data-ms-* 属性的承载节点,让 density / motion / fx / tone
+ * 经 CSS 级联下发给后代组件(实际的 token 定义在 device.css / effects.css,此处不重复)。
+ * display: contents 让默认 div 根在布局上「消失」,不引入额外盒子、不破坏父级 flex/grid 排布。
+ * 注意:contents 下根元素自身的盒模型/背景不渲染(本组件本就透明,无影响);
+ * 若用户经 className/style 需要这层成为真实盒子,自定义类的特异性更高会自然覆盖。 */
+.ms-config-provider {
+  display: contents;
+}
