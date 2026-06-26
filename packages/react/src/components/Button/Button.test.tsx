@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 import '@testing-library/jest-dom/vitest';
 import { fireEvent, render, screen, within } from '@testing-library/react';
+import { createRef } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { Button, ButtonGroup } from './Button';
 
@@ -90,6 +91,24 @@ describe('Button', () => {
     expect(link).toHaveClass('ms-button', 'ms-button--link', 'ms-tone-accent');
     expect(link).toHaveAttribute('href', '/x');
     expect(screen.queryByRole('button')).toBeNull();
+  });
+
+  it('asChild:compose 两边 onClick(都触发)+ ref 接到子元素', () => {
+    const onButton = vi.fn();
+    const onChild = vi.fn();
+    const ref = createRef<HTMLButtonElement>();
+    render(
+      <Button asChild onClick={onButton} ref={ref}>
+        <a href="/x" onClick={onChild}>
+          去文档
+        </a>
+      </Button>,
+    );
+    const link = screen.getByRole('link', { name: '去文档' });
+    fireEvent.click(link);
+    expect(onChild).toHaveBeenCalledOnce(); // 子元素自带的
+    expect(onButton).toHaveBeenCalledOnce(); // 传给 Button 的,不再被丢
+    expect(ref.current).toBe(link); // 外部 ref 拿到真实 <a> DOM
   });
 
   it('ButtonGroup:role=group + 吸附类,内含子按钮', () => {

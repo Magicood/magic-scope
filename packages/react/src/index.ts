@@ -8,3 +8,4 @@
 export const version = '0.0.0';
 export * from './components';
 export * from './i18n';
+export * from './utils/compose';

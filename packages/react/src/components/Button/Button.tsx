@@ -1,5 +1,6 @@
-import type { ComponentPropsWithoutRef, ReactElement, ReactNode } from 'react';
+import type { ComponentPropsWithoutRef, ReactElement, ReactNode, Ref } from 'react';
 import { cloneElement, forwardRef, isValidElement } from 'react';
+import { composeRefs, mergeAsChildProps } from '../../utils/compose';
 
 export type ButtonVariant = 'solid' | 'soft' | 'outline' | 'ghost' | 'link';
 export type ButtonTone = 'primary' | 'accent' | 'success' | 'warning' | 'danger' | 'info';
@@ -75,14 +76,16 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       .filter(Boolean)
       .join(' ');
 
-    // asChild:把样式与按钮 props 合并到子元素(子元素自带内容),用于链接 / 路由 Link
+    // asChild:把样式与按钮 props 合并到子元素(子元素自带内容),用于链接 / 路由 Link。
+    // 事件 compose(子元素与 Button 的同名处理器都执行)、ref 合并到子元素(外部 ref 能拿到真实 DOM)。
     if (asChild && isValidElement(children)) {
-      const child = children as ReactElement<{ className?: string }>;
+      const child = children as ReactElement<Record<string, unknown>>;
+      const childRef = (child as { ref?: Ref<unknown> }).ref;
+      const merged = mergeAsChildProps({ ...props, className: classes }, child.props);
       return cloneElement(child, {
-        ...props,
-        ...(child.props as object),
-        className: [classes, child.props.className].filter(Boolean).join(' '),
-      });
+        ...merged,
+        ref: composeRefs(ref as Ref<unknown>, childRef),
+      } as Record<string, unknown>);
     }
 
     return (
