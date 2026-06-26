@@ -69,7 +69,12 @@ for (const id of ids) {
     if (safe && new RegExp(`\\b${safe}\\b`).test(demoText)) covered.add(p);
   }
   const uncovered = [...new Set(allProps)].filter((p) => !covered.has(p));
-  report.push({ id, total: allProps.length, covered: allProps.length - uncovered.length, uncovered });
+  report.push({
+    id,
+    total: allProps.length,
+    covered: allProps.length - uncovered.length,
+    uncovered,
+  });
 }
 
 report.sort((a, b) => b.uncovered.length - a.uncovered.length);
