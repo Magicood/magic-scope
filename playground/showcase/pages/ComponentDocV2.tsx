@@ -104,6 +104,10 @@ export function ComponentDocV2({
   const { values, set, reset } = useControls(meta.controls);
   const [vp, setVp] = useState<string>('full');
   const props = getProps(meta.propsName ?? meta.name, meta.alsoProps, meta.spread);
+  // 事件(on* 回调)单独成「事件 Events」表,按方法名 + 回调参数展示。
+  const isEvent = (n: string) => /^on[A-Z]/.test(n);
+  const eventRows = props.filter((p) => isEvent(p.name));
+  const propRows = props.filter((p) => !isEvent(p.name));
   const width = VIEWPORTS.find((v) => v.id === vp)?.width ?? '100%';
 
   return (
@@ -195,7 +199,7 @@ export function ComponentDocV2({
         </section>
       )}
 
-      {props.length > 0 && (
+      {propRows.length > 0 && (
         <section className="sc-section">
           <h2 className="sc-h2">参数 Props（自动抽取自 TS）</h2>
           <div className="sc-table-wrap">
@@ -209,7 +213,7 @@ export function ComponentDocV2({
                 </tr>
               </thead>
               <tbody>
-                {props.map((p) => (
+                {propRows.map((p) => (
                   <tr key={p.name}>
                     <td>
                       <code className="sc-code-name">{p.name}</code>
@@ -233,6 +237,49 @@ export function ComponentDocV2({
                     <td>{p.description}</td>
                   </tr>
                 ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      )}
+
+      {(eventRows.length > 0 || meta.spread) && (
+        <section className="sc-section">
+          <h2 className="sc-h2">事件 Events（方法 + 回调参数，自动抽取自 TS）</h2>
+          <div className="sc-table-wrap">
+            <table className="sc-proptable">
+              <thead>
+                <tr>
+                  <th>事件</th>
+                  <th>回调参数</th>
+                  <th>说明</th>
+                </tr>
+              </thead>
+              <tbody>
+                {eventRows.map((p) => (
+                  <tr key={p.name}>
+                    <td>
+                      <code className="sc-code-name">{p.name}</code>
+                    </td>
+                    <td>
+                      <code className="sc-code-type">{p.type.replace(/^\((.+)\)$/, '$1')}</code>
+                    </td>
+                    <td>{p.description}</td>
+                  </tr>
+                ))}
+                {meta.spread && (
+                  <tr>
+                    <td>
+                      <code className="sc-code-name">原生事件</code>
+                    </td>
+                    <td>
+                      <code className="sc-code-type">{`on*: ${meta.spread} 元素事件`}</code>
+                    </td>
+                    <td>
+                      透传原生 &lt;{meta.spread}&gt; 的全部事件(onClick / onFocus / onKeyDown 等)。
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
