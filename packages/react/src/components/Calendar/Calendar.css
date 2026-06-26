@@ -1,0 +1,216 @@
+/* Calendar —— 独立月历(data-display)。前缀 ms-cal,与 DatePicker 内嵌 .ms-calendar 区分,互不污染。
+ * 全部消费 @magic-scope/tokens 的 --ms-* 变量;尺寸随 data-ms-density(--ms-density-scale)缩放;
+ * 选中 / 范围色走 tone 槽位(--ms-c / --ms-on-c / --ms-c-soft / --ms-c-glow,见 tone.css)。 */
+
+.ms-cal {
+  /* 单格边长:紧凑基线 2.25rem,fullscreen 拉大;随密度缩放 */
+  --ms-cal-cell: calc(2.25rem * var(--ms-density-scale, 1));
+  --ms-cal-gap: var(--ms-space-1);
+  display: flex;
+  flex-direction: column;
+  gap: var(--ms-space-2);
+  font-family: var(--ms-font-sans);
+  color: var(--ms-color-fg);
+  inline-size: fit-content;
+  max-inline-size: 100%;
+}
+
+.ms-cal--fullscreen {
+  --ms-cal-cell: calc(3rem * var(--ms-density-scale, 1));
+  inline-size: 100%;
+}
+
+.ms-cal--compact {
+  --ms-cal-cell: calc(2.25rem * var(--ms-density-scale, 1));
+}
+
+/* ── 顶部导航栏 ── */
+.ms-cal__header {
+  display: flex;
+  align-items: center;
+  gap: var(--ms-space-1);
+}
+
+.ms-cal__nav {
+  flex: none;
+  inline-size: var(--ms-cal-cell);
+  block-size: var(--ms-cal-cell);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font: inherit;
+  font-size: 1.1em;
+  line-height: 1;
+  background: none;
+  border: none;
+  border-radius: var(--ms-radius-sm);
+  color: var(--ms-color-fg-muted);
+  cursor: pointer;
+  transition: background var(--ms-dur-fast, 0.12s) var(--ms-ease-standard, ease);
+}
+.ms-cal__nav:hover {
+  background: var(--ms-color-surface-sunken);
+  color: var(--ms-color-fg);
+}
+.ms-cal__nav:focus-visible {
+  outline: 2px solid var(--ms-color-focus-ring, var(--ms-c, var(--ms-color-primary)));
+  outline-offset: 1px;
+}
+
+.ms-cal__title {
+  flex: 1;
+  min-inline-size: 0;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.95em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-inline: var(--ms-space-1);
+}
+
+/* ── 网格 ── */
+.ms-cal__grid {
+  inline-size: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.ms-cal__weekday {
+  inline-size: var(--ms-cal-cell);
+  block-size: calc(var(--ms-cal-cell) * 0.7);
+  font-size: 0.78em;
+  font-weight: 500;
+  color: var(--ms-color-fg-subtle);
+  text-align: center;
+}
+
+.ms-cal__cell-wrap {
+  padding: 0;
+  text-align: center;
+  vertical-align: top;
+}
+
+.ms-cal__cell {
+  position: relative;
+  inline-size: 100%;
+  min-inline-size: var(--ms-cal-cell);
+  block-size: var(--ms-cal-cell);
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  font: inherit;
+  font-size: 0.9em;
+  background: none;
+  border: none;
+  border-radius: var(--ms-radius-sm);
+  color: var(--ms-color-fg);
+  cursor: pointer;
+  overflow: hidden;
+  transition:
+    background var(--ms-dur-fast, 0.12s) var(--ms-ease-standard, ease),
+    color var(--ms-dur-fast, 0.12s) var(--ms-ease-standard, ease);
+}
+.ms-cal--fullscreen .ms-cal__cell {
+  /* fullscreen:格子更高,数字靠上,给 dateCellRender 留下方空间 */
+  block-size: calc(var(--ms-cal-cell) * 1.5);
+  justify-content: flex-start;
+  padding-block-start: var(--ms-space-1);
+  align-items: stretch;
+  border-radius: var(--ms-radius-md);
+  border-block-start: 2px solid transparent;
+}
+
+.ms-cal__cell-day {
+  flex: none;
+}
+.ms-cal--fullscreen .ms-cal__cell-day {
+  text-align: end;
+  padding-inline-end: var(--ms-space-1);
+}
+
+.ms-cal__cell-content {
+  display: block;
+  inline-size: 100%;
+  font-size: 0.85em;
+  line-height: 1.2;
+  overflow: hidden;
+}
+
+.ms-cal__cell:hover:not(:disabled):not(.ms-cal__cell--selected) {
+  background: var(--ms-color-surface-sunken);
+}
+.ms-cal__cell:focus-visible {
+  outline: 2px solid var(--ms-color-focus-ring, var(--ms-c, var(--ms-color-primary)));
+  outline-offset: -2px;
+  z-index: 1;
+}
+
+/* 补位(上 / 下月):弱化 */
+.ms-cal__cell--outside {
+  color: var(--ms-color-fg-subtle);
+  opacity: 0.55;
+}
+
+/* 今天:内描边高亮 */
+.ms-cal__cell--today {
+  font-weight: 700;
+  box-shadow: inset 0 0 0 1px var(--ms-c, var(--ms-color-primary));
+}
+.ms-cal--fullscreen .ms-cal__cell--today {
+  box-shadow: none;
+  border-block-start-color: var(--ms-c, var(--ms-color-primary));
+}
+
+/* 范围中段:浅底贯穿 */
+.ms-cal__cell--in-range {
+  background: var(
+    --ms-c-soft,
+    color-mix(in oklab, var(--ms-c, var(--ms-color-primary)) 14%, transparent)
+  );
+  border-radius: 0;
+}
+
+/* 选中:实心 + 发光(受 --ms-fx-glow 调) */
+.ms-cal__cell--selected {
+  background: var(--ms-c, var(--ms-color-primary));
+  color: var(--ms-on-c, #fff);
+  font-weight: 600;
+  box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) var(--ms-c-glow, transparent);
+}
+.ms-cal__cell--selected.ms-cal__cell--today {
+  box-shadow:
+    inset 0 0 0 1px var(--ms-on-c, #fff),
+    0 0 calc(8px * var(--ms-fx-glow, 1)) var(--ms-c-glow, transparent);
+}
+.ms-cal__cell--range-start {
+  border-start-start-radius: var(--ms-radius-sm);
+  border-end-start-radius: var(--ms-radius-sm);
+}
+.ms-cal__cell--range-end {
+  border-start-end-radius: var(--ms-radius-sm);
+  border-end-end-radius: var(--ms-radius-sm);
+}
+
+.ms-cal__cell:disabled {
+  color: var(--ms-color-fg-subtle);
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* 降级动效:尊重系统偏好与库内开关 */
+@media (prefers-reduced-motion: reduce) {
+  .ms-cal__cell,
+  .ms-cal__nav {
+    transition: none;
+  }
+}
+[data-ms-motion="off"] .ms-cal__cell,
+[data-ms-motion="off"] .ms-cal__nav {
+  transition: none;
+}
+[data-ms-fx="off"] .ms-cal__cell--selected {
+  box-shadow: none;
+}

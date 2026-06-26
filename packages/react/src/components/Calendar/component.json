@@ -1,0 +1,28 @@
+{
+  "id": "calendar",
+  "name": "Calendar",
+  "description": "独立月历:整月铺展的日期网格,支持单选 / 范围 / 多选、今天高亮、禁用规则、周起始切换、单元格自定义渲染与完整键盘网格导航。",
+  "category": "data-display",
+  "tags": [
+    "calendar",
+    "date",
+    "month-view",
+    "date-grid",
+    "range",
+    "multiple",
+    "keyboard-navigation",
+    "i18n",
+    "a11y"
+  ],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "inspired",
+    "url": "https://ant.design/components/calendar",
+    "capturedAt": "2026-06-26",
+    "requirements": "需要一个区别于 DatePicker(输入框 + 弹层)的『独立月历』:直接平铺在页面中展示一整月,顶部可逐月 / 逐年翻页并显示年月标题,主体是周几表头 + 6×7 固定日格(含上 / 下月补位并弱化样式),用于排期 / 日程 / 数据看板等场景。选择需同时覆盖单选(value)、范围(mode=range)、多选(mode=multiple);today 高亮、disabledDate 与 minDate/maxDate 禁用、weekStartsOn 周起始可配;关键是 renderCell / dateCellRender 留口,以便在日格上挂事件圆点 / 徽标(对标 Ant Design Calendar 的 dateCellRender)。交互上要做成无障碍网格(role=grid),提供完整键盘导航(方向键逐日 / 逐周、PageUp/Down 逐月、Shift+PageUp/Down 逐年、Home/End 本周首尾、Enter/Space 选中),焦点日 roving 且跨月自动翻页。两种尺寸:fullscreen 占满与 compact 紧凑。月名 / 周名 / 日期文案经 Intl 按 locale 本地化,不硬编码语言;日期数学独立成纯函数内核(零外部库)以便正确性可测与跨框架平移。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Calendar.tsx", "Calendar.css", "logic.ts", "index.ts"]
+}

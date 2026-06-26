@@ -14,7 +14,7 @@ const ROOT = join(import.meta.dirname, '..');
 // 阈值留余量给后续组件增长,仅拦截「误打包依赖 / CSS 失控」级别的暴涨(那会是 100KB+ 量级)。
 const CHECKS = [
   { label: '@magic-scope/tokens  index.js', file: 'packages/tokens/dist/index.js', limitKb: 3 },
-  { label: '@magic-scope/react   index.js', file: 'packages/react/dist/index.js', limitKb: 170 },
+  { label: '@magic-scope/react   index.js', file: 'packages/react/dist/index.js', limitKb: 195 },
   { label: '@magic-scope/react   styles.css', file: 'packages/react/dist/styles.css', limitKb: 70 },
   {
     label: '@magic-scope/tokens  arcane.css',

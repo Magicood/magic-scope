@@ -1,0 +1,406 @@
+/* —— NavigationMenu 网站导航菜单(navigation) ——
+ * 外层 <nav> 横排触发器 / 链接;带 panel 的项打开 mega-menu。
+ * 浮层定位:CSS Anchor Positioning(共享 Viewport 锚到 <nav>,position-area 由 align 派生),
+ *   @supports not (anchor-name) 降级为 fixed 居中,保证不支持时仍可用。
+ * 配色:tone resolver —— 只读 6 槽位(--ms-c / --ms-c-soft / --ms-c-glow / --ms-c-hover …),不写死语义色。
+ * 尺寸 / 间距随 data-ms-density(--ms-density-scale)缩放;辉光受 --ms-fx-glow 门控;
+ * 过渡受 --ms-motion-scale / prefers-reduced-motion / [data-ms-motion=off] 门控。
+ */
+.ms-navmenu {
+  position: relative;
+  display: flex;
+  font-family: var(--ms-font-sans);
+  color: var(--ms-color-fg);
+}
+
+/* —— 触发器横排(<ul role=list>) —— */
+.ms-navmenu__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ms-space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ms-navmenu__item {
+  position: relative;
+  display: flex;
+}
+
+/* —— 触发器 / 顶层链接:同一视觉口径 —— */
+.ms-navmenu__trigger,
+.ms-navmenu__link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ms-space-2);
+  max-inline-size: min(16rem, 60vw);
+  min-block-size: calc(2.25rem * var(--ms-density-scale, 1));
+  padding-block: var(--ms-space-2);
+  padding-inline: var(--ms-space-3);
+  border: 1px solid transparent;
+  border-radius: var(--ms-radius-md);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-decoration: none;
+  cursor: pointer;
+  user-select: none;
+  transition:
+    background-color var(--ms-dur-fast) var(--ms-ease-standard),
+    color var(--ms-dur-fast) var(--ms-ease-standard),
+    border-color var(--ms-dur-fast) var(--ms-ease-standard),
+    box-shadow var(--ms-dur-fast) var(--ms-ease-standard);
+}
+
+/* hover / focus:浮起表面 + 主色字 + 外发光(发光受 fx 门控) */
+.ms-navmenu__trigger:hover:not(:disabled, [aria-disabled="true"]),
+.ms-navmenu__link:hover:not([aria-disabled="true"]),
+.ms-navmenu__trigger:focus-visible,
+.ms-navmenu__link:focus-visible {
+  outline: none;
+  background-color: var(--ms-c-soft);
+  color: var(--ms-c-hover);
+  box-shadow: 0 0 calc(18px * var(--ms-fx-glow, 1)) -10px var(--ms-c-glow);
+}
+
+/* 键盘聚焦:可达性发光环(不受 fx 门控) */
+.ms-navmenu__trigger:focus-visible,
+.ms-navmenu__link:focus-visible {
+  box-shadow: 0 0 0 2px var(--ms-color-focus-ring);
+}
+
+[data-ms-fx="off"] .ms-navmenu__trigger:hover:not(:disabled, [aria-disabled="true"]),
+[data-ms-fx="off"] .ms-navmenu__link:hover:not([aria-disabled="true"]) {
+  box-shadow: none;
+}
+
+/* 打开态触发器:保持高亮 + 卡尺旋转 */
+.ms-navmenu__trigger[data-state="open"] {
+  background-color: var(--ms-c-soft);
+  color: var(--ms-c-hover);
+}
+
+/* 当前页链接(aria-current=page):主色 + 底部指示条 */
+.ms-navmenu__link[data-active],
+.ms-navmenu__trigger--link[data-active] {
+  color: var(--ms-c);
+  font-weight: 600;
+}
+.ms-navmenu__link[data-active]::after,
+.ms-navmenu__trigger--link[data-active]::after {
+  content: "";
+  position: absolute;
+  inset-inline: var(--ms-space-3);
+  inset-block-end: calc(-1 * var(--ms-space-1));
+  block-size: 2px;
+  border-radius: 1px;
+  background-color: var(--ms-c);
+}
+
+.ms-navmenu__trigger:disabled,
+.ms-navmenu__trigger[aria-disabled="true"],
+.ms-navmenu__link[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+/* 触发器前置图标 / 卡尺 */
+.ms-navmenu__trigger-icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  inline-size: 1.1em;
+  block-size: 1.1em;
+}
+.ms-navmenu__trigger-caret {
+  display: inline-flex;
+  flex: 0 0 auto;
+  font-size: 0.7em;
+  line-height: 1;
+  transition: rotate var(--ms-dur-fast) var(--ms-ease-standard);
+}
+.ms-navmenu__trigger[data-state="open"] .ms-navmenu__trigger-caret {
+  rotate: 180deg;
+}
+/* 链接形态的顶层项无 panel,不显示卡尺 */
+.ms-navmenu__trigger--link .ms-navmenu__trigger-caret {
+  display: none;
+}
+
+/* —— 共享 Viewport(单浮层容器,尺寸 / 位置随 active panel 过渡) —— */
+.ms-navmenu__viewport {
+  position: absolute;
+  z-index: 50;
+  inset-block-start: 100%;
+  inset-inline-start: 0;
+  margin-block-start: var(--ms-navmenu-offset, var(--ms-space-2));
+  /* 入场:淡入 + 上滑 + 轻微缩放,位移受 motion-scale 门控 */
+  opacity: 0;
+  transform: translateY(calc(-6px * var(--ms-motion-scale, 1)));
+  transform-origin: top center;
+  transition:
+    opacity var(--ms-dur-base) var(--ms-ease-standard),
+    transform var(--ms-dur-base) var(--ms-ease-emphasized);
+  pointer-events: none;
+}
+.ms-navmenu[data-ms-viewport-align="center"] .ms-navmenu__viewport {
+  inset-inline-start: 50%;
+  translate: -50% 0;
+}
+.ms-navmenu[data-ms-viewport-align="end"] .ms-navmenu__viewport {
+  inset-inline-start: auto;
+  inset-inline-end: 0;
+}
+.ms-navmenu__viewport[data-state="open"] {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.ms-navmenu__viewport[hidden] {
+  display: none;
+}
+
+/* Viewport 内层卡片:尺寸随内容,封顶 + 内部滚动不撑破 */
+.ms-navmenu__viewport-inner {
+  min-inline-size: min(16rem, calc(100dvw - var(--ms-space-4) * 2));
+  max-inline-size: min(48rem, calc(100dvw - var(--ms-space-4) * 2));
+  max-block-size: min(70svh, 32rem);
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: var(--ms-space-4);
+  border: 1px solid var(--ms-color-border);
+  border-radius: var(--ms-radius-lg);
+  background-color: var(--ms-color-surface-raised);
+  box-shadow:
+    0 24px 64px -24px rgb(0 0 0 / 0.45),
+    0 0 calc(48px * var(--ms-fx-glow, 1)) -20px var(--ms-c-glow);
+}
+[data-ms-fx="off"] .ms-navmenu__viewport-inner {
+  box-shadow: 0 24px 64px -24px rgb(0 0 0 / 0.45);
+}
+
+/* —— 锚定位:支持 anchor-name 时,Viewport 锚到 <nav> 的底边 —— */
+@supports (anchor-name: --x) {
+  .ms-navmenu {
+    anchor-name: --ms-navmenu-anchor;
+  }
+  .ms-navmenu__viewport {
+    position: absolute;
+    position-anchor: --ms-navmenu-anchor;
+    position-area: block-end span-inline-end;
+    inset: auto;
+    margin-block-start: var(--ms-navmenu-offset, var(--ms-space-2));
+    position-try-fallbacks: flip-block;
+  }
+  .ms-navmenu[data-ms-viewport-align="center"] .ms-navmenu__viewport {
+    position-area: block-end;
+    translate: none;
+  }
+  .ms-navmenu[data-ms-viewport-align="end"] .ms-navmenu__viewport {
+    position-area: block-end span-inline-start;
+  }
+}
+
+/* —— 降级:不支持锚定位 → fixed 居顶,避免浮层错位 —— */
+@supports not (anchor-name: --x) {
+  .ms-navmenu__viewport {
+    position: fixed;
+    inset-block-start: calc(16vh + var(--ms-safe-top, 0px));
+    inset-inline: 0;
+    margin-inline: auto;
+    margin-block-start: 0;
+    translate: none;
+    inline-size: max-content;
+    max-inline-size: calc(100dvw - var(--ms-space-4) * 2);
+  }
+}
+
+/* —— 就地 panel(viewport=false、纯复合用法,或复合 + 默认 viewport=true 时的兜底) ——
+ * 基类直接带定位 + 卡片样式,保证「复合用法 + 默认 viewport=true」也开箱可用(不再依赖
+ * :not(.ms-navmenu--viewport) 门控,否则该路径下根带 viewport class、共享 Viewport 又不渲染,
+ * 就地 Content 会变成无定位、无卡片的裸块)。viewport 模式下真正收进共享 Viewport 的内容
+ * 会被 .ms-navmenu__viewport-inner 内的覆盖规则还原为「无卡片」(见下)。 */
+.ms-navmenu__content {
+  position: absolute;
+  z-index: 50;
+  inset-block-start: 100%;
+  inset-inline-start: 0;
+  margin-block-start: var(--ms-navmenu-offset, var(--ms-space-2));
+  min-inline-size: min(16rem, calc(100dvw - var(--ms-space-4) * 2));
+  max-inline-size: min(40rem, calc(100dvw - var(--ms-space-4) * 2));
+  max-block-size: min(70svh, 32rem);
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: var(--ms-space-4);
+  border: 1px solid var(--ms-color-border);
+  border-radius: var(--ms-radius-lg);
+  background-color: var(--ms-color-surface-raised);
+  box-shadow:
+    0 24px 64px -24px rgb(0 0 0 / 0.45),
+    0 0 calc(48px * var(--ms-fx-glow, 1)) -20px var(--ms-c-glow);
+  /* 入场动画 */
+  animation: ms-navmenu-pop var(--ms-dur-base) var(--ms-ease-emphasized);
+}
+[data-ms-fx="off"] .ms-navmenu__content {
+  box-shadow: 0 24px 64px -24px rgb(0 0 0 / 0.45);
+}
+
+@supports not (anchor-name: --x) {
+  .ms-navmenu__content {
+    position: fixed;
+    inset-block-start: calc(16vh + var(--ms-safe-top, 0px));
+    inset-inline: 0;
+    margin-inline: auto;
+    margin-block-start: 0;
+    inline-size: max-content;
+  }
+}
+
+/* viewport 模式:真正收进共享 Viewport(viewport-inner)里的 panel 不要自带卡片 / 定位,
+ * 卡片由 .ms-navmenu__viewport-inner 提供,内容只做无装饰的内层。 */
+.ms-navmenu__viewport-inner .ms-navmenu__content {
+  position: static;
+  z-index: auto;
+  inset: auto;
+  margin: 0;
+  min-inline-size: 0;
+  max-inline-size: none;
+  max-block-size: none;
+  overflow: visible;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  animation: none;
+}
+
+@keyframes ms-navmenu-pop {
+  from {
+    opacity: 0;
+    transform: translateY(calc(-6px * var(--ms-motion-scale, 1)));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* —— mega-menu 链接网格 —— */
+.ms-navmenu__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(14rem, 100%), 1fr));
+  gap: var(--ms-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ms-navmenu__grid-item {
+  display: flex;
+}
+.ms-navmenu__grid-link {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ms-space-3);
+  inline-size: 100%;
+  min-inline-size: 0;
+  padding: var(--ms-space-3);
+  border-radius: var(--ms-radius-md);
+  color: inherit;
+  text-decoration: none;
+  transition:
+    background-color var(--ms-dur-fast) var(--ms-ease-standard),
+    box-shadow var(--ms-dur-fast) var(--ms-ease-standard);
+}
+.ms-navmenu__grid-link:hover:not([aria-disabled="true"]),
+.ms-navmenu__grid-link:focus-visible {
+  outline: none;
+  background-color: var(--ms-c-soft);
+  box-shadow: 0 0 calc(16px * var(--ms-fx-glow, 1)) -10px var(--ms-c-glow);
+}
+.ms-navmenu__grid-link:focus-visible {
+  box-shadow: 0 0 0 2px var(--ms-color-focus-ring);
+}
+[data-ms-fx="off"] .ms-navmenu__grid-link:hover:not([aria-disabled="true"]) {
+  box-shadow: none;
+}
+.ms-navmenu__grid-link[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+.ms-navmenu__grid-link[data-active] {
+  color: var(--ms-c);
+}
+.ms-navmenu__grid-icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  inline-size: 1.5rem;
+  block-size: 1.5rem;
+  color: var(--ms-c);
+}
+.ms-navmenu__grid-text {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--ms-space-1) / 2);
+  min-inline-size: 0;
+}
+.ms-navmenu__grid-label {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.ms-navmenu__grid-desc {
+  color: var(--ms-color-fg-muted);
+  font-size: 0.85rem;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+/* —— 触控设备:触发器达标到最小命中目标 —— */
+@media (pointer: coarse) {
+  .ms-navmenu__trigger,
+  .ms-navmenu__link {
+    min-block-size: max(var(--ms-target-min, 2.75rem), calc(2.5rem * var(--ms-density-scale, 1)));
+  }
+}
+
+/* —— 动效降级:尊重系统偏好与库级总闸 —— */
+@media (prefers-reduced-motion: reduce) {
+  .ms-navmenu__viewport,
+  .ms-navmenu__viewport[data-state="open"] {
+    transition-duration: 0.01ms;
+    transform: none;
+  }
+  .ms-navmenu__trigger,
+  .ms-navmenu__link,
+  .ms-navmenu__trigger-caret,
+  .ms-navmenu__grid-link {
+    transition-duration: 0.01ms;
+  }
+  .ms-navmenu__content {
+    animation-duration: 0.01ms;
+  }
+}
+[data-ms-motion="off"] .ms-navmenu__viewport,
+[data-ms-motion="off"] .ms-navmenu__viewport[data-state="open"] {
+  transition: none;
+  transform: none;
+}
+[data-ms-motion="off"] .ms-navmenu__trigger,
+[data-ms-motion="off"] .ms-navmenu__link,
+[data-ms-motion="off"] .ms-navmenu__trigger-caret,
+[data-ms-motion="off"] .ms-navmenu__grid-link {
+  transition: none;
+}
+[data-ms-motion="off"] .ms-navmenu__content {
+  animation: none;
+}
