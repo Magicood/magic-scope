@@ -1,17 +1,29 @@
 {
   "id": "kbd",
   "name": "Kbd",
-  "description": "键盘按键样式组件,surface-raised 底配加粗底边模拟键帽立体感,等宽字号展示快捷键。",
+  "description": "键盘按键样式组件,surface-raised 底配加粗底边模拟键帽立体感。深度:keys 解析器把 'cmd+shift+k'/数组拆成多键帽并平台符号化(cmd→⌘ ctrl→⌃ alt→⌥ shift→⇧),platform=auto 经 navigator 探测;接全库 tone 色调(7 色,危险/确认键位可着语义色 + tone 辉光);size sm/md/lg 随密度缩放;separator 可传 ReactNode;asChild 多态、classNames 定制子部件。发光/动效尊重 data-ms-fx / prefers-reduced-motion。",
   "category": "data-display",
-  "tags": ["kbd", "keyboard", "key", "shortcut", "hotkey", "keycap", "data-display"],
+  "tags": [
+    "kbd",
+    "keyboard",
+    "key",
+    "shortcut",
+    "hotkey",
+    "keycap",
+    "combo",
+    "platform",
+    "mac",
+    "tone",
+    "data-display"
+  ],
   "status": "stable",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "frameworks": ["react"],
   "source": {
     "type": "original",
     "capturedAt": "2026-06-24",
-    "requirements": "键盘按键样式组件,surface-raised 底配加粗底边模拟键帽立体感,等宽字号展示快捷键。。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-* 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion。"
+    "requirements": "键盘按键样式组件,surface-raised 底配加粗底边模拟键帽立体感,等宽字号展示快捷键。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-* 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion。深度补强:keys 多键帽解析(纯函数 logic.ts,可平移 core)+ 平台符号映射(cmd→⌘ ctrl→⌃ alt→⌥ shift→⇧ enter→⏎ esc→⎋ del→⌫)+ tone 色调 + lg 档 + 可定制 separator。"
   },
   "dependencies": ["@magic-scope/tokens"],
-  "files": ["Kbd.tsx", "Kbd.css", "index.ts"]
+  "files": ["Kbd.tsx", "Kbd.css", "logic.ts", "index.ts"]
 }

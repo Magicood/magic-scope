@@ -1,9 +1,20 @@
 {
   "id": "alert",
   "name": "Alert",
-  "description": "语义化提示框,按 info/success/warning/danger 渲染柔和底色与起始边强调条,role=\"alert\" 向辅助技术播报。",
+  "description": "语义化提示框(旗舰深度):variant(info/success/warning/danger)经统一 tone 槽位驱动配色;子部件 icon(默认符文/自定义/可关)、title、description、action、可关闭钮;classNames 细粒度定制;role 按语义自动分流(danger/warning→alert、info/success→status)且可覆盖;关闭按钮 aria-label 走 i18n;asChild 多态;进场动画 + tone 辉光,尊重 prefers-reduced-motion 与 data-ms-fx/data-ms-motion 总闸。",
   "category": "feedback",
-  "tags": ["alert", "feedback", "notification", "banner", "message", "status"],
+  "tags": [
+    "alert",
+    "feedback",
+    "notification",
+    "banner",
+    "message",
+    "status",
+    "dismissible",
+    "tone",
+    "icon",
+    "a11y"
+  ],
   "status": "stable",
   "version": "0.1.0",
   "frameworks": ["react"],

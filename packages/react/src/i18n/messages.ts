@@ -20,6 +20,11 @@ export type MessageKey =
   | 'input.clear'
   | 'input.password.show'
   | 'input.password.hide'
+  | 'alert.close'
+  | 'avatar.status.online'
+  | 'avatar.status.offline'
+  | 'avatar.status.busy'
+  | 'avatar.status.away'
   | 'select.placeholder'
   | 'select.empty'
   | 'select.loading'
@@ -63,6 +68,11 @@ export const defaultMessages: Messages = {
   'input.clear': '清除',
   'input.password.show': '显示密码',
   'input.password.hide': '隐藏密码',
+  'alert.close': '关闭',
+  'avatar.status.online': '在线',
+  'avatar.status.offline': '离线',
+  'avatar.status.busy': '忙碌',
+  'avatar.status.away': '离开',
   'select.placeholder': '请选择…',
   'select.empty': '无匹配项',
   'select.loading': '加载中…',

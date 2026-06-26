@@ -1,17 +1,29 @@
 {
   "id": "badge",
   "name": "Badge",
-  "description": "小标签组件,支持 solid / soft / outline 三种变体与六种语义色调,圆角 full、紧凑内边距,用于状态、计数与分类标记。",
+  "description": "状态 / 计数 / 角标徽标。solid·soft·outline·glow 四变体 × 七语义色调(经全库 tone resolver,只读 6 槽位、零硬编码配色);圆点 dot(可 pulse 呼吸)、数字徽标(count·max·showZero、tabular-nums)、角标 overlap(standalone=false 包裹宿主、四角定位)、size(sm/md 随密度缩放)、icon 槽位、asChild 多态。动效尊重 prefers-reduced-motion 与 data-ms-motion,发光受 data-ms-fx 总闸门控。",
   "category": "data-display",
-  "tags": ["badge", "tag", "label", "chip", "status", "data-display", "pill"],
+  "tags": [
+    "badge",
+    "tag",
+    "label",
+    "chip",
+    "status",
+    "count",
+    "dot",
+    "notification",
+    "indicator",
+    "data-display",
+    "pill"
+  ],
   "status": "stable",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "frameworks": ["react"],
   "source": {
     "type": "original",
     "capturedAt": "2026-06-24",
-    "requirements": "小标签组件,支持 solid / soft / outline 三种变体与六种语义色调,圆角 full、紧凑内边距,用于状态、计数与分类标记。。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-* 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion。"
+    "requirements": "状态 / 计数 / 角标徽标(旗舰深度):四变体(solid/soft/outline/glow)× 七语义色调,接全库 tone resolver(只读 6 槽位 --ms-c / --ms-c-hover / --ms-c-active / --ms-on-c / --ms-c-soft / --ms-c-glow,零硬编码配色)。圆点 dot(可 pulse)、数字徽标(count + max 默认 99 + showZero,圆角 full)、角标 overlap(standalone=false 用 children 包裹宿主、top/bottom × start/end 四角定位)、size(sm/md 随 --ms-density-scale 缩放)、icon ReactNode 槽位、asChild 多态。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-* 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion 与 data-ms-motion/data-ms-fx 总闸。数字推导逻辑抽离为框架无关纯函数(logic.ts)便于平移 core。"
   },
   "dependencies": ["@magic-scope/tokens"],
-  "files": ["Badge.tsx", "Badge.css", "index.ts"]
+  "files": ["Badge.tsx", "Badge.css", "logic.ts", "index.ts"]
 }
