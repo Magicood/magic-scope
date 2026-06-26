@@ -1,0 +1,116 @@
+/* Flex —— flexbox 布局原语。全部经 --ms-flex-* CSS 变量驱动(由 logic.ts 注入 inline style)。
+ *
+ * 响应式实现:CSS 的 @media 条件里 var() 不生效,故断点对象在 JS 侧展开为「带断点后缀的变量」
+ * (--ms-flex-direction-md 等,基线/单值写无后缀 --ms-flex-direction),下方静态 @media 块按视口
+ * 断点(对齐 @magic-scope/tokens 的 breakpoints.viewport:sm 30rem / md 48rem / lg 64rem /
+ * xl 80rem / 2xl 96rem)逐级把后缀变量写入「解析变量」--_ms-flex-*,flex 属性只消费解析变量。
+ *
+ * 为什么要解析变量层:若直接对生效变量自赋值并以自身作 fallback
+ * (--ms-flex-x: var(--ms-flex-x-md, var(--ms-flex-x))),CSS 自引用会令变量变为
+ * guaranteed-invalid(解析为 initial),故用独立的 --_ms-flex-* 承接,回退链只引用「上一级解析变量」
+ * (异名,无自引用)。@media 自上而下、小→大书写,大断点天然覆盖小断点。
+ *
+ * RTL:align/justify 用 flex-start/flex-end 逻辑值;gap 不分左右;不写死 margin-left/right。 */
+
+.ms-flex {
+  /* 基线/单值变量默认值(JS 注入无后缀变量覆盖此默认) */
+  --ms-flex-direction: row;
+  --ms-flex-align: stretch;
+  --ms-flex-justify: flex-start;
+  --ms-flex-wrap: nowrap;
+  --ms-flex-gap: 0;
+
+  /* 解析变量层:基线下等于无后缀变量;row/column gap 未单独设则回落到统一 gap */
+  --_ms-flex-direction: var(--ms-flex-direction);
+  --_ms-flex-align: var(--ms-flex-align);
+  --_ms-flex-justify: var(--ms-flex-justify);
+  --_ms-flex-wrap: var(--ms-flex-wrap);
+  --_ms-flex-gap: var(--ms-flex-gap);
+  --_ms-flex-row-gap: var(--ms-flex-row-gap, var(--ms-flex-gap));
+  --_ms-flex-column-gap: var(--ms-flex-column-gap, var(--ms-flex-gap));
+
+  display: flex;
+  flex-direction: var(--_ms-flex-direction);
+  align-items: var(--_ms-flex-align);
+  justify-content: var(--_ms-flex-justify);
+  flex-wrap: var(--_ms-flex-wrap);
+  row-gap: var(--_ms-flex-row-gap);
+  column-gap: var(--_ms-flex-column-gap);
+  /* 容器内对父级自适应保留:让消费方可叠加 @container 查询(组件不强制) */
+  min-inline-size: 0;
+}
+
+.ms-flex--inline {
+  display: inline-flex;
+}
+
+/* flex 子项:item 级变量,未设则保留浏览器默认(0 1 auto) */
+.ms-flex-item {
+  flex-grow: var(--ms-flex-item-grow, 0);
+  flex-shrink: var(--ms-flex-item-shrink, 1);
+  flex-basis: var(--ms-flex-item-basis, auto);
+  align-self: var(--ms-flex-item-align, auto);
+  order: var(--ms-flex-item-order, 0);
+  min-inline-size: 0;
+}
+
+/* —— 响应式断点提升:逐级把 --ms-flex-*-<bp> 写入解析变量,回退到上一级解析变量(异名,无自引用) —— */
+@media (min-width: 30rem) {
+  .ms-flex {
+    --_ms-flex-direction: var(--ms-flex-direction-sm, var(--ms-flex-direction));
+    --_ms-flex-align: var(--ms-flex-align-sm, var(--ms-flex-align));
+    --_ms-flex-justify: var(--ms-flex-justify-sm, var(--ms-flex-justify));
+    --_ms-flex-wrap: var(--ms-flex-wrap-sm, var(--ms-flex-wrap));
+    --_ms-flex-gap: var(--ms-flex-gap-sm, var(--ms-flex-gap));
+    --_ms-flex-row-gap: var(--ms-flex-row-gap-sm, var(--_ms-flex-gap));
+    --_ms-flex-column-gap: var(--ms-flex-column-gap-sm, var(--_ms-flex-gap));
+  }
+}
+
+@media (min-width: 48rem) {
+  .ms-flex {
+    --_ms-flex-direction: var(--ms-flex-direction-md, var(--_ms-flex-direction));
+    --_ms-flex-align: var(--ms-flex-align-md, var(--_ms-flex-align));
+    --_ms-flex-justify: var(--ms-flex-justify-md, var(--_ms-flex-justify));
+    --_ms-flex-wrap: var(--ms-flex-wrap-md, var(--_ms-flex-wrap));
+    --_ms-flex-gap: var(--ms-flex-gap-md, var(--_ms-flex-gap));
+    --_ms-flex-row-gap: var(--ms-flex-row-gap-md, var(--_ms-flex-gap));
+    --_ms-flex-column-gap: var(--ms-flex-column-gap-md, var(--_ms-flex-gap));
+  }
+}
+
+@media (min-width: 64rem) {
+  .ms-flex {
+    --_ms-flex-direction: var(--ms-flex-direction-lg, var(--_ms-flex-direction));
+    --_ms-flex-align: var(--ms-flex-align-lg, var(--_ms-flex-align));
+    --_ms-flex-justify: var(--ms-flex-justify-lg, var(--_ms-flex-justify));
+    --_ms-flex-wrap: var(--ms-flex-wrap-lg, var(--_ms-flex-wrap));
+    --_ms-flex-gap: var(--ms-flex-gap-lg, var(--_ms-flex-gap));
+    --_ms-flex-row-gap: var(--ms-flex-row-gap-lg, var(--_ms-flex-gap));
+    --_ms-flex-column-gap: var(--ms-flex-column-gap-lg, var(--_ms-flex-gap));
+  }
+}
+
+@media (min-width: 80rem) {
+  .ms-flex {
+    --_ms-flex-direction: var(--ms-flex-direction-xl, var(--_ms-flex-direction));
+    --_ms-flex-align: var(--ms-flex-align-xl, var(--_ms-flex-align));
+    --_ms-flex-justify: var(--ms-flex-justify-xl, var(--_ms-flex-justify));
+    --_ms-flex-wrap: var(--ms-flex-wrap-xl, var(--_ms-flex-wrap));
+    --_ms-flex-gap: var(--ms-flex-gap-xl, var(--_ms-flex-gap));
+    --_ms-flex-row-gap: var(--ms-flex-row-gap-xl, var(--_ms-flex-gap));
+    --_ms-flex-column-gap: var(--ms-flex-column-gap-xl, var(--_ms-flex-gap));
+  }
+}
+
+@media (min-width: 96rem) {
+  .ms-flex {
+    --_ms-flex-direction: var(--ms-flex-direction-2xl, var(--_ms-flex-direction));
+    --_ms-flex-align: var(--ms-flex-align-2xl, var(--_ms-flex-align));
+    --_ms-flex-justify: var(--ms-flex-justify-2xl, var(--_ms-flex-justify));
+    --_ms-flex-wrap: var(--ms-flex-wrap-2xl, var(--_ms-flex-wrap));
+    --_ms-flex-gap: var(--ms-flex-gap-2xl, var(--_ms-flex-gap));
+    --_ms-flex-row-gap: var(--ms-flex-row-gap-2xl, var(--_ms-flex-gap));
+    --_ms-flex-column-gap: var(--ms-flex-column-gap-2xl, var(--_ms-flex-gap));
+  }
+}

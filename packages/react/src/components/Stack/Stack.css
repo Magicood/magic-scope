@@ -1,0 +1,146 @@
+/* —— Stack:有主张的一维堆叠原语(flex)——
+ * 全部布局参数(方向/间距/对齐/分布/换行)经 inline CSS 变量驱动,组件只负责把
+ * 「断点对象」拍平成 --ms-stack-<prop>(base) 与 --ms-stack-<prop>-<bp> 变量(见 logic.ts)。
+ *
+ * 响应式级联:CSS @media 条件里 var() 不生效,无法运行期改阈值;但可用「fallback 链」让
+ * 每个断点的生效值优先取本断点变量,缺省逐级回退到更小断点直至 base 默认值。
+ * 这样单值 / 部分断点 / 全断点三种写法都正确级联,且断点阈值对齐 @magic-scope/tokens 的 viewport 刻度。
+ */
+
+@layer ms.components {
+  .ms-stack {
+    /* base 生效值:取 base 断点变量,缺省回退到组件默认。 */
+    --_dir: var(--ms-stack-dir, column);
+    --_gap: var(--ms-stack-gap, var(--ms-space-4, 1rem));
+    --_align: var(--ms-stack-align, stretch);
+    --_justify: var(--ms-stack-justify, flex-start);
+    --_wrap: var(--ms-stack-wrap, nowrap);
+
+    display: flex;
+    flex-direction: var(--_dir);
+    align-items: var(--_align);
+    justify-content: var(--_justify);
+    flex-wrap: var(--_wrap);
+    /* 逻辑间距:gap 天然 RTL 友好,无需 margin hack。密度缩放交给 token 自身。 */
+    gap: var(--_gap);
+    /* min-width:0 —— flex 子项默认 min-width:auto 会被超长内容撑破,这里给堆叠容器兜底。 */
+    min-inline-size: 0;
+  }
+
+  .ms-stack--inline {
+    display: inline-flex;
+  }
+
+  /* —— divider 间插容器 —— 继承父 Stack 方向,横向 Stack 自动给竖直分隔(交叉轴拉伸)。 */
+  .ms-stack__divider {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: stretch;
+    align-self: stretch;
+  }
+  /* 横向堆叠时分隔元素应纵向铺满(交叉轴),纵向堆叠时横向铺满 —— 由 flex 容器 align-items 处理。 */
+
+  /* —— 断点级联:每个断点把生效值升格为「本断点变量 → 回退到上一级生效值」—— */
+  /* sm:30rem。 */
+  @media (min-width: 30rem) {
+    .ms-stack {
+      --_dir: var(--ms-stack-dir-sm, var(--ms-stack-dir, column));
+      --_gap: var(--ms-stack-gap-sm, var(--ms-stack-gap, var(--ms-space-4, 1rem)));
+      --_align: var(--ms-stack-align-sm, var(--ms-stack-align, stretch));
+      --_justify: var(--ms-stack-justify-sm, var(--ms-stack-justify, flex-start));
+      --_wrap: var(--ms-stack-wrap-sm, var(--ms-stack-wrap, nowrap));
+    }
+  }
+
+  /* md:48rem。 */
+  @media (min-width: 48rem) {
+    .ms-stack {
+      --_dir: var(--ms-stack-dir-md, var(--ms-stack-dir-sm, var(--ms-stack-dir, column)));
+      --_gap: var(
+        --ms-stack-gap-md,
+        var(--ms-stack-gap-sm, var(--ms-stack-gap, var(--ms-space-4, 1rem)))
+      );
+      --_align: var(--ms-stack-align-md, var(--ms-stack-align-sm, var(--ms-stack-align, stretch)));
+      --_justify: var(
+        --ms-stack-justify-md,
+        var(--ms-stack-justify-sm, var(--ms-stack-justify, flex-start))
+      );
+      --_wrap: var(--ms-stack-wrap-md, var(--ms-stack-wrap-sm, var(--ms-stack-wrap, nowrap)));
+    }
+  }
+
+  /* lg:64rem。 */
+  @media (min-width: 64rem) {
+    .ms-stack {
+      --_dir: var(
+        --ms-stack-dir-lg,
+        var(--ms-stack-dir-md, var(--ms-stack-dir-sm, var(--ms-stack-dir, column)))
+      );
+      --_gap: var(
+        --ms-stack-gap-lg,
+        var(--ms-stack-gap-md, var(--ms-stack-gap-sm, var(--ms-stack-gap, var(--ms-space-4, 1rem))))
+      );
+      --_align: var(
+        --ms-stack-align-lg,
+        var(--ms-stack-align-md, var(--ms-stack-align-sm, var(--ms-stack-align, stretch)))
+      );
+      --_justify: var(
+        --ms-stack-justify-lg,
+        var(--ms-stack-justify-md, var(--ms-stack-justify-sm, var(--ms-stack-justify, flex-start)))
+      );
+      --_wrap: var(
+        --ms-stack-wrap-lg,
+        var(--ms-stack-wrap-md, var(--ms-stack-wrap-sm, var(--ms-stack-wrap, nowrap)))
+      );
+    }
+  }
+
+  /* xl:80rem。 */
+  @media (min-width: 80rem) {
+    .ms-stack {
+      --_dir: var(
+        --ms-stack-dir-xl,
+        var(
+          --ms-stack-dir-lg,
+          var(--ms-stack-dir-md, var(--ms-stack-dir-sm, var(--ms-stack-dir, column)))
+        )
+      );
+      --_gap: var(
+        --ms-stack-gap-xl,
+        var(
+          --ms-stack-gap-lg,
+          var(
+            --ms-stack-gap-md,
+            var(--ms-stack-gap-sm, var(--ms-stack-gap, var(--ms-space-4, 1rem)))
+          )
+        )
+      );
+      --_align: var(
+        --ms-stack-align-xl,
+        var(
+          --ms-stack-align-lg,
+          var(--ms-stack-align-md, var(--ms-stack-align-sm, var(--ms-stack-align, stretch)))
+        )
+      );
+      --_justify: var(
+        --ms-stack-justify-xl,
+        var(
+          --ms-stack-justify-lg,
+          var(
+            --ms-stack-justify-md,
+            var(--ms-stack-justify-sm, var(--ms-stack-justify, flex-start))
+          )
+        )
+      );
+      --_wrap: var(
+        --ms-stack-wrap-xl,
+        var(
+          --ms-stack-wrap-lg,
+          var(--ms-stack-wrap-md, var(--ms-stack-wrap-sm, var(--ms-stack-wrap, nowrap)))
+        )
+      );
+    }
+  }
+
+  /* 降级:用户偏好减少动效时不影响布局(本组件无动效),保留占位以备未来交错入场动画。 */
+}

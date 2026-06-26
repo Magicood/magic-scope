@@ -1,0 +1,28 @@
+{
+  "id": "stack",
+  "name": "Stack",
+  "description": "有主张的一维堆叠原语:flex 实现,纵/横向、间距 token、对齐、分布、换行、行内全部支持断点对象响应式;支持子项间插 divider、recursive 交替方向、多态 as 与 asChild Slot。",
+  "category": "layout",
+  "tags": [
+    "layout",
+    "stack",
+    "flex",
+    "vstack",
+    "hstack",
+    "spacing",
+    "responsive",
+    "divider",
+    "polymorphic",
+    "rtl"
+  ],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-26",
+    "requirements": "原创布局原语。定位:有主张的一维堆叠(对标 Radix Flex / Chakra Stack / MUI Stack 的纵横堆叠),作为本库 layout 分类首个落地组件,沉淀「断点对象 → CSS 变量 + 静态 @media 级联」的响应式范式供 Flex/Grid 平移。需求要点:direction(vertical 默认 | horizontal,响应式)、gap(token 档,响应式)、align(start/center/end/stretch/baseline)、justify、wrap、inline;divider 子项间插;recursive 子 Stack 自动反向;flex 实现;多态 as 默认 div + asChild。布局组件为结构性,无 tone/发光,但要多态、响应式、间距 token 化、RTL 友好(逻辑属性 + gap)。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Stack.tsx", "Stack.css", "logic.ts", "index.ts"]
+}

@@ -1,0 +1,33 @@
+{
+  "id": "grid",
+  "name": "Grid",
+  "description": "CSS Grid 原语(生产级 layout 组件):columns(数字→等宽 repeat(minmax(0,1fr)) / 模板字符串 / 响应式断点对象)、minChildWidth 自适应列(auto-fit+minmax 折行)、gap/rowGap/columnGap(间距 token,响应式)、align/justify(items)与 alignContent/justifyContent、autoFlow/autoRows/autoColumns、inline-grid、容器查询模式(@container 随父容器自适应)。子部件 Grid.Item(colSpan/rowSpan→span / colStart/rowStart / alignSelf/justifySelf,均响应式)。多态 as + asChild,forwardRef 到根,...rest 全量透传。响应式靠「每断点一个 CSS 变量 + 静态 @media/@container 级联」实现(条件里 var() 不生效),断点档对齐 tokens 视口断点;纯解析逻辑在 logic.ts(零 React,可单测、可平移其它框架)。",
+  "category": "layout",
+  "tags": [
+    "grid",
+    "layout",
+    "css-grid",
+    "columns",
+    "gap",
+    "responsive",
+    "container-query",
+    "auto-fit",
+    "min-child-width",
+    "polymorphic",
+    "as-child",
+    "grid-item",
+    "col-span",
+    "row-span",
+    "rtl"
+  ],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-26",
+    "requirements": "新增 layout 基础组件 Grid:CSS Grid 原语。需求:columns 支持 number(→repeat(n,minmax(0,1fr)))/模板字符串/响应式断点对象;gap/rowGap/columnGap 接间距 token 且响应式;align/justify(items 与 content);autoFlow;autoRows;minChildWidth(repeat(auto-fit,minmax(minChildWidth,1fr)) 做自适应列);子部件 Grid.Item(colSpan/rowSpan/colStart/rowStart,响应式);多态 as;响应式靠 CSS 变量 + 容器查询/媒体查询。对齐 magic-scope 布局组件标准:多态 + asChild(mergeAsChildProps + composeRefs)、间距 token 化(--ms-space-N)、CSS 逻辑属性 RTL 友好、断点对象响应式(对齐 @magic-scope/tokens 视口断点 sm/md/lg/xl/2xl)、strict TS(exactOptionalPropertyTypes/noUncheckedIndexedAccess,纯逻辑下沉 logic.ts)。自研、零依赖,消费 tokens 的 --ms-* 变量。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Grid.tsx", "Grid.css", "Grid.test.tsx", "logic.ts", "index.ts"]
+}

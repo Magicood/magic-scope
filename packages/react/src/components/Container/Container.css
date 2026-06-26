@@ -1,0 +1,121 @@
+/* Container —— 居中定宽容器(layout)。
+ * 核心样式经 CSS 自定义属性驱动(--ms-container-*),由 Container.tsx 的 logic 注入;
+ * 响应式断点对象通过下方媒体查询逐级覆盖(断点宽度对齐 @magic-scope/tokens 的 breakpoints.viewport)。
+ * 全部用 CSS 逻辑属性(inline-size / margin-inline / padding-inline / padding-block)以 RTL 友好。 */
+
+.ms-container {
+  /* 当前生效的内边距(中转变量),由下方媒体查询逐档重指向断点专属变量。
+   * 基础档:--ms-container-px(用户传 padding 时由 JS 注入,否则由 .ms-container--fluid-pad 兜底流式)。 */
+  --ms-container-px-cur: var(--ms-container-px, 0px);
+  --ms-container-py-cur: var(--ms-container-py, 0px);
+
+  display: block;
+  box-sizing: border-box;
+  inline-size: 100%;
+  /* 限宽 + 不超过可用宽度(min 防止小视口下 max-inline-size 撑出横向滚动) */
+  max-inline-size: min(var(--ms-container-max, 64rem), 100%);
+  /* 水平居中 */
+  margin-inline: auto;
+  /* 响应式内边距(逻辑属性,RTL 友好);叠加安全区,避刘海/圆角屏裁切 */
+  padding-inline: calc(var(--ms-container-px-cur) + var(--ms-safe-left, 0px));
+  padding-block: var(--ms-container-py-cur);
+}
+
+/* 未传 padding:走流式 clamp(随视口 1rem~2rem 平滑收放)的默认体验。 */
+.ms-container--fluid-pad {
+  --ms-container-px: clamp(1rem, 0.5rem + 2vw, 2rem);
+}
+
+/* 满宽:不限宽(配合 size="full" / fluid)。仍保留居中(无效但无害)与内边距。 */
+.ms-container--full {
+  max-inline-size: none;
+}
+
+/* 整屏垂直居中:撑到至少一屏高(用 device.css 的动态视口变量,治移动端地址栏抽风),
+ * 交叉轴居中内容。用于落地页 / 空状态 / 错误页等。 */
+.ms-container--centered {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-block-size: var(--ms-viewport-h, 100vh);
+}
+
+/* —— 响应式断点对象:逐级媒体查询把「当前生效变量」重指向更高断点的专属变量 ——
+ * 各档默认回退到「上一档当前生效值」,故未给某断点值时自动继承更小断点(级联不断链)。
+ * 断点宽度对齐 @magic-scope/tokens 的 breakpoints.viewport(30/48/64/80/96 rem)。 */
+@media (min-width: 30rem) {
+  .ms-container {
+    --ms-container-px-cur: var(--ms-container-px-sm, var(--ms-container-px, 0px));
+    --ms-container-py-cur: var(--ms-container-py-sm, var(--ms-container-py, 0px));
+  }
+}
+
+@media (min-width: 48rem) {
+  .ms-container {
+    --ms-container-px-cur: var(
+      --ms-container-px-md,
+      var(--ms-container-px-sm, var(--ms-container-px, 0px))
+    );
+    --ms-container-py-cur: var(
+      --ms-container-py-md,
+      var(--ms-container-py-sm, var(--ms-container-py, 0px))
+    );
+  }
+}
+
+@media (min-width: 64rem) {
+  .ms-container {
+    --ms-container-px-cur: var(
+      --ms-container-px-lg,
+      var(--ms-container-px-md, var(--ms-container-px-sm, var(--ms-container-px, 0px)))
+    );
+    --ms-container-py-cur: var(
+      --ms-container-py-lg,
+      var(--ms-container-py-md, var(--ms-container-py-sm, var(--ms-container-py, 0px)))
+    );
+  }
+}
+
+@media (min-width: 80rem) {
+  .ms-container {
+    --ms-container-px-cur: var(
+      --ms-container-px-xl,
+      var(
+        --ms-container-px-lg,
+        var(--ms-container-px-md, var(--ms-container-px-sm, var(--ms-container-px, 0px)))
+      )
+    );
+    --ms-container-py-cur: var(
+      --ms-container-py-xl,
+      var(
+        --ms-container-py-lg,
+        var(--ms-container-py-md, var(--ms-container-py-sm, var(--ms-container-py, 0px)))
+      )
+    );
+  }
+}
+
+@media (min-width: 96rem) {
+  .ms-container {
+    --ms-container-px-cur: var(
+      --ms-container-px-2xl,
+      var(
+        --ms-container-px-xl,
+        var(
+          --ms-container-px-lg,
+          var(--ms-container-px-md, var(--ms-container-px-sm, var(--ms-container-px, 0px)))
+        )
+      )
+    );
+    --ms-container-py-cur: var(
+      --ms-container-py-2xl,
+      var(
+        --ms-container-py-xl,
+        var(
+          --ms-container-py-lg,
+          var(--ms-container-py-md, var(--ms-container-py-sm, var(--ms-container-py, 0px)))
+        )
+      )
+    );
+  }
+}

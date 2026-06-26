@@ -1,0 +1,30 @@
+{
+  "id": "flex",
+  "name": "Flex",
+  "description": "通用 flexbox 布局原语。direction/align/justify/wrap/gap(行列可分)全部支持「单值 或 断点对象」响应式(如 gap={{ base: 2, md: 4 }}),经 --ms-flex-* CSS 变量 + 预展开静态 @media 块驱动;间距走 --ms-space-* token、对齐用逻辑值故 RTL 友好。inline 切 inline-flex;多态 as(默认 div)+ asChild(Slot 风格,mergeAsChildProps + composeRefs);配套 Flex.Item(item 级 grow/shrink/basis/align-self/order)。纯响应式解析逻辑抽到 logic.ts(零 React,可单测、可平移其它框架内核)。",
+  "category": "layout",
+  "tags": [
+    "flex",
+    "flexbox",
+    "layout",
+    "responsive",
+    "gap",
+    "direction",
+    "align",
+    "justify",
+    "wrap",
+    "as-child",
+    "polymorphic",
+    "rtl"
+  ],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-26",
+    "requirements": "magic-scope layout 分类的 flexbox 原语。对标主流库的 Flex/HStack/VStack:全部布局属性支持断点对象响应式(本库「多端适配」体现),响应式靠 JS 解析为带断点后缀的 CSS 变量 + 构建期预展开的静态 @media 块逐级提升(因 @media 条件里 var() 不生效)。间距 token 化(--ms-space-*)、对齐走 flex-start/flex-end 逻辑值 RTL 友好、多态 as + asChild 留口。纯逻辑放 logic.ts 以便单测与跨框架平移。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Flex.tsx", "Flex.css", "logic.ts", "index.ts"]
+}
