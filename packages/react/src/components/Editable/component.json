@@ -1,0 +1,18 @@
+{
+  "id": "editable",
+  "name": "Editable",
+  "description": "行内编辑:点击/聚焦文本切换为输入态,Enter 或失焦提交、Esc 取消还原;支持多行(textarea)、受控/非受控值与编辑态双通道、selectAllOnFocus、submitOnBlur/Enter 开关与 renderPreview/renderEdit 留口。",
+  "category": "forms",
+  "tags": ["editable", "inline-edit", "input", "textarea", "form", "controlled"],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "original",
+    "capturedAt": "2026-06-26",
+    "requirements": "需要一个把静态文本就地变成可编辑输入的轻控件:展示态看似纯文本(空值显示占位),点击或键盘进入编辑态,Enter/失焦提交、Esc 取消还原,值变化才回调。要能进 Form(invalid/maxLength),要给用户完全替换两态渲染的口子(renderPreview/renderEdit),并把提交/取消的键盘语义与值流转抽成零 React 的纯逻辑,便于平移多框架内核。"
+  },
+  "notes": "进入编辑态的 seed(快照 editStartValue + 草稿 draft)由 editing 的 false→true 上升沿统一驱动(useLayoutEffect),受控编辑(父级直接翻 editing,不点击)与非受控(点击/键盘 enterEdit)共用同一套填充逻辑——保证受控通道下值未改不误触发 onChange、且进入编辑展示最新 currentValue(含『一次性 setState 既给新值又开编辑』)。invalid 语义:展示态与编辑态在 invalid 时都带 aria-invalid,校验失败态对辅助技术连续可感知。renderPreview 自定义展示态的两点透明边界:① 焦点回收依赖你把 render props 的 `ref` 接到一个可聚焦元素上,不接则退出编辑(提交/取消/Esc)后焦点会丢到 <body>;② invalid 语义需你自行用 render props 的 `invalid` 打 aria-invalid(默认展示态已内建)。",
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Editable.tsx", "Editable.css", "logic.ts", "index.ts"]
+}

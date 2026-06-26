@@ -1,0 +1,148 @@
+/* —— Marquee 无限跑马灯 ——
+ * children 克隆 N 份首尾相接,track 沿主轴 translate 位移「一份」(-100/repeat%)后无限回卷,
+ * 因克隆补位视觉连续。只动 transform(GPU 友好)。横/纵双向 + 四方向(direction 决定 normal/reverse)。
+ * 悬停 / 按下可暂停(animation-play-state);两端可加淡出遮罩(mask-image)。
+ * reduced-motion / data-ms-motion=off:停止动画,静态展示。配色 / 间距只读 --ms-* token。
+ */
+.ms-marquee {
+  position: relative;
+  display: flex;
+  overflow: hidden;
+  inline-size: 100%;
+  max-inline-size: 100%;
+  font-family: var(--ms-font-sans);
+  color: var(--ms-color-fg);
+  /* 默认参数(可被内联 --ms-marquee-* 覆盖) */
+  --ms-marquee-translate: -50%;
+  --ms-marquee-duration: 20s;
+  --ms-marquee-direction: normal;
+  --ms-marquee-gap: var(--ms-space-4, 1rem);
+  --ms-marquee-fade: 15%;
+  --ms-marquee-fade-color: var(--ms-color-bg, #fff);
+}
+
+/* —— 横向:track 横排,沿 X 位移 ——
+ * 关键:track 不用 flex `gap` 分隔克隆份!否则 N 份的总宽 = N·单份 + (N−1)·gap,
+ * 位移 -100/N% = 单份 + gap·(N−1)/N,比无缝所需的「单份 + gap」少了 gap/N → 每圈回卷跳变。
+ * 改为把份间距并入「重复单元」:每个 group 带等于 gap 的尾随 margin(见 .ms-marquee__group),
+ * 使重复周期 = 单份 + gap,与位移 -100/N% 严格一致,无缝。
+ */
+.ms-marquee__track {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  flex: 0 0 auto;
+  inline-size: max-content;
+  min-inline-size: 100%;
+  will-change: transform;
+  animation: ms-marquee-x var(--ms-marquee-duration) linear infinite;
+  animation-direction: var(--ms-marquee-direction);
+}
+
+/* —— 单份内容包裹:不收缩,内容原样 ——
+ * 份间距用尾随 margin(而非 track flex gap),让「单份 + gap」成为不可分的重复单元。
+ * group 内部子元素间距仍用 gap。
+ */
+.ms-marquee__group {
+  display: flex;
+  flex-direction: row;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: var(--ms-marquee-gap);
+  margin-inline-end: var(--ms-marquee-gap);
+  min-inline-size: max-content;
+}
+
+/* —— 纵向:容器立起,track 竖排,沿 Y 位移 —— */
+.ms-marquee--vertical {
+  flex-direction: column;
+  block-size: 100%;
+}
+.ms-marquee--vertical .ms-marquee__track {
+  flex-direction: column;
+  inline-size: auto;
+  block-size: max-content;
+  min-inline-size: 0;
+  min-block-size: 100%;
+  animation-name: ms-marquee-y;
+}
+.ms-marquee--vertical .ms-marquee__group {
+  flex-direction: column;
+  /* 纵向:份间距改用尾随 block 方向 margin(横向 margin 清零,避免双向叠加) */
+  margin-inline-end: 0;
+  margin-block-end: var(--ms-marquee-gap);
+}
+
+/* —— 横向位移关键帧:从 0 走到 -100/repeat%(direction=reverse 时反向跑,即向 right)—— */
+@keyframes ms-marquee-x {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(var(--ms-marquee-translate));
+  }
+}
+@keyframes ms-marquee-y {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(var(--ms-marquee-translate));
+  }
+}
+
+/* —— 悬停暂停(纯 CSS,无 JS 状态)—— */
+.ms-marquee--pause-hover:hover .ms-marquee__track {
+  animation-play-state: paused;
+}
+
+/* —— 按下暂停 / 全局停(JS 加 --paused 类:reduced-motion / data-ms-motion=off / pauseOnClick 按下)—— */
+.ms-marquee--paused .ms-marquee__track {
+  animation-play-state: paused;
+}
+
+/* —— 两端淡出遮罩:主轴两端渐隐(用 mask 不占色,任意背景通透)—— */
+.ms-marquee--gradient {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    var(--ms-marquee-fade-color) var(--ms-marquee-fade),
+    var(--ms-marquee-fade-color) calc(100% - var(--ms-marquee-fade)),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    var(--ms-marquee-fade-color) var(--ms-marquee-fade),
+    var(--ms-marquee-fade-color) calc(100% - var(--ms-marquee-fade)),
+    transparent 100%
+  );
+}
+.ms-marquee--gradient.ms-marquee--vertical {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    var(--ms-marquee-fade-color) var(--ms-marquee-fade),
+    var(--ms-marquee-fade-color) calc(100% - var(--ms-marquee-fade)),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    var(--ms-marquee-fade-color) var(--ms-marquee-fade),
+    var(--ms-marquee-fade-color) calc(100% - var(--ms-marquee-fade)),
+    transparent 100%
+  );
+}
+
+/* —— 动效一键降级:reduced-motion 与 data-ms-motion=off 都停滚动,静态展示一份 —— */
+@media (prefers-reduced-motion: reduce) {
+  .ms-marquee__track {
+    animation: none;
+    transform: none;
+  }
+}
+[data-ms-motion="off"] .ms-marquee__track {
+  animation: none;
+  transform: none;
+}

@@ -1,0 +1,208 @@
+/* —— Command 命令面板(⌘K) ——
+ * 配色:tone resolver —— 只读 6 槽位(--ms-c / --ms-c-soft / --ms-c-hover / --ms-c-glow / --ms-on-c …),不写死语义色。
+ * 尺寸随 data-ms-density 缩放(--ms-density-scale);动效尊重 prefers-reduced-motion 与 [data-ms-motion=off]。
+ * 高亮命中片段(<mark>)用主色发光,呼应「魔法」主题。
+ */
+.ms-command {
+  display: flex;
+  flex-direction: column;
+  inline-size: 100%;
+  min-block-size: 0;
+  border-radius: var(--ms-radius-lg);
+  background-color: var(--ms-color-surface);
+  color: var(--ms-color-fg);
+  font-family: var(--ms-font-sans);
+  overflow: hidden;
+}
+
+/* —— 输入行 —— */
+.ms-command__input-row {
+  display: flex;
+  align-items: center;
+  gap: var(--ms-space-3);
+  padding-block: calc(var(--ms-space-3) * var(--ms-density-scale, 1));
+  padding-inline: var(--ms-space-4);
+  border-block-end: 1px solid var(--ms-color-border);
+}
+
+.ms-command__input-icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  color: var(--ms-color-fg-muted);
+}
+
+.ms-command__input {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: calc(1rem * var(--ms-density-scale, 1));
+  line-height: 1.5;
+  outline: none;
+}
+
+.ms-command__input::placeholder {
+  color: var(--ms-color-fg-muted);
+}
+
+/* —— 列表(可滚动)—— */
+.ms-command__list {
+  flex: 1 1 auto;
+  min-block-size: 0;
+  max-block-size: min(24rem, 60svh);
+  padding: var(--ms-space-2);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scroll-padding-block: var(--ms-space-2);
+}
+
+/* —— 分组 —— */
+.ms-command__group:not(:first-child) {
+  margin-block-start: var(--ms-space-2);
+}
+
+.ms-command__group-heading {
+  padding-block: var(--ms-space-1);
+  padding-inline: var(--ms-space-3);
+  color: var(--ms-color-fg-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* —— 项 —— */
+.ms-command__item {
+  display: flex;
+  align-items: center;
+  gap: var(--ms-space-3);
+  inline-size: 100%;
+  min-inline-size: 0;
+  padding-block: calc(var(--ms-space-2) * var(--ms-density-scale, 1));
+  padding-inline: var(--ms-space-3);
+  border-radius: var(--ms-radius-md);
+  color: inherit;
+  font-size: calc(0.95rem * var(--ms-density-scale, 1));
+  text-align: start;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+  user-select: none;
+  transition:
+    background-color var(--ms-dur-fast) var(--ms-ease-standard),
+    color var(--ms-dur-fast) var(--ms-ease-standard),
+    box-shadow var(--ms-dur-fast) var(--ms-ease-standard);
+}
+
+/* 高亮项(键盘 / 悬停):浮起表面 + 主色 + 内侧导轨 + 微光 */
+.ms-command__item[data-active] {
+  background-color: var(--ms-c-soft);
+  color: var(--ms-c-hover, var(--ms-c));
+  box-shadow:
+    inset 2px 0 0 var(--ms-c),
+    0 0 calc(18px * var(--ms-fx-glow, 1)) -10px var(--ms-c-glow);
+}
+
+/* 发光总闸关断:保留导轨,去外发光 */
+[data-ms-fx="off"] .ms-command__item[data-active] {
+  box-shadow: inset 2px 0 0 var(--ms-c);
+}
+
+.ms-command__item[data-disabled] {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.ms-command__item-icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  inline-size: 1.15em;
+  block-size: 1.15em;
+  color: var(--ms-color-fg-muted);
+}
+
+.ms-command__item[data-active] .ms-command__item-icon {
+  color: var(--ms-c);
+}
+
+.ms-command__item-label {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+
+.ms-command__item-shortcut {
+  flex: 0 0 auto;
+  margin-inline-start: auto;
+  padding-inline-start: var(--ms-space-3);
+  color: var(--ms-color-fg-muted);
+  font-size: 0.85em;
+}
+
+/* —— 命中高亮片段:主色 + 微光,呼应魔法主题 —— */
+.ms-command__highlight {
+  background: transparent;
+  color: var(--ms-c);
+  font-weight: 700;
+  text-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) var(--ms-c-glow);
+}
+
+[data-ms-fx="off"] .ms-command__highlight {
+  text-shadow: none;
+}
+
+/* —— 分隔线 —— */
+.ms-command__separator {
+  block-size: 1px;
+  margin-block: var(--ms-space-2);
+  margin-inline: var(--ms-space-2);
+  border: none;
+  background-color: var(--ms-color-border);
+}
+
+/* —— 空态 —— */
+.ms-command__empty {
+  padding-block: var(--ms-space-6);
+  padding-inline: var(--ms-space-4);
+  color: var(--ms-color-fg-muted);
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+/* —— Dialog 模态形态:面板内嵌 Command,清掉面板内边距让边界贴合 —— */
+.ms-command__dialog-panel {
+  padding: 0;
+  overflow: hidden;
+}
+
+.ms-command--dialog {
+  border-radius: inherit;
+  background: transparent;
+}
+
+.ms-command--dialog .ms-command__list {
+  max-block-size: min(28rem, 60svh);
+}
+
+/* —— 触控设备:项达标到最小命中目标 —— */
+@media (pointer: coarse) {
+  .ms-command__item {
+    min-block-size: max(var(--ms-target-min), calc(2.5rem * var(--ms-density-scale, 1)));
+  }
+}
+
+/* —— 动效降级:尊重系统偏好与库级总闸 —— */
+@media (prefers-reduced-motion: reduce) {
+  .ms-command__item {
+    transition-duration: 0.01ms;
+  }
+}
+
+[data-ms-motion="off"] .ms-command__item {
+  transition: none;
+}

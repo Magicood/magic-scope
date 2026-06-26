@@ -1,0 +1,28 @@
+{
+  "id": "command",
+  "name": "Command",
+  "description": "命令面板(⌘K):带模糊 / 子串过滤、命中高亮、键盘导航与分组的可组合命令搜索框,可独立内嵌或包成 Command.Dialog 模态(可监听 mod+k 唤起)。",
+  "category": "navigation",
+  "tags": [
+    "command",
+    "command-palette",
+    "cmdk",
+    "search",
+    "spotlight",
+    "navigation",
+    "keyboard",
+    "combobox",
+    "fuzzy"
+  ],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "inspired",
+    "url": "https://cmdk.paco.me/",
+    "capturedAt": "2026-06-26",
+    "requirements": "需要一个对标 cmdk / raycast / macOS Spotlight 的命令面板:用户按 ⌘K 唤起,输入即时过滤命令(支持连续子串与允许跳字符的模糊匹配),命中字符要高亮;↑↓ 在结果间移动且跳过禁用项与分组标题,Enter 执行,Home/End 跳首尾;命令可分组(组头不可选)、可加关键词别名参与匹配、可挂图标与快捷键提示;既能作为页内内嵌控件,也能一键包进模态对话框(复用 Dialog 的焦点陷阱 / Esc / top-layer)。过滤 / 分组拍平 / 键盘落点等算法必须抽成框架无关纯逻辑以便平移 core。a11y 走 combobox + listbox + option 组合角色(aria-expanded / aria-controls / aria-activedescendant / aria-selected)。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["Command.tsx", "Command.css", "logic.ts", "index.ts"]
+}

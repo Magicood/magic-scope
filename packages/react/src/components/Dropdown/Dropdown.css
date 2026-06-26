@@ -1,0 +1,376 @@
+/* —— Dropdown 下拉菜单(navigation,便捷封装) ——
+ * 浮层进 top-layer:原生 Popover API(.ms-dropdown[popover])。
+ * 定位:CSS Anchor Positioning —— position-anchor 由内联 style 提供,position-area(--ms-dropdown-area)
+ *   由 placement(12 向)派生,offset(--ms-dropdown-offset)控制与 trigger 间距。
+ * 配色:tone resolver —— 只读 6 槽位(--ms-c / --ms-c-soft / --ms-c-glow / --ms-c-hover …),不写死语义色。
+ * 降级:@supports not (anchor-name) → 退化为 fixed 居顶,保证不支持的浏览器仍可用。
+ * 项的视觉与 Menu 对齐,但用独立 .ms-dropdown__* 类名,避免与 Menu 样式互相串味。
+ */
+.ms-dropdown {
+  /* 重置 popover UA 默认:清掉 inset/margin,改由 anchor 定位 */
+  position: fixed;
+  margin: 0;
+  inset: auto;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--ms-color-fg);
+  font-family: var(--ms-font-sans);
+
+  /* 入场动画:淡入 + 自顶部展开下滑,位移受 motion-scale 门控 */
+  opacity: 0;
+  transform: translateY(calc(-6px * var(--ms-motion-scale, 1))) scaleY(0.96);
+  transform-origin: top center;
+  transition:
+    opacity var(--ms-dur-base) var(--ms-ease-standard),
+    transform var(--ms-dur-base) var(--ms-ease-emphasized),
+    overlay var(--ms-dur-base) allow-discrete,
+    display var(--ms-dur-base) allow-discrete;
+}
+
+.ms-dropdown:popover-open {
+  opacity: 1;
+  transform: translateY(0) scaleY(1);
+}
+
+@starting-style {
+  .ms-dropdown:popover-open {
+    opacity: 0;
+    transform: translateY(calc(-6px * var(--ms-motion-scale, 1))) scaleY(0.96);
+  }
+}
+
+/* —— 浮层面板:卡片容器(承载列表 + 箭头) —— */
+.ms-dropdown__panel {
+  position: relative;
+  min-inline-size: min(11rem, 90vw);
+  max-inline-size: min(20rem, calc(100dvw - var(--ms-space-4) * 2));
+  padding: var(--ms-space-1);
+  border: 1px solid var(--ms-color-border);
+  border-radius: var(--ms-radius-lg);
+  background-color: var(--ms-color-surface-raised);
+  box-shadow:
+    0 24px 64px -24px rgb(0 0 0 / 0.45),
+    0 0 calc(40px * var(--ms-fx-glow, 1)) -16px var(--ms-c-glow);
+}
+
+[data-ms-fx="off"] .ms-dropdown__panel {
+  box-shadow: 0 24px 64px -24px rgb(0 0 0 / 0.45);
+}
+
+/* —— 锚定位:支持 anchor-name 时按 placement 锚定,offset 控制间距 —— */
+@supports (anchor-name: --x) {
+  .ms-dropdown {
+    position: absolute;
+    position-area: var(--ms-dropdown-area, block-end span-inline-end);
+    position-try-fallbacks:
+      flip-block,
+      flip-inline,
+      flip-block flip-inline;
+  }
+  .ms-dropdown[data-ms-side="bottom"] {
+    margin-block-start: var(--ms-dropdown-offset, var(--ms-space-2));
+  }
+  .ms-dropdown[data-ms-side="top"] {
+    margin-block-end: var(--ms-dropdown-offset, var(--ms-space-2));
+  }
+  .ms-dropdown[data-ms-side="right"] {
+    margin-inline-start: var(--ms-dropdown-offset, var(--ms-space-2));
+  }
+  .ms-dropdown[data-ms-side="left"] {
+    margin-inline-end: var(--ms-dropdown-offset, var(--ms-space-2));
+  }
+}
+
+/* —— 降级:不支持锚定位 → fixed 居顶,避免浮层错位丢失 —— */
+@supports not (anchor-name: --x) {
+  .ms-dropdown {
+    position: fixed;
+    inset-block-start: calc(20vh + var(--ms-safe-top));
+    inset-inline: 0;
+    margin-inline: auto;
+    inline-size: max-content;
+  }
+}
+
+/* —— 菜单列表(role=menu) —— */
+.ms-dropdown__menu {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  /* 超长菜单可滚动:封顶高度 + 内部滚动,滚动链隔离 */
+  max-block-size: min(60svh, 24rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/* —— 菜单项 —— */
+.ms-dropdown__item {
+  display: flex;
+  align-items: center;
+  gap: var(--ms-space-2);
+  inline-size: 100%;
+  min-inline-size: 0;
+  padding-block: var(--ms-space-2);
+  padding-inline: var(--ms-space-3);
+  border: none;
+  border-radius: var(--ms-radius-md);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 0.95rem;
+  text-align: start;
+  text-decoration: none;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+  user-select: none;
+  transition:
+    background-color var(--ms-dur-fast) var(--ms-ease-standard),
+    color var(--ms-dur-fast) var(--ms-ease-standard),
+    box-shadow var(--ms-dur-fast) var(--ms-ease-standard);
+}
+
+/* 项内部:图标 / 选中勾 / 标签(占满可压缩)/ 快捷键 / 子菜单箭头 */
+.ms-dropdown__icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  inline-size: 1.1em;
+  block-size: 1.1em;
+}
+.ms-dropdown__check {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  inline-size: 1.1em;
+  color: var(--ms-c);
+}
+.ms-dropdown__label {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+.ms-dropdown__shortcut {
+  flex: 0 0 auto;
+  margin-inline-start: auto;
+  padding-inline-start: var(--ms-space-3);
+  color: var(--ms-color-fg-muted);
+  font-size: 0.85em;
+}
+.ms-dropdown__submenu-arrow {
+  flex: 0 0 auto;
+  margin-inline-start: auto;
+  padding-inline-start: var(--ms-space-2);
+  color: var(--ms-color-fg-muted);
+  font-size: 1.1em;
+  line-height: 1;
+}
+/* 有快捷键又有子菜单箭头时,箭头不再抢 auto 间距 */
+.ms-dropdown__shortcut + .ms-dropdown__submenu-arrow {
+  margin-inline-start: 0;
+}
+
+/* hover / focus 高亮:浮起表面 + 主色字 + 内侧微光导轨 */
+.ms-dropdown__item:hover:not(:disabled, [aria-disabled="true"]),
+.ms-dropdown__item:focus-visible {
+  outline: none;
+  background-color: var(--ms-c-soft);
+  color: var(--ms-c-hover);
+  box-shadow:
+    inset 2px 0 0 var(--ms-c),
+    0 0 calc(16px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow);
+}
+
+/* 键盘聚焦再叠加发光环,保证可达性(不受 fx 门控) */
+.ms-dropdown__item:focus-visible {
+  box-shadow:
+    inset 2px 0 0 var(--ms-c),
+    0 0 0 2px var(--ms-color-focus-ring);
+}
+
+/* 发光总闸关断:项保留导轨,去掉外发光 */
+[data-ms-fx="off"] .ms-dropdown__item:hover:not(:disabled, [aria-disabled="true"]),
+[data-ms-fx="off"] .ms-dropdown__item:focus-visible {
+  box-shadow: inset 2px 0 0 var(--ms-c);
+}
+[data-ms-fx="off"] .ms-dropdown__item:focus-visible {
+  box-shadow:
+    inset 2px 0 0 var(--ms-c),
+    0 0 0 2px var(--ms-color-focus-ring);
+}
+
+/* 选中态项:选中时标签略加粗 */
+.ms-dropdown__item--selectable[aria-checked="true"] .ms-dropdown__label {
+  font-weight: 600;
+}
+
+/* danger 项:危险色,hover / focus 染红并微光 */
+.ms-dropdown__item--danger {
+  color: var(--ms-color-danger);
+}
+.ms-dropdown__item--danger .ms-dropdown__check {
+  color: var(--ms-color-danger);
+}
+.ms-dropdown__item--danger:hover:not(:disabled, [aria-disabled="true"]),
+.ms-dropdown__item--danger:focus-visible {
+  background-color: color-mix(in oklab, var(--ms-color-danger) 14%, transparent);
+  color: var(--ms-color-danger);
+  box-shadow:
+    inset 2px 0 0 var(--ms-color-danger),
+    0 0 calc(16px * var(--ms-fx-glow, 1)) -8px var(--ms-color-danger);
+}
+.ms-dropdown__item--danger:focus-visible {
+  box-shadow:
+    inset 2px 0 0 var(--ms-color-danger),
+    0 0 0 2px var(--ms-color-focus-ring);
+}
+
+.ms-dropdown__item:disabled,
+.ms-dropdown__item[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+/* —— 分隔线(<hr>:重置默认边框,只留一条细线) —— */
+.ms-dropdown__separator {
+  block-size: 1px;
+  margin-block: var(--ms-space-1);
+  margin-inline: var(--ms-space-2);
+  border: none;
+  background-color: var(--ms-color-border);
+}
+
+/* —— 分组标题 —— */
+.ms-dropdown__group-label {
+  padding-block: var(--ms-space-1);
+  padding-inline: var(--ms-space-3);
+  color: var(--ms-color-fg-muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+.ms-dropdown__group:not(:first-child) .ms-dropdown__group-label {
+  margin-block-start: var(--ms-space-1);
+}
+
+/* —— 空态 —— */
+.ms-dropdown__empty {
+  padding-block: var(--ms-space-3);
+  padding-inline: var(--ms-space-3);
+  color: var(--ms-color-fg-muted);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+/* —— 子菜单(一层):相对父项定位,贴右/左侧展开 —— */
+.ms-dropdown__submenu-wrap {
+  position: relative;
+}
+.ms-dropdown__submenu {
+  position: absolute;
+  z-index: 1;
+  inset-block-start: 0;
+  inset-inline-start: 100%;
+  margin: 0;
+  margin-inline-start: var(--ms-space-1);
+  padding: var(--ms-space-1);
+  min-inline-size: min(10rem, 80vw);
+  max-inline-size: min(18rem, calc(100dvw - var(--ms-space-4) * 2));
+  max-block-size: min(60svh, 22rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  list-style: none;
+  border: 1px solid var(--ms-color-border);
+  border-radius: var(--ms-radius-lg);
+  background-color: var(--ms-color-surface-raised);
+  box-shadow:
+    0 24px 64px -24px rgb(0 0 0 / 0.45),
+    0 0 calc(40px * var(--ms-fx-glow, 1)) -16px var(--ms-c-glow);
+}
+/* 父菜单从左侧弹出时,子菜单也向左展开 */
+.ms-dropdown__submenu-wrap[data-submenu-side="left"] .ms-dropdown__submenu {
+  inset-inline-start: auto;
+  inset-inline-end: 100%;
+  margin-inline-start: 0;
+  margin-inline-end: var(--ms-space-1);
+}
+[data-ms-fx="off"] .ms-dropdown__submenu {
+  box-shadow: 0 24px 64px -24px rgb(0 0 0 / 0.45);
+}
+/* 子菜单展开时父项保持高亮 */
+.ms-dropdown__item--has-submenu[aria-expanded="true"] {
+  background-color: var(--ms-c-soft);
+  color: var(--ms-c-hover);
+}
+
+/* —— 指向箭头:贴主轴方向,随 side 翻面(简化为三角) —— */
+.ms-dropdown__arrow {
+  position: absolute;
+  inline-size: 0.6rem;
+  block-size: 0.6rem;
+  background-color: var(--ms-color-surface-raised);
+  border: 1px solid var(--ms-color-border);
+  rotate: 45deg;
+}
+.ms-dropdown[data-ms-side="bottom"] .ms-dropdown__arrow {
+  inset-block-start: calc(-0.3rem - 1px);
+  inset-inline-start: var(--ms-space-4);
+  border-block-end: none;
+  border-inline-end: none;
+}
+.ms-dropdown[data-ms-side="top"] .ms-dropdown__arrow {
+  inset-block-end: calc(-0.3rem - 1px);
+  inset-inline-start: var(--ms-space-4);
+  border-block-start: none;
+  border-inline-start: none;
+}
+.ms-dropdown[data-ms-side="right"] .ms-dropdown__arrow {
+  inset-inline-start: calc(-0.3rem - 1px);
+  inset-block-start: var(--ms-space-4);
+  border-block-start: none;
+  border-inline-end: none;
+}
+.ms-dropdown[data-ms-side="left"] .ms-dropdown__arrow {
+  inset-inline-end: calc(-0.3rem - 1px);
+  inset-block-start: var(--ms-space-4);
+  border-block-end: none;
+  border-inline-start: none;
+}
+
+/* —— 触控设备:菜单项达标到最小命中目标,纵向更宽松 —— */
+@media (pointer: coarse) {
+  .ms-dropdown__item {
+    min-block-size: max(var(--ms-target-min), calc(2.5rem * var(--ms-density-scale, 1)));
+    padding-block: var(--ms-space-3);
+  }
+}
+
+/* —— 动效降级:尊重系统偏好与库级总闸 —— */
+@media (prefers-reduced-motion: reduce) {
+  .ms-dropdown,
+  .ms-dropdown:popover-open {
+    transition-duration: 0.01ms;
+    transform: none;
+  }
+  @starting-style {
+    .ms-dropdown:popover-open {
+      transform: none;
+    }
+  }
+  .ms-dropdown__item {
+    transition-duration: 0.01ms;
+  }
+}
+[data-ms-motion="off"] .ms-dropdown,
+[data-ms-motion="off"] .ms-dropdown:popover-open {
+  transition: none;
+  transform: none;
+}
+[data-ms-motion="off"] .ms-dropdown__item {
+  transition: none;
+}

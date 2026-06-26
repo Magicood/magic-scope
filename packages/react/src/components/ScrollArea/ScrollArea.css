@@ -1,0 +1,142 @@
+/* —— ScrollArea 基座:相对定位容器,滚动条作为绝对定位 overlay 叠在内容上,不占布局 —— */
+.ms-scroll-area {
+  position: relative;
+  /* 默认填满给定的宽高;调用方在外层约束尺寸即可滚动 */
+  display: block;
+  overflow: hidden;
+  /* 滚动条厚度(随密度缩放)与内边距留白 */
+  --ms-sa-thickness: calc(10px * var(--ms-density-scale, 1));
+  --ms-sa-gap: var(--ms-space-1, 2px);
+  /* 默认 tone 槽位兜底(未给 ms-tone-* 时仍能取到 --ms-c) */
+  --ms-c: var(--ms-color-primary, currentcolor);
+}
+
+/* —— 视口:真正承载原生滚动的层;隐藏原生滚动条,保留键盘/惯性滚动能力 —— */
+.ms-scroll-area__viewport {
+  inline-size: 100%;
+  block-size: 100%;
+  /* 诚实备注:scrollbar-width 走 Firefox / 新内核;::-webkit-scrollbar 兜 WebKit / 旧 Chromium。
+     极个别两者皆不支持的老内核会让原生条与自绘条并存,但不影响功能。 */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.ms-scroll-area__viewport::-webkit-scrollbar {
+  display: none;
+  inline-size: 0;
+  block-size: 0;
+}
+
+/* 按 orientation 决定视口的滚动轴(默认仅纵向滚) */
+.ms-scroll-area--vertical .ms-scroll-area__viewport {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.ms-scroll-area--horizontal .ms-scroll-area__viewport {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+.ms-scroll-area--both .ms-scroll-area__viewport {
+  overflow: auto;
+}
+
+/* 横向滚动时,内容容器需收缩到内容宽度而非被压成视口宽 */
+.ms-scroll-area--horizontal .ms-scroll-area__content,
+.ms-scroll-area--both .ms-scroll-area__content {
+  inline-size: max-content;
+  min-inline-size: 100%;
+}
+
+/* —— 滚动条轨道:绝对定位贴边,不占布局;按 data-state 淡入淡出 —— */
+.ms-scroll-area__scrollbar {
+  position: absolute;
+  /* 触控加宽热区到目标尺寸,视觉厚度不变(背景透明，仅扩大命中区) */
+  display: flex;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+  /* 默认隐藏,data-state=visible 时显形 */
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--ms-dur-base, 0.2s) var(--ms-ease-standard, ease),
+    visibility var(--ms-dur-base, 0.2s) var(--ms-ease-standard, ease);
+}
+.ms-scroll-area__scrollbar[data-state="visible"] {
+  opacity: 1;
+  visibility: visible;
+}
+
+.ms-scroll-area__scrollbar--vertical {
+  inset-block: var(--ms-sa-gap);
+  inset-inline-end: var(--ms-sa-gap);
+  inline-size: var(--ms-sa-thickness);
+  flex-direction: column;
+}
+.ms-scroll-area__scrollbar--horizontal {
+  inset-inline: var(--ms-sa-gap);
+  inset-block-end: var(--ms-sa-gap);
+  block-size: var(--ms-sa-thickness);
+  flex-direction: row;
+}
+/* 双向并存时,纵条让出底部一格、横条让出末端一格,避免在角落叠压 */
+.ms-scroll-area--both .ms-scroll-area__scrollbar--vertical {
+  inset-block-end: calc(var(--ms-sa-thickness) + var(--ms-sa-gap) * 2);
+}
+.ms-scroll-area--both .ms-scroll-area__scrollbar--horizontal {
+  inset-inline-end: calc(var(--ms-sa-thickness) + var(--ms-sa-gap) * 2);
+}
+
+/* —— 滑块:圆角条,几何由 inline style(thumbSize/thumbPos)驱动 —— */
+.ms-scroll-area__thumb {
+  position: relative;
+  flex: 0 0 auto;
+  border-radius: var(--ms-radius-full, 999px);
+  background-color: color-mix(in oklch, currentcolor 28%, transparent);
+  cursor: default;
+  transition: background-color var(--ms-dur-fast, 0.12s) var(--ms-ease-standard, ease);
+  /* 触控下加大最小命中区(配合 logic 的 minThumb) */
+  min-block-size: var(--ms-target-min, 0);
+}
+.ms-scroll-area__scrollbar--vertical .ms-scroll-area__thumb {
+  inline-size: 100%;
+  min-block-size: 0;
+}
+.ms-scroll-area__scrollbar--horizontal .ms-scroll-area__thumb {
+  block-size: 100%;
+  min-inline-size: 0;
+}
+
+/* hover/active:染主色 + 轻发光,提示可拖 */
+@media (hover: hover) {
+  .ms-scroll-area__thumb:hover {
+    background-color: color-mix(in oklch, var(--ms-c, currentcolor) 50%, transparent);
+  }
+}
+.ms-scroll-area__thumb:active {
+  background-color: var(--ms-c, currentcolor);
+  box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) -3px var(--ms-c-glow, transparent);
+}
+
+/* —— 触控:轨道命中区拓宽到目标尺寸(视觉厚度仍由 thumb 决定) —— */
+@media (pointer: coarse) {
+  .ms-scroll-area__scrollbar--vertical {
+    inline-size: max(var(--ms-sa-thickness), var(--ms-target-min, 44px));
+  }
+  .ms-scroll-area__scrollbar--horizontal {
+    block-size: max(var(--ms-sa-thickness), var(--ms-target-min, 44px));
+  }
+}
+
+/* —— 尊重 reduced-motion / motion=off:滚动条显隐降级为即时,不再淡入淡出 —— */
+@media (prefers-reduced-motion: reduce) {
+  .ms-scroll-area__scrollbar,
+  .ms-scroll-area__thumb {
+    transition: none;
+  }
+}
+.ms-scroll-area[data-ms-motion="off"] .ms-scroll-area__scrollbar,
+.ms-scroll-area[data-ms-motion="off"] .ms-scroll-area__thumb,
+[data-ms-motion="off"] .ms-scroll-area__scrollbar,
+[data-ms-motion="off"] .ms-scroll-area__thumb {
+  transition: none;
+}

@@ -1,0 +1,323 @@
+/* —— Toolbar 工具栏 —— role=toolbar 复合容器,roving tabindex。
+ * 子项配色只读 tone 槽位(--ms-c*),零硬编码;尺寸随密度(--ms-density-scale);
+ * 内容边界:wrap 换行或横向溢出可滚动,绝不撑破;动效 motion 双降级。 */
+
+.ms-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--ms-space-1, 0.25rem);
+  box-sizing: border-box;
+  max-inline-size: 100%;
+  padding: var(--ms-space-1, 0.25rem);
+  border-radius: var(--ms-radius-lg, 0.625rem);
+  font-family: var(--ms-font-sans);
+  /* 横向溢出可滚动(不换行时);隐藏滚动条但保留可滚 */
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
+}
+.ms-toolbar::-webkit-scrollbar {
+  block-size: 6px;
+}
+.ms-toolbar::-webkit-scrollbar-thumb {
+  border-radius: var(--ms-radius-full, 999px);
+  background-color: color-mix(in oklch, var(--ms-color-fg) 20%, transparent);
+}
+
+/* —— 朝向 —— */
+.ms-toolbar--vertical {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: stretch;
+  inline-size: max-content;
+  max-block-size: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/* —— 换行:取消滚动,内容溢出即折行 —— */
+.ms-toolbar--wrap {
+  flex-wrap: wrap;
+  overflow: visible;
+}
+.ms-toolbar--vertical.ms-toolbar--wrap {
+  flex-wrap: wrap;
+}
+
+/* —— 根变体 —— */
+.ms-toolbar--solid {
+  background-color: color-mix(in oklch, var(--ms-color-fg) 5%, var(--ms-color-bg));
+  box-shadow: inset 0 0 0 var(--ms-hairline, 1px)
+    color-mix(in oklch, var(--ms-color-fg) 8%, transparent);
+}
+.ms-toolbar--outline {
+  box-shadow: inset 0 0 0 var(--ms-hairline, 1px)
+    color-mix(in oklch, var(--ms-color-fg) 16%, transparent);
+}
+
+/* —— 项基座 —— */
+.ms-toolbar__item {
+  flex: 0 0 auto;
+}
+
+/* —— 动作 / toggle 按钮 —— */
+.ms-toolbar__button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ms-space-2, 0.5rem);
+  box-sizing: border-box;
+  min-block-size: calc(2.25rem * var(--ms-density-scale, 1));
+  max-inline-size: 100%;
+  padding-inline: calc(var(--ms-space-3, 0.5rem) * var(--ms-density-scale, 1));
+  margin: 0;
+  border: 1px solid transparent;
+  border-radius: var(--ms-radius-md, 0.5rem);
+  background: transparent;
+  color: var(--ms-color-fg);
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition:
+    background-color var(--ms-dur-fast, 0.12s) var(--ms-ease-standard, ease),
+    border-color var(--ms-dur-fast, 0.12s) var(--ms-ease-standard, ease),
+    color var(--ms-dur-fast, 0.12s) var(--ms-ease-standard, ease),
+    box-shadow var(--ms-dur-base, 0.2s) var(--ms-ease-standard, ease),
+    transform var(--ms-dur-fast, 0.12s) var(--ms-ease-standard, ease);
+}
+.ms-toolbar__icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  font-size: 1.15em;
+  line-height: 0;
+}
+/* 内容边界:超长 label 单行省略号 */
+.ms-toolbar__label {
+  min-inline-size: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* —— 按钮变体(只读 tone 槽位) —— */
+.ms-toolbar__button--ghost {
+  color: var(--ms-color-fg);
+}
+.ms-toolbar__button--soft {
+  background-color: var(--ms-c-soft);
+  color: var(--ms-c);
+}
+.ms-toolbar__button--solid {
+  background-color: var(--ms-c);
+  border-color: var(--ms-c);
+  color: var(--ms-on-c);
+  box-shadow: 0 0 calc(12px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow);
+}
+.ms-toolbar__button--outline {
+  color: var(--ms-c);
+  border-color: color-mix(in oklch, var(--ms-c) 50%, transparent);
+}
+
+/* —— hover(仅具 hover 能力的指针) —— */
+@media (hover: hover) {
+  .ms-toolbar__button--ghost:hover:not(:disabled) {
+    background-color: var(--ms-c-soft);
+    color: var(--ms-c);
+  }
+  .ms-toolbar__button--soft:hover:not(:disabled) {
+    background-color: color-mix(in oklch, var(--ms-c) 24%, transparent);
+  }
+  .ms-toolbar__button--solid:hover:not(:disabled) {
+    background-color: var(--ms-c-hover);
+    border-color: var(--ms-c-hover);
+    box-shadow: 0 0 calc(18px * var(--ms-fx-glow, 1)) -6px var(--ms-c-glow);
+  }
+  .ms-toolbar__button--outline:hover:not(:disabled) {
+    background-color: var(--ms-c-soft);
+    border-color: var(--ms-c);
+  }
+}
+
+/* —— active —— */
+.ms-toolbar__button:active:not(:disabled) {
+  transform: scale(calc(1 - 0.03 * var(--ms-motion-scale, 1)));
+}
+
+/* —— focus-visible:tone 发光环 —— */
+.ms-toolbar__button:focus-visible,
+.ms-toolbar__link:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--ms-color-bg),
+    0 0 0 4px var(--ms-color-focus-ring),
+    0 0 calc(14px * var(--ms-fx-glow, 1)) -4px var(--ms-c-glow);
+}
+
+/* —— disabled —— */
+.ms-toolbar__button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+  box-shadow: none;
+  transform: none;
+}
+
+/* —— 纯图标:正方形 —— */
+.ms-toolbar__button--icon-only {
+  padding-inline: 0;
+  inline-size: calc(2.25rem * var(--ms-density-scale, 1));
+}
+
+/* —— 链接项 —— */
+.ms-toolbar__link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ms-space-2, 0.5rem);
+  box-sizing: border-box;
+  min-block-size: calc(2.25rem * var(--ms-density-scale, 1));
+  padding-inline: calc(var(--ms-space-2, 0.5rem) * var(--ms-density-scale, 1));
+  border-radius: var(--ms-radius-md, 0.5rem);
+  color: var(--ms-color-link, var(--ms-c));
+  font-size: 0.9375rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color var(--ms-dur-fast, 0.12s) var(--ms-ease-standard, ease);
+}
+@media (hover: hover) {
+  .ms-toolbar__link:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}
+
+/* —— 分隔线(<hr>):按 aria-orientation 取轴;先把 <hr> 默认边框 / 边距清掉 —— */
+.ms-toolbar__separator {
+  flex: 0 0 auto;
+  align-self: stretch;
+  border: 0;
+  margin-block: 0;
+  margin-inline: var(--ms-space-1, 0.25rem);
+  background-color: color-mix(in oklch, var(--ms-color-fg) 16%, transparent);
+}
+/* 工具栏横向 → 分隔线为竖线 */
+.ms-toolbar__separator[aria-orientation="vertical"] {
+  inline-size: var(--ms-hairline, 1px);
+  min-block-size: calc(1.25rem * var(--ms-density-scale, 1));
+}
+/* 工具栏纵向 → 分隔线为横线 */
+.ms-toolbar__separator[aria-orientation="horizontal"] {
+  block-size: var(--ms-hairline, 1px);
+  margin-block: var(--ms-space-1, 0.25rem);
+  margin-inline: 0;
+}
+
+/* —— 分组 —— */
+.ms-toolbar__group {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ms-space-1, 0.25rem);
+  flex: 0 0 auto;
+}
+.ms-toolbar--vertical .ms-toolbar__group {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+/* —— 吸附:相邻项合并边界与圆角 —— */
+.ms-toolbar__group--attached {
+  gap: 0;
+}
+.ms-toolbar__group--attached .ms-toolbar__button:not(:first-child) {
+  margin-inline-start: -1px;
+  border-start-start-radius: 0;
+  border-end-start-radius: 0;
+}
+.ms-toolbar__group--attached .ms-toolbar__button:not(:last-child) {
+  border-start-end-radius: 0;
+  border-end-end-radius: 0;
+}
+.ms-toolbar--vertical .ms-toolbar__group--attached .ms-toolbar__button:not(:first-child) {
+  margin-inline-start: 0;
+  margin-block-start: -1px;
+  border-start-start-radius: 0;
+  border-start-end-radius: 0;
+}
+.ms-toolbar--vertical .ms-toolbar__group--attached .ms-toolbar__button:not(:last-child) {
+  border-start-end-radius: 0;
+  border-end-start-radius: 0;
+  border-end-end-radius: 0;
+}
+/* 吸附时 hover / focus 项提到上层,发光 / 描边不被相邻盖住 */
+.ms-toolbar__group--attached .ms-toolbar__button:hover:not(:disabled),
+.ms-toolbar__group--attached .ms-toolbar__button:focus-visible {
+  z-index: 1;
+}
+
+/* —— Toggle 项:pressed 态 —— */
+.ms-toolbar__toggle-item {
+  border-color: color-mix(in oklch, var(--ms-color-fg) 12%, transparent);
+}
+.ms-toolbar__toggle-item--on {
+  background-color: var(--ms-c-soft);
+  border-color: color-mix(in oklch, var(--ms-c) 45%, transparent);
+  color: var(--ms-c);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in oklch, var(--ms-c) 30%, transparent),
+    0 0 calc(12px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow);
+}
+@media (hover: hover) {
+  .ms-toolbar__toggle-item--on:hover:not(:disabled) {
+    background-color: color-mix(in oklch, var(--ms-c) 22%, transparent);
+  }
+}
+
+/* —— 尺寸 —— */
+.ms-toolbar--sm .ms-toolbar__button,
+.ms-toolbar--sm .ms-toolbar__link {
+  min-block-size: calc(1.875rem * var(--ms-density-scale, 1));
+  font-size: 0.8125rem;
+}
+.ms-toolbar--sm .ms-toolbar__button--icon-only {
+  inline-size: calc(1.875rem * var(--ms-density-scale, 1));
+}
+.ms-toolbar--lg .ms-toolbar__button,
+.ms-toolbar--lg .ms-toolbar__link {
+  min-block-size: calc(2.75rem * var(--ms-density-scale, 1));
+  padding-inline: calc(var(--ms-space-4, 0.75rem) * var(--ms-density-scale, 1));
+  font-size: 1rem;
+}
+.ms-toolbar--lg .ms-toolbar__button--icon-only {
+  inline-size: calc(2.75rem * var(--ms-density-scale, 1));
+}
+
+/* —— 触控:热区不低于目标尺寸 —— */
+@media (pointer: coarse) {
+  .ms-toolbar__button,
+  .ms-toolbar__link {
+    min-block-size: max(calc(2.25rem * var(--ms-density-scale, 1)), var(--ms-target-min, 44px));
+  }
+}
+
+/* —— 动效降级:reduced-motion 或 [data-ms-motion=off] 去掉位移 / 过渡 —— */
+@media (prefers-reduced-motion: reduce) {
+  .ms-toolbar__button {
+    transition-duration: 0.01ms;
+  }
+  .ms-toolbar__button:active:not(:disabled) {
+    transform: none;
+  }
+}
+[data-ms-motion="off"] .ms-toolbar__button {
+  transition: none;
+}
+[data-ms-motion="off"] .ms-toolbar__button:active:not(:disabled) {
+  transform: none;
+}

@@ -1,0 +1,149 @@
+/* —— Collapsible:单项折叠原语。根仅作布局上下文,视觉交给 trigger / content。 —— */
+.ms-collapsible {
+  display: block;
+  inline-size: 100%;
+  max-inline-size: 100%;
+  min-inline-size: 0;
+  font-family: var(--ms-font-sans);
+  color: var(--ms-color-fg);
+}
+
+/* —— 切换按钮:可点击的开合头,padding / 最小高度接密度缩放 —— */
+.ms-collapsible__trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ms-space-2);
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  min-block-size: calc(2.5rem * var(--ms-density-scale, 1));
+  margin: 0;
+  padding-block: calc(var(--ms-space-2) * var(--ms-density-scale, 1));
+  padding-inline: var(--ms-space-3);
+  border: 1px solid var(--ms-color-border);
+  border-radius: var(--ms-radius-md);
+  background-color: var(--ms-color-surface);
+  color: inherit;
+  font-family: inherit;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.4;
+  text-align: start;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+  transition:
+    background-color var(--ms-dur-fast) var(--ms-ease-standard),
+    border-color var(--ms-dur-fast) var(--ms-ease-standard),
+    color var(--ms-dur-fast) var(--ms-ease-standard),
+    box-shadow var(--ms-dur-base) var(--ms-ease-standard);
+}
+
+/* —— hover:面板微亮 + 文字提亮(tone) + 内侧暖辉(tone glow) —— */
+.ms-collapsible__trigger:not(:disabled):hover {
+  background-color: var(--ms-color-surface-raised);
+  border-color: var(--ms-c);
+  color: var(--ms-c-hover);
+  box-shadow: inset 0 0 calc(20px * var(--ms-fx-glow, 1)) -14px var(--ms-c-glow);
+}
+
+/* —— 展开态:边框 / 文字染 tone 主色,弱化与下方内容的视觉缝隙 —— */
+.ms-collapsible--open .ms-collapsible__trigger {
+  border-color: var(--ms-c);
+  color: var(--ms-c);
+}
+
+/* —— focus-visible:发光环(可达性,模糊半径不参与开关) —— */
+.ms-collapsible__trigger:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--ms-color-focus-ring),
+    0 0 calc(24px * var(--ms-fx-glow, 1)) -10px var(--ms-c-glow);
+}
+
+/* —— fx 总闸关闭:去掉装饰性辉光,只留可达性焦点环 —— */
+[data-ms-fx="off"] .ms-collapsible__trigger:not(:disabled):hover {
+  box-shadow: none;
+}
+[data-ms-fx="off"] .ms-collapsible__trigger:focus-visible {
+  box-shadow: 0 0 0 2px var(--ms-color-focus-ring);
+}
+
+.ms-collapsible__trigger:disabled {
+  cursor: not-allowed;
+  color: var(--ms-color-fg-subtle);
+  border-color: var(--ms-color-border);
+  background-color: var(--ms-color-surface);
+}
+
+/* —— 折叠容器:grid-template-rows 0fr → 1fr 过渡(现代、平滑) ——
+ * Content 始终常驻挂载(JS 侧 inert={!open} 切换),收起 / 展开都靠 data-state 切换样式播放过渡。
+ * 收起:grid-template-rows 与 visibility 一起过渡,但 visibility 延迟 = 动画时长,
+ * 让收起动画完整播完后再 visibility:hidden(从绘制 / AT 移除),双向动画都完整。
+ * inert(JS 即时挂)负责焦点 / AT 语义;visibility 负责绘制与动画完整性。 */
+.ms-collapsible__content {
+  display: grid;
+  grid-template-rows: 0fr;
+  visibility: hidden;
+  transition:
+    grid-template-rows var(--ms-dur-base) var(--ms-ease-emphasized),
+    visibility 0s linear var(--ms-dur-base);
+}
+
+.ms-collapsible__content[data-state="open"] {
+  grid-template-rows: 1fr;
+  visibility: visible;
+  /* 展开:visibility 立刻可见(延迟 0),内容随网格撑开 */
+  transition:
+    grid-template-rows var(--ms-dur-base) var(--ms-ease-emphasized),
+    visibility 0s linear 0s;
+}
+
+/* 1fr 网格行配合 min-block-size: 0 + overflow 才能从 0 平滑撑开 */
+.ms-collapsible__content-inner {
+  min-block-size: 0;
+  min-inline-size: 0;
+  overflow: hidden;
+}
+
+/* —— 展开内容:在网格撑开的同时叠加淡入 + 微位移(magic;受 motion 调制) —— */
+.ms-collapsible__content[data-state="closed"] .ms-collapsible__content-inner {
+  opacity: 0;
+  transform: translateY(calc(-0.25rem * var(--ms-motion-scale, 1)));
+  transition:
+    opacity var(--ms-dur-base) var(--ms-ease-standard),
+    transform var(--ms-dur-base) var(--ms-ease-emphasized);
+}
+
+.ms-collapsible__content[data-state="open"] .ms-collapsible__content-inner {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity var(--ms-dur-base) var(--ms-ease-standard),
+    transform var(--ms-dur-base) var(--ms-ease-emphasized);
+}
+
+/* —— 触控设备:trigger 达到最小可点击高度(与密度取较大值) —— */
+@media (pointer: coarse) {
+  .ms-collapsible__trigger {
+    min-block-size: max(calc(2.5rem * var(--ms-density-scale, 1)), var(--ms-target-min));
+  }
+}
+
+/* —— 一键降级:无障碍偏好把展开收起动画压到瞬时,但保持最终态正确 —— */
+@media (prefers-reduced-motion: reduce) {
+  .ms-collapsible__content,
+  .ms-collapsible__content-inner {
+    transition-duration: 0.01ms;
+  }
+  .ms-collapsible__content-inner {
+    transform: none;
+  }
+}
+
+/* —— 全局动效总闸关闭:同样压到瞬时 —— */
+[data-ms-motion="off"] .ms-collapsible__content,
+[data-ms-motion="off"] .ms-collapsible__content-inner {
+  transition-duration: 0.01ms;
+}
+[data-ms-motion="off"] .ms-collapsible__content-inner {
+  transform: none;
+}
