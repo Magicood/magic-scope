@@ -271,7 +271,14 @@ const SplitterBase = forwardRef<SplitterHandle, SplitterProps>(
     );
 
     // —— 拖拽:在 gutter 上 pointerdown 起,移动按 delta 改两侧 —— //
-    const dragRef = useRef<{ gutter: number; startPos: number; startSizes: number[] } | null>(null);
+    const dragRef = useRef<{
+      gutter: number;
+      startPos: number;
+      startSizes: number[];
+      // pointermove 最近算出的末态尺寸缓存:落定时优先用它,
+      // 使受控父组件即便不每次 onResize 回写,onResizeEnd 也报拖拽末态而非起始值。
+      lastSizes: number[] | null;
+    } | null>(null);
     // 拖拽视觉态:关闭面板过渡(跟手)。只在拖拽边界翻转,不在 move 高频 setState。
     const [dragging, setDragging] = useState(false);
 
@@ -284,6 +291,7 @@ const SplitterBase = forwardRef<SplitterHandle, SplitterProps>(
           gutter: gutterIndex,
           startPos: isHorizontal ? event.clientX : event.clientY,
           startSizes: [...latest.current],
+          lastSizes: null,
         };
         setDragging(true);
       },
@@ -297,6 +305,7 @@ const SplitterBase = forwardRef<SplitterHandle, SplitterProps>(
         const pos = isHorizontal ? event.clientX : event.clientY;
         const delta = pos - drag.startPos;
         const nextSizes = resizePanels(drag.startSizes, drag.gutter, delta, usablePx, constraints);
+        drag.lastSizes = nextSizes;
         emit(nextSizes, false);
       },
       [isHorizontal, usablePx, constraints, emit],
@@ -304,11 +313,15 @@ const SplitterBase = forwardRef<SplitterHandle, SplitterProps>(
 
     const endDrag = useCallback(
       (event: ReactPointerEvent<HTMLDivElement>) => {
-        if (!dragRef.current) return;
+        const drag = dragRef.current;
+        if (!drag) return;
         (event.currentTarget as HTMLElement).releasePointerCapture?.(event.pointerId);
+        // 落定优先用 pointermove 缓存的末态:受控父组件不每次回写时,
+        // latest.current 仍是拖拽起始值,直接 emit 它会让 onResizeEnd 报旧值。
+        const finalSizes = drag.lastSizes ?? [...latest.current];
         dragRef.current = null;
         setDragging(false);
-        emit([...latest.current], true);
+        emit(finalSizes, true);
       },
       [emit],
     );
@@ -357,7 +370,9 @@ const SplitterBase = forwardRef<SplitterHandle, SplitterProps>(
         );
         const signedDelta = gutterIndex === panelIndex ? -delta : delta;
         const nextSizes = resizePanels(current, gutterIndex, signedDelta, usablePx, relaxed);
-        collapsedFrom.current.set(panelIndex, cur);
+        // 只在「折叠前确为展开态」时记录还原快照;重复折叠(cur 已 <= collapsedSize)
+        // 不覆盖,否则 expand 会还原成折叠尺寸(0)而非折叠前的真实尺寸。
+        if (cur > meta.collapsedSize) collapsedFrom.current.set(panelIndex, cur);
         emit(nextSizes, true);
       },
       [panels, count, constraints, usablePx, emit],

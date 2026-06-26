@@ -204,6 +204,40 @@ describe('Cascader', () => {
     expect(screen.queryByRole('menuitem', { hidden: true })).not.toBeInTheDocument();
   });
 
+  it('受控 value 在 open 期间外部变更,菜单列随之展开刷新', () => {
+    function Controlled() {
+      const [value, setValue] = useState<string[]>([]);
+      return (
+        <>
+          <button type="button" onClick={() => setValue(['zj', 'hz'])}>
+            外部设值
+          </button>
+          <Cascader options={tree} value={value} open onOpenChange={() => {}} />
+        </>
+      );
+    }
+    render(<Controlled />);
+    // 初始 value 为空:只有根列,第二列(杭州)不应出现
+    expect(screen.queryByRole('menuitem', { name: /杭州/, hidden: true })).not.toBeInTheDocument();
+    // 外部把 value 改成 zj/hz:列应随之展开到第二、第三列
+    fireEvent.click(screen.getByRole('button', { name: '外部设值' }));
+    expect(screen.getByRole('menuitem', { name: /杭州/, hidden: true })).toBeInTheDocument();
+    expect(screen.getByRole('menuitem', { name: '西湖', hidden: true })).toBeInTheDocument();
+  });
+
+  it('defaultValue 指向 disabled 项时,初始键盘焦点回退到首个可用项而非 disabled 项', () => {
+    // 江苏(js)是 disabled,作为首层选中项;初始 active 不应落在江苏上。
+    render(<Cascader options={tree} defaultValue={['js']} />);
+    fireEvent.click(getTrigger());
+    const js = screen.getByRole('menuitem', { name: /江苏/, hidden: true });
+    expect(js).toHaveAttribute('aria-disabled', 'true');
+    expect(js).not.toHaveClass('ms-cascader__option--active');
+    expect(js).not.toHaveAttribute('data-active');
+    // 焦点回退到首个可用项(浙江)
+    const zj = screen.getByRole('menuitem', { name: /浙江/, hidden: true });
+    expect(zj).toHaveAttribute('data-active', 'true');
+  });
+
   it('选中项与展开项各带状态类名', () => {
     render(<Cascader options={tree} defaultValue={['zj', 'hz', 'xh']} />);
     fireEvent.click(getTrigger());

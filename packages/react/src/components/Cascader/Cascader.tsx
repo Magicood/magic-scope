@@ -178,8 +178,9 @@ export const Cascader = forwardRef<HTMLButtonElement, CascaderProps>(
       if (open) {
         setActivePath(value);
         const firstCol = options;
-        const selectedRow = firstCol.findIndex((o) => o.value === value[0]);
-        const row = selectedRow >= 0 ? selectedRow : findEnabledIndex(firstCol, 0, 1);
+        const sel = firstCol.findIndex((o) => o.value === value[0]);
+        // 初始焦点不可落在 disabled 节点:命中且可用才用,否则回退到首个可用项。
+        const row = sel >= 0 && !firstCol[sel]?.disabled ? sel : findEnabledIndex(firstCol, 0, 1);
         setActiveCell({ col: 0, row });
         // 等浮层进 top-layer 后再聚焦,使 ↑↓←→ 能落到菜单容器。
         const id = requestAnimationFrame(() => menuRef.current?.focus());
@@ -187,6 +188,14 @@ export const Cascader = forwardRef<HTMLButtonElement, CascaderProps>(
       }
       return undefined;
     }, [open]);
+
+    // 仅受控且 open 时:外部改 value 要同步进浏览前缀,使列随之展开 / 刷新。
+    // 非受控不挂(避免边浏览边被自己写回的 value 打断);依赖只含受控值,不碰 activeCell。
+    useEffect(() => {
+      if (isValueControlled && open) {
+        setActivePath(controlledValue ?? []);
+      }
+    }, [isValueControlled, controlledValue, open]);
 
     // 当前要渲染的列(按浏览前缀展开)。
     const columns = useMemo(() => columnsForValue(options, activePath), [options, activePath]);

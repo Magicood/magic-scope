@@ -242,4 +242,67 @@ describe('Affix', () => {
     unmount();
     expect(disconnect).toHaveBeenCalled();
   });
+
+  it('自定义 getTarget 容器自身尺寸变化触发重测:该容器元素被纳入 ResizeObserver 观测', () => {
+    const observed: unknown[] = [];
+    let trigger: (() => void) | null = null;
+    class FakeRO {
+      constructor(cb: () => void) {
+        trigger = cb;
+      }
+      observe = (el: Element) => {
+        observed.push(el);
+      };
+      unobserve = vi.fn();
+      disconnect = vi.fn();
+    }
+    vi.stubGlobal('ResizeObserver', FakeRO);
+
+    const scrollHost = document.createElement('div');
+    document.body.appendChild(scrollHost);
+    // 给自定义容器一个独立、固定在视口顶的几何(top=0),让 content 的 topValue 单独驱动吸附判定
+    Object.defineProperty(scrollHost, 'getBoundingClientRect', {
+      configurable: true,
+      value: () =>
+        ({
+          top: 0,
+          left: 0,
+          right: 1000,
+          bottom: 800,
+          width: 1000,
+          height: 800,
+          x: 0,
+          y: 0,
+          toJSON() {},
+        }) as DOMRect,
+    });
+
+    const { container } = render(
+      <Affix offsetTop={16} getTarget={() => scrollHost}>
+        <div>内容</div>
+      </Affix>,
+    );
+
+    // 自定义容器(非 window)被纳入观测,其尺寸变化(非 window resize、非 root 盒变化)能驱动重测
+    expect(observed).toContain(scrollHost);
+
+    const root = container.querySelector('.ms-affix') as HTMLElement;
+    // 起始几何不吸:content 上沿 200,距容器顶 200 > offsetTop 16
+    topValue = 200;
+    act(() => {
+      trigger?.();
+      flushRaf();
+    });
+    expect(root).not.toHaveAttribute('data-affixed');
+
+    // 模拟容器自身尺寸变化:改几何后由 RO 回调驱动 scheduleMeasure → 重测切到吸附态
+    topValue = 8;
+    act(() => {
+      trigger?.();
+      flushRaf();
+    });
+    expect(root).toHaveAttribute('data-affixed');
+
+    document.body.removeChild(scrollHost);
+  });
 });

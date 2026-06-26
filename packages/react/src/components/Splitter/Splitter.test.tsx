@@ -199,6 +199,56 @@ describe('Splitter', () => {
     expect(ref.current?.getSizes()[0]).toBeCloseTo(before, 0);
   });
 
+  it('回归:重复折叠同一面板再展开,仍还原到折叠前真实尺寸(非 0)', () => {
+    const ref = createRef<SplitterHandle>();
+    render(
+      <Splitter ref={ref}>
+        <Splitter.Panel collapsible>a</Splitter.Panel>
+        <Splitter.Panel>b</Splitter.Panel>
+      </Splitter>,
+    );
+    const before = ref.current?.getSizes()[0] ?? 0;
+    expect(before).toBeGreaterThan(0);
+    // 第一次折叠
+    act(() => {
+      ref.current?.collapse(0);
+    });
+    expect(ref.current?.getSizes()[0]).toBeCloseTo(0, 1);
+    // 第二次折叠(此时 cur 已是 0):不得覆盖还原快照
+    act(() => {
+      ref.current?.collapse(0);
+    });
+    expect(ref.current?.getSizes()[0]).toBeCloseTo(0, 1);
+    // 展开:必须还原到折叠前真实尺寸,而非 0
+    act(() => {
+      ref.current?.expand(0);
+    });
+    expect(ref.current?.getSizes()[0]).toBeCloseTo(before, 0);
+    expect(ref.current?.getSizes()[0]).toBeGreaterThan(0);
+  });
+
+  it('回归:受控且父组件不回写 onResize 时,松手 onResizeEnd 报拖拽末态而非起始值', () => {
+    const onResizeEnd = vi.fn();
+    // 受控:固定 sizes,父组件不在 onResize 里回写 → latest.current 恒为起始态
+    render(
+      <Splitter sizes={[200, 200]} onResizeEnd={onResizeEnd}>
+        <Splitter.Panel>a</Splitter.Panel>
+        <Splitter.Panel>b</Splitter.Panel>
+      </Splitter>,
+    );
+    const sep = screen.getByRole('separator');
+    act(() => {
+      fireEvent.pointerDown(sep, { button: 0, clientX: 200, pointerId: 1 });
+      fireEvent.pointerMove(sep, { clientX: 260, pointerId: 1 });
+      fireEvent.pointerUp(sep, { pointerId: 1 });
+    });
+    expect(onResizeEnd).toHaveBeenCalled();
+    const detail = onResizeEnd.mock.calls.at(-1)?.[0];
+    // 末态:左侧被拖大(>200 起始值),而非报回起始 200/200
+    expect(detail.sizes[0]).toBeGreaterThan(detail.sizes[1]);
+    expect(detail.sizes[0]).toBeGreaterThan(200);
+  });
+
   it('忽略非 Panel 子节点(纯文本 / 其它元素不计入面板)', () => {
     render(
       <Splitter>

@@ -152,7 +152,14 @@ export const ColorPicker = forwardRef<HTMLButtonElement, ColorPickerProps>(
     const hsva = useMemo<HSVA>(() => {
       if (!isControlled) return internal;
       const parsed = parseColor(controlledValue ?? '');
-      return parsed ?? lastValidRef.current;
+      if (!parsed) return lastValidRef.current;
+      // RGB→HSV 对无彩色不可逆:灰阶(s===0)丢色相、纯黑(v===0)丢色相+饱和度,
+      // 解析都会归 0。受控下每渲染重解析,会把父组件存的 #000000/#ffffff 串往返后
+      // 误将色相砸成红(0)。这里沿用上次有效 h/s 作基准,保住用户当前色相。
+      const prev = lastValidRef.current;
+      if (parsed.v === 0) return { ...parsed, h: prev.h, s: prev.s };
+      if (parsed.s === 0) return { ...parsed, h: prev.h };
+      return parsed;
     }, [isControlled, controlledValue, internal]);
     lastValidRef.current = hsva;
 
@@ -454,7 +461,10 @@ export const ColorPicker = forwardRef<HTMLButtonElement, ColorPickerProps>(
                     setHsva({ h: 0 });
                   } else if (e.key === 'End') {
                     e.preventDefault();
-                    setHsva({ h: 360 });
+                    // hue 是环形,360≡0;内部 h 统一规整到 [0,360),End 存 0 而非 360,
+                    // 与显示(normalizeHue→0=红)/ aria-valuenow / 渲染三者一致,
+                    // 消除 360 处 ArrowRight 跳到 1 的跳变。
+                    setHsva({ h: 0 });
                   }
                 }}
               >

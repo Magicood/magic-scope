@@ -182,13 +182,17 @@ export const Affix = forwardRef<AffixHandle, AffixProps>(
 
     // 诚实备注:用 ResizeObserver(特性检测)在内容自身尺寸变化时更新宽度 / 重判吸附;
     // 缺失则降级为仅 scroll/resize 时更新(老环境内容动态改尺寸可能短暂错位)。
+    // 自定义 getTarget 返回的容器(非 window)自身尺寸变化(非 window resize、非 root 盒变化)
+    // 也会改变吸底基准,故一并纳入观测,变化时重测,避免吸底短暂错位。
     useEffect(() => {
       if (typeof ResizeObserver === 'undefined') {
         return;
       }
       const root = rootRef.current;
       const content = contentRef.current;
-      if (!root && !content) {
+      const target = resolveTarget();
+      const targetEl = target && !isWindow(target) ? target : null;
+      if (!root && !content && !targetEl) {
         return;
       }
       const ro = new ResizeObserver(() => {
@@ -200,10 +204,13 @@ export const Affix = forwardRef<AffixHandle, AffixProps>(
       if (content) {
         ro.observe(content);
       }
+      if (targetEl) {
+        ro.observe(targetEl);
+      }
       return () => {
         ro.disconnect();
       };
-    }, [scheduleMeasure]);
+    }, [scheduleMeasure, resolveTarget]);
 
     // 暴露命令式 measure(),供外部在布局变化后主动重测。
     useImperativeHandle(forwardedRef, () => ({ measure }), [measure]);

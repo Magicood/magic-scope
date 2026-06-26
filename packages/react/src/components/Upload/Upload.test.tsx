@@ -134,6 +134,49 @@ describe('Upload', () => {
     expect(customRequest).toHaveBeenCalledTimes(1);
   });
 
+  it('受控注入无 raw 的 error 条目不渲染重试按钮(避免死按钮)', () => {
+    const customRequest = vi.fn();
+    const fileList: UploadFile[] = [
+      {
+        uid: '1',
+        name: 'fail.txt',
+        size: 10,
+        type: 'text/plain',
+        status: 'error',
+        percent: 0,
+        // 无 raw:startRequest 会因 !item.raw 静默 return,重试按钮必须不渲染
+      },
+    ];
+    render(<Upload fileList={fileList} customRequest={customRequest} />);
+    expect(screen.queryByRole('button', { name: /重试 fail.txt/ })).not.toBeInTheDocument();
+  });
+
+  it('迟到的 onProgress 在已终态(done)后不再篡改 percent', () => {
+    let captured: UploadRequestOption | null = null;
+    const customRequest = vi.fn((opt: UploadRequestOption) => {
+      captured = opt;
+    });
+    const onChange = vi.fn();
+    render(<Upload customRequest={customRequest} onChange={onChange} />);
+    const input = screen
+      .getByRole('button', { name: /上传/ })
+      .closest('.ms-upload')
+      ?.querySelector('input[type="file"]') as HTMLInputElement;
+    fireEvent.change(input, { target: { files: [makeFile('go.txt')] } });
+    // 先成功置 done(percent=100)
+    act(() => captured?.handlers.onSuccess({ url: 'https://x/go.txt' }));
+    let last = onChange.mock.calls.at(-1)?.[0] as UploadFile[];
+    expect(last[0]?.status).toBe('done');
+    expect(last[0]?.percent).toBe(100);
+    const callsAfterSuccess = onChange.mock.calls.length;
+    // 迟到的进度回报不得改写已终态条目
+    act(() => captured?.handlers.onProgress(42));
+    expect(onChange.mock.calls.length).toBe(callsAfterSuccess);
+    last = onChange.mock.calls.at(-1)?.[0] as UploadFile[];
+    expect(last[0]?.status).toBe('done');
+    expect(last[0]?.percent).toBe(100);
+  });
+
   it('customRequest 经 onProgress/onSuccess 推进 status 与 percent', () => {
     let captured: UploadRequestOption | null = null;
     const customRequest = vi.fn((opt: UploadRequestOption) => {

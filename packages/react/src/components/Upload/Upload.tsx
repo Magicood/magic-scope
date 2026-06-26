@@ -242,7 +242,8 @@ export const Upload = forwardRef<HTMLDivElement, UploadProps>(
           handlers: {
             onProgress: (percent) => {
               const cur = listRef.current.find((f) => f.uid === item.uid);
-              if (!cur || cur.status === 'removed') {
+              // 只在 uploading 态接受进度:迟到的 onProgress 不得篡改已终态(done/error)条目。
+              if (!cur || cur.status !== 'uploading') {
                 return;
               }
               patchByUid(item.uid, { percent: clampPercent(percent) });
@@ -584,7 +585,8 @@ export const Upload = forwardRef<HTMLDivElement, UploadProps>(
                       .filter(Boolean)
                       .join(' ')}
                   >
-                    {isError && (
+                    {/* 重试仅在有 raw 且有 customRequest 时渲染:否则 startRequest 会因 !item.raw 静默 return = 死按钮。 */}
+                    {isError && item.raw && customRequest && (
                       <button
                         type="button"
                         className="ms-upload__action ms-upload__action--retry"
