@@ -34,6 +34,7 @@ export type MessageKey =
   | 'typography.permalink'
   | 'link.newWindow'
   | 'empty.description'
+  | 'segmented.label'
   | 'select.placeholder'
   | 'select.empty'
   | 'select.loading'
@@ -95,6 +96,7 @@ export const defaultMessages: Messages = {
   'typography.permalink': '永久链接',
   'link.newWindow': '(在新窗口打开)',
   'empty.description': '暂无数据',
+  'segmented.label': '分段选择',
   'select.placeholder': '请选择…',
   'select.empty': '无匹配项',
   'select.loading': '加载中…',

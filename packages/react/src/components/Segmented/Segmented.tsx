@@ -334,10 +334,7 @@ const SegmentedRoot = forwardRef<HTMLDivElement, SegmentedProps>((props, ref) =>
 
   // 无可见名时给 group 兜底无障碍名(避免读屏对 radiogroup/tablist 失名)。
   const resolvedAriaLabel =
-    ariaLabel ??
-    (ariaLabelledby == null
-      ? t('segmented.label' as Parameters<typeof t>[0], undefined, '分段选择')
-      : undefined);
+    ariaLabel ?? (ariaLabelledby == null ? t('segmented.label') : undefined);
 
   return (
     // biome-ignore lint/a11y/noStaticElementInteractions: 容器 role=radiogroup/tablist 即交互角色,onKeyDown 是 WAI-ARIA 要求的方向键导航,不是静态元素
