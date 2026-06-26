@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import type { RowKey, TableColumn } from '../packages/react/src/index';
 import {
   Accordion,
   Alert,
@@ -44,6 +45,134 @@ import {
   Tooltip,
   toast,
 } from '../packages/react/src/index';
+
+type DemoRow = {
+  id: number;
+  name: string;
+  role: string;
+  age: number;
+  status: 'active' | 'away' | 'offline';
+};
+const DEMO_ROWS: DemoRow[] = [
+  { id: 1, name: '赵晨', role: '前端工程师', age: 28, status: 'active' },
+  { id: 2, name: '李思', role: '产品设计', age: 32, status: 'away' },
+  { id: 3, name: '王武', role: '后端工程师', age: 26, status: 'offline' },
+  { id: 4, name: '陈柳', role: '产品经理', age: 35, status: 'active' },
+  { id: 5, name: '周琪', role: '测试工程师', age: 29, status: 'active' },
+];
+const STATUS_TONE = { active: 'success', away: 'warning', offline: 'neutral' } as const;
+const STATUS_TEXT = { active: '在线', away: '离开', offline: '离线' } as const;
+
+function RichTableDemo() {
+  const [selected, setSelected] = useState<RowKey[]>([2]);
+  const [expanded, setExpanded] = useState<RowKey[]>([1]);
+  const [size, setSize] = useState<'sm' | 'md' | 'lg'>('md');
+  const [loading, setLoading] = useState(false);
+  const columns: TableColumn<DemoRow>[] = [
+    {
+      key: 'name',
+      header: '姓名',
+      fixed: 'left',
+      render: (r) => <Text weight="semibold">{r.name}</Text>,
+    },
+    { key: 'role', header: '角色' },
+    {
+      key: 'age',
+      header: '年龄',
+      align: 'end',
+      sortable: true,
+      render: (r) => (
+        <Text family="mono" numeric="tabular">
+          {r.age}
+        </Text>
+      ),
+    },
+    {
+      key: 'status',
+      header: '状态',
+      render: (r) => (
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+          <Badge dot tone={STATUS_TONE[r.status]} />
+          <Text size="sm" dimmed>
+            {STATUS_TEXT[r.status]}
+          </Text>
+        </span>
+      ),
+    },
+    {
+      key: 'actions',
+      header: '操作',
+      align: 'end',
+      render: (r) => (
+        <Button
+          variant="ghost"
+          size="sm"
+          tone="danger"
+          onClick={(e) => {
+            e.stopPropagation();
+            toast.error(`删除 ${r.name}`);
+          }}
+        >
+          删除
+        </Button>
+      ),
+    },
+  ];
+  return (
+    <div style={{ display: 'grid', gap: '0.6rem' }}>
+      <div style={row}>
+        <Text size="sm" tone="primary" weight="semibold" transform="uppercase" tracking="wider">
+          Table 旗舰 · 排序/多选/展开/固定列/tone/密度/行点击
+        </Text>
+      </div>
+      <div style={row}>
+        <Text size="sm" dimmed>
+          密度:
+        </Text>
+        {(['sm', 'md', 'lg'] as const).map((s) => (
+          <Button
+            key={s}
+            size="sm"
+            variant={size === s ? 'solid' : 'outline'}
+            onClick={() => setSize(s)}
+          >
+            {s}
+          </Button>
+        ))}
+        <Button size="sm" variant="soft" tone="accent" onClick={() => setLoading((l) => !l)}>
+          {loading ? '停止 loading' : '试 loading'}
+        </Button>
+        <Text size="sm" dimmed>
+          已选 {selected.length} 行 · 点行有 toast
+        </Text>
+      </div>
+      <Table
+        columns={columns}
+        data={DEMO_ROWS}
+        tone="primary"
+        size={size}
+        stripe
+        hoverable
+        loading={loading}
+        stickyHeader
+        maxHeight={280}
+        getRowKey={(r) => r.id}
+        defaultSortState={{ key: 'age', direction: 'asc' }}
+        rowSelection={{ selectedKeys: selected, onChange: (keys) => setSelected(keys) }}
+        expandable={{
+          expandedKeys: expanded,
+          onExpandedChange: setExpanded,
+          rowRender: (r) => (
+            <Text dimmed size="sm">
+              {r.name} · {r.role} · {r.age} 岁 —— 这是 expandable.rowRender 的展开内容。
+            </Text>
+          ),
+        }}
+        onRowClick={(r) => toast(`点击行:${r.name}`)}
+      />
+    </div>
+  );
+}
 
 const row: React.CSSProperties = {
   display: 'flex',
@@ -545,20 +674,7 @@ export function App() {
           },
         ]}
       />
-      <Table
-        stripe
-        hoverable
-        columns={[
-          { key: 'name', header: '组件' },
-          { key: 'cat', header: '分类' },
-          { key: 'status', header: '状态' },
-        ]}
-        data={[
-          { name: 'Button', cat: 'actions', status: 'stable' },
-          { name: 'Dialog', cat: 'overlay', status: 'stable' },
-          { name: 'Tabs', cat: 'navigation', status: 'stable' },
-        ]}
-      />
+      <RichTableDemo />
       <Pagination page={page} total={8} onPageChange={setPage} />
 
       <Toaster position="bottom-end" />
