@@ -35,6 +35,11 @@ export type MessageKey =
   | 'link.newWindow'
   | 'empty.description'
   | 'segmented.label'
+  | 'rate.label'
+  | 'rate.valueText'
+  | 'result.title.404'
+  | 'result.title.403'
+  | 'result.title.500'
   | 'select.placeholder'
   | 'select.empty'
   | 'select.loading'
@@ -97,6 +102,11 @@ export const defaultMessages: Messages = {
   'link.newWindow': '(在新窗口打开)',
   'empty.description': '暂无数据',
   'segmented.label': '分段选择',
+  'rate.label': '评分',
+  'rate.valueText': '{count} 分中的 {value} 分',
+  'result.title.404': '页面不存在',
+  'result.title.403': '无权访问',
+  'result.title.500': '服务器开小差了',
   'select.placeholder': '请选择…',
   'select.empty': '无匹配项',
   'select.loading': '加载中…',

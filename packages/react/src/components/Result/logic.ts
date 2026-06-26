@@ -35,13 +35,17 @@ const STATUS_GLYPH: Record<ResultStatus, string> = {
 };
 
 /**
- * status → 默认标题(中文字面量兜底,messages.ts 暂无 result.* key)。
- * 仅 HTTP 异常给默认标题(语义结果的标题应由调用方按业务给)。未列出的返回 undefined。
+ * HTTP 默认标题的 i18n key(纯逻辑只给 key 不持文案,由 Result 壳用 useMessages 解析)。
  */
-const STATUS_DEFAULT_TITLE: Partial<Record<ResultStatus, string>> = {
-  '404': '页面不存在',
-  '403': '无权访问',
-  '500': '服务器开小差了',
+export type ResultTitleKey = 'result.title.404' | 'result.title.403' | 'result.title.500';
+/**
+ * status → 默认标题 i18n key。仅 HTTP 异常给默认标题(语义结果标题应由调用方按业务给)。
+ * 未列出的返回 undefined。
+ */
+const STATUS_DEFAULT_TITLE_KEY: Partial<Record<ResultStatus, ResultTitleKey>> = {
+  '404': 'result.title.404',
+  '403': 'result.title.403',
+  '500': 'result.title.500',
 };
 
 /** 取某 status 的默认 tone。 */
@@ -50,9 +54,9 @@ export const resolveTone = (status: ResultStatus): ResultTone => STATUS_TONE[sta
 /** 取某 status 的默认符文。 */
 export const resolveGlyph = (status: ResultStatus): string => STATUS_GLYPH[status];
 
-/** 取某 status 的默认标题(无则 undefined)。 */
-export const resolveDefaultTitle = (status: ResultStatus): string | undefined =>
-  STATUS_DEFAULT_TITLE[status];
+/** 取某 status 的默认标题 i18n key(无则 undefined)。 */
+export const resolveDefaultTitleKey = (status: ResultStatus): ResultTitleKey | undefined =>
+  STATUS_DEFAULT_TITLE_KEY[status];
 
 /** HTTP 异常码(默认符文是纯数字,样式上需缩小字号、加单等宽)。 */
 export const isHttpStatus = (status: ResultStatus): boolean =>

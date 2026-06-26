@@ -4,6 +4,7 @@ import type {
   ReactNode,
 } from 'react';
 import { forwardRef, useCallback, useId, useMemo, useRef, useState } from 'react';
+import { useMessages } from '../../i18n';
 import { composeEventHandlers } from '../../utils/compose';
 import {
   clampRate,
@@ -265,13 +266,14 @@ export const Rate = forwardRef<HTMLDivElement, RateProps>((props, ref) => {
 
   // role=slider 的无障碍文案:有 tooltip 用当前整星对应 tooltip,否则用「count 分中 value 分」。
   // 注:i18n 字典尚无 rate.* key(本组件不改 messages.ts),先用中文字面量兜底,见交付 notes。
+  const t = useMessages();
   const valueText = (() => {
     const idx = Math.ceil(value) - 1;
     const tip = idx >= 0 ? tooltips?.[idx] : undefined;
     if (tip) {
       return tip;
     }
-    return `${count} 分中的 ${value} 分`;
+    return t('rate.valueText', { count, value });
   })();
 
   return (
@@ -279,7 +281,7 @@ export const Rate = forwardRef<HTMLDivElement, RateProps>((props, ref) => {
       ref={ref}
       role="slider"
       tabIndex={disabled ? -1 : 0}
-      aria-label={ariaLabel ?? (ariaLabelledby ? undefined : '评分')}
+      aria-label={ariaLabel ?? (ariaLabelledby ? undefined : t('rate.label'))}
       aria-labelledby={ariaLabelledby}
       aria-valuemin={0}
       aria-valuemax={count}

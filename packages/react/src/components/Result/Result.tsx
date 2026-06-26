@@ -1,12 +1,13 @@
 import type { ComponentPropsWithoutRef, ElementType, ReactElement, ReactNode, Ref } from 'react';
 import { cloneElement, forwardRef, isValidElement } from 'react';
+import { useMessages } from '../../i18n';
 import { composeRefs, mergeAsChildProps } from '../../utils/compose';
 import {
   isHttpStatus,
   type ResultSize,
   type ResultStatus,
   type ResultTone,
-  resolveDefaultTitle,
+  resolveDefaultTitleKey,
   resolveGlyph,
   resolveTone,
 } from './logic';
@@ -92,6 +93,7 @@ export const Result = forwardRef<HTMLDivElement, ResultProps>(
     const resolvedTone = tone ?? resolveTone(status);
     const httpCode = isHttpStatus(status);
 
+    const t = useMessages();
     const classes = [
       'ms-result',
       `ms-result--${size}`,
@@ -120,7 +122,8 @@ export const Result = forwardRef<HTMLDivElement, ResultProps>(
     const iconNode = icon === false ? null : (icon ?? resolveGlyph(status));
 
     // 标题:未传且为 HTTP 异常时给默认标题兜底。
-    const resolvedTitle = title ?? (httpCode ? resolveDefaultTitle(status) : undefined);
+    const titleKey = httpCode ? resolveDefaultTitleKey(status) : undefined;
+    const resolvedTitle = title ?? (titleKey ? t(titleKey) : undefined);
 
     const Root = (as ?? 'div') as ElementType;
 
