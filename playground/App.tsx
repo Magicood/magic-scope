@@ -35,6 +35,7 @@ import {
   Table,
   Tabs,
   Tag,
+  Text,
   Textarea,
   Timeline,
   TimelineItem,
@@ -75,6 +76,93 @@ export function App() {
       <h1 style={{ fontFamily: 'var(--ms-font-display)', color: 'var(--ms-color-primary-hover)' }}>
         ✦ magic-scope playground
       </h1>
+
+      <section
+        style={{
+          display: 'grid',
+          gap: '1rem',
+          padding: '1.25rem',
+          border: '1px solid var(--ms-color-border)',
+          borderRadius: '12px',
+          background: 'var(--ms-color-surface)',
+        }}
+      >
+        <h2 style={{ margin: 0 }}>✦ 本会话新成果(Typography 文字分类 + 深度化)</h2>
+
+        <div style={{ display: 'grid', gap: '0.5rem' }}>
+          <Text size="sm" tone="primary" weight="semibold" transform="uppercase" tracking="wider">
+            Typography · Text(多态 / 全属性 / 魔法文字)
+          </Text>
+          <div style={row}>
+            <Text size="3xl" family="display" weight="bold">
+              魔法标题 Aa
+            </Text>
+            <Text size="3xl" gradient="aurora" weight="bold">
+              渐变流光
+            </Text>
+            <Text size="3xl" glow="strong" tone="accent" weight="bold">
+              辉光
+            </Text>
+            <Text size="3xl" stroke tone="primary" weight="bold">
+              描边字
+            </Text>
+          </div>
+          <div style={row}>
+            <Text tone="success">success</Text>
+            <Text tone="danger">danger</Text>
+            <Text tone="warning">warning</Text>
+            <Text dimmed>dimmed 次要</Text>
+            <Text family="mono" numeric="tabular">
+              1234567890
+            </Text>
+            <Text italic underline>
+              强调
+            </Text>
+            <Text family="serif" size="lg">
+              衬线 serif
+            </Text>
+          </div>
+          <Text lineClamp={2} dimmed style={{ maxWidth: '420px' }}>
+            多行省略
+            lineClamp=2:这是一段刻意写得很长很长的文字,用来演示多行截断——超出两行就显示省略号,
+            而且无论塞进多长的无空格长串都绝不撑破容器边界,这是这次全库加固过的能力。
+          </Text>
+        </div>
+
+        <div style={{ display: 'grid', gap: '0.5rem' }}>
+          <Text size="sm" tone="primary" weight="semibold" transform="uppercase" tracking="wider">
+            Button · tone × variant × loading
+          </Text>
+          <div style={row}>
+            <Button>solid</Button>
+            <Button variant="soft" tone="accent">
+              soft
+            </Button>
+            <Button variant="outline" tone="success">
+              outline
+            </Button>
+            <Button variant="ghost" tone="warning">
+              ghost
+            </Button>
+            <Button variant="link" tone="info">
+              link
+            </Button>
+            <Button tone="danger" loading>
+              loading
+            </Button>
+          </div>
+        </div>
+
+        <div style={{ display: 'grid', gap: '0.5rem', maxWidth: '420px' }}>
+          <Text size="sm" tone="primary" weight="semibold" transform="uppercase" tracking="wider">
+            Input · 前后缀 / 清除 / 密码 / 计数 / 拼接
+          </Text>
+          <Input prefix="¥" placeholder="金额" defaultValue="1280" clearable />
+          <Input type="password" placeholder="密码" defaultValue="secret" />
+          <Input showCount maxLength={20} placeholder="带计数" defaultValue="魔法文字" />
+          <Input addonBefore="https://" addonAfter=".com" placeholder="域名" />
+        </div>
+      </section>
 
       <h2>Overlay(重点实测)</h2>
       <div style={row}>
