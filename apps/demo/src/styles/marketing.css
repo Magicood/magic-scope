@@ -133,10 +133,11 @@
 
 .v-hero__title {
   margin-block: 1.25rem 0;
-  font-size: clamp(2.5rem, 6vw, 4rem);
-  line-height: 1.05;
+  font-size: clamp(2.25rem, 5vw, 3.5rem);
+  line-height: 1.08;
   letter-spacing: var(--ms-tracking-tighter, -0.03em);
   white-space: pre-line;
+  text-wrap: balance;
 }
 
 .v-hero__actions {
