@@ -37,7 +37,7 @@ export const meta: ComponentMeta = {
     },
     { type: 'boolean', prop: 'loading', label: '加载态 loading', default: false },
     { type: 'boolean', prop: 'disabled', label: '禁用 disabled', default: false },
-    { type: 'text', prop: 'label', label: '说明文案', default: '启用魔法' },
+    { type: 'text', prop: 'label', label: '说明文案', default: '桌面通知' },
   ],
   spread: 'input',
 };

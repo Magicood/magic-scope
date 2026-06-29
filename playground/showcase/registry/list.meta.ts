@@ -4,9 +4,9 @@ export const meta: ComponentMeta = {
   id: 'list',
   name: 'List',
   category: 'typography',
-  summary: '列表排版,无序 / 有序 / 描述三态,原生与自定义标记、tone 着色与魔法辉光一把收口。',
+  summary: '列表排版,无序 / 有序 / 描述三态,原生与自定义标记、tone 着色与辉光效果一把收口。',
   description:
-    '一个 props 把三种语义列表(ul / ol / dl)、原生 ::marker 与自定义节点标记、间距密度、tone 着色、奥术辉光全收口。\n子部件走命名空间:List.Item(li)/ List.Term(dt)/ List.Detail(dd)。嵌套时子列表标记与间距独立(CSS 不向下穿透),天然形成层级缩进。glow 受全局「光影」开关调制。',
+    '一个 props 把三种语义列表(ul / ol / dl)、原生 ::marker 与自定义节点标记、间距密度、tone 着色、辉光效果全收口。\n子部件走命名空间:List.Item(li)/ List.Term(dt)/ List.Detail(dd)。嵌套时子列表标记与间距独立(CSS 不向下穿透),天然形成层级缩进。glow 受全局「光影」开关调制。',
   controls: [
     {
       type: 'select',

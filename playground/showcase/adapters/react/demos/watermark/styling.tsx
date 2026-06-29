@@ -25,16 +25,16 @@ export default function Demo() {
         inlineSize: '100%',
       }}
     >
-      <Watermark content="奥术紫" fontColor="rgba(124, 92, 255, 1)" opacity={0.3} style={cellStyle}>
+      <Watermark
+        content="内部预览"
+        fontColor="rgba(124, 92, 255, 1)"
+        opacity={0.3}
+        style={cellStyle}
+      >
         <p style={labelStyle}>主题色 + 高不透明度</p>
       </Watermark>
 
-      <Watermark
-        content="霜寒青"
-        fontColor="rgba(56, 189, 248, 1)"
-        opacity={0.18}
-        style={cellStyle}
-      >
+      <Watermark content="草稿" fontColor="rgba(56, 189, 248, 1)" opacity={0.18} style={cellStyle}>
         <p style={labelStyle}>自定义 fontColor</p>
       </Watermark>
 
@@ -45,7 +45,7 @@ export default function Demo() {
         opacity={0.16}
         style={cellStyle}
       >
-        <p style={labelStyle}>大字号 + 余烬品红</p>
+        <p style={labelStyle}>大字号 + 警示红</p>
       </Watermark>
 
       <Watermark

@@ -6,7 +6,7 @@ export const meta: ComponentMeta = {
   category: 'feedback',
   summary: '结果页,七态(成功 / 失败 / 信息 / 警告 + 404 / 403 / 500)派生默认图标与配色,四槽位。',
   description:
-    '自研、零依赖,消费 @magic-scope/tokens 的 --ms-* 变量。\nstatus 七态派生默认符文与 tone 柔底发光圆,HTTP 异常另给默认标题;tone 可显式覆盖配色,size 随 data-ms-density 缩放。title / subtitle / extra / children 四槽位各带细粒度 classNames;icon 传 ReactNode 覆盖、传 false 关闭整区;多态 as 改根标签、asChild 合并到子元素。',
+    '自研、零依赖,消费 @magic-scope/tokens 的 --ms-* 变量。\nstatus 七态派生默认图标与 tone 柔底发光圆,HTTP 异常另给默认标题;tone 可显式覆盖配色,size 随 data-ms-density 缩放。title / subtitle / extra / children 四槽位各带细粒度 classNames;icon 传 ReactNode 覆盖、传 false 关闭整区;多态 as 改根标签、asChild 合并到子元素。',
   controls: [
     {
       type: 'select',
@@ -49,12 +49,12 @@ export const meta: ComponentMeta = {
         { value: 'info', label: 'info' },
       ],
     },
-    { type: 'text', prop: 'title', label: '标题 title', default: '施法成功' },
+    { type: 'text', prop: 'title', label: '标题 title', default: '提交成功' },
     {
       type: 'text',
       prop: 'subtitle',
       label: '副标题 subtitle',
-      default: '奥术回路已稳定,法术效果已生效。',
+      default: '数据已同步,变更立即生效。',
     },
   ],
   spread: 'div',

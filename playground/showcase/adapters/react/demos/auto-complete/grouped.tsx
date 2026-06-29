@@ -6,16 +6,16 @@ import { useState } from 'react';
 // 过滤后空组自动隐藏;renderOption 覆盖默认 label 文本(这里加图标 + 描述)。
 const options: AutoCompleteOptions = [
   {
-    label: '🔥 火系',
-    options: [{ value: 'Ember 余烬' }, { value: 'Blaze 烈焰' }, { value: 'Cinder 灰烬' }],
+    label: '📄 文档',
+    options: [{ value: '产品需求文档' }, { value: '接口设计稿' }, { value: '发布说明' }],
   },
   {
-    label: '❄️ 冰系',
-    options: [{ value: 'Frost 霜寒' }, { value: 'Glacier 冰川' }, { value: 'Rime 雾凇' }],
+    label: '👤 成员',
+    options: [{ value: 'Mira Chen' }, { value: 'Jonas Park' }, { value: 'Ann Lee' }],
   },
   {
-    label: '🌿 自然系',
-    options: [{ value: 'Verdant 苍翠' }, { value: 'Bloom 繁花' }],
+    label: '📁 项目',
+    options: [{ value: '官网改版' }, { value: '移动端 App' }],
   },
 ];
 
@@ -41,9 +41,11 @@ export default function Demo() {
             {opt.value}
           </span>
         )}
-        aria-label="分组流派联想"
+        aria-label="分组联想"
       />
-      <small style={{ color: 'var(--ms-color-fg-muted)' }}>提示:输入「霜」「焰」等可跨组过滤</small>
+      <small style={{ color: 'var(--ms-color-fg-muted)' }}>
+        提示:输入「文档」「项目」等可跨组过滤
+      </small>
     </div>
   );
 }

@@ -20,19 +20,19 @@ function Playground({ values }: { values: ControlValues }) {
   if (variant === 'description') {
     return (
       <List {...common}>
-        <List.Term>奥术飞弹</List.Term>
-        <List.Detail>无需命中检定,自动击中目标的塑能法术。</List.Detail>
-        <List.Term>传送门</List.Term>
-        <List.Detail>在两点之间撕开一道稳定的空间裂隙。</List.Detail>
+        <List.Term>并发请求数</List.Term>
+        <List.Detail>单个客户端在同一时刻可发起的最大请求数量。</List.Detail>
+        <List.Term>速率限制</List.Term>
+        <List.Detail>在固定时间窗口内允许的请求次数,超出后返回 429。</List.Detail>
       </List>
     );
   }
 
   return (
     <List {...common}>
-      <List.Item>研习一道塑能法术</List.Item>
-      <List.Item>积蓄法力直至临界</List.Item>
-      <List.Item>引导奥术能量成形</List.Item>
+      <List.Item>创建项目并连接代码仓库</List.Item>
+      <List.Item>配置构建命令与环境变量</List.Item>
+      <List.Item>推送提交,触发自动部署</List.Item>
     </List>
   );
 }

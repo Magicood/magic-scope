@@ -12,10 +12,10 @@ const TONES: {
 }[] = [
   {
     variant: 'primary',
-    title: 'primary 奥术',
+    title: 'primary 主要',
     time: '✦ 主要',
     icon: '✦',
-    body: '主线节点,奥术紫高亮。',
+    body: '主线节点,主色高亮。',
   },
   {
     variant: 'accent',

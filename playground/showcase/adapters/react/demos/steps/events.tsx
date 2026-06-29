@@ -3,9 +3,9 @@ import { Button, Steps } from '@magic-scope/react';
 import { useRef, useState } from 'react';
 
 const items: StepItem[] = [
-  { title: '登记', description: '提交基本信息' },
+  { title: '注册', description: '提交基本信息' },
   { title: '验证', description: '校验与确认身份' },
-  { title: '施法', description: '执行核心仪式' },
+  { title: '支付', description: '完成订单付款' },
   { title: '完成', description: '结果归档' },
 ];
 

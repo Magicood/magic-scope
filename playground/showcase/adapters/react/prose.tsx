@@ -12,12 +12,12 @@ function Playground({ values }: { values: ControlValues }) {
       tone={values.tone as ProseTone}
       style={{ inlineSize: 'min(640px, 100%)' }}
     >
-      <h2>魔法排版 Prose</h2>
+      <h2>富文本排版 Prose</h2>
       <p>
         把一整块已渲染好的 HTML / JSX 内容交给 <code>Prose</code>,无需逐元素手写类, 标题、段落、
         <strong>强调</strong>、<a href="#prose">链接</a> 都自动套上全库排版规范。
       </p>
-      <blockquote>真正的魔法,是让复杂的东西用起来简单。</blockquote>
+      <blockquote>好的排版不该被察觉,它只是让内容更容易被读懂。</blockquote>
       <ul>
         <li>字号阶梯走 token,层级关系恒定</li>
         <li>链接 / 列表标记跟随 tone 槽位着色</li>

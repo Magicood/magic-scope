@@ -6,7 +6,7 @@ export const meta: ComponentMeta = {
   category: 'typography',
   summary: '内联超链接,下划线四态、tone 着色、外链一键安全化与禁用模拟。',
   description:
-    '真正的 <a> 原语,把链接的交互/语义/装饰收成 props。\n下划线四态(auto/hover/always/none)、语义 tone 着色(默认走专用链接角色色)、字号档继承上下文;external 自动补 target=_blank + rel="noopener noreferrer" + 外链图标 + sr-only 新窗口提示;disabled 以「去 href + aria-disabled + 拦截点击」综合模拟,读屏仍报为被禁用链接。muted 次级、glow 魔法微光、asChild 多态(路由 Link)。',
+    '真正的 <a> 原语,把链接的交互/语义/装饰收成 props。\n下划线四态(auto/hover/always/none)、语义 tone 着色(默认走专用链接角色色)、字号档继承上下文;external 自动补 target=_blank + rel="noopener noreferrer" + 外链图标 + sr-only 新窗口提示;disabled 以「去 href + aria-disabled + 拦截点击」综合模拟,读屏仍报为被禁用链接。muted 次级、glow 微光辉光、asChild 多态(路由 Link)。',
   controls: [
     {
       type: 'select',
@@ -63,7 +63,7 @@ export const meta: ComponentMeta = {
     { type: 'boolean', prop: 'external', label: '外链 external', default: false },
     { type: 'boolean', prop: 'muted', label: '弱化 muted', default: false },
     { type: 'boolean', prop: 'disabled', label: '禁用 disabled', default: false },
-    { type: 'text', prop: 'children', label: '文案', default: '前往奥术图书馆' },
+    { type: 'text', prop: 'children', label: '文案', default: '查看产品文档' },
   ],
   spread: 'a',
 };

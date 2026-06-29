@@ -2,11 +2,11 @@ import type { DescriptionsItem, DescriptionsTone } from '@magic-scope/react';
 import { Descriptions } from '@magic-scope/react';
 
 const items: DescriptionsItem[] = [
-  { key: 'name', label: '召唤物', value: '冰晶元素' },
-  { key: 'hp', label: '生命', value: '640 / 640' },
-  { key: 'duration', label: '持续', value: '8 回合' },
+  { key: 'name', label: '服务', value: 'web-gateway' },
+  { key: 'version', label: '版本', value: 'v2.4.0' },
+  { key: 'region', label: '区域', value: '华东 1' },
   // span 跨两列:占满本行剩余宽度。
-  { key: 'note', label: '备注', value: '受到火焰伤害时持续时间减半', span: 2 },
+  { key: 'note', label: '备注', value: '灰度发布,流量切换中,预计 10 分钟完成', span: 2 },
 ];
 
 const tones: { tone: DescriptionsTone; title: string }[] = [

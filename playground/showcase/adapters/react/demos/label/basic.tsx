@@ -5,7 +5,7 @@ export default function Demo() {
   const [name, setName] = useState('');
   return (
     <div style={{ display: 'grid', gap: '0.4rem', inlineSize: 'min(320px, 80vw)' }}>
-      <Label htmlFor="ms-label-basic">法师称号</Label>
+      <Label htmlFor="ms-label-basic">显示名称</Label>
       <Input
         id="ms-label-basic"
         value={name}

@@ -4,11 +4,11 @@ import { useState } from 'react';
 // prompt() 返回 Promise<string | null>:确认返回输入值 / 取消·Esc·遮罩返回 null。
 // 默认焦点落在输入框并全选,支持 placeholder 与 defaultValue,回车即确认。
 export default function Demo() {
-  const [name, setName] = useState('奥术飞弹');
+  const [name, setName] = useState('未命名项目');
 
   const rename = async () => {
-    const next = await prompt('给这道法术起个新名字:', {
-      title: '重命名',
+    const next = await prompt('给这个项目起个新名字:', {
+      title: '重命名项目',
       placeholder: '输入新名称',
       defaultValue: name,
       confirmText: '保存',

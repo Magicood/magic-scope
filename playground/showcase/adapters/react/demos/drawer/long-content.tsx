@@ -2,7 +2,7 @@ import { Button, Drawer } from '@magic-scope/react';
 import { useState } from 'react';
 
 const longWord =
-  'supercalifragilisticexpialidocious反魔法力场超长无空格连续字符串0123456789abcdefghijklmnopqrstuvwxyz';
+  'supercalifragilisticexpialidocious超长无空格连续字符串测试用例0123456789abcdefghijklmnopqrstuvwxyz';
 
 const paragraphs = Array.from(
   { length: 12 },

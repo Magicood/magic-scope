@@ -1,6 +1,6 @@
 import { Alert } from '@magic-scope/react';
 
-// icon 图标列三态:不传按 variant 给默认符文;传 ReactNode 覆盖为自定义符文;
+// icon 图标列三态:不传按 variant 给默认图标;传 ReactNode 覆盖为自定义图标;
 // 传 false 完全关闭图标列(正文左对齐占满)。
 export default function Demo() {
   return (
@@ -12,11 +12,11 @@ export default function Demo() {
         maxInlineSize: 'min(32rem, 100%)',
       }}
     >
-      <Alert variant="info" title="默认符文">
-        不传 icon,按 variant 自动给出语义符文。
+      <Alert variant="info" title="默认图标">
+        不传 icon,按 variant 自动给出语义图标。
       </Alert>
-      <Alert variant="success" title="自定义符文" icon={<span aria-hidden="true">✦</span>}>
-        传入 ReactNode 覆盖默认图标,可换成任意奥术符号。
+      <Alert variant="success" title="自定义图标" icon={<span aria-hidden="true">✦</span>}>
+        传入 ReactNode 覆盖默认图标,可换成任意自定义符号。
       </Alert>
       <Alert variant="warning" title="关闭图标列" icon={false}>
         传 icon={'{false}'} 完全移除图标槽,正文占满整行。

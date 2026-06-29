@@ -46,7 +46,7 @@ export const meta: ComponentMeta = {
       label: '色调 tone',
       default: 'primary',
       options: [
-        { value: 'primary', label: 'primary 奥术' },
+        { value: 'primary', label: 'primary 主色' },
         { value: 'accent', label: 'accent 强调' },
         { value: 'success', label: 'success 成功' },
         { value: 'warning', label: 'warning 警示' },

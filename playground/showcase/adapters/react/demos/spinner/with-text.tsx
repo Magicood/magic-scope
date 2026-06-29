@@ -4,8 +4,8 @@ export default function Demo() {
   return (
     <div style={{ display: 'grid', gap: '1rem' }}>
       <span style={{ display: 'inline-flex', gap: '0.5rem', alignItems: 'center' }}>
-        <Spinner size="sm" label="正在施法" />
-        <span style={{ color: 'var(--ms-color-fg-muted)' }}>正在施法…</span>
+        <Spinner size="sm" label="正在加载" />
+        <span style={{ color: 'var(--ms-color-fg-muted)' }}>正在加载…</span>
       </span>
       <div
         style={{
@@ -18,8 +18,8 @@ export default function Demo() {
           border: '1px solid var(--ms-color-border)',
         }}
       >
-        <Spinner size="lg" label="召唤传送门" />
-        <span style={{ color: 'var(--ms-color-fg-muted)' }}>召唤传送门中…</span>
+        <Spinner size="lg" label="正在同步数据" />
+        <span style={{ color: 'var(--ms-color-fg-muted)' }}>正在同步数据…</span>
       </div>
     </div>
   );

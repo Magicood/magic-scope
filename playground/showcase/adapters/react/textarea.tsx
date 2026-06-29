@@ -6,7 +6,7 @@ import type { ReactAdapter } from '../../core/types';
 import type { ControlValues } from '../../types';
 
 function Playground({ values }: { values: ControlValues }) {
-  const [value, setValue] = useState('愿奥术之火,照亮你前行的道路。');
+  const [value, setValue] = useState('简单描述一下你遇到的问题与复现步骤。');
   return (
     <Textarea
       value={value}

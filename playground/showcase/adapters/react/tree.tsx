@@ -8,37 +8,37 @@ import type { ControlValues } from '../../types';
 const data: TreeNode[] = [
   {
     key: 'spellbook',
-    title: '法术书',
-    icon: '📕',
+    title: '工作区',
+    icon: '🗂️',
     children: [
       {
         key: 'arcane',
-        title: '奥术系',
-        icon: '🔮',
+        title: '概览',
+        icon: '📊',
         children: [
-          { key: 'arcane-bolt', title: '奥术飞弹', icon: '✨' },
-          { key: 'arcane-blink', title: '闪现', icon: '✨' },
-          { key: 'arcane-sealed', title: '禁咒(已封印)', icon: '🚫', disabled: true },
+          { key: 'arcane-bolt', title: '仪表盘', icon: '📈' },
+          { key: 'arcane-blink', title: '活动日志', icon: '🕑' },
+          { key: 'arcane-sealed', title: '计费(未开通)', icon: '🔒', disabled: true },
         ],
       },
       {
         key: 'frost',
-        title: '冰霜系',
-        icon: '❄️',
+        title: '团队',
+        icon: '👥',
         children: [
-          { key: 'frost-nova', title: '冰霜新星', icon: '❄️' },
-          { key: 'frost-armor', title: '寒冰护甲', icon: '🛡️' },
+          { key: 'frost-nova', title: '成员', icon: '🧑' },
+          { key: 'frost-armor', title: '权限', icon: '🛡️' },
         ],
       },
     ],
   },
   {
     key: 'reagents',
-    title: '材料库',
-    icon: '🧪',
+    title: '资源库',
+    icon: '📦',
     children: [
-      { key: 'mana-crystal', title: '魔力水晶', icon: '💎' },
-      { key: 'phoenix-ash', title: '凤凰灰烬', icon: '🔥' },
+      { key: 'mana-crystal', title: '设计令牌', icon: '🎨' },
+      { key: 'phoenix-ash', title: '部署记录', icon: '🚀' },
     ],
   },
 ];

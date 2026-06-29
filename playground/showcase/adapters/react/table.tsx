@@ -5,15 +5,15 @@ import type { ReactAdapter } from '../../core/types';
 import type { ControlValues } from '../../types';
 
 const columns = [
-  { key: 'name', header: '法术' },
-  { key: 'school', header: '学派' },
-  { key: 'cost', header: '法力', align: 'end' as const },
+  { key: 'name', header: '成员' },
+  { key: 'school', header: '团队' },
+  { key: 'cost', header: '任务数', align: 'end' as const },
 ];
 
 const data = [
-  { name: '奥术飞弹', school: '塑能', cost: 3 },
-  { name: '传送门', school: '咒法', cost: 7 },
-  { name: '心灵感应', school: '惑控', cost: 5 },
+  { name: 'Mira Chen', school: '产品', cost: 3 },
+  { name: 'Jonas Park', school: '研发', cost: 7 },
+  { name: 'Ann Lee', school: '设计', cost: 5 },
 ];
 
 function Playground({ values }: { values: ControlValues }) {

@@ -8,10 +8,10 @@ export default function Demo() {
   return (
     <div style={{ display: 'grid', gap: '0.8rem', inlineSize: 'min(280px, 90vw)' }}>
       <Checkbox defaultChecked>
-        启用超长无空格标识符ULTRA_ARCANE_AMPLIFICATION_SUBSYSTEM_WITH_NO_BREAK_OPPORTUNITY_0123456789
+        启用超长无空格标识符ULTRA_LONG_FEATURE_FLAG_SUBSYSTEM_WITH_NO_BREAK_OPPORTUNITY_0123456789
       </Checkbox>
       <Checkbox>
-        我已逐字阅读并完全理解这份冗长到不近人情的奥术契约全文,包括其中关于法力透支、位面债务、灵魂抵押以及在多个平行宇宙同时生效的连带责任的所有附则与脚注,且自愿承担由此衍生的一切后果。
+        我已逐字阅读并完全理解这份冗长到不近人情的服务协议全文,包括其中关于数据处理、账单结算、责任限制以及在多个司法辖区同时生效的连带条款的所有附则与脚注,且自愿承担由此衍生的一切后果。
       </Checkbox>
     </div>
   );

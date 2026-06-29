@@ -38,8 +38,8 @@ export default function Demo() {
         }}
       >
         <VisuallyHidden as="h2">近期通知</VisuallyHidden>
-        <span style={{ color: 'var(--ms-color-fg)' }}>· 你的法术书已同步</span>
-        <span style={{ color: 'var(--ms-color-fg)' }}>· 奥术核心充能完成</span>
+        <span style={{ color: 'var(--ms-color-fg)' }}>· 你的工作区已同步完成</span>
+        <span style={{ color: 'var(--ms-color-fg)' }}>· 本月账单已生成</span>
         <small style={{ color: 'var(--ms-color-fg-muted)' }}>
           该区块有隐藏的 &lt;h2&gt;「近期通知」,SR 可按标题跳转。
         </small>

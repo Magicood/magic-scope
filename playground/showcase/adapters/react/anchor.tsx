@@ -6,27 +6,27 @@ import type { ReactAdapter } from '../../core/types';
 import type { ControlValues } from '../../types';
 
 const items: AnchorItem[] = [
-  { key: 'intro', href: '#pg-intro', title: '魔法导论' },
+  { key: 'intro', href: '#pg-intro', title: '产品概览' },
   {
-    key: 'spells',
-    href: '#pg-spells',
-    title: '咒语体系',
+    key: 'guide',
+    href: '#pg-guide',
+    title: '接入指南',
     children: [
-      { key: 'fire', href: '#pg-fire', title: '烈焰系' },
-      { key: 'frost', href: '#pg-frost', title: '霜寒系' },
+      { key: 'install', href: '#pg-install', title: '安装与初始化' },
+      { key: 'auth', href: '#pg-auth', title: '鉴权与密钥' },
     ],
   },
-  { key: 'rituals', href: '#pg-rituals', title: '仪式与阵法' },
-  { key: 'artifacts', href: '#pg-artifacts', title: '魔导器物' },
+  { key: 'api', href: '#pg-api', title: 'API 参考' },
+  { key: 'billing', href: '#pg-billing', title: '计费与配额' },
 ];
 
 const sections: { id: string; title: string }[] = [
-  { id: 'pg-intro', title: '魔法导论' },
-  { id: 'pg-spells', title: '咒语体系' },
-  { id: 'pg-fire', title: '烈焰系' },
-  { id: 'pg-frost', title: '霜寒系' },
-  { id: 'pg-rituals', title: '仪式与阵法' },
-  { id: 'pg-artifacts', title: '魔导器物' },
+  { id: 'pg-intro', title: '产品概览' },
+  { id: 'pg-guide', title: '接入指南' },
+  { id: 'pg-install', title: '安装与初始化' },
+  { id: 'pg-auth', title: '鉴权与密钥' },
+  { id: 'pg-api', title: 'API 参考' },
+  { id: 'pg-billing', title: '计费与配额' },
 ];
 
 function Playground({ values }: { values: ControlValues }) {
@@ -49,7 +49,7 @@ function Playground({ values }: { values: ControlValues }) {
         targetOffset={values.targetOffset as number}
         bounds={values.bounds as number}
         getContainer={() => scrollRef.current ?? window}
-        aria-label="魔法手册目录"
+        aria-label="文档目录"
       />
       <div
         ref={scrollRef}

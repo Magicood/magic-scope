@@ -6,15 +6,15 @@ import { useMemo, useState } from 'react';
 // 两套候选共存于同一份 options(用 value 前缀区分),回填时按命中的前缀续接。
 // 这里按当前光标命中的前缀动态切换候选集,体现「多前缀 + 异构候选」的真实用法。
 const people: MentionOption[] = [
-  { value: '@arcanist', label: '奥术师·墨', icon: '🔮' },
-  { value: '@frostweaver', label: '霜织者·凛', icon: '❄️' },
-  { value: '@emberkin', label: '余烬使·焰', icon: '🔥' },
+  { value: '@mira', label: 'Mira Chen', icon: '🧭' },
+  { value: '@jonas', label: 'Jonas Park', icon: '🛠️' },
+  { value: '@ann', label: 'Ann Lee', icon: '🎨' },
 ];
 
 const topics: MentionOption[] = [
-  { value: '#符文研究', label: '符文研究', icon: '📜' },
-  { value: '#冰封领域', label: '冰封领域', icon: '🧊' },
-  { value: '#烈焰爆发', label: '烈焰爆发', icon: '💥' },
+  { value: '#设计系统', label: '设计系统', icon: '📐' },
+  { value: '#性能优化', label: '性能优化', icon: '⚡' },
+  { value: '#发布计划', label: '发布计划', icon: '🚀' },
 ];
 
 export default function Demo() {

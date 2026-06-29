@@ -9,7 +9,7 @@ const STAGES = [
 ];
 
 export default function Demo() {
-  // active 之前的为成功,active 为进行中(奥术高亮),之后为待办(中性)。
+  // active 之前的为成功,active 为进行中(主色高亮),之后为待办(中性)。
   const [active, setActive] = useState(1);
 
   return (

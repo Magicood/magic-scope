@@ -5,10 +5,10 @@ import { useState } from 'react';
 // 关键状态:校验失败(invalid 染 danger + aria-invalid)、整体禁用、
 // 含禁用候选(高亮自动跳过、不可选中)。
 const options: MentionOption[] = [
-  { value: 'arcanist', label: '奥术师·墨', icon: '🔮' },
-  { value: 'frostweaver', label: '霜织者·凛', icon: '❄️' },
-  { value: 'void', label: '虚空者·阒(已封印)', icon: '🌀', disabled: true },
-  { value: 'emberkin', label: '余烬使·焰', icon: '🔥' },
+  { value: 'mira', label: 'Mira Chen', icon: '🧭' },
+  { value: 'jonas', label: 'Jonas Park', icon: '🛠️' },
+  { value: 'guest', label: 'Guest 访客(已离职)', icon: '🚫', disabled: true },
+  { value: 'ann', label: 'Ann Lee', icon: '🎨' },
 ];
 
 export default function Demo() {
@@ -33,7 +33,7 @@ export default function Demo() {
         />
         {invalid && (
           <small style={{ color: 'var(--ms-color-danger-fg, var(--ms-color-fg-muted))' }}>
-            请至少 @ 提及一位同袍。
+            请至少 @ 提及一位成员。
           </small>
         )}
       </div>
@@ -45,7 +45,7 @@ export default function Demo() {
         <Mentions
           options={options}
           disabled
-          defaultValue="已锁定:本条记录不可再 @ 提及"
+          defaultValue="已锁定:本条评论不可再 @ 提及"
           rows={2}
           aria-label="禁用的提及"
         />
@@ -53,7 +53,7 @@ export default function Demo() {
 
       <div style={{ display: 'grid', gap: 'var(--ms-space-1)' }}>
         <span style={{ fontSize: '0.8rem', color: 'var(--ms-color-fg-muted)' }}>
-          含禁用候选(↑↓ 自动跳过「已封印」项)
+          含禁用候选(↑↓ 自动跳过「已离职」项)
         </span>
         <Mentions
           options={options}

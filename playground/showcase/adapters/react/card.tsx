@@ -13,7 +13,7 @@ function Playground({ values }: { values: ControlValues }) {
       interactive={interactive}
       style={{ maxInlineSize: '20rem', padding: '1.25rem' }}
     >
-      <h3 style={{ marginBlockStart: 0, marginBlockEnd: '0.5rem' }}>奥术卷轴 ✦</h3>
+      <h3 style={{ marginBlockStart: 0, marginBlockEnd: '0.5rem' }}>项目概览</h3>
       <p style={{ margin: 0, color: 'var(--ms-color-fg-muted)' }}>
         卡片是承载内容的最小容器:标题、描述与操作可自由组合。
         {interactive ? '当前可交互,试试悬停或用键盘聚焦。' : '开启 interactive 体验上浮与发光。'}

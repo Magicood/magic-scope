@@ -27,9 +27,9 @@ export default function Demo() {
 
       {/* asChild:渲染为 <a>,Button 与子元素的 onClick 都执行(事件 compose);
           子元素若 preventDefault 则会阻断 Button 的处理器(Radix 语义)。 */}
-      <Button asChild onClick={() => push('Button 的 onClick ✦')}>
+      <Button asChild onClick={() => push('Button 的 onClick 已触发')}>
         {/* biome-ignore lint/a11y/useValidAnchor: 故意用原生 <a> 演示 asChild 把 Button 行为合成到锚点上 */}
-        <a href="#/button" onClick={() => push('子 <a> 的 onClick ✦')}>
+        <a href="#/button" onClick={() => push('子 <a> 的 onClick 已触发')}>
           asChild 渲染为 &lt;a&gt; · 点我看两个 onClick 都触发
         </a>
       </Button>

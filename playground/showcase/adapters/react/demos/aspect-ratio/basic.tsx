@@ -13,8 +13,8 @@ export default function Demo() {
         <div key={label} style={{ inlineSize: 'min(220px, 100%)' }}>
           <AspectRatio ratio={ratio} rounded="md">
             <img
-              src="https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=600&q=80"
-              alt="星空"
+              src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=600&q=80"
+              alt="办公空间封面图"
               style={{ inlineSize: '100%', blockSize: '100%' }}
             />
           </AspectRatio>

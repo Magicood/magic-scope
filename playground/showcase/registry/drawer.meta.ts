@@ -46,7 +46,7 @@ export const meta: ComponentMeta = {
         { value: 'neutral', label: 'neutral 中性' },
       ],
     },
-    { type: 'text', prop: 'title', label: '标题 title', default: '奥术抽屉' },
+    { type: 'text', prop: 'title', label: '标题 title', default: '面板设置' },
     { type: 'boolean', prop: 'dismissable', label: '点遮罩关闭 dismissable', default: true },
   ],
   spread: 'dialog',

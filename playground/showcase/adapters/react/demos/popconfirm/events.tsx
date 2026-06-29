@@ -27,7 +27,7 @@ export default function Demo() {
     <div style={{ display: 'grid', gap: '0.75rem', inlineSize: 'min(440px, 100%)' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
         <Popconfirm
-          trigger={<Button>提交施法</Button>}
+          trigger={<Button>提交审核</Button>}
           title="确定提交?"
           description="确认走异步流程,resolve 后自动关闭。"
           open={open}

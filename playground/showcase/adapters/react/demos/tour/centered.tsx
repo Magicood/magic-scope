@@ -21,7 +21,7 @@ export default function Demo() {
       description: '点这里切换驱动核心,配色与动效随之而变。',
     },
     {
-      title: '开始你的魔法',
+      title: '准备就绪',
       description: '收尾也用一张居中卡致谢,引导到此结束。',
     },
   ];

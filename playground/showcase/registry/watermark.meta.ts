@@ -49,9 +49,9 @@ export const meta: ComponentMeta = {
       default: 'rgba(120, 120, 130, 1)',
       options: [
         { value: 'rgba(120, 120, 130, 1)', label: '中性灰(默认)' },
-        { value: 'rgba(124, 92, 255, 1)', label: '奥术紫' },
-        { value: 'rgba(56, 189, 248, 1)', label: '霜寒青' },
-        { value: 'rgba(244, 63, 94, 1)', label: '余烬品红' },
+        { value: 'rgba(124, 92, 255, 1)', label: '主题紫' },
+        { value: 'rgba(56, 189, 248, 1)', label: '天空蓝' },
+        { value: 'rgba(244, 63, 94, 1)', label: '警示红' },
       ],
     },
     { type: 'number', prop: 'zIndex', label: '层级 zIndex', default: 9, min: 0, max: 99, step: 1 },

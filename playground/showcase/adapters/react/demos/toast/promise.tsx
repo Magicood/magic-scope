@@ -5,8 +5,8 @@ import { Button, toast } from '@magic-scope/react';
 function cast(shouldFail: boolean): Promise<string> {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      if (shouldFail) reject(new Error('坐标超出结界范围'));
-      else resolve('北境观星台');
+      if (shouldFail) reject(new Error('网络超时,请重试'));
+      else resolve('生产环境');
     }, 1600);
   });
 }
@@ -18,9 +18,9 @@ export default function Demo() {
         variant="outline"
         onClick={() =>
           toast.promise(cast(false), {
-            loading: '正在校准传送坐标…',
-            success: (target) => `传送门已在「${target}」展开`,
-            error: (err) => `施法失败:${(err as Error).message}`,
+            loading: '正在部署…',
+            success: (target) => `已成功部署到「${target}」`,
+            error: (err) => `部署失败:${(err as Error).message}`,
           })
         }
       >
@@ -30,9 +30,9 @@ export default function Demo() {
         variant="outline"
         onClick={() =>
           toast.promise(cast(true), {
-            loading: '正在校准传送坐标…',
-            success: '传送门已展开',
-            error: (err) => `施法失败:${(err as Error).message}`,
+            loading: '正在部署…',
+            success: '部署完成',
+            error: (err) => `部署失败:${(err as Error).message}`,
           })
         }
       >
@@ -41,9 +41,9 @@ export default function Demo() {
       <Button
         variant="outline"
         onClick={() =>
-          toast.info('点我查看法术详情', {
+          toast.info('点我查看详情', {
             description: '整条 toast 可点击,用于跳转或展开详情。',
-            onClick: () => toast.success('已打开法术档案'),
+            onClick: () => toast.success('已打开详情面板'),
           })
         }
       >

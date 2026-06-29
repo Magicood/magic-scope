@@ -21,7 +21,7 @@ function Playground({ values }: { values: ControlValues }) {
     {
       target: pick('[data-tour="theme"]'),
       title: '主题切换',
-      description: '一键在魔法主题之间穿梭,配色与动效实时生效。',
+      description: '一键在内置主题预设之间切换,配色与动效实时生效。',
     },
     {
       target: pick('[data-tour="publish"]'),

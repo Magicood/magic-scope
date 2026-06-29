@@ -15,7 +15,7 @@ export default function Demo() {
       }}
     >
       <span style={{ fontSize: '1.4rem' }}>✦</span>
-      <strong>欢迎回到结界</strong>
+      <strong>欢迎回来</strong>
       <span style={{ color: 'var(--ms-color-fg-muted)' }}>子项纵向堆叠并整体居中</span>
     </Center>
   );

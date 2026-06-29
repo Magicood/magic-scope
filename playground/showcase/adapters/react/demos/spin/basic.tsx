@@ -5,7 +5,7 @@ export default function Demo() {
   const [spinning, setSpinning] = useState(true);
   return (
     <div style={{ display: 'grid', gap: '0.75rem', inlineSize: 'min(360px, 100%)' }}>
-      <Spin spinning={spinning} tip="召唤资源中…">
+      <Spin spinning={spinning} tip="加载数据中…">
         <div
           style={{
             display: 'grid',
@@ -17,7 +17,7 @@ export default function Demo() {
             color: 'var(--ms-color-fg, #e8e8ef)',
           }}
         >
-          <strong>奥术卷轴</strong>
+          <strong>项目概览</strong>
           <p style={{ margin: 0, color: 'var(--ms-color-fg-muted, #9a9aa6)', fontSize: '0.86rem' }}>
             加载时这段文字会被遮罩盖住并屏蔽交互,但内容不卸载、布局不抖动。
           </p>
