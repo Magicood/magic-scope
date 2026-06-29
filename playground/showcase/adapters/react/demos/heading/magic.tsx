@@ -1,6 +1,6 @@
 import { Heading } from '@magic-scope/react';
 
-// 视觉特性:tone 色调、渐变文字(tone / aurora 极光)、辉光(受全局光影开关调制)。
+// 视觉特性:tone 色调、渐变文字(tone / aurora 极光)、光晕(受全局光影开关调制)。
 export default function Demo() {
   return (
     <div style={{ display: 'grid', gap: '1rem' }}>
@@ -14,7 +14,7 @@ export default function Demo() {
         极光渐变标题 Aurora
       </Heading>
       <Heading level={2} glow tone="info">
-        辉光标题 Glow
+        光晕标题 Glow
       </Heading>
       <Heading level={1} family="display" gradient="aurora" glow="strong" tone="accent">
         视觉全开 Showcase

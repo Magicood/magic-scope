@@ -49,7 +49,7 @@ export default function Demo() {
         }}
       >
         <button type="button" data-tour="spell" style={chip}>
-          选法术
+          选项
         </button>
         <button type="button" data-tour="cast" style={chip}>
           施放

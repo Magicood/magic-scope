@@ -9,7 +9,7 @@ const longToken =
   'msp://artifact/0xDEADBEEFCAFEBABE-9f3c1a72b4e85d60f1a293c47e8b0d5612fa9c3e0b7d4859/seal';
 
 const longText =
-  '这是一段刻意写得很长的法术注解,用来检验内容格在巨量文本下能否正常折行而不把整张描述列表的网格列宽撑破——' +
+  '这是一段刻意写得很长的说明文本,用来检验内容格在巨量文本下能否正常折行而不把整张描述列表的网格列宽撑破——' +
   'it should wrap gracefully across multiple lines without overflowing its grid cell, ' +
   '即使中英文混排、夹杂长串与标点也应保持每列宽度稳定。'.repeat(2);
 

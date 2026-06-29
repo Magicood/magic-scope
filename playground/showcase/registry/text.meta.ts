@@ -4,9 +4,9 @@ export const meta: ComponentMeta = {
   id: 'text',
   name: 'Text',
   category: 'typography',
-  summary: '文字排版旗舰原语,多态 as,全字号/字重/字距,渐变/辉光/描边与入场动效。',
+  summary: '文字排版旗舰原语,多态 as,全字号/字重/字距,渐变/光晕/描边与入场动效。',
   description:
-    '把「所有可控文字属性」收成 props:字族/字号/字重/斜体、tone 着色、对齐/行高/字距、装饰/transform、截断(单行+多行)、折行/空白/断词/方向、数字变体/小型大写。\n视觉层:gradient(tone / aurora 极光)、glow(辉光)、stroke(描边镂空),受全局「光影」开关调制。动效层:reveal 上浮 / blur-in 模糊聚焦 / shimmer 高光 / pulse 呼吸 / flow 渐变流动,受 data-ms-motion 与 prefers-reduced-motion 调制,关闭时降级为静态。\n多态:as 切任意标签、asChild 合并到子元素;...rest 透传所有原生属性与事件。',
+    '把「所有可控文字属性」收成 props:字族/字号/字重/斜体、tone 着色、对齐/行高/字距、装饰/transform、截断(单行+多行)、折行/空白/断词/方向、数字变体/小型大写。\n视觉层:gradient(tone / aurora 极光)、glow(光晕)、stroke(描边镂空),受全局「光影」开关调制。动效层:reveal 上浮 / blur-in 模糊聚焦 / shimmer 高光 / pulse 呼吸 / flow 渐变流动,受 data-ms-motion 与 prefers-reduced-motion 调制,关闭时降级为静态。\n多态:as 切任意标签、asChild 合并到子元素;...rest 透传所有原生属性与事件。',
   controls: [
     {
       type: 'select',
