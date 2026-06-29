@@ -233,7 +233,7 @@
   transform: none;
 }
 
-/* —— 发光总闸关闭:清掉所有辉光 —— */
+/* —— 发光总闸关闭:清掉所有发光 —— */
 [data-ms-fx="off"] .ms-avatar,
 [data-ms-fx="off"] .ms-avatar--fallback,
 [data-ms-fx="off"] .ms-avatar--ring,

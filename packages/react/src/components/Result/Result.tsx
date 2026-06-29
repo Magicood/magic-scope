@@ -18,7 +18,7 @@ export type { ResultSize, ResultStatus, ResultTone };
 export interface ResultClassNames {
   /** 根容器。 */
   root?: string;
-  /** 图标区(柔底圆 + 符文/SVG)。 */
+  /** 图标区(柔底圆 + 字符/SVG)。 */
   icon?: string;
   /** 标题行。 */
   title?: string;
@@ -44,7 +44,7 @@ export interface ResultProps extends Omit<ComponentPropsWithoutRef<'div'>, 'titl
   /** 尺寸(随 data-ms-density 缩放)。默认 md。 */
   size?: ResultSize;
   /**
-   * 图标:不传按 status 给默认符文/数字码;传 ReactNode 覆盖(可放 SVG);传 false 关闭整个图标区。
+   * 图标:不传按 status 给默认图标/数字码;传 ReactNode 覆盖(可放 SVG);传 false 关闭整个图标区。
    */
   icon?: ReactNode | false;
   /** 主标题。HTTP 异常不传时给默认标题(如 404→“页面不存在”)。 */
@@ -67,7 +67,7 @@ export interface ResultProps extends Omit<ComponentPropsWithoutRef<'div'>, 'titl
 /**
  * Result —— 结果页(旗舰深度组件)。自研、零依赖,消费 @magic-scope/tokens 的 --ms-* 变量。
  * status 七态(success / error / info / warning / 404 / 403 / 500)派生默认图标与 tone 配色,
- * tone 可显式覆盖;图标用大号符文/SVG + tone 柔底发光圆;title / subtitle / extra / children 四槽位,
+ * tone 可显式覆盖;图标用大号字符/SVG + tone 柔底发光圆;title / subtitle / extra / children 四槽位,
  * 各带 classNames 细粒度定制;size 随密度缩放;多态 as 改根标签、asChild 合并到子元素。
  * 纯映射逻辑见同目录 logic.ts。样式见 Result.css,需引入 @magic-scope/react/styles.css。
  */
@@ -117,7 +117,7 @@ export const Result = forwardRef<HTMLDivElement, ResultProps>(
       } as Record<string, unknown>);
     }
 
-    // 图标:false 关闭整区;未传按 status 给默认符文/数字码;传 ReactNode 覆盖。
+    // 图标:false 关闭整区;未传按 status 给默认图标/数字码;传 ReactNode 覆盖。
     const showIcon = icon !== false;
     const iconNode = icon === false ? null : (icon ?? resolveGlyph(status));
 

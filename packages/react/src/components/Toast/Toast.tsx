@@ -44,7 +44,7 @@ export interface ToastOptions {
   /** 行动按钮:点击后执行并关闭。 */
   action?: { label: ReactNode; onClick: () => void };
   /**
-   * 图标:不传按 variant 给默认符文(loading 显示旋转符文);传 ReactNode 覆盖;传 false 完全关闭图标列。
+   * 图标:不传按 variant 给默认图标(loading 显示旋转图标);传 ReactNode 覆盖;传 false 完全关闭图标列。
    */
   icon?: ReactNode | false;
   /** 自定义关闭按钮内容(默认 ×)。 */
@@ -266,7 +266,7 @@ const VARIANT_TONE: Record<ToastVariant, string> = {
   loading: 'ms-tone-info',
 };
 
-/** variant → 默认图标符文(可被 icon prop 覆盖或 false 关闭;default 无默认图标)。 */
+/** variant → 默认图标(可被 icon prop 覆盖或 false 关闭;default 无默认图标)。 */
 const VARIANT_ICON: Record<ToastVariant, ReactNode> = {
   default: null,
   success: '✓',
@@ -421,7 +421,7 @@ function ToastView({
     };
   }, [id, duration, dismissing, persistent, rev]);
 
-  // 图标:false 关闭整列;未传按 variant 给默认符文(loading→旋转符文);传 ReactNode 覆盖
+  // 图标:false 关闭整列;未传按 variant 给默认图标(loading→旋转图标);传 ReactNode 覆盖
   const iconNode = icon === false ? null : (icon ?? VARIANT_ICON[variant]);
   const showIcon = iconNode != null;
 

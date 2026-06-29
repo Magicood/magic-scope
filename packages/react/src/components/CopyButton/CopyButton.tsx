@@ -6,7 +6,7 @@ import { Button, type ButtonSize, type ButtonTone, type ButtonVariant } from '..
 import { Tooltip, type TooltipPlacement } from '../Tooltip/Tooltip';
 import { copyMessageKey, writeClipboard } from './logic';
 
-/** 默认「复制」符文(两叠的方片)。可被 icon prop 覆盖。 */
+/** 默认「复制」图标(两叠的方片)。可被 icon prop 覆盖。 */
 const DefaultCopyIcon = (
   <svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" aria-hidden="true">
     <title>copy</title>
@@ -20,7 +20,7 @@ const DefaultCopyIcon = (
   </svg>
 );
 
-/** 默认「已复制」符文(对勾)。可被 copiedIcon prop 覆盖。 */
+/** 默认「已复制」图标(对勾)。可被 copiedIcon prop 覆盖。 */
 const DefaultCopiedIcon = (
   <svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" aria-hidden="true">
     <title>copied</title>
@@ -84,13 +84,13 @@ export interface CopyButtonProps extends CopyButtonRootProps {
 
 /**
  * CopyButton —— 复制按钮(actions)。点击把 value 写入剪贴板并进入「已复制」反馈态:
- * - 图标从「复制」符文切到「对勾」,timeout(默认 1500ms)后自动还原。
+ * - 图标从「复制」切到「对勾」,timeout(默认 1500ms)后自动还原。
  * - 复制走逻辑层 writeClipboard:优先 navigator.clipboard.writeText(需安全上下文 https/localhost),
  *   特性检测后回退 document.execCommand('copy');两者皆不可用时触发 onError。
  * - a11y:button aria-label 随状态切换(复制 / 已复制);成功时经一个 aria-live=polite 的视隐区
  *   播报「已复制」,读屏用户也能感知。
  * - 复用 Button(tone / size / variant + 全 tone resolver 配色 + 密度缩放)与 Tooltip(可关)。
- * - 留口:render-prop children `(copied) => ReactNode` 自定义内容;icon / copiedIcon 覆盖符文;
+ * - 留口:render-prop children `(copied) => ReactNode` 自定义内容;icon / copiedIcon 覆盖图标;
  *   onClick 等原生事件经 composeEventHandlers 合并(先用户、未 preventDefault 再复制),...rest 透传。
  *
  * 诚实备注:navigator.clipboard 仅在安全上下文(https / localhost / file)暴露;普通 http 页面会自动

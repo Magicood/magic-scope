@@ -42,7 +42,7 @@
   --ms-spinner-bw: 4px;
 }
 
-/* ===== 变体 ring:旋转的奥术发光圆环 ===== */
+/* ===== 变体 ring:旋转的发光圆环 ===== */
 .ms-spinner--ring .ms-spinner__indicator {
   border-style: solid;
   border-width: var(--ms-spinner-bw);

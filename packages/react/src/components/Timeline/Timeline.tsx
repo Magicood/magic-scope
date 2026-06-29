@@ -5,7 +5,7 @@ import { composeEventHandlers } from '../../utils/compose';
 
 /**
  * 时间线条目的语义色入口。`default` = 中性(不上色);其余对齐全库 tone resolver,
- * 经 `ms-tone-*` 派生 6 槽位,节点强调色读 `--ms-c`、柔底 `--ms-c-soft`、辉光 `--ms-c-glow`。
+ * 经 `ms-tone-*` 派生 6 槽位,节点强调色读 `--ms-c`、柔底 `--ms-c-soft`、发光 `--ms-c-glow`。
  */
 export type TimelineVariant =
   | 'default'
@@ -94,7 +94,7 @@ export interface TimelineItemProps extends Omit<ComponentPropsWithoutRef<'li'>, 
   title?: ReactNode;
   /** 条目正文内容。 */
   children?: ReactNode;
-  /** 圆点呼吸辉光(进行中 / 强调当前节点)。默认 false。 */
+  /** 圆点呼吸发光(进行中 / 强调当前节点)。默认 false。 */
   pulse?: boolean;
   /** 本条连线样式,覆盖 Timeline 级 lineStyle。 */
   lineStyle?: TimelineLineStyle;

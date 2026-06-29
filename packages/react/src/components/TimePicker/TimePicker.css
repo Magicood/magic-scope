@@ -381,7 +381,7 @@
   scroll-behavior: auto;
 }
 
-/* fx 总闸:关断发光(面板保留结构性投影,仅去辉光) */
+/* fx 总闸:关断发光(面板保留结构性投影,仅去发光) */
 [data-ms-fx="off"] .ms-time-picker,
 [data-ms-fx="off"] .ms-time-picker:hover:not(.ms-time-picker--disabled) {
   box-shadow: none;

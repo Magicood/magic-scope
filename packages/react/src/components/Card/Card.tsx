@@ -13,7 +13,7 @@ export interface CardProps extends ComponentPropsWithoutRef<'div'> {
   tone?: CardTone;
   /** 内边距档位(随密度 --ms-density-scale 缩放):none 供满血媒体 / sm / md / lg。默认 md。 */
   padding?: CardPadding;
-  /** 可交互:true 时 hover 上浮 + 奥术发光、暴露键盘聚焦环(tabIndex/focus-visible),并支持 Enter/Space 触发 onClick。 */
+  /** 可交互:true 时 hover 上浮 + 发光、暴露键盘聚焦环(tabIndex/focus-visible),并支持 Enter/Space 触发 onClick。 */
   interactive?: boolean;
   /** 渲染为子元素(如 <a> / <article> / 路由 Link)并保留卡片样式与 interactive 行为(Radix Slot 风格;由子元素自带内容)。 */
   asChild?: boolean;

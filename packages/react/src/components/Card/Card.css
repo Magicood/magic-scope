@@ -88,7 +88,7 @@
   transform: translateY(0) scale(calc(1 - 0.005 * var(--ms-motion-scale, 1)));
 }
 
-/* 发光总闸:data-ms-fx=off 时关断卡片的辉光层(保留结构性阴影/描边) */
+/* 发光总闸:data-ms-fx=off 时关断卡片的发光层(保留结构性阴影/描边) */
 [data-ms-fx="off"] .ms-card--elevated {
   box-shadow:
     0 1px 2px -1px rgb(0 0 0 / 0.22),

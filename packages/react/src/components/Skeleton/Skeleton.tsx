@@ -9,7 +9,7 @@ export type SkeletonAnimation = 'shimmer' | 'pulse' | 'wave' | 'none';
 export interface SkeletonProps extends ComponentPropsWithoutRef<'div'> {
   /** 占位形状。text 为文本行(较矮 + 小圆角),circle 为等宽高圆形,rect 为矩形(默认)。 */
   variant?: SkeletonVariant;
-  /** 动画类型:流光 / 脉冲呼吸 / 波浪 / 关闭。默认 shimmer。受 data-ms-motion 与 reduced-motion 再降级。 */
+  /** 动画类型:渐变高亮 / 脉冲呼吸 / 波浪 / 关闭。默认 shimmer。受 data-ms-motion 与 reduced-motion 再降级。 */
   animation?: SkeletonAnimation;
   /**
    * 多行文本骨架(仅在视觉上排成多行):>1 时渲染多个文本行,最后一行宽度自动收窄。
@@ -49,7 +49,7 @@ function withDimensionStyle(
 
 /**
  * Skeleton —— 加载占位(旗舰深度组件)。自研、零依赖,消费 @magic-scope/tokens 的 --ms-* 变量。
- * surface-raised 底色叠加一道流光(linear-gradient + 移动 background-position),契合奥术魔法主题。
+ * surface-raised 底色叠加一道渐变高亮(linear-gradient + 移动 background-position)。
  * 能力:text/rect/circle 形态 · 四档动画(shimmer/pulse/wave/none) · 便捷 width/height ·
  * 多行文本骨架(lines,末行自动收窄) · 内容感知(loading + children,加载完显真实内容) · asChild 多态。
  * 动效受 data-ms-motion 调档(off 停成静态底色 / subtle 放慢),发光受 data-ms-fx 门控,尊重 reduced-motion。

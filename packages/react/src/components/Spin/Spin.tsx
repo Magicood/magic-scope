@@ -34,7 +34,7 @@ export interface SpinProps extends Omit<ComponentPropsWithoutRef<'div'>, 'classN
    * 判定逻辑抽到 logic.ts 的纯函数 shouldShow,可单测。
    */
   delay?: number;
-  /** 自定义指示器(ReactNode);给出时取代默认 Spinner 符文。 */
+  /** 自定义指示器(ReactNode);给出时取代默认 Spinner 图标。 */
   indicator?: ReactNode;
   /** 语义色调(默认指示器读全库 tone 槽位 --ms-c / --ms-c-glow)。不传跟随上下文。 */
   tone?: SpinTone;
@@ -95,7 +95,7 @@ function useDelayedSpinning(spinning: boolean, delay: number): boolean {
 /**
  * Spin —— 加载遮罩(category: feedback)。自研、零依赖,消费 @magic-scope/tokens 的 --ms-* 变量。
  *
- * 包裹任意 children;`spinning` 时在其上盖半透明遮罩 + 居中加载符文(默认复用 Spinner,可 `indicator`
+ * 包裹任意 children;`spinning` 时在其上盖半透明遮罩 + 居中加载图标(默认复用 Spinner,可 `indicator`
  * 自定义),内容**不卸载**——保留布局、降不透明度并模糊、屏蔽交互(`aria-hidden` + `inert` + `pointer-events`)。
  * 短促加载可用 `delay` 防闪烁(纯判定见 logic.ts 的 shouldShow)。支持 `tip` 文字、`size`、`tone`、
  * 以及 `fullscreen` 全屏遮罩。无 children 时退化为行内/块级的独立指示器。
@@ -104,7 +104,7 @@ function useDelayedSpinning(spinning: boolean, delay: number): boolean {
  * 「加载中」);被遮内容 `aria-hidden` + `inert` 防止读屏与键盘穿透到不可见交互。
  * **留口**:`...rest` 透传到根;`wrapperClassName` 与 `classNames`(root/overlay/indicator/content/tip)
  * 细粒度定制;`forwardRef` 到根容器。**动效/发光**:默认指示器随 data-ms-motion 与 prefers-reduced-motion
- * 降速/静止、随 data-ms-fx 调制辉光。样式见同目录 Spin.css,需引入 @magic-scope/react/styles.css。
+ * 降速/静止、随 data-ms-fx 调制发光。样式见同目录 Spin.css,需引入 @magic-scope/react/styles.css。
  */
 export const Spin = forwardRef<HTMLDivElement, SpinProps>(function Spin(
   {

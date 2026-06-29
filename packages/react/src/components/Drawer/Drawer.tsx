@@ -70,7 +70,7 @@ export interface DrawerProps extends Omit<ComponentPropsWithoutRef<'dialog'>, 'o
   side?: DrawerSide;
   /** 尺寸:sm / md(默认)/ lg。控横向(start/end)或纵向(top/bottom)尺寸档位。 */
   size?: DrawerSize;
-  /** 语义色调,经全库 tone resolver 派生(focus 环 / 贴边描边 / 辉光)。默认 primary。 */
+  /** 语义色调,经全库 tone resolver 派生(focus 环 / 贴边描边 / 发光)。默认 primary。 */
   tone?: DrawerTone;
   /**
    * 头部整块(ReactNode)。优先于 title;传入后自行负责头部布局,
@@ -85,7 +85,7 @@ export interface DrawerProps extends Omit<ComponentPropsWithoutRef<'dialog'>, 'o
   dismissable?: boolean;
   /** 隐藏内建关闭按钮(自带关闭入口时)。默认 false。 */
   hideCloseButton?: boolean;
-  /** 自定义关闭图标(覆盖默认 ✕ 符文)。 */
+  /** 自定义关闭图标(覆盖默认 ✕ 图标)。 */
   closeIcon?: ReactNode;
   /** 各部件细粒度 className。 */
   classNames?: DrawerClassNames;

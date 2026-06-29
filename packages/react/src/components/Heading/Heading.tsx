@@ -78,11 +78,11 @@ export interface HeadingOwnProps {
   /** 长串/URL 强制断行(overflow-wrap:anywhere),防超长无空格内容撑破。 */
   breakWord?: boolean;
   /**
-   * 渐变文字:true/'tone' 用 tone 槽位渐变;'aurora' 加流光动画(受 motion 档调制)。
+   * 渐变文字:true/'tone' 用 tone 槽位渐变;'aurora' 加渐变流动动画(受 motion 档调制)。
    * 兼容:基于 background-clip:text,不支持环境自动回退实色。
    */
   gradient?: boolean | 'tone' | 'aurora';
-  /** 辉光文字(text-shadow,受全局 --ms-fx-glow 调制,data-ms-fx=off 时消失)。 */
+  /** 发光文字(text-shadow,受全局 --ms-fx-glow 调制,data-ms-fx=off 时消失)。 */
   glow?: boolean | 'soft' | 'strong';
   /**
    * permalink 锚点(给文档/Prose 用):
@@ -122,7 +122,7 @@ const LEVEL_DEFAULT_VARIANT: Record<HeadingLevel, HeadingVariant> = {
  *
  * h1–h6 语义标题,**视觉与语义解耦**:`level` 定语义标签(可访问性/大纲),`variant` 定视觉档
  * (display/title/subtitle/overline/caption),二者独立(MUI 式)。复用 Text 的字族/tone/字重/对齐/
- * 截断/折行(默认 balance 均衡标题)/魔法渐变·辉光,样式共享 typography.css 的 --ms-type-step-* token,
+ * 截断/折行(默认 balance 均衡标题)/渐变·发光,样式共享 typography.css 的 --ms-type-step-* token,
  * 类名复用 `ms-text--*` 同款修饰,保证与 Text 行为一致。
  *
  * **anchor**:`anchor`(boolean | string)给标题挂 permalink(文档/Prose 必备)——自动从标题文本

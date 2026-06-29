@@ -69,7 +69,7 @@ export interface ContextMenuProps
   items: MenuItem[];
   /** 响应右键的区域内容。 */
   children: ReactNode;
-  /** 语义色调,经全库 tone resolver 派生 hover/focus/danger 配色与辉光。默认 primary。 */
+  /** 语义色调,经全库 tone resolver 派生 hover/focus/danger 配色与发光。默认 primary。 */
   tone?: ContextMenuTone;
   /** 菜单浮层附加类名(作用于 .ms-context-menu)。 */
   className?: string;
@@ -129,7 +129,7 @@ export interface ContextMenuProps
  * 深度能力:
  * - 复用 Menu 的 MenuItem 与 logic(item / separator / group + icon / shortcut / checked / href),
  *   拍平 / typeahead / 方向键全部走 Menu/logic.ts 同一套纯函数,避免行为分叉;
- * - tone 7 色调只读 6 槽位(不写死配色)+ 辉光;
+ * - tone 7 色调只读 6 槽位(不写死配色)+ 发光;
  * - 受控 open / defaultOpen + onOpenChange 双通道;
  * - 事件全留口:包裹区 onContextMenu(可 preventDefault 拦截打开)+ onOpen(带坐标)、
  *   菜单级 onSelect、可拦截的 onEscapeKeyDown / onPointerDownOutside;

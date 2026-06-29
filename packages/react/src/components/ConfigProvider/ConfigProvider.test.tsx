@@ -137,11 +137,11 @@ describe('ConfigProvider', () => {
       return <span data-testid="probe">{t('spinner.label', undefined, '回退')}</span>;
     }
     render(
-      <ConfigProvider messages={{ 'spinner.label': '施法中' }}>
+      <ConfigProvider messages={{ 'spinner.label': '加载中' }}>
         <Probe />
       </ConfigProvider>,
     );
-    expect(screen.getByTestId('probe')).toHaveTextContent('施法中');
+    expect(screen.getByTestId('probe')).toHaveTextContent('加载中');
   });
 
   it('不给 messages 时不报错且透传父级文案(回退默认)', () => {

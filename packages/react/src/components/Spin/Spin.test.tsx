@@ -64,15 +64,15 @@ describe('Spin', () => {
 
   it('tip 文本既可见渲染,也作为遮罩的可访问名播报', () => {
     render(
-      <Spin tip="正在施法…">
+      <Spin tip="正在加载…">
         <div>内容</div>
       </Spin>,
     );
     // 可见 tip
-    expect(screen.getByText('正在施法…')).toHaveClass('ms-spin__tip');
+    expect(screen.getByText('正在加载…')).toHaveClass('ms-spin__tip');
     // 遮罩可访问名取 tip
     const overlay = document.querySelector('.ms-spin__overlay');
-    expect(overlay).toHaveAttribute('aria-label', '正在施法…');
+    expect(overlay).toHaveAttribute('aria-label', '正在加载…');
   });
 
   it('自定义 indicator 取代默认 Spinner', () => {

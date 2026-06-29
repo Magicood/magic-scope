@@ -1,6 +1,6 @@
 /* —— Label:表单标签(基于原生 label,消费 tone 槽位) —— */
 .ms-label {
-  /* 必填标记辉光的局部门控:半径与色统一收口为变量,
+  /* 必填标记发光的局部门控:半径与色统一收口为变量,
      idle/hover/关断只改变量,避免选择器特异性战争 */
   --ms-label-glow-blur: calc(6px * var(--ms-fx-glow, 1));
   --ms-label-glow-color: var(--ms-color-glow);
@@ -53,7 +53,7 @@
   text-shadow: 0 0 var(--ms-label-glow-blur) var(--ms-label-glow-color);
   transition: text-shadow var(--ms-dur-base) var(--ms-ease-standard);
 }
-/* 显式 tone(非 neutral / 非默认 primary 的红惯例)→ 星号随色调,辉光色切到 --ms-c-glow */
+/* 显式 tone(非 neutral / 非默认 primary 的红惯例)→ 星号随色调,发光色切到 --ms-c-glow */
 .ms-label:not(.ms-tone-neutral):not(.ms-tone-primary) {
   --ms-label-glow-color: var(--ms-c-glow, var(--ms-color-glow));
 }
@@ -61,7 +61,7 @@
   color: var(--ms-c, var(--ms-color-danger));
 }
 
-/* hover 关联表单时,必填标记发光强化(深色奥术氛围):只抬辉光半径变量 */
+/* hover 关联表单时,必填标记发光强化(深色氛围):只抬发光半径变量 */
 @media (hover: hover) {
   .ms-label:not(.ms-label--disabled):hover {
     --ms-label-glow-blur: calc(10px * var(--ms-fx-glow, 1));
@@ -90,14 +90,14 @@
   border: 0;
 }
 
-/* —— 禁用态:降透明度、关闭交互态(辉光半径归零) —— */
+/* —— 禁用态:降透明度、关闭交互态(发光半径归零) —— */
 .ms-label--disabled {
   cursor: not-allowed;
   opacity: 0.5;
   --ms-label-glow-blur: 0px;
 }
 
-/* —— 发光总闸关断:辉光半径归零(变量门控,无需 !important / 特异性战争) —— */
+/* —— 发光总闸关断:发光半径归零(变量门控,无需 !important / 特异性战争) —— */
 [data-ms-fx="off"] .ms-label {
   --ms-label-glow-blur: 0px;
 }
@@ -111,7 +111,7 @@
   }
 }
 
-/* —— 动效降级:必填辉光过渡可一键停 —— */
+/* —— 动效降级:必填发光过渡可一键停 —— */
 @media (prefers-reduced-motion: reduce) {
   .ms-label,
   .ms-label__required {

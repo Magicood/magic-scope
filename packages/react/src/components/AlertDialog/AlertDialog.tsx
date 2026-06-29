@@ -3,7 +3,7 @@ import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { createPortal } from 'react-dom';
 import { translate } from '../../i18n';
 
-/** 语义色调:面板挂 ms-tone-*,确认按钮(solid)与强调条/辉光经全库 tone resolver 派生,零硬编码配色。 */
+/** 语义色调:面板挂 ms-tone-*,确认按钮(solid)与强调条/发光经全库 tone resolver 派生,零硬编码配色。 */
 export type AlertDialogTone = 'default' | 'danger' | 'warning' | 'success' | 'info';
 
 /** prompt 输入类型(平移到原生 <input> type)。 */

@@ -63,7 +63,7 @@
   box-shadow: inset 0 0 0 2px var(--ms-color-focus-ring);
 }
 
-/* —— fx 总闸关闭:去掉装饰性辉光,只留可达性焦点环 —— */
+/* —— fx 总闸关闭:去掉装饰性发光,只留可达性焦点环 —— */
 [data-ms-fx="off"] .ms-accordion__trigger:not(:disabled):hover {
   box-shadow: none;
 }

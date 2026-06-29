@@ -4,7 +4,7 @@
   inline-size: 100%;
   block-size: 1.5rem;
   border-radius: var(--ms-radius-md);
-  /* surface-raised 底色 + 一道极淡的纵向奥术渐变点缀,叠加横向流光高亮 */
+  /* surface-raised 底色 + 一道极淡的纵向渐变点缀,叠加横向渐变高亮 */
   background-color: var(--ms-color-surface-raised);
   background-image:
     linear-gradient(90deg, transparent 0%, var(--ms-color-glow) 50%, transparent 100%),
@@ -18,12 +18,12 @@
     0 0;
 }
 
-/* —— 动画分档:shimmer 横向流光 / pulse 透明度呼吸 / wave 渐变波动 / none 静态 —— */
+/* —— 动画分档:shimmer 横向渐变高亮 / pulse 透明度呼吸 / wave 渐变波动 / none 静态 —— */
 .ms-skeleton--anim-shimmer {
   animation: ms-skeleton-shimmer 1.4s var(--ms-ease-standard) infinite;
 }
 .ms-skeleton--anim-pulse {
-  /* 脉冲不靠流光,关掉流光层,只留底色做透明度呼吸 */
+  /* 脉冲不靠渐变高亮,关掉高亮层,只留底色做透明度呼吸 */
   background-image: linear-gradient(
     180deg,
     var(--ms-color-surface-raised) 0%,
@@ -47,7 +47,7 @@
   animation: none;
 }
 
-/* —— 流光:让高亮从左掠到右(仅移动流光层,渐变点缀层保持静止) —— */
+/* —— 渐变高亮:让高亮从左掠到右(仅移动高亮层,渐变点缀层保持静止) —— */
 @keyframes ms-skeleton-shimmer {
   from {
     background-position:
@@ -192,7 +192,7 @@
   animation-duration: 3.2s;
 }
 
-/* —— 系统 reduced-motion:去掉位移流光,放慢为透明度呼吸,保留「加载中」语义,放慢不停止 —— */
+/* —— 系统 reduced-motion:去掉位移高亮,放慢为透明度呼吸,保留「加载中」语义,放慢不停止 —— */
 @media (prefers-reduced-motion: reduce) {
   .ms-skeleton:not(.ms-skeleton--multiline):not(.ms-skeleton--anim-none),
   .ms-skeleton__line {
@@ -210,7 +210,7 @@
   }
 }
 
-/* —— 发光总闸关断:data-ms-fx="off" 熄灭所有辉光 —— */
+/* —— 发光总闸关断:data-ms-fx="off" 熄灭所有发光 —— */
 [data-ms-fx="off"] .ms-skeleton,
 [data-ms-fx="off"] .ms-skeleton__line {
   box-shadow: none;

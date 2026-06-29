@@ -43,7 +43,7 @@
   border-radius: var(--ms-radius-md);
 }
 
-/* —— 内容部件:箭头符文 / 自定义内容,绝不溢出按钮 —— */
+/* —— 内容部件:箭头图标 / 自定义内容,绝不溢出按钮 —— */
 .ms-back-top__icon {
   display: inline-flex;
   align-items: center;

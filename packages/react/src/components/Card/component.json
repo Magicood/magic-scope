@@ -1,7 +1,7 @@
 {
   "id": "card",
   "name": "Card",
-  "description": "内容卡片容器(旗舰深度):elevated(柔和阴影)/ outline(描边)两变体,tone 语义色调经全库 tone resolver 派生配色,padding 档位随密度缩放(none 供满血媒体)。interactive 时 hover 上浮奥术发光、键盘聚焦环并支持 Enter/Space 激活;asChild 多态渲染为 a/article/路由 Link。配套 CardHeader/CardTitle/CardBody/CardFooter/CardMedia 子部件自由组合。",
+  "description": "内容卡片容器(旗舰深度):elevated(柔和阴影)/ outline(描边)两变体,tone 语义色调经全库 tone resolver 派生配色,padding 档位随密度缩放(none 供满血媒体)。interactive 时 hover 上浮发光、键盘聚焦环并支持 Enter/Space 激活;asChild 多态渲染为 a/article/路由 Link。配套 CardHeader/CardTitle/CardBody/CardFooter/CardMedia 子部件自由组合。",
   "category": "layout",
   "tags": [
     "card",
@@ -26,7 +26,7 @@
   "source": {
     "type": "original",
     "capturedAt": "2026-06-24",
-    "requirements": "内容卡片容器,支持 elevated(柔和阴影)与 outline(描边)两种变体,可设为 interactive 时 hover 上浮并奥术发光。补强到生产级深度:tone 语义色调(读 tone 6 槽位,不写死语义色)、padding 档位(随密度缩放,none 供满血媒体)、interactive 键盘激活(Enter/Space → onClick,composeEventHandlers 合并不替换用户 handler)、asChild 多态(Radix Slot 风格,渲染为 a/article/路由 Link)、可组合子部件 CardHeader/CardTitle/CardBody/CardFooter/CardMedia。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-* 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion 与 data-ms-fx/motion 总闸。"
+    "requirements": "内容卡片容器,支持 elevated(柔和阴影)与 outline(描边)两种变体,可设为 interactive 时 hover 上浮并发光。补强到生产级深度:tone 语义色调(读 tone 6 槽位,不写死语义色)、padding 档位(随密度缩放,none 供满血媒体)、interactive 键盘激活(Enter/Space → onClick,composeEventHandlers 合并不替换用户 handler)、asChild 多态(Radix Slot 风格,渲染为 a/article/路由 Link)、可组合子部件 CardHeader/CardTitle/CardBody/CardFooter/CardMedia。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-* 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion 与 data-ms-fx/motion 总闸。"
   },
   "dependencies": ["@magic-scope/tokens"],
   "files": ["Card.tsx", "Card.css", "index.ts"]

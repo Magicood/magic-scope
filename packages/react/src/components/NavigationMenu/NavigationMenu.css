@@ -3,7 +3,7 @@
  * 浮层定位:CSS Anchor Positioning(共享 Viewport 锚到 <nav>,position-area 由 align 派生),
  *   @supports not (anchor-name) 降级为 fixed 居中,保证不支持时仍可用。
  * 配色:tone resolver —— 只读 6 槽位(--ms-c / --ms-c-soft / --ms-c-glow / --ms-c-hover …),不写死语义色。
- * 尺寸 / 间距随 data-ms-density(--ms-density-scale)缩放;辉光受 --ms-fx-glow 门控;
+ * 尺寸 / 间距随 data-ms-density(--ms-density-scale)缩放;发光受 --ms-fx-glow 门控;
  * 过渡受 --ms-motion-scale / prefers-reduced-motion / [data-ms-motion=off] 门控。
  */
 .ms-navmenu {

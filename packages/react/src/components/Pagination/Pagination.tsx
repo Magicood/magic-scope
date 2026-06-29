@@ -128,7 +128,7 @@ const cx = (...parts: (string | false | undefined)[]): string => parts.filter(Bo
 
 /**
  * Pagination —— 分页导航(旗舰深度组件)。自研、零依赖,消费 @magic-scope/tokens 的 --ms-* 变量。
- * tone × size(随密度缩放)、当前页主色实底奥术发光(读 6 槽位,fx/motion 可一键降级)、
+ * tone × size(随密度缩放)、当前页主色实底发光(读 6 槽位,fx/motion 可一键降级)、
  * 过多页省略号折叠、simple 精简变体;每页条数选择 + 快速跳页 + showTotal 区间显示;
  * renderItem / itemRender(包成 <a>)/ onItemClick / prevIcon-nextIcon 全留口;
  * onPageChange + onPageSizeChange + onChange 聚合 + onQuickJump 全事件覆盖;

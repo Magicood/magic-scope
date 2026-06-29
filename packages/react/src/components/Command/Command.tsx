@@ -110,7 +110,7 @@ export interface CommandProps extends Omit<ComponentPropsWithoutRef<'div'>, 'onS
    * @param value 被选中项的 value。
    */
   onSelect?: (value: string) => void;
-  /** 语义色调,经全库 tone resolver 派生高亮 / 辉光配色。默认 primary。 */
+  /** 语义色调,经全库 tone resolver 派生高亮 / 发光配色。默认 primary。 */
   tone?: CommandTone;
   /** 过滤模式:substring(默认,连续子串)| fuzzy(允许跳字符)。 */
   filterMode?: CommandFilterMode;

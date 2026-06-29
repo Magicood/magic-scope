@@ -41,7 +41,7 @@ export interface SpinnerProps extends ComponentPropsWithoutRef<'span'> {
  * Spinner —— 加载旋转器(旗舰深度组件)。自研、零依赖,消费 @magic-scope/tokens 的 --ms-* 变量。
  *
  * `role="status"` + aria-label(走 i18n,不写死中文)。三种形态变体:
- * ring 奥术发光圆环 / dots 三点跳动 / bars 多条波动。接全库统一 tone resolver
+ * ring 发光圆环 / dots 三点跳动 / bars 多条波动。接全库统一 tone resolver
  * (只读 --ms-c / --ms-c-glow 6 槽位,不写死配色;不传 tone 时跟随上下文 currentColor,
  * 放进彩色 Button / success / danger 语境会自动随之)。可选可见旁注 label(四向放置)。
  *

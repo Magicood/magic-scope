@@ -1,7 +1,7 @@
 {
   "id": "timeline",
   "name": "Timeline",
-  "description": "时间线 / 信息流(旗舰深度):语义化 <ol> 的 Timeline + 若干 TimelineItem。竖向轴 + 节点圆点(可换图标)+ 连线;节点经全库 tone resolver 着色(variant default/primary/accent/success/warning/danger/info/neutral,只读 6 槽位不写死语义色)并带克制辉光。mode left/right/alternate 控制左右轴与左右交替排布(alternate 经容器查询窄屏退化为单侧),reverse 视觉倒序;pending 末节点(虚线引导 + 呼吸圆点)表示进行中;Item 级 pulse 圆点呼吸辉光(motion-scale 调强度、reduced-motion / 总闸停)。连线样式 lineStyle solid/dashed(Timeline 级与 Item 级可覆盖),连线为真实 .ms-timeline__line 元素供 className 钩子定制。交互式时间线:TimelineItem interactive/active 受控 + onSelect 语义回调 + 键盘 Enter/Space 触发 + tabindex/aria-current,onClick 与内部选择经 composeEventHandlers 合并(用户优先、可 preventDefault 拦截)。每条含标题、次级时间(<time>)、正文。密度缩放、逻辑属性 RTL 友好、overflow-wrap 防长串溢出。",
+  "description": "时间线 / 信息流(旗舰深度):语义化 <ol> 的 Timeline + 若干 TimelineItem。竖向轴 + 节点圆点(可换图标)+ 连线;节点经全库 tone resolver 着色(variant default/primary/accent/success/warning/danger/info/neutral,只读 6 槽位不写死语义色)并带克制发光。mode left/right/alternate 控制左右轴与左右交替排布(alternate 经容器查询窄屏退化为单侧),reverse 视觉倒序;pending 末节点(虚线引导 + 呼吸圆点)表示进行中;Item 级 pulse 圆点呼吸发光(motion-scale 调强度、reduced-motion / 总闸停)。连线样式 lineStyle solid/dashed(Timeline 级与 Item 级可覆盖),连线为真实 .ms-timeline__line 元素供 className 钩子定制。交互式时间线:TimelineItem interactive/active 受控 + onSelect 语义回调 + 键盘 Enter/Space 触发 + tabindex/aria-current,onClick 与内部选择经 composeEventHandlers 合并(用户优先、可 preventDefault 拦截)。每条含标题、次级时间(<time>)、正文。密度缩放、逻辑属性 RTL 友好、overflow-wrap 防长串溢出。",
   "category": "data-display",
   "tags": [
     "timeline",
@@ -23,7 +23,7 @@
   "source": {
     "type": "original",
     "capturedAt": "2026-06-25",
-    "requirements": "补齐信息流 / 历史记录展示:时间线,并补强到生产级深度对标旗舰 Button/Input/Text。原创实现,声明式 Timeline + TimelineItem 组合(语义 <ol>/<li>);节点圆点接 tone resolver(8 色,只读 6 槽位)+ 真实 .ms-timeline__line 连线(末项不画);mode 左右轴 / 交替排布 + reverse;pending 进行中末节点 + pulse 呼吸辉光;lineStyle 实/虚线;交互式选择(interactive/active/onSelect + 键盘)。复用 --ms-* token、tone 槽位、密度 / 动效 / 发光总闸,逻辑属性 RTL 友好,composeEventHandlers 留口不丢用户处理器。"
+    "requirements": "补齐信息流 / 历史记录展示:时间线,并补强到生产级深度对标旗舰 Button/Input/Text。原创实现,声明式 Timeline + TimelineItem 组合(语义 <ol>/<li>);节点圆点接 tone resolver(8 色,只读 6 槽位)+ 真实 .ms-timeline__line 连线(末项不画);mode 左右轴 / 交替排布 + reverse;pending 进行中末节点 + pulse 呼吸发光;lineStyle 实/虚线;交互式选择(interactive/active/onSelect + 键盘)。复用 --ms-* token、tone 槽位、密度 / 动效 / 发光总闸,逻辑属性 RTL 友好,composeEventHandlers 留口不丢用户处理器。"
   },
   "dependencies": ["@magic-scope/tokens"],
   "files": ["Timeline.tsx", "Timeline.css", "index.ts"]

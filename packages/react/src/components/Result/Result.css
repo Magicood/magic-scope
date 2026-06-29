@@ -1,6 +1,6 @@
 /* —— Result 基座:tone 槽位驱动 + 密度(--ms-density-scale)接活,纵向居中结果页 —— */
 .ms-result {
-  /* 单图标尺寸(柔底圆直径)与符文字号:md 基线,sm/lg 覆盖。随密度缩放。 */
+  /* 单图标尺寸(柔底圆直径)与字符字号:md 基线,sm/lg 覆盖。随密度缩放。 */
   --ms-result-icon-size: calc(4.5rem * var(--ms-density-scale, 1));
   --ms-result-glyph-size: calc(2.25rem * var(--ms-density-scale, 1));
   --ms-result-gap: calc(var(--ms-space-3) * var(--ms-density-scale, 1));
@@ -18,7 +18,7 @@
   min-block-size: max(0px, var(--ms-target-min));
 }
 
-/* —— 图标区:tone 柔底发光圆 + 大号符文 —— */
+/* —— 图标区:tone 柔底发光圆 + 大号字符 —— */
 .ms-result__icon {
   display: inline-flex;
   align-items: center;

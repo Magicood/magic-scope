@@ -21,7 +21,7 @@
   "source": {
     "type": "original",
     "capturedAt": "2026-06-25",
-    "requirements": "提示气泡:用 Popover API 进 top-layer + CSS Anchor Positioning 贴位,hover/focus 延时触发、aria-describedby 关联,深色奥术微光入场,零第三方依赖并带锚定降级。。magic-scope overlay 组件:用满平台原生能力(Popover API + CSS Anchor Positioning)自研,带降级、键盘可达、fx/motion 开关、入场动画。补强到生产级深度:12 向 placement(四主轴)+ 箭头、tone 槽位配色、受控 open/onOpenChange/defaultOpen 双通道、disabled、openDelay/closeDelay 拆分、...rest 透传气泡根、trigger 事件 compose、onEscapeKeyDown/onPointerDownOutside 拦截关闭。"
+    "requirements": "提示气泡:用 Popover API 进 top-layer + CSS Anchor Positioning 贴位,hover/focus 延时触发、aria-describedby 关联,深色微光入场,零第三方依赖并带锚定降级。。magic-scope overlay 组件:用满平台原生能力(Popover API + CSS Anchor Positioning)自研,带降级、键盘可达、fx/motion 开关、入场动画。补强到生产级深度:12 向 placement(四主轴)+ 箭头、tone 槽位配色、受控 open/onOpenChange/defaultOpen 双通道、disabled、openDelay/closeDelay 拆分、...rest 透传气泡根、trigger 事件 compose、onEscapeKeyDown/onPointerDownOutside 拦截关闭。"
   },
   "dependencies": ["@magic-scope/tokens"],
   "files": ["Tooltip.tsx", "Tooltip.css", "logic.ts", "index.ts"]

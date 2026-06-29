@@ -40,7 +40,7 @@ export interface LinkOwnProps {
   external?: boolean;
   /** 隐藏外链图标(仍保留 target/rel 与 sr-only 提示)。external 为 false 时无意义。 */
   hideExternalIcon?: boolean;
-  /** 自定义外链图标(覆盖默认箭头符文);仅 external 时渲染。 */
+  /** 自定义外链图标(覆盖默认箭头图标);仅 external 时渲染。 */
   externalIcon?: ReactNode;
   /**
    * 禁用:<a> 无原生 disabled —— 用「去 href + aria-disabled + tabIndex=-1 + 拦截点击」综合模拟,
@@ -77,7 +77,7 @@ export type LinkProps = LinkOwnProps &
 
 const cx = (...parts: Array<string | false | undefined>): string => parts.filter(Boolean).join(' ');
 
-/** 默认外链图标:右上箭头符文(线性、currentColor 跟随链接色)。 */
+/** 默认外链图标:右上箭头图标(线性、currentColor 跟随链接色)。 */
 const DefaultExternalIcon = (
   <svg
     className="ms-link__external-icon"

@@ -10,7 +10,7 @@
   "source": {
     "type": "original",
     "capturedAt": "2026-06-26",
-    "requirements": "高频「一键复制」场景(token / 命令 / 分享链接)需要一个开箱即用的复制按钮:点击即写剪贴板,并给出明确的即时反馈,避免用户不确定是否复制成功。设计意图——复制成功后图标从复制符文切到对勾、可选 Tooltip 提示「已复制」,timeout(默认 1500ms)后自动还原成「复制」;复用 Button 的 tone/size/variant 与 Tooltip,不另起一套样式。剪贴板写入做特性检测降级:优先 navigator.clipboard.writeText(需安全上下文),回退 document.execCommand('copy')。a11y 要求 aria-label 随状态切换,并经 aria-live=polite 视隐区播报「已复制」让读屏用户感知。留口:render-prop children (copied)=>ReactNode、icon/copiedIcon 覆盖符文、onClick 经 composeEventHandlers 合并(可 preventDefault 阻断复制)。"
+    "requirements": "高频「一键复制」场景(token / 命令 / 分享链接)需要一个开箱即用的复制按钮:点击即写剪贴板,并给出明确的即时反馈,避免用户不确定是否复制成功。设计意图——复制成功后图标从复制图标切到对勾、可选 Tooltip 提示「已复制」,timeout(默认 1500ms)后自动还原成「复制」;复用 Button 的 tone/size/variant 与 Tooltip,不另起一套样式。剪贴板写入做特性检测降级:优先 navigator.clipboard.writeText(需安全上下文),回退 document.execCommand('copy')。a11y 要求 aria-label 随状态切换,并经 aria-live=polite 视隐区播报「已复制」让读屏用户感知。留口:render-prop children (copied)=>ReactNode、icon/copiedIcon 覆盖图标、onClick 经 composeEventHandlers 合并(可 preventDefault 阻断复制)。"
   },
   "dependencies": ["@magic-scope/tokens"],
   "files": [

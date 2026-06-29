@@ -1,7 +1,7 @@
 /* —— Command 命令面板(⌘K) ——
  * 配色:tone resolver —— 只读 6 槽位(--ms-c / --ms-c-soft / --ms-c-hover / --ms-c-glow / --ms-on-c …),不写死语义色。
  * 尺寸随 data-ms-density 缩放(--ms-density-scale);动效尊重 prefers-reduced-motion 与 [data-ms-motion=off]。
- * 高亮命中片段(<mark>)用主色发光,呼应「魔法」主题。
+ * 高亮命中片段(<mark>)用主色发光强调。
  */
 .ms-command {
   display: flex;
@@ -144,7 +144,7 @@
   font-size: 0.85em;
 }
 
-/* —— 命中高亮片段:主色 + 克制微光,呼应魔法主题 —— */
+/* —— 命中高亮片段:主色 + 克制微光 —— */
 .ms-command__highlight {
   background: transparent;
   color: var(--ms-c);

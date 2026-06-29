@@ -222,12 +222,12 @@ describe('toast + Toaster', () => {
     expect(onClick).toHaveBeenCalledTimes(1);
   });
 
-  it('icon:默认按 variant 给符文、传 false 关闭整列、自定义 closeIcon', () => {
+  it('icon:默认按 variant 给图标、传 false 关闭整列、自定义 closeIcon', () => {
     render(<Toaster />);
     act(() => {
       toast.success('成', { duration: 0 });
     });
-    // success 默认符文渲染在图标列
+    // success 默认图标渲染在图标列
     expect(document.querySelector('.ms-toast--success .ms-toast__icon')).not.toBeNull();
 
     act(() => {

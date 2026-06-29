@@ -1,7 +1,7 @@
 {
   "id": "progress",
   "name": "Progress",
-  "description": "奥术发光的进度组件,role=progressbar。两形态:linear 线性条 / circular 环形(SVG stroke-dashoffset)。tone 语义色(只读 6 槽位不写死配色)、size(sm/md/lg 随密度缩放)、striped+animated 条纹、buffer 缓冲段、showValue/label(百分比或自定义 ReactNode)、确定态与不确定态流动。classNames 精修子部件,实例级 glow=off;全部动效受 data-ms-motion 与 prefers-reduced-motion 一键降级。",
+  "description": "发光的进度组件,role=progressbar。两形态:linear 线性条 / circular 环形(SVG stroke-dashoffset)。tone 语义色(只读 6 槽位不写死配色)、size(sm/md/lg 随密度缩放)、striped+animated 条纹、buffer 缓冲段、showValue/label(百分比或自定义 ReactNode)、确定态与不确定态流动。classNames 精修子部件,实例级 glow=off;全部动效受 data-ms-motion 与 prefers-reduced-motion 一键降级。",
   "category": "feedback",
   "tags": [
     "progress",
@@ -24,7 +24,7 @@
   "source": {
     "type": "original",
     "capturedAt": "2026-06-24",
-    "requirements": "奥术发光的进度组件,role=progressbar。补强到生产级深度:linear/circular 两形态、tone 语义色(6 槽位)、size 随密度缩放、striped+animated 条纹、buffer 缓冲段、showValue/label 槽位、确定态/不确定态流动、classNames 子部件精修、实例级 glow。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-* 变量,完整状态与过渡、发光,动效受 data-ms-motion / prefers-reduced-motion 一键降级。"
+    "requirements": "发光的进度组件,role=progressbar。补强到生产级深度:linear/circular 两形态、tone 语义色(6 槽位)、size 随密度缩放、striped+animated 条纹、buffer 缓冲段、showValue/label 槽位、确定态/不确定态流动、classNames 子部件精修、实例级 glow。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-* 变量,完整状态与过渡、发光,动效受 data-ms-motion / prefers-reduced-motion 一键降级。"
   },
   "dependencies": ["@magic-scope/tokens"],
   "files": ["Progress.tsx", "Progress.css", "Progress.test.tsx", "index.ts"]

@@ -139,7 +139,7 @@
 }
 /* 不支持 border-image 渐变的环境回退实色边(border 已是 --ms-c,无需额外处理) */
 
-/* —— 魔法:辉光(强调条/底块外发光,受 --ms-fx-glow 调制) —— */
+/* —— 魔法:发光(强调条/底块外发光,受 --ms-fx-glow 调制) —— */
 .ms-blockquote--glow-soft {
   box-shadow: 0 0 calc(0.5rem * var(--ms-fx-glow, 1)) var(--ms-c-soft);
 }
@@ -148,7 +148,7 @@
     0 0 calc(0.9rem * var(--ms-fx-glow, 1)) var(--ms-c-glow),
     0 0 calc(0.35rem * var(--ms-fx-glow, 1)) var(--ms-c-soft);
 }
-/* card 变体本就有阴影:辉光叠加到其上 */
+/* card 变体本就有阴影:发光叠加到其上 */
 .ms-blockquote--card.ms-blockquote--glow-soft {
   box-shadow:
     var(--ms-shadow-sm, 0 1px 2px rgb(0 0 0 / 0.06)),
@@ -159,7 +159,7 @@
     var(--ms-shadow-sm, 0 1px 2px rgb(0 0 0 / 0.06)),
     0 0 calc(0.9rem * var(--ms-fx-glow, 1)) var(--ms-c-glow);
 }
-/* fx 总闸关闭:彻底去辉光 */
+/* fx 总闸关闭:彻底去发光 */
 [data-ms-fx="off"] .ms-blockquote--glow-soft,
 [data-ms-fx="off"] .ms-blockquote--glow-strong {
   box-shadow: none;

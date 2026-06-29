@@ -1,7 +1,7 @@
 /**
  * Form 表单子系统样式 —— 消费 @magic-scope/tokens 的 --ms-* 变量。
  * layout 三档(vertical / horizontal / inline)、校验态发光、错误进出过渡(不抖布局)、
- * validating 旋转符文、密度缩放、超长 label/错误内容边界加固。尊重 prefers-reduced-motion 与 data-ms-motion=off。
+ * validating 旋转图标、密度缩放、超长 label/错误内容边界加固。尊重 prefers-reduced-motion 与 data-ms-motion=off。
  */
 
 .ms-form {
@@ -110,7 +110,7 @@
   transition: box-shadow var(--ms-dur-fast, 0.15s) var(--ms-ease-standard, ease);
 }
 
-/* ── validating 旋转符文(校验中微动效) ── */
+/* ── validating 旋转图标(校验中微动效) ── */
 .ms-form__item--validating .ms-form__control::after {
   content: "";
   position: absolute;

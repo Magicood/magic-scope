@@ -86,7 +86,7 @@ describe('CopyButton', () => {
     });
   });
 
-  it('icon / copiedIcon 覆盖默认符文', async () => {
+  it('icon / copiedIcon 覆盖默认图标', async () => {
     render(
       <CopyButton
         value="x"

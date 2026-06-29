@@ -32,7 +32,7 @@
   margin-inline-end: var(--ms-space-1);
 }
 
-/* 非当前项的链接:读 tone 槽位(--ms-c),hover 转 hover 槽位并泛起克制的奥术微光 */
+/* 非当前项的链接:读 tone 槽位(--ms-c),hover 转 hover 槽位并泛起克制的微光 */
 .ms-breadcrumb__link {
   display: inline-flex;
   align-items: center;
@@ -165,7 +165,7 @@
   transition: none;
 }
 
-/* 实例级总闸关断发光:hover/focus 辉光去掉,仅保留聚焦双环的纯隔断(可见性不丢) */
+/* 实例级总闸关断发光:hover/focus 发光去掉,仅保留聚焦双环的纯隔断(可见性不丢) */
 [data-ms-fx="off"] .ms-breadcrumb__link:hover,
 [data-ms-fx="off"] .ms-breadcrumb__ellipsis:hover {
   box-shadow: none;

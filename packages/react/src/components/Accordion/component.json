@@ -25,7 +25,7 @@
   "source": {
     "type": "original",
     "capturedAt": "2026-06-25",
-    "requirements": "手风琴:可折叠面板组,grid-template-rows 0fr→1fr 平滑展开、▸ 图标旋转、深色奥术发光,支持 single/multiple 与键盘 ↑↓ 导航。。magic-scope 结构/导航组件:自研、消费 tokens,完整状态、键盘可达、fx/motion 开关、逻辑属性。补强到旗舰深度:受控/非受控双模式、collapsible 全收、tone 色调、全量语义事件回调与原生事件透传、classNames 插槽、可替换指示符、inert+延迟 visibility 修复 hidden 与 grid 过渡冲突。"
+    "requirements": "手风琴:可折叠面板组,grid-template-rows 0fr→1fr 平滑展开、▸ 图标旋转、深色发光,支持 single/multiple 与键盘 ↑↓ 导航。。magic-scope 结构/导航组件:自研、消费 tokens,完整状态、键盘可达、fx/motion 开关、逻辑属性。补强到旗舰深度:受控/非受控双模式、collapsible 全收、tone 色调、全量语义事件回调与原生事件透传、classNames 插槽、可替换指示符、inert+延迟 visibility 修复 hidden 与 grid 过渡冲突。"
   },
   "dependencies": ["@magic-scope/tokens"],
   "files": ["Accordion.tsx", "Accordion.css", "logic.ts", "index.ts"]

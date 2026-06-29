@@ -245,7 +245,7 @@
   }
 }
 
-/* —— 发光总闸关断:fx=off 时所有 tone 辉光归零 —— */
+/* —— 发光总闸关断:fx=off 时所有 tone 发光归零 —— */
 [data-ms-fx="off"] .ms-tag-input,
 [data-ms-fx="off"] .ms-tag-input__tag,
 [data-ms-fx="off"] .ms-tag-input__remove {

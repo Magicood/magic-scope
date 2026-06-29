@@ -1,7 +1,7 @@
 {
   "id": "empty",
   "name": "Empty",
-  "description": "空状态(生产级深度,对标 AntD Empty):无数据 / 无结果时的占位与引导。image 不传走内置极简插画(预设 default 文档卡片 / simple 托盘,均 currentColor + tone 着色),可传自定义 ReactNode 或 false 关闭;description 默认走 i18n empty.description(暂无数据),可覆盖或 false 关闭;children 作底部操作区(如重试按钮);size(sm/md/lg)随 data-ms-density 缩放;tone 7 档语义色经统一 6 槽位驱动插画着色与辉光;多态 as + asChild(Slot)、classNames 部件级定制、forwardRef、...rest 透传;辉光与微动尊重 prefers-reduced-motion 与 data-ms-fx/data-ms-motion 总闸。",
+  "description": "空状态(生产级深度,对标 AntD Empty):无数据 / 无结果时的占位与引导。image 不传走内置极简插画(预设 default 文档卡片 / simple 托盘,均 currentColor + tone 着色),可传自定义 ReactNode 或 false 关闭;description 默认走 i18n empty.description(暂无数据),可覆盖或 false 关闭;children 作底部操作区(如重试按钮);size(sm/md/lg)随 data-ms-density 缩放;tone 7 档语义色经统一 6 槽位驱动插画着色与发光;多态 as + asChild(Slot)、classNames 部件级定制、forwardRef、...rest 透传;发光与微动尊重 prefers-reduced-motion 与 data-ms-fx/data-ms-motion 总闸。",
   "category": "feedback",
   "tags": [
     "empty",
