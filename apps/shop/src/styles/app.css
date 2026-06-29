@@ -1,0 +1,219 @@
+/* ============================================================================
+ * Daybreak — 精品咖啡店应用级设计层
+ * 只用 @magic-scope/tokens 的 --ms-* 设计 token;基调:浅色、暖、通透、留白足。
+ * 编辑式 serif 标题 + 干净 sans 正文(食品/精品零售那种考究感,Aesop/Apple Store 一脉)。
+ * 应用层自有样式一律用 db- 前缀,避免与库的 ms- 冲突。
+ * ========================================================================== */
+
+/* 消费方字体:库不锁字体。标题用编辑式衬线(含中文宋体),正文用干净 sans。 */
+:root {
+  --ms-font-sans:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", sans-serif;
+  --ms-font-display:
+    "Iowan Old Style", "Palatino Linotype", Palatino, "Songti SC", "Noto Serif SC", Georgia, serif;
+  --ms-font-serif: var(--ms-font-display);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  margin: 0;
+  min-block-size: 100dvh;
+  background-color: var(--ms-color-bg);
+  color: var(--ms-color-fg);
+  font-family: var(--ms-font-sans);
+  font-size: 1rem;
+  line-height: var(--ms-leading-normal, 1.55);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+::selection {
+  background-color: var(--ms-color-selection);
+  color: var(--ms-color-on-selection);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img,
+svg {
+  display: block;
+  max-inline-size: 100%;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ms-color-focus-ring, var(--ms-color-primary));
+  outline-offset: 2px;
+}
+
+/* --- 晨光暖色背景:固定、极柔、顶部洒下,呼应「Daybreak」----------------- */
+.db-glow {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      120% 80% at 80% -10%,
+      color-mix(in oklab, var(--ms-color-primary) 14%, transparent),
+      transparent 60%
+    ),
+    radial-gradient(
+      90% 60% at 0% 0%,
+      color-mix(in oklab, var(--ms-color-accent) 10%, transparent),
+      transparent 55%
+    );
+}
+
+.db-app {
+  position: relative;
+  z-index: 1;
+}
+
+/* --- 容器与区块节奏 -------------------------------------------------------- */
+.db-container {
+  inline-size: 100%;
+  max-inline-size: 1180px;
+  margin-inline: auto;
+  padding-inline: clamp(1.1rem, 4vw, 2.25rem);
+}
+
+.db-section {
+  padding-block: clamp(3.25rem, 7vw, 6rem);
+}
+
+.db-section--tight {
+  padding-block: clamp(2rem, 4vw, 3.25rem);
+}
+
+.db-hairline {
+  block-size: 1px;
+  border: 0;
+  margin: 0;
+  background-color: var(--ms-color-border);
+}
+
+/* --- 区块抬头(编辑式)----------------------------------------------------- */
+.db-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.78rem;
+  font-weight: var(--ms-font-weight-semibold, 600);
+  letter-spacing: var(--ms-tracking-widest, 0.12em);
+  text-transform: uppercase;
+  color: var(--ms-color-primary);
+}
+
+.db-display {
+  font-family: var(--ms-font-display);
+  font-weight: var(--ms-font-weight-semibold, 600);
+  line-height: 1.1;
+  letter-spacing: var(--ms-tracking-tight, -0.01em);
+  color: var(--ms-color-fg);
+  margin: 0;
+}
+
+.db-section-head {
+  max-inline-size: 40rem;
+}
+
+.db-section-head--center {
+  margin-inline: auto;
+  text-align: center;
+}
+
+.db-lead {
+  margin-block-start: 0.85rem;
+  color: var(--ms-color-fg-muted);
+  font-size: clamp(1rem, 1.5vw, 1.1rem);
+  line-height: var(--ms-leading-relaxed, 1.7);
+}
+
+/* --- 表面与卡片 ------------------------------------------------------------ */
+.db-card {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--ms-color-surface);
+  border: 1px solid var(--ms-color-border);
+  border-radius: var(--ms-radius-lg, 0.85rem);
+  overflow: hidden;
+  transition:
+    transform 0.25s var(--ms-ease-standard, ease),
+    box-shadow 0.25s var(--ms-ease-standard, ease),
+    border-color 0.25s ease;
+}
+
+.db-card--interactive:hover {
+  transform: translateY(-3px);
+  border-color: color-mix(in oklab, var(--ms-color-primary) 35%, var(--ms-color-border));
+  box-shadow: 0 18px 40px -28px color-mix(in oklab, var(--ms-color-fg) 40%, transparent);
+}
+
+/* 价格 / 评分等零售排版小工具 */
+.db-price {
+  font-family: var(--ms-font-display);
+  font-weight: var(--ms-font-weight-semibold, 600);
+  color: var(--ms-color-fg);
+}
+
+.db-price__was {
+  margin-inline-start: 0.5rem;
+  font-family: var(--ms-font-sans);
+  font-size: 0.85em;
+  color: var(--ms-color-fg-subtle);
+  text-decoration: line-through;
+}
+
+/* --- 滚动渐入 -------------------------------------------------------------- */
+.db-reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 0.6s var(--ms-ease-standard, cubic-bezier(0.2, 0, 0, 1)),
+    transform 0.6s var(--ms-ease-standard, cubic-bezier(0.2, 0, 0, 1));
+  transition-delay: var(--db-reveal-delay, 0ms);
+}
+
+.db-reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .db-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* --- 通用网格 -------------------------------------------------------------- */
+.db-grid {
+  display: grid;
+  gap: clamp(1rem, 2vw, 1.6rem);
+}
+
+.db-grid--products {
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+}
