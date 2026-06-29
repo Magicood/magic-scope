@@ -201,6 +201,7 @@ export const Select = forwardRef<HTMLButtonElement, SelectProps>((props, ref) =>
     'aria-labelledby': ariaLabelledby,
     onClick,
     onKeyDown,
+    style,
     ...rest
   } = props;
 
@@ -539,7 +540,9 @@ export const Select = forwardRef<HTMLButtonElement, SelectProps>((props, ref) =>
     return () => document.removeEventListener('pointerdown', handler, true);
   }, [open, onPointerDownOutside]);
 
-  const triggerStyle: CSSProperties = { anchorName } as CSSProperties;
+  // 用户 style 与 anchorName 合并:anchorName 放最后,确保不被用户 style 覆盖
+  // (否则浮层定位锚点丢失 → 弹层掉到 top-layer 左上角)。
+  const triggerStyle: CSSProperties = { ...style, anchorName } as CSSProperties;
   const listStyle: CSSProperties = { positionAnchor: anchorName } as CSSProperties;
 
   const hasValue = selectedValues.length > 0;
