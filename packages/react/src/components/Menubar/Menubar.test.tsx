@@ -582,4 +582,55 @@ describe('Menubar', () => {
       vi.useRealTimers();
     }
   });
+
+  // —— CSS Anchor Positioning 回归:用户传 style 不得覆盖 anchor-name / position-anchor ——
+  // 触发器经 style={{ ...style, anchorName }} 合并、且 style 已从 props 解构出不进 {...rest},
+  // 故用户 style 与 anchor-name 同时生效;否则锚点丢失,菜单浮层会掉到 top-layer 左上角。
+  describe('CSS Anchor Positioning:用户 style 不覆盖锚点', () => {
+    it('触发器 inline style 同时含用户样式与 anchor-name(style 经 Menubar.Menu 透传)', () => {
+      render(
+        <Menubar>
+          <Menubar.Menu
+            value="file"
+            label="文件"
+            items={fileItems}
+            style={{ maxInlineSize: '16rem' }}
+          />
+        </Menubar>,
+      );
+      const file = screen.getByRole('menuitem', { name: '文件' });
+      // 用户样式生效。
+      expect(file.style.getPropertyValue('max-inline-size')).toBe('16rem');
+      // 关键断言:anchor-name 没被用户 style / {...rest} 覆盖,仍以 -- 开头。
+      const anchorName = file.style.getPropertyValue('anchor-name');
+      expect(anchorName).not.toBe('');
+      expect(anchorName.startsWith('--')).toBe(true);
+      // inline style 串里两者并存。
+      const inline = file.getAttribute('style') ?? '';
+      expect(inline).toContain('max-inline-size');
+      expect(inline).toContain('anchor-name');
+    });
+
+    it('面板 position-anchor 指向触发器 anchor-name,且不被用户 style 干扰', () => {
+      render(
+        <Menubar value="file">
+          <Menubar.Menu
+            value="file"
+            label="文件"
+            items={fileItems}
+            style={{ maxInlineSize: '16rem' }}
+          />
+        </Menubar>,
+      );
+      const file = screen.getByRole('menuitem', { name: '文件' });
+      const anchorName = file.style.getPropertyValue('anchor-name');
+      // 面板浮层(role=menu 的容器 .ms-menubar__menu,popover top-layer)。
+      const menu = screen.getByRole('menu', { hidden: true });
+      const popover = menu.closest('.ms-menubar__menu') as HTMLElement;
+      const positionAnchor = popover.style.getPropertyValue('position-anchor');
+      // position-anchor 未丢失,且与触发器的 anchor-name 一致(锚定成立)。
+      expect(positionAnchor).not.toBe('');
+      expect(positionAnchor).toBe(anchorName);
+    });
+  });
 });

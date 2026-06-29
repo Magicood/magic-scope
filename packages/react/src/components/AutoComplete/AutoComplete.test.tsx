@@ -305,4 +305,35 @@ describe('AutoComplete', () => {
     expect(ref.current).toBeInstanceOf(HTMLInputElement);
     expect(ref.current).toHaveAttribute('role', 'combobox');
   });
+
+  // 回归:CSS Anchor Positioning 锚点不被用户 style 覆盖。
+  // anchor-name 设在 .ms-autocomplete__control 包裹层、position-anchor 设在浮层,
+  // 二者都不吃 {...rest};用户 style 经 {...rest} 落在 <input> 上(另一元素),
+  // 故 anchor 永不被用户 style 顶掉 —— 浮层不会丢锚点掉到 top-layer 左上角。
+  it('用户传 style 不覆盖 anchor-name / position-anchor(浮层锚点保留)', () => {
+    render(<AutoComplete options={options} style={{ maxInlineSize: '16rem' }} aria-label="水果" />);
+
+    const input = screen.getByRole('combobox', { name: '水果' });
+
+    // 用户 style 经 {...rest} 落在 input 上(与锚点元素分离)。
+    expect(input.style.getPropertyValue('max-inline-size')).toBe('16rem');
+    // input 自身不承载 anchor-name(锚点在外层 control,故用户 style 无从覆盖)。
+    expect(input.style.getPropertyValue('anchor-name')).toBe('');
+
+    // 触发器侧:.ms-autocomplete__control 保留 anchor-name,未被用户 style 顶掉。
+    const control = input.closest('.ms-autocomplete')?.querySelector('.ms-autocomplete__control');
+    expect(control).not.toBeNull();
+    const anchorName = (control as HTMLElement).style.getPropertyValue('anchor-name');
+    expect(anchorName).toMatch(/^--ms-autocomplete-/);
+    // control 不接收用户 style(没拿 rest),不会被 max-inline-size 污染。
+    expect((control as HTMLElement).style.getPropertyValue('max-inline-size')).toBe('');
+
+    // 面板侧:popover listbox 保留 position-anchor,且指向同一锚点名。
+    const listbox = document.getElementById(input.getAttribute('aria-controls') ?? '');
+    expect(listbox).not.toBeNull();
+    const positionAnchor = (listbox as HTMLElement).style.getPropertyValue('position-anchor');
+    expect(positionAnchor).toBe(anchorName);
+    // 面板也不接收用户 style,position-anchor 不会被覆盖。
+    expect((listbox as HTMLElement).style.getPropertyValue('max-inline-size')).toBe('');
+  });
 });

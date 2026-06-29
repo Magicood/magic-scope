@@ -207,4 +207,44 @@ describe('Tooltip', () => {
     // arrow 渲染
     expect(bubble.querySelector('.ms-tooltip__arrow')).not.toBeNull();
   });
+
+  it('回归:trigger 子元素带 style 时,用户样式与 anchor-name 共存(锚点不被覆盖)', () => {
+    // 背景:CSS Anchor Positioning 靠 trigger 的 anchor-name + 气泡的 position-anchor 定位。
+    // 若 cloneElement 合并里把用户 style 放在 anchorName 之后,会覆盖掉 anchor-name,
+    // 锚点丢失 → popover 退化到 top-layer 左上角。此处用 child 上的真实 style 锁定合并顺序。
+    render(
+      <Tooltip content="提示">
+        <button type="button" style={{ maxInlineSize: '16rem' }}>
+          触发器
+        </button>
+      </Tooltip>,
+    );
+
+    const trigger = screen.getByRole('button', { name: '触发器' });
+    // 用户样式保留
+    expect(trigger.style.getPropertyValue('max-inline-size')).toBe('16rem');
+    // anchor-name 仍在(未被用户 style 覆盖),且是本组件的 dashed-ident
+    const anchorName = trigger.style.getPropertyValue('anchor-name');
+    expect(anchorName).toMatch(/^--ms-tt-/);
+    // 二者同时出现在内联 style 上
+    const inline = trigger.getAttribute('style') ?? '';
+    expect(inline).toContain('max-inline-size');
+    expect(inline).toContain('anchor-name');
+  });
+
+  it('回归:气泡面板始终带 position-anchor,指向 trigger 的 anchor-name', () => {
+    render(
+      <Tooltip content="提示">
+        <button type="button" style={{ maxInlineSize: '16rem' }}>
+          触发器
+        </button>
+      </Tooltip>,
+    );
+
+    const trigger = screen.getByRole('button', { name: '触发器' });
+    const bubble = screen.getByRole('tooltip', { hidden: true });
+    const anchorName = trigger.style.getPropertyValue('anchor-name');
+    // 面板 position-anchor 不丢,且与 trigger 的 anchor-name 一致(定位闭环成立)
+    expect(bubble.style.getPropertyValue('position-anchor')).toBe(anchorName);
+  });
 });

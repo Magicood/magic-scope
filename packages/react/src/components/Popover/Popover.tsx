@@ -288,7 +288,9 @@ export const Popover = forwardRef<HTMLDivElement, PopoverProps>(
     // —— trigger 注入属性:anchor / aria 关联 + 按 triggerAction 合并交互事件(全量 compose) ——
     const triggerProps: Record<string, unknown> = {
       ref: setTriggerRef,
-      style: { anchorName, ...ownProps.style } as CSSProperties,
+      // anchorName 放最后,确保不被用户经 trigger 子元素传入的 style 覆盖
+      // (否则 CSS Anchor Positioning 锚点丢失 → 浮层退化到 top-layer 左上角)。
+      style: { ...ownProps.style, anchorName } as CSSProperties,
       id: ownProps.id ?? fallbackTriggerId,
       'aria-haspopup': 'dialog',
       'aria-expanded': isOpen,

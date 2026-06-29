@@ -243,6 +243,45 @@ describe('Popover', () => {
     expect(dialog).toHaveClass('ms-popover');
   });
 
+  it('回归:用户给 trigger 子元素传 style 时,anchor-name 不被覆盖(锚点不丢)', () => {
+    render(
+      <Popover
+        trigger={
+          <button type="button" style={{ maxInlineSize: '16rem' }}>
+            锚点
+          </button>
+        }
+      >
+        内容
+      </Popover>,
+    );
+
+    const trigger = screen.getByRole('button', { name: '锚点' });
+    // 用户自带的 style 仍生效
+    expect(trigger.style.getPropertyValue('max-inline-size')).toBe('16rem');
+    // 关键:anchor-name 同时存在(没被用户 style 展开覆盖掉),否则 CSS Anchor Positioning 失锚
+    const anchorName = trigger.style.getPropertyValue('anchor-name');
+    expect(anchorName).toMatch(/^--ms-popover-/);
+    // 行内 style 字符串里两者并存,锁定合并顺序(anchorName 放最后不被覆盖)
+    const inline = trigger.getAttribute('style') ?? '';
+    expect(inline).toContain('max-inline-size');
+    expect(inline).toContain('anchor-name');
+  });
+
+  it('回归:浮层根设置 position-anchor 指向同一 anchor-name(两侧锚点配对不丢)', () => {
+    render(
+      <Popover trigger={<button type="button">配对</button>} data-testid="pop-anchor">
+        内容
+      </Popover>,
+    );
+    const trigger = screen.getByRole('button', { name: '配对' });
+    const dialog = screen.getByTestId('pop-anchor');
+    const anchorName = trigger.style.getPropertyValue('anchor-name');
+    expect(anchorName).toMatch(/^--ms-popover-/);
+    // 面板侧 position-anchor 必须等于 trigger 的 anchor-name(且不被 ...rest 覆盖)
+    expect(dialog.style.getPropertyValue('position-anchor')).toBe(anchorName);
+  });
+
   it('classNames 槽位作用到 panel / arrow', () => {
     const { container } = render(
       <Popover

@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 import '@testing-library/jest-dom/vitest';
 import { act, fireEvent, render, screen } from '@testing-library/react';
+import type { CSSProperties } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { HoverCard } from './HoverCard';
 
@@ -448,5 +449,71 @@ describe('HoverCard', () => {
     );
     const trigger = screen.getByText('头像');
     expect(trigger).toHaveAttribute('tabindex', '-1');
+  });
+
+  // —— anchor 定位回归:用户给 trigger 子元素传 style 时,不得覆盖掉组件注入的 anchor-name ——
+  // 背景:CSS Anchor Positioning 靠 trigger 的 anchor-name + 卡片的 position-anchor 配对;若用户 style
+  // 把 anchor-name 顶掉,锚点丢失 → 卡片掉到 top-layer 左上角。anchorName 必须殿后、不被二次覆盖。
+  it('anchor:用户给 trigger 传 style 时,用户样式与 anchor-name 同时保留(anchorName 不被覆盖)', () => {
+    render(
+      <HoverCard openDelay={0} closeDelay={0}>
+        <HoverCard.Trigger>
+          <a href="/u/ada" style={{ maxInlineSize: '16rem' }}>
+            @ada
+          </a>
+        </HoverCard.Trigger>
+        <HoverCard.Content>卡</HoverCard.Content>
+      </HoverCard>,
+    );
+    const trigger = screen.getByRole('link', { name: '@ada' });
+    // 用户样式落地
+    expect(trigger.style.getPropertyValue('max-inline-size')).toBe('16rem');
+    // 关键:组件注入的 anchor-name 仍在(没被用户 style 覆盖掉)
+    const anchorName = trigger.style.getPropertyValue('anchor-name');
+    expect(anchorName).not.toBe('');
+    expect(anchorName.startsWith('--ms-hover-card-')).toBe(true);
+    // inline style 文本里两者并存
+    const styleAttr = trigger.getAttribute('style') ?? '';
+    expect(styleAttr).toContain('max-inline-size');
+    expect(styleAttr).toContain('anchor-name');
+  });
+
+  it('anchor:即便用户 style 里也带 anchor-name,组件注入的 anchor-name 仍胜出(殿后不被覆盖)', () => {
+    render(
+      <HoverCard openDelay={0} closeDelay={0}>
+        <HoverCard.Trigger>
+          {/* 用户故意传一个 anchorName,组件刚需的 anchorName 必须仍然生效 */}
+          <a href="/u/ada" style={{ anchorName: '--user-supplied' } as CSSProperties}>
+            @ada
+          </a>
+        </HoverCard.Trigger>
+        <HoverCard.Content>卡</HoverCard.Content>
+      </HoverCard>,
+    );
+    const trigger = screen.getByRole('link', { name: '@ada' });
+    const anchorName = trigger.style.getPropertyValue('anchor-name');
+    // 组件注入的命名空间锚点胜出,而非用户的 --user-supplied
+    expect(anchorName.startsWith('--ms-hover-card-')).toBe(true);
+    expect(anchorName).not.toBe('--user-supplied');
+  });
+
+  it('anchor:内容卡始终带 position-anchor,与 trigger 的 anchor-name 同名配对', () => {
+    render(
+      <HoverCard openDelay={0} closeDelay={0} defaultOpen>
+        <HoverCard.Trigger>
+          <a href="/u/ada" style={{ maxInlineSize: '16rem' }}>
+            @ada
+          </a>
+        </HoverCard.Trigger>
+        <HoverCard.Content>卡</HoverCard.Content>
+      </HoverCard>,
+    );
+    const trigger = screen.getByRole('link', { name: '@ada' });
+    const card = document.querySelector('.ms-hover-card') as HTMLElement;
+    const anchorName = trigger.style.getPropertyValue('anchor-name');
+    const positionAnchor = card.style.getPropertyValue('position-anchor');
+    // 面板 position-anchor 不丢,且与 trigger 的 anchor-name 同名(锚点正确配对)
+    expect(positionAnchor).not.toBe('');
+    expect(positionAnchor).toBe(anchorName);
   });
 });

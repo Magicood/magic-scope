@@ -511,6 +511,8 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       'aria-disabled'?: boolean;
     };
     const childTriggerRef = (trigger as { ref?: Ref<unknown> }).ref;
+    // 触发器 anchor-name:用户(child)style 先铺底,anchorName 放最后不被覆盖。
+    // 经 cloneElement(triggerInjected) 注入,是 child style 的最终合并,锚定不会丢。
     const triggerStyle: AnchorStyle = { ...triggerProps.style, anchorName };
 
     const triggerInjected: Record<string, unknown> = {
@@ -566,11 +568,14 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
     const renderedTrigger = cloneElement(trigger, triggerInjected as Record<string, unknown>);
 
     // —— 浮层定位 style ——
+    // 用户 style 先铺底,positionAnchor / 定位 CSS 变量放最后,确保锚定不被用户 style 覆盖
+    // (否则 position-anchor 丢失 → 浮层退化到 top-layer 左上角)。style 已从 props 解构出、
+    // 不在 ...rest 里,故面板上的 {...rest} 不会二次注入 style 把锚定盖掉。
     const popoverStyle: AnchorStyle = {
+      ...(style as AnchorStyle | undefined),
       positionAnchor: anchorName,
       '--ms-dropdown-area': placementToArea(resolvedPlacement),
       '--ms-dropdown-offset': `${offset}px`,
-      ...(style as AnchorStyle | undefined),
     };
 
     const rootClass = [
