@@ -1,0 +1,213 @@
+/* —— magic-scope 进场 / 滚动特效系统 · 框架无关 CSS 契约(Vue / WC 可直接复用) ——
+ *
+ * 机制(transition 状态机,非 animation):
+ *   data-ms-reveal="<变体>"  声明特效类型(SSR 即静态写入,无 FOUC)
+ *   data-ms-inview           观察器进视口时置位 → 元素从「初态」过渡到「终态」
+ *   无 data-ms-inview = 初态(隐藏 / 位移 / 缩放 / 模糊 / 裁剪);有 = 终态(自然态)
+ *
+ * 调制(复用三轴,不引第四乘子):
+ *   位移 / 缩放 / 模糊量统一乘 var(--ms-motion-scale)  → 全 1 / 弱 0.6 / 关 0 / reduced-motion 0
+ *   时长引 var(--ms-dur-base)(已含乘子,关 / reduced 时为 0ms = 瞬时直显,无需写 off 分支)
+ *   扫光强度乘 var(--ms-fx-glow)、取色 var(--ms-color-glow)
+ *
+ * 一次性 reveal 走 transition(天然无重播 hack);仅 shine / parallax / progress 用 animation。
+ * 焦点环永不接乘子(可达性铁律);只动 transform / opacity / filter / clip-path(合成层友好)。 */
+
+:root {
+  --ms-reveal-distance: 28px;
+  --ms-reveal-duration: var(--ms-dur-base);
+  --ms-reveal-delay: 0ms;
+  --ms-reveal-ease: var(--ms-ease-emphasized, cubic-bezier(0.34, 1.56, 0.64, 1));
+  --ms-reveal-stagger: 60ms;
+  --ms-reveal-blur: 12px;
+  --ms-reveal-scale: 0.92;
+  --ms-reveal-scale-out: 1.08;
+}
+
+/* —— 过渡定义(含 stagger:延迟 = 基准 + --i * 每档 * 乘子) —— */
+[data-ms-reveal] {
+  transition-property: opacity, transform, filter, clip-path;
+  transition-duration: var(--ms-reveal-duration);
+  transition-timing-function: var(--ms-reveal-ease);
+  transition-delay: calc(
+    var(--ms-reveal-delay) +
+    var(--i, 0) *
+    var(--ms-reveal-stagger) *
+    var(--ms-motion-scale, 1)
+  );
+}
+
+/* —— 初态:派生受乘子门控的位移 / 缩放 / 模糊量 —— */
+[data-ms-reveal]:not([data-ms-inview]) {
+  opacity: 0;
+  --_d: calc(var(--ms-reveal-distance) * var(--ms-motion-scale, 1));
+  --_blur: calc(var(--ms-reveal-blur) * var(--ms-motion-scale, 1));
+  --_scale: calc(1 - (1 - var(--ms-reveal-scale)) * var(--ms-motion-scale, 1));
+  --_scale-out: calc(1 + (var(--ms-reveal-scale-out) - 1) * var(--ms-motion-scale, 1));
+  will-change: opacity, transform;
+}
+
+/* fade 是基础,也是所有变体在「关 / reduced」下乘子归零后的天然降级形态 */
+[data-ms-reveal="up"]:not([data-ms-inview]) {
+  transform: translateY(var(--_d));
+}
+[data-ms-reveal="down"]:not([data-ms-inview]) {
+  transform: translateY(calc(-1 * var(--_d)));
+}
+[data-ms-reveal="left"]:not([data-ms-inview]) {
+  transform: translateX(var(--_d));
+}
+[data-ms-reveal="right"]:not([data-ms-inview]) {
+  transform: translateX(calc(-1 * var(--_d)));
+}
+
+[data-ms-reveal="up-left"]:not([data-ms-inview]) {
+  transform: translate(var(--_d), var(--_d));
+}
+[data-ms-reveal="up-right"]:not([data-ms-inview]) {
+  transform: translate(calc(-1 * var(--_d)), var(--_d));
+}
+[data-ms-reveal="down-left"]:not([data-ms-inview]) {
+  transform: translate(var(--_d), calc(-1 * var(--_d)));
+}
+[data-ms-reveal="down-right"]:not([data-ms-inview]) {
+  transform: translate(calc(-1 * var(--_d)), calc(-1 * var(--_d)));
+}
+
+[data-ms-reveal="zoom-in"]:not([data-ms-inview]) {
+  transform: scale(var(--_scale));
+}
+[data-ms-reveal="zoom-out"]:not([data-ms-inview]) {
+  transform: scale(var(--_scale-out));
+}
+
+[data-ms-reveal="flip-x"]:not([data-ms-inview]) {
+  transform: perspective(800px) rotateX(calc(80deg * var(--ms-motion-scale, 1)));
+}
+[data-ms-reveal="flip-y"]:not([data-ms-inview]) {
+  transform: perspective(800px) rotateY(calc(80deg * var(--ms-motion-scale, 1)));
+}
+
+[data-ms-reveal="rotate"]:not([data-ms-inview]) {
+  transform: rotate(calc(-6deg * var(--ms-motion-scale, 1))) scale(var(--_scale));
+}
+
+[data-ms-reveal="blur"]:not([data-ms-inview]) {
+  filter: blur(var(--_blur));
+}
+
+[data-ms-reveal="clip-up"]:not([data-ms-inview]) {
+  clip-path: inset(100% 0 0 0);
+}
+[data-ms-reveal="clip-down"]:not([data-ms-inview]) {
+  clip-path: inset(0 0 100% 0);
+}
+[data-ms-reveal="clip-left"]:not([data-ms-inview]) {
+  clip-path: inset(0 100% 0 0);
+}
+[data-ms-reveal="clip-right"]:not([data-ms-inview]) {
+  clip-path: inset(0 0 0 100%);
+}
+
+/* —— 终态:回到自然态 —— */
+[data-ms-reveal][data-ms-inview] {
+  opacity: 1;
+  transform: none;
+  filter: none;
+  clip-path: inset(0);
+  will-change: auto;
+}
+
+/* —— 遮罩揭示 mask-* / 文字逐行逐词逐字:容器裁剪 + 内层位移 —— */
+/* Reveal 组件在 mask / text-* 变体下包出 [data-ms-reveal-inner] 内层结构 */
+[data-ms-reveal^="mask-"],
+[data-ms-reveal-line] {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+}
+[data-ms-reveal-inner] {
+  display: inline-block;
+  transition-property: transform;
+  transition-duration: var(--ms-reveal-duration);
+  transition-timing-function: var(--ms-reveal-ease);
+  transition-delay: calc(
+    var(--ms-reveal-delay) +
+    var(--i, 0) *
+    var(--ms-reveal-stagger) *
+    var(--ms-motion-scale, 1)
+  );
+}
+[data-ms-reveal="mask-up"]:not([data-ms-inview]) > [data-ms-reveal-inner],
+[data-ms-reveal-line]:not([data-ms-inview]) > [data-ms-reveal-inner] {
+  transform: translateY(calc(100% * var(--ms-motion-scale, 1)));
+}
+[data-ms-reveal="mask-down"]:not([data-ms-inview]) > [data-ms-reveal-inner] {
+  transform: translateY(calc(-100% * var(--ms-motion-scale, 1)));
+}
+[data-ms-reveal="mask-left"]:not([data-ms-inview]) > [data-ms-reveal-inner] {
+  transform: translateX(calc(100% * var(--ms-motion-scale, 1)));
+}
+[data-ms-reveal="mask-right"]:not([data-ms-inview]) > [data-ms-reveal-inner] {
+  transform: translateX(calc(-100% * var(--ms-motion-scale, 1)));
+}
+[data-ms-reveal-inner][data-ms-inview],
+[data-ms-inview] > [data-ms-reveal-inner] {
+  transform: none;
+}
+
+/* —— 扫光 shine(文字 / 元素高光横扫):受 fx-glow 门控,reduced-motion 自停 —— */
+@keyframes ms-reveal-shine {
+  to {
+    background-position: 200% center;
+  }
+}
+[data-ms-reveal="shine"][data-ms-inview] {
+  background-image: linear-gradient(
+    100deg,
+    currentColor 0%,
+    currentColor 40%,
+    color-mix(in oklch, var(--ms-color-glow, #fff) calc(70% * var(--ms-fx-glow, 1)), currentColor)
+      50%,
+    currentColor 60%,
+    currentColor 100%
+  );
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: ms-reveal-shine 2.4s linear infinite;
+}
+
+/* —— 滚动进度驱动 scrub(parallax / progress):原生时间线,off-main-thread,双重门控 —— */
+@keyframes ms-reveal-parallax {
+  from {
+    transform: translateY(calc(-8% * var(--ms-motion-scale, 1)));
+  }
+  to {
+    transform: translateY(calc(8% * var(--ms-motion-scale, 1)));
+  }
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    [data-ms-reveal="parallax"] {
+      animation: ms-reveal-parallax linear both;
+      animation-timeline: view();
+      animation-range: cover;
+    }
+    [data-ms-reveal="progress"] {
+      animation: ms-reveal-shine linear both;
+      animation-timeline: scroll(root);
+    }
+  }
+}
+
+/* reduced-motion 兜底:三类 animation 乘子管不住,强制设终态(可见、静止) */
+@media (prefers-reduced-motion: reduce) {
+  [data-ms-reveal="shine"][data-ms-inview],
+  [data-ms-reveal="parallax"],
+  [data-ms-reveal="progress"] {
+    animation: none;
+    transform: none;
+  }
+}
