@@ -208,13 +208,12 @@
   border-radius: var(--ms-radius-full, 9999px);
   background: var(--ms-color-surface-raised, rgb(0 0 0 / 0.5));
   border: 1px solid var(--ms-color-border, transparent);
-  box-shadow:
-    0 12px 32px -16px rgb(0 0 0 / 0.6),
-    0 0 calc(28px * var(--ms-fx-glow, 1)) -12px var(--ms-color-glow, transparent);
+  /* 静息不发光:仅保留柔和中性投影 */
+  box-shadow: 0 12px 32px -18px rgb(0 0 0 / 0.32);
 }
 
 [data-ms-fx="off"] .ms-image__toolbar {
-  box-shadow: 0 12px 32px -16px rgb(0 0 0 / 0.6);
+  box-shadow: 0 12px 32px -18px rgb(0 0 0 / 0.32);
 }
 
 .ms-image__tool {

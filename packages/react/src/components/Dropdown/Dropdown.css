@@ -49,13 +49,11 @@
   border: 1px solid var(--ms-color-border);
   border-radius: var(--ms-radius-lg);
   background-color: var(--ms-color-surface-raised);
-  box-shadow:
-    0 24px 64px -24px rgb(0 0 0 / 0.45),
-    0 0 calc(40px * var(--ms-fx-glow, 1)) -16px var(--ms-c-glow);
+  box-shadow: 0 24px 64px -24px rgb(0 0 0 / 0.32);
 }
 
 [data-ms-fx="off"] .ms-dropdown__panel {
-  box-shadow: 0 24px 64px -24px rgb(0 0 0 / 0.45);
+  box-shadow: 0 24px 64px -24px rgb(0 0 0 / 0.32);
 }
 
 /* —— 锚定位:支持 anchor-name 时按 placement 锚定,offset 控制间距 —— */
@@ -182,7 +180,7 @@
   color: var(--ms-c-hover);
   box-shadow:
     inset 2px 0 0 var(--ms-c),
-    0 0 calc(16px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow);
+    0 0 calc(8px * var(--ms-fx-glow, 1)) -10px var(--ms-c-glow);
 }
 
 /* 键盘聚焦再叠加发光环,保证可达性(不受 fx 门控) */
@@ -221,7 +219,7 @@
   color: var(--ms-color-danger);
   box-shadow:
     inset 2px 0 0 var(--ms-color-danger),
-    0 0 calc(16px * var(--ms-fx-glow, 1)) -8px var(--ms-color-danger);
+    0 0 calc(8px * var(--ms-fx-glow, 1)) -10px var(--ms-color-danger);
 }
 .ms-dropdown__item--danger:focus-visible {
   box-shadow:
@@ -288,9 +286,7 @@
   border: 1px solid var(--ms-color-border);
   border-radius: var(--ms-radius-lg);
   background-color: var(--ms-color-surface-raised);
-  box-shadow:
-    0 24px 64px -24px rgb(0 0 0 / 0.45),
-    0 0 calc(40px * var(--ms-fx-glow, 1)) -16px var(--ms-c-glow);
+  box-shadow: 0 24px 64px -24px rgb(0 0 0 / 0.32);
 }
 /* 父菜单从左侧弹出时,子菜单也向左展开 */
 .ms-dropdown__submenu-wrap[data-submenu-side="left"] .ms-dropdown__submenu {
@@ -300,7 +296,7 @@
   margin-inline-end: var(--ms-space-1);
 }
 [data-ms-fx="off"] .ms-dropdown__submenu {
-  box-shadow: 0 24px 64px -24px rgb(0 0 0 / 0.45);
+  box-shadow: 0 24px 64px -24px rgb(0 0 0 / 0.32);
 }
 /* 子菜单展开时父项保持高亮 */
 .ms-dropdown__item--has-submenu[aria-expanded="true"] {

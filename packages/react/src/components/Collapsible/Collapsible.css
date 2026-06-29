@@ -37,12 +37,12 @@
     box-shadow var(--ms-dur-base) var(--ms-ease-standard);
 }
 
-/* —— hover:面板微亮 + 文字提亮(tone) + 内侧暖辉(tone glow) —— */
+/* —— hover:面板微亮 + 文字提亮(tone) + 收敛的内侧微辉(tone glow) —— */
 .ms-collapsible__trigger:not(:disabled):hover {
   background-color: var(--ms-color-surface-raised);
   border-color: var(--ms-c);
   color: var(--ms-c-hover);
-  box-shadow: inset 0 0 calc(20px * var(--ms-fx-glow, 1)) -14px var(--ms-c-glow);
+  box-shadow: inset 0 0 calc(8px * var(--ms-fx-glow, 1)) -16px var(--ms-c-glow);
 }
 
 /* —— 展开态:边框 / 文字染 tone 主色,弱化与下方内容的视觉缝隙 —— */
@@ -51,12 +51,10 @@
   color: var(--ms-c);
 }
 
-/* —— focus-visible:发光环(可达性,模糊半径不参与开关) —— */
+/* —— focus-visible:干净细环(可达性,无发光晕) —— */
 .ms-collapsible__trigger:focus-visible {
   outline: none;
-  box-shadow:
-    0 0 0 2px var(--ms-color-focus-ring),
-    0 0 calc(24px * var(--ms-fx-glow, 1)) -10px var(--ms-c-glow);
+  box-shadow: 0 0 0 2px var(--ms-color-focus-ring);
 }
 
 /* —— fx 总闸关闭:去掉装饰性辉光,只留可达性焦点环 —— */

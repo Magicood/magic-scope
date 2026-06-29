@@ -13,27 +13,22 @@
     box-shadow var(--ms-dur-base) var(--ms-ease-standard);
 }
 
-/* 聚焦任意内部元素:整体高亮 + 发光环(读 tone 6 槽位;invalid 时根挂 ms-tone-danger 自动变红) */
+/* 聚焦任意内部元素:整体高亮 + 干净细环(读 tone 6 槽位;invalid 时根挂 ms-tone-danger 自动变红) */
 .ms-number-input:focus-within {
   border-color: var(--ms-c, var(--ms-color-primary));
-  box-shadow:
-    0 0 0 3px color-mix(in oklch, var(--ms-c-glow, var(--ms-color-focus-ring)) 35%, transparent),
-    0 0 calc(16px * var(--ms-fx-glow, 1)) -6px var(--ms-c-glow, var(--ms-color-glow));
+  box-shadow: 0 0 0 3px
+    color-mix(in oklch, var(--ms-c-glow, var(--ms-color-focus-ring)) 28%, transparent);
 }
 
-/* 总闸关断发光 */
+/* 总闸关断发光(此处已无发光晕,与默认一致) */
 [data-ms-fx="off"] .ms-number-input:focus-within {
   box-shadow: 0 0 0 3px
-    color-mix(in oklch, var(--ms-c-glow, var(--ms-color-focus-ring)) 35%, transparent);
+    color-mix(in oklch, var(--ms-c-glow, var(--ms-color-focus-ring)) 28%, transparent);
 }
 
-/* —— 校验失败态:danger 边 + 发光,不依赖聚焦 —— */
+/* —— 校验失败态:danger 边,不依赖聚焦(静息不发光) —— */
 .ms-number-input--invalid {
   border-color: var(--ms-c, var(--ms-color-danger));
-  box-shadow: 0 0 calc(14px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow, var(--ms-color-danger));
-}
-[data-ms-fx="off"] .ms-number-input--invalid {
-  box-shadow: none;
 }
 
 /* —— 数字输入域:透明融入容器,居中,隐藏原生 spinner —— */

@@ -86,43 +86,40 @@
   transition: transform var(--ms-dur-fast) var(--ms-ease-emphasized);
 }
 
-/* —— hover:边框加强 + 微光晕染(仅具备 hover 能力的指针,消触屏 sticky-hover) —— */
+/* —— hover:边框加强 + 收敛微光(仅具备 hover 能力的指针,消触屏 sticky-hover) —— */
 @media (hover: hover) {
   .ms-radio__input:hover:not(:disabled) + .ms-radio__control {
     border-color: var(--ms-c);
-    box-shadow: 0 0 calc(10px * var(--ms-fx-glow, 1)) -3px var(--ms-c-glow);
+    box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) -5px var(--ms-c-glow);
   }
   .ms-radio__input:checked:hover:not(:disabled) + .ms-radio__control {
-    box-shadow: 0 0 calc(20px * var(--ms-fx-glow, 1)) -3px var(--ms-c-glow);
+    box-shadow: 0 0 calc(10px * var(--ms-fx-glow, 1)) -5px var(--ms-c-glow);
   }
 }
 
-/* —— focus-visible:发光聚焦环(不受 fx 门控,保证可达性) —— */
+/* —— focus-visible:干净聚焦细环(不受 fx 门控,保证可达性) —— */
 .ms-radio__input:focus-visible + .ms-radio__control {
   border-color: var(--ms-c);
   box-shadow:
     0 0 0 2px var(--ms-color-bg),
-    0 0 0 4px var(--ms-color-focus-ring),
-    0 0 calc(16px * var(--ms-fx-glow, 1)) -4px var(--ms-c-glow);
+    0 0 0 4px var(--ms-color-focus-ring);
 }
 
-/* —— checked:染 tone 主色底 + 内点显现 + 奥术微光 —— */
+/* —— checked:染 tone 主色底 + 内点显现(静息不发光) —— */
 .ms-radio__input:checked + .ms-radio__control {
   border-color: var(--ms-c);
   background-color: var(--ms-c);
   background-image: linear-gradient(160deg, var(--ms-c), var(--ms-c-active));
-  box-shadow: 0 0 calc(12px * var(--ms-fx-glow, 1)) -3px var(--ms-c-glow);
 }
 .ms-radio__input:checked + .ms-radio__control::after {
   transform: scale(1);
 }
 
-/* —— checked + focus-visible:聚焦环叠加 checked 微光 —— */
+/* —— checked + focus-visible:干净聚焦细环 —— */
 .ms-radio__input:checked:focus-visible + .ms-radio__control {
   box-shadow:
     0 0 0 2px var(--ms-color-bg),
-    0 0 0 4px var(--ms-color-focus-ring),
-    0 0 calc(18px * var(--ms-fx-glow, 1)) -4px var(--ms-c-glow);
+    0 0 0 4px var(--ms-color-focus-ring);
 }
 
 /* —— active:按下时轻微回缩反馈(motion-scale 只调装饰强度) —— */
@@ -187,22 +184,20 @@
 @media (hover: hover) {
   .ms-radio--card:has(.ms-radio__input:not(:disabled)):hover {
     border-color: var(--ms-c);
-    box-shadow: 0 0 calc(14px * var(--ms-fx-glow, 1)) -6px var(--ms-c-glow);
+    box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow);
   }
 }
-/* card 选中:柔底 + 主色边 + 辉光,圆点照常 checked */
+/* card 选中:柔底 + 主色边(静息不发光) */
 .ms-radio--card:has(.ms-radio__input:checked) {
   border-color: var(--ms-c);
   background-color: var(--ms-c-soft);
-  box-shadow: 0 0 calc(18px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow);
 }
-/* card 内 focus-visible:卡片整体出聚焦环(圆点本身的环在卡片内,这里给卡片描边强调) */
+/* card 内 focus-visible:卡片整体出干净聚焦细环(圆点本身的环在卡片内,这里给卡片描边强调) */
 .ms-radio--card:has(.ms-radio__input:focus-visible) {
   border-color: var(--ms-c);
   box-shadow:
     0 0 0 2px var(--ms-color-bg),
-    0 0 0 4px var(--ms-color-focus-ring),
-    0 0 calc(18px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow);
+    0 0 0 4px var(--ms-color-focus-ring);
 }
 /* card disabled:整卡片降透明 */
 .ms-radio--card:has(.ms-radio__input:disabled) {

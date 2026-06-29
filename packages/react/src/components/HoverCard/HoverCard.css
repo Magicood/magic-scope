@@ -48,10 +48,8 @@
   /* 内容边界:超长内容 / 无空格长串换行,不撑破卡片 */
   overflow-wrap: anywhere;
 
-  /* 奥术微光:tone 发光色的 glow,受 fx 总闸门控 */
-  box-shadow:
-    0 12px 32px -16px rgb(0 0 0 / 0.45),
-    0 0 calc(22px * var(--ms-fx-glow, 1)) -10px var(--ms-c-glow);
+  /* 静息不发光:仅保留柔和中性投影,优雅克制 */
+  box-shadow: 0 12px 32px -18px rgb(0 0 0 / 0.3);
 }
 
 /* —— offset 间距 + 入场微移:按主轴方位推开,逻辑属性 RTL 友好 —— */
@@ -203,9 +201,9 @@
   }
 }
 
-/* —— fx 总闸:关断发光的模糊光晕,保留可读的实色投影 —— */
+/* —— fx 总闸:静息已无光晕,保持与基态一致的中性投影 —— */
 [data-ms-fx="off"] .ms-hover-card__panel {
-  box-shadow: 0 12px 32px -16px rgb(0 0 0 / 0.45);
+  box-shadow: 0 12px 32px -18px rgb(0 0 0 / 0.3);
 }
 
 /* —— 尊重 reduced-motion:去过渡 / 去位移(覆盖各主轴入场微移) —— */

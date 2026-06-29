@@ -44,9 +44,8 @@
 .ms-editable__preview:focus-visible {
   outline: none;
   border-color: var(--ms-c, var(--ms-color-primary));
-  box-shadow:
-    0 0 0 3px color-mix(in oklch, var(--ms-c-glow, var(--ms-color-focus-ring)) 35%, transparent),
-    0 0 calc(14px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow, var(--ms-color-glow));
+  box-shadow: 0 0 0 3px
+    color-mix(in oklch, var(--ms-c-glow, var(--ms-color-focus-ring)) 35%, transparent);
 }
 
 /* 空值:占位文本染弱化前景 */
@@ -63,14 +62,8 @@
   border: 1px solid var(--ms-color-border);
   border-radius: var(--ms-radius-md);
   background-color: var(--ms-color-surface);
-  background-image: linear-gradient(
-    180deg,
-    color-mix(in oklch, var(--ms-color-glow) 4%, transparent),
-    transparent 60%
-  );
   color: inherit;
   font: inherit;
-  box-shadow: inset 0 0 calc(12px * var(--ms-fx-glow, 1)) -10px var(--ms-color-glow);
   transition:
     border-color var(--ms-dur-fast) var(--ms-ease-standard),
     box-shadow var(--ms-dur-base) var(--ms-ease-standard);
@@ -89,10 +82,8 @@ textarea.ms-editable__input {
 .ms-editable__input:focus {
   outline: none;
   border-color: var(--ms-c, var(--ms-color-primary));
-  box-shadow:
-    0 0 0 3px color-mix(in oklch, var(--ms-c-glow, var(--ms-color-focus-ring)) 35%, transparent),
-    0 0 calc(16px * var(--ms-fx-glow, 1)) -6px var(--ms-c-glow, var(--ms-color-glow)),
-    inset 0 0 calc(18px * var(--ms-fx-glow, 1)) -12px var(--ms-c, var(--ms-color-primary));
+  box-shadow: 0 0 0 3px
+    color-mix(in oklch, var(--ms-c-glow, var(--ms-color-focus-ring)) 35%, transparent);
 }
 
 /* —— invalid:染 danger 环(组件已挂 ms-tone-danger,--ms-c* 自动变 danger) —— */

@@ -8,10 +8,6 @@
   border: 1px solid var(--ms-color-border);
   border-radius: var(--ms-radius-lg);
   background-color: var(--ms-color-surface);
-  box-shadow: 0 0 calc(16px * var(--ms-fx-glow, 1)) -10px var(--ms-c-glow);
-}
-[data-ms-fx="off"] .ms-table-wrap {
-  box-shadow: none;
 }
 
 .ms-table {
@@ -105,11 +101,6 @@
 /* —— 选中行高亮:主色起始强调条 + 极淡主色底 + inset glow(fx 调制) —— */
 .ms-table__row--selected .ms-table__td {
   background-color: color-mix(in oklch, var(--ms-c) 10%, transparent);
-  box-shadow:
-    inset 2px 0 0 -1px var(--ms-c),
-    inset 0 0 calc(12px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow);
-}
-[data-ms-fx="off"] .ms-table__row--selected .ms-table__td {
   box-shadow: inset 2px 0 0 -1px var(--ms-c);
 }
 
@@ -207,14 +198,12 @@
 .ms-table__sort-btn[data-ms-sort="asc"] .ms-table__sort-arrow {
   color: var(--ms-c);
   opacity: 1;
-  filter: drop-shadow(0 0 calc(4px * var(--ms-fx-glow, 1)) var(--ms-c-glow));
   animation: ms-table-sort-pop var(--ms-dur-base) var(--ms-ease-emphasized);
 }
 .ms-table__sort-btn[data-ms-sort="desc"] .ms-table__sort-arrow {
   color: var(--ms-c);
   opacity: 1;
   transform: rotate(180deg);
-  filter: drop-shadow(0 0 calc(4px * var(--ms-fx-glow, 1)) var(--ms-c-glow));
   animation: ms-table-sort-pop var(--ms-dur-base) var(--ms-ease-emphasized);
 }
 @keyframes ms-table-sort-pop {

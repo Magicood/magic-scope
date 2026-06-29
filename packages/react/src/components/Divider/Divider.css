@@ -5,7 +5,6 @@
 .ms-divider {
   /* 线色:默认读 tone 主色;neutral 下覆盖为 border 色(见下),保持「分隔不抢眼」 */
   --ms-divider-color: var(--ms-c);
-  --ms-divider-glow: var(--ms-c-glow);
   /* 兜底:thickness / spacing 未注入时的默认值 */
   --ms-divider-thickness: 1px;
   --ms-divider-spacing: 0px;
@@ -16,10 +15,9 @@
     box-shadow var(--ms-dur-base) var(--ms-ease-standard);
 }
 
-/* neutral(默认 tone):线用 border 色,微光仍用全局 glow —— 克制、不抢视觉 */
+/* neutral(默认 tone):线用 border 色 —— 克制、不抢视觉 */
 .ms-divider.ms-tone-neutral {
   --ms-divider-color: var(--ms-color-border);
-  --ms-divider-glow: var(--ms-color-glow);
 }
 
 /* —— horizontal:横跨容器,上边框成线 —— */
@@ -29,20 +27,17 @@
   block-size: 0;
   border-block-start: var(--ms-divider-thickness) solid var(--ms-divider-color);
   margin-block: var(--ms-divider-spacing);
-  /* 奥术微光:沿线方向的渐变点缀,中段微亮、两端隐入 */
+  /* 沿线方向的柔和渐变:中段实、两端隐入(静息不发光,克制) */
   background-image: linear-gradient(
     90deg,
     transparent,
     var(--ms-divider-color) 18%,
-    var(--ms-divider-glow) 50%,
     var(--ms-divider-color) 82%,
     transparent
   );
   background-repeat: no-repeat;
   background-position: center;
   background-size: 100% var(--ms-divider-thickness);
-  /* idle 微光:由 --ms-fx-glow 控制强度,可整体关闭 */
-  box-shadow: 0 0 calc(6px * var(--ms-fx-glow, 1)) -3px var(--ms-divider-glow);
 }
 
 /* —— vertical:行内,贴满高度,起始侧边框成线 —— */
@@ -53,20 +48,17 @@
   vertical-align: middle;
   border-inline-start: var(--ms-divider-thickness) solid var(--ms-divider-color);
   margin-inline: var(--ms-divider-spacing);
-  /* 奥术微光:沿线方向的渐变点缀,中段微亮、两端隐入 */
+  /* 沿线方向的柔和渐变:中段实、两端隐入(静息不发光,克制) */
   background-image: linear-gradient(
     180deg,
     transparent,
     var(--ms-divider-color) 18%,
-    var(--ms-divider-glow) 50%,
     var(--ms-divider-color) 82%,
     transparent
   );
   background-repeat: no-repeat;
   background-position: center;
   background-size: var(--ms-divider-thickness) 100%;
-  /* idle 微光:由 --ms-fx-glow 控制强度,可整体关闭 */
-  box-shadow: 0 0 calc(6px * var(--ms-fx-glow, 1)) -3px var(--ms-divider-glow);
 }
 
 /* —— 线型:虚线 / 点线(对 <hr> 路径生效;labeled 路径在伪线上另设) —— */
@@ -105,7 +97,7 @@
   line-height: 1.4;
 }
 
-/* 两侧线段:flex 撑开,用 border 画线、渐变兜微光 */
+/* 两侧线段:flex 撑开,用 border 画线、渐变向文字侧渐隐(静息不发光) */
 .ms-divider__line {
   flex: 1 1 0;
   min-inline-size: 0;
@@ -115,20 +107,19 @@
     90deg,
     transparent,
     var(--ms-divider-color) 30%,
-    var(--ms-divider-glow) 70%
+    var(--ms-divider-color) 70%
   );
   background-repeat: no-repeat;
   background-position: center;
   background-size: 100% var(--ms-divider-thickness);
-  box-shadow: 0 0 calc(5px * var(--ms-fx-glow, 1)) -3px var(--ms-divider-glow);
 }
-/* 右侧线渐变方向镜像,让微光朝向文字中段 */
+/* 右侧线渐变方向镜像,过渡朝向文字中段 */
 .ms-divider__line + .ms-divider__content + .ms-divider__line {
   background-image: linear-gradient(
     270deg,
     transparent,
     var(--ms-divider-color) 30%,
-    var(--ms-divider-glow) 70%
+    var(--ms-divider-color) 70%
   );
 }
 
@@ -156,7 +147,6 @@
 }
 .ms-divider--labeled:not(.ms-tone-neutral) .ms-divider__content {
   color: var(--ms-c);
-  text-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) var(--ms-c-glow);
 }
 
 /* —— textAlign:偏置文字(收/放两侧线段的占比) —— */

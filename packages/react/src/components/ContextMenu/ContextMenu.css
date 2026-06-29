@@ -25,9 +25,7 @@
   background-color: var(--ms-color-surface-raised);
   color: var(--ms-color-fg);
   font-family: var(--ms-font-sans);
-  box-shadow:
-    0 24px 64px -24px rgb(0 0 0 / 0.45),
-    0 0 calc(40px * var(--ms-fx-glow, 1)) -16px var(--ms-c-glow);
+  box-shadow: 0 24px 64px -24px rgb(0 0 0 / 0.32);
   transform-origin: top left;
   animation: ms-context-menu-in var(--ms-dur-base) var(--ms-ease-emphasized);
 }
@@ -41,7 +39,7 @@
 
 /* 发光总闸关断:去掉外发光,保留景深投影 */
 [data-ms-fx="off"] .ms-context-menu {
-  box-shadow: 0 24px 64px -24px rgb(0 0 0 / 0.45);
+  box-shadow: 0 24px 64px -24px rgb(0 0 0 / 0.32);
 }
 
 /* —— 触控设备:浮层底部留出安全区,避免被手势条 / 圆角遮挡 —— */
