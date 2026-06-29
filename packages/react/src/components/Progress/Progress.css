@@ -42,7 +42,7 @@
   box-shadow: inset 0 0 calc(4px * var(--ms-fx-glow, 1)) -1px var(--ms-c-glow);
 }
 
-/* —— 线性填充:tone 槽位渐变 + 奥术发光 —— */
+/* —— 线性填充:tone 槽位渐变 + 克制微光(单层,深负扩散) —— */
 .ms-progress--linear .ms-progress__fill {
   position: relative;
   display: block;
@@ -51,9 +51,7 @@
   background-color: var(--ms-c);
   background-image: linear-gradient(90deg, var(--ms-c), var(--ms-c-glow));
   border-radius: var(--ms-radius-full);
-  box-shadow:
-    0 0 calc(var(--ms-progress-glow, 8px) * var(--ms-fx-glow, 1)) -1px var(--ms-c-glow),
-    0 0 calc(var(--ms-progress-glow, 8px) * 2 * var(--ms-fx-glow, 1)) -4px var(--ms-c-glow);
+  box-shadow: 0 0 calc(var(--ms-progress-glow, 8px) * var(--ms-fx-glow, 1)) -4px var(--ms-c-glow);
   transition:
     inline-size var(--ms-dur-base) var(--ms-ease-emphasized),
     box-shadow var(--ms-dur-base) var(--ms-ease-standard);
@@ -195,7 +193,7 @@
   align-items: center;
   justify-content: center;
   color: var(--ms-c);
-  text-shadow: 0 0 calc(0.4em * var(--ms-fx-glow, 1)) var(--ms-c-glow);
+  text-shadow: 0 0 calc(0.25em * var(--ms-fx-glow, 1)) var(--ms-c-glow);
 }
 
 /* —— 实例级发光关断 + 全局 fx 总闸关断 —— */

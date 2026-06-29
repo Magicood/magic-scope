@@ -14,15 +14,15 @@ const TONES: { tone: TabsTone; label: string }[] = [
 ];
 
 const items: TabItem[] = [
-  { value: 'arcane', label: '奥术' },
-  { value: 'frost', label: '冰霜' },
-  { value: 'ember', label: '余烬' },
+  { value: 'overview', label: '概览' },
+  { value: 'activity', label: '活动' },
+  { value: 'settings', label: '设置' },
 ];
 
 const sizeItems: TabItem[] = [
-  { value: 'arcane', label: 'Arcane 奥术' },
-  { value: 'frost', label: 'Frost 冰霜' },
-  { value: 'ember', label: 'Ember 余烬' },
+  { value: 'overview', label: 'Overview 概览' },
+  { value: 'activity', label: 'Activity 活动' },
+  { value: 'settings', label: 'Settings 设置' },
 ];
 
 export default function Demo() {
@@ -41,14 +41,14 @@ export default function Demo() {
             >
               {label}
             </span>
-            <Tabs items={items} defaultValue="arcane" variant="pill" tone={tone} />
+            <Tabs items={items} defaultValue="overview" variant="pill" tone={tone} />
           </div>
         ))}
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-        <Tabs items={sizeItems} defaultValue="arcane" tone="accent" size="sm" />
-        <Tabs items={sizeItems} defaultValue="arcane" tone="accent" size="md" />
-        <Tabs items={sizeItems} defaultValue="arcane" tone="accent" size="lg" />
+        <Tabs items={sizeItems} defaultValue="overview" tone="accent" size="sm" />
+        <Tabs items={sizeItems} defaultValue="overview" tone="accent" size="md" />
+        <Tabs items={sizeItems} defaultValue="overview" tone="accent" size="lg" />
       </div>
     </div>
   );

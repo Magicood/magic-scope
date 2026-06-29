@@ -11,13 +11,13 @@ export default function Demo() {
 
   return (
     <Empty
-      image={<span style={{ fontSize: '3rem' }}>🔮</span>}
+      image={<span style={{ fontSize: '3rem' }}>🔍</span>}
       tone="accent"
-      description={loading ? '正在重新探查…' : '搜索没有命中任何结果'}
+      description={loading ? '正在重新搜索…' : '没有找到匹配的结果'}
       style={{ inlineSize: 'min(360px, 100%)' }}
     >
       <Button variant="outline" disabled={loading} onClick={retry}>
-        {loading ? '探查中' : '重新探查'}
+        {loading ? '搜索中' : '重新搜索'}
       </Button>
       <Button variant="ghost">清除筛选</Button>
     </Empty>

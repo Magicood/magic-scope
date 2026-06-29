@@ -409,12 +409,14 @@ const MenuBase = forwardRef<HTMLDivElement, MenuProps>(
     } as Record<string, unknown>);
 
     // —— 浮层定位 style ——
+    // 用户 style 先展开,positionAnchor / 定位 token 放最后,确保不被用户 style 覆盖
+    // (否则浮层定位锚点丢失 → 弹层掉到 top-layer 左上角);与 trigger 侧 anchorName 放最后同理。
     const supportsArea = positionAreaFor(placement, align);
     const popoverStyle: AnchorStyle = {
+      ...(style as AnchorStyle | undefined),
       positionAnchor: anchorName,
       '--ms-menu-offset': `${offset}px`,
       '--ms-menu-area': supportsArea,
-      ...(style as AnchorStyle | undefined),
     };
 
     const rootClassName = ['ms-menu', `ms-tone-${tone}`, className, classNames?.root]

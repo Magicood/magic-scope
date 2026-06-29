@@ -5,7 +5,7 @@ import { Text } from '@magic-scope/react';
 const longUrl =
   'https://magic.example.com/very/long/path/segment/that/never/breaks?token=abcdefghijklmnopqrstuvwxyz0123456789';
 const longText =
-  '在魔法的世界里,文字不只是信息的载体,更是咒语本身。每一个字符都承载着施法者的意图,从微弱的低语到震彻天地的吟唱,文字排版系统必须在任意宽度下都保持优雅而不失控。';
+  '用于压力测试的超长正文,会持续延伸以验证多行省略的边界:无论容器宽度如何变化,排版系统都应在指定行数处优雅截断,既不撑破布局,也不裁掉焦点环。这段文字会一直写下去,直到足以触发省略号为止。';
 
 export default function Demo() {
   return (

@@ -1,9 +1,9 @@
 import { Switch } from '@magic-scope/react';
 
 const longWord =
-  '奥术充能超长连续标识符WithoutAnySpacesToProveWrappingAndOverflowAreContained固化于轨道之外不撑破布局';
+  '用于压力测试的超长连续标识符WithoutAnySpacesToProveWrappingAndOverflowAreContained始终约束在轨道之外不撑破布局';
 const longText =
-  '开启后将对当前法术阵列内的全部符文施加持续奥术充能,并在每一帧重算辉光强度、滑块位移与焦点环半径,以确保在任意视口宽度下开关本体始终保持紧凑,而承载的说明文案自然换行、不裁剪焦点环、不挤压控件命中区。';
+  '这是一段用于压力测试的超长说明正文,会持续延伸以模拟真实业务里偶尔出现的冗长设置项描述,并在每一帧重算光晕强度、滑块位移与焦点环半径,以确保在任意视口宽度下开关本体始终保持紧凑,而承载的说明文案自然换行、不裁剪焦点环、不挤压控件命中区。';
 
 export default function Demo() {
   return (

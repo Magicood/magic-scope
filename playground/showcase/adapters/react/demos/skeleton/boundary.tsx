@@ -6,7 +6,7 @@ import { useState } from 'react';
 const TITLE =
   'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
 const BODY =
-  '奥术长卷'.repeat(80) +
+  '用于压力测试的超长正文会持续延伸'.repeat(80) +
   ' https://example.com/超长无空格地址/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa?x=1';
 
 export default function Demo() {

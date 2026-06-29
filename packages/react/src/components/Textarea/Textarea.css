@@ -16,18 +16,11 @@
   border: 1px solid var(--ms-color-border);
   border-radius: var(--ms-radius-md);
   background-color: var(--ms-color-surface);
-  background-image: linear-gradient(
-    180deg,
-    color-mix(in oklch, var(--ms-c-glow, var(--ms-color-glow)) 5%, transparent),
-    transparent 40%
-  );
   color: var(--ms-color-fg);
   font-family: var(--ms-font-sans);
   line-height: 1.5;
   padding-block: var(--ms-space-2);
   padding-inline: var(--ms-space-4);
-  box-shadow: inset 0 0 calc(12px * var(--ms-fx-glow, 1)) -8px
-    var(--ms-c-glow, var(--ms-color-glow));
   transition:
     border-color var(--ms-dur-fast) var(--ms-ease-standard),
     box-shadow var(--ms-dur-base) var(--ms-ease-standard),
@@ -40,19 +33,15 @@
 
 .ms-textarea:hover:not(:disabled):not(.ms-textarea--invalid) {
   border-color: var(--ms-color-border-strong);
-  box-shadow:
-    inset 0 0 calc(12px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow, var(--ms-color-glow)),
-    0 0 calc(16px * var(--ms-fx-glow, 1)) -6px var(--ms-c-glow, var(--ms-color-glow));
+  box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow, var(--ms-color-glow));
 }
 
-/* 聚焦:色调读 tone 槽位(invalid 时根挂 ms-tone-danger,--ms-c/--ms-c-glow 自动变 danger) */
+/* 聚焦:干净细环(色调读 tone 槽位,invalid 时根挂 ms-tone-danger,--ms-c/--ms-c-glow 自动变 danger) */
 .ms-textarea:focus-visible {
   outline: none;
   border-color: var(--ms-c, var(--ms-color-primary));
-  box-shadow:
-    0 0 0 3px color-mix(in oklch, var(--ms-c-glow, var(--ms-color-focus-ring)) 35%, transparent),
-    inset 0 0 calc(14px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow, var(--ms-color-glow)),
-    0 0 calc(22px * var(--ms-fx-glow, 1)) -6px var(--ms-c-glow, var(--ms-color-glow));
+  box-shadow: 0 0 0 3px
+    color-mix(in oklch, var(--ms-c-glow, var(--ms-color-focus-ring)) 28%, transparent);
 }
 
 .ms-textarea:disabled {
@@ -67,9 +56,7 @@
 }
 .ms-textarea--invalid:focus-visible {
   border-color: var(--ms-color-danger);
-  box-shadow:
-    0 0 0 3px color-mix(in oklch, var(--ms-color-danger) 35%, transparent),
-    0 0 calc(20px * var(--ms-fx-glow, 1)) -6px var(--ms-color-danger);
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--ms-color-danger) 28%, transparent);
 }
 
 /* —— autosize:JS 控高,禁手动拖拽 + 隐藏溢出滚动条(由 JS 在触达 maxRows 时改回 auto) —— */
@@ -164,5 +151,5 @@
 }
 [data-ms-fx="off"] .ms-textarea:focus-visible {
   box-shadow: 0 0 0 3px
-    color-mix(in oklch, var(--ms-c-glow, var(--ms-color-focus-ring)) 35%, transparent);
+    color-mix(in oklch, var(--ms-c-glow, var(--ms-color-focus-ring)) 28%, transparent);
 }

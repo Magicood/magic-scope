@@ -354,6 +354,16 @@ export const HoverCardTrigger = forwardRef<HTMLElement, HoverCardTriggerProps>(
       else if (ref) (ref as { current: HTMLElement | null }).current = node;
     };
 
+    // anchor-name 与用户自带 style 合并:把 anchorName 放最后,确保它不被用户 style 覆盖。
+    // 关键:mergeAsChildProps 的 style 合并是 { ...parentStyle, ...childStyle }(child 在后、会覆盖),
+    // 若只把 { anchorName } 当 parent 交给它,用户若在 style 里带 anchorName(或同名 CSS 变量)就会盖掉锚点
+    // → position-anchor 失配 → 卡片掉到 top-layer 左上角。故这里先自行合并好(anchorName 殿后),
+    // 再作为单一 style 注入,且不把 style 列入 mergeAsChildProps 的 compose 路径让 child 再次覆盖。
+    const mergedStyle: AnchorStyle = {
+      ...(childProps.style as CSSProperties | undefined),
+      anchorName,
+    };
+
     // 只放「内部」处理器与注入属性;与 child 自带处理器的 compose 交给 mergeAsChildProps
     // (它会 child-first → 内部 的顺序 compose,用户 preventDefault 即阻断内部)。
     // 不在这里预先 compose,否则会与 mergeAsChildProps 二次合并导致 child handler 触发两次。
@@ -362,7 +372,7 @@ export const HoverCardTrigger = forwardRef<HTMLElement, HoverCardTriggerProps>(
       // 补充信息关联:卡片「有效可见」(open && !coarse)时 trigger aria-describedby 指向内容卡。
       // 仅看裸 open 会在触屏(coarse)下指向一张 inert / 不可达的卡 → 悬空引用,故用 describable。
       'aria-describedby': describable ? contentId : undefined,
-      style: { anchorName } as AnchorStyle,
+      style: mergedStyle,
       onPointerEnter: () => onEnter('trigger'),
       onPointerLeave: (event: ReactPointerEvent) => onLeave(event, 'trigger'),
       // 键盘可达:聚焦也打开、失焦也走桥接关闭判定。
@@ -377,9 +387,11 @@ export const HoverCardTrigger = forwardRef<HTMLElement, HoverCardTriggerProps>(
       injected.tabIndex = childProps.tabIndex ?? 0;
     }
 
-    // mergeAsChildProps:on* 两边都有则 compose(child 先、injected 后);style 合并(child 覆盖,
-    // 但 anchorName 是本组件刚需 → 用 child 不会带的 key,合并后保留);其它属性 child 优先(留住 href 等)。
-    return cloneElement(child, mergeAsChildProps(injected, childProps as Record<string, unknown>));
+    // mergeAsChildProps:on* 两边都有则 compose(child 先、injected 后);其它属性 child 优先(留住 href 等)。
+    // style 已在上面手动合并为 mergedStyle(anchorName 殿后),故从交给 mergeAsChildProps 的 childProps 里
+    // 剔除 style,避免它再做 { ...injected.style, ...child.style } 把用户 style 二次叠到 anchorName 之后覆盖锚点。
+    const { style: _childStyle, ...childPropsForMerge } = childProps as Record<string, unknown>;
+    return cloneElement(child, mergeAsChildProps(injected, childPropsForMerge));
   },
 );
 HoverCardTrigger.displayName = 'HoverCard.Trigger';

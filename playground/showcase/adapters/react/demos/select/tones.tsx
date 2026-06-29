@@ -13,9 +13,9 @@ const tones: { tone: SelectTone; label: string }[] = [
 ];
 
 const options = [
-  { value: 'arcane', label: 'Arcane 奥术紫' },
-  { value: 'frost', label: 'Frost 霜寒青' },
-  { value: 'ember', label: 'Ember 余烬品红' },
+  { value: 'arcane', label: 'Arcane 紫' },
+  { value: 'frost', label: 'Frost 蓝' },
+  { value: 'ember', label: 'Ember 品红' },
 ];
 
 export default function Demo() {

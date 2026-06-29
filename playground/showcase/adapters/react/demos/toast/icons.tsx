@@ -1,6 +1,6 @@
 import { Button, toast } from '@magic-scope/react';
 
-// icon 图标位:不传按 variant 给默认符文;传 ReactNode 覆盖;传 false 完全关闭图标列。
+// icon 图标位:不传按 variant 给默认图标;传 ReactNode 覆盖;传 false 完全关闭图标列。
 // closeIcon 同理可换关闭按钮内容。展示三种姿态各自的视觉差异。
 export default function Demo() {
   return (
@@ -8,8 +8,8 @@ export default function Demo() {
       <Button
         variant="outline"
         onClick={() =>
-          toast.success('符文已铭刻', {
-            icon: <span aria-hidden="true">🔮</span>,
+          toast.success('设置已保存', {
+            icon: <span aria-hidden="true">✅</span>,
           })
         }
       >
@@ -18,7 +18,7 @@ export default function Demo() {
       <Button
         variant="outline"
         onClick={() =>
-          toast.info('已切换至静默模式', {
+          toast.info('已开启免打扰模式', {
             icon: false,
           })
         }
@@ -28,9 +28,9 @@ export default function Demo() {
       <Button
         variant="outline"
         onClick={() =>
-          toast('卷轴已归档', {
-            description: '默认 variant 不带图标,符文需自行指定。',
-            icon: <span aria-hidden="true">📜</span>,
+          toast('草稿已归档', {
+            description: '默认 variant 不带图标,图标需自行指定。',
+            icon: <span aria-hidden="true">📄</span>,
             closeIcon: <span aria-hidden="true">✖</span>,
           })
         }

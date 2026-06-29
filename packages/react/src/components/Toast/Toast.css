@@ -77,15 +77,14 @@
   background-color: var(--ms-color-surface-raised);
   color: var(--ms-color-fg);
   font-family: var(--ms-font-sans);
-  /* 起始边强调条(inset 阴影)+ 立体投影 + 变体着色的奥术辉光。
-     强调色 / 辉光色读统一 tone 槽位(--ms-c / --ms-c-glow),随 tone resolver 换肤联动。
+  /* 起始边强调条(inset 阴影)+ 柔和立体投影(静息不发光,克制优雅)。
+     强调色读统一 tone 槽位(--ms-c),随 tone resolver 换肤联动。
      default 走 ms-tone-neutral,强调条回退中性 border-strong(无语义色干扰)。 */
   --ms-toast-accent: var(--ms-c);
   --ms-toast-glow: var(--ms-c-glow);
   box-shadow:
     inset 3px 0 0 var(--ms-toast-accent),
-    0 12px 32px -16px rgb(0 0 0 / 0.4),
-    0 0 calc(24px * var(--ms-fx-glow, 1)) -12px var(--ms-toast-glow);
+    0 12px 32px -16px rgb(0 0 0 / 0.28);
   /* 退场用平滑 standard 曲线(非过冲),避免淡出时先回弹进画面 */
   transition:
     opacity var(--ms-dur-base) var(--ms-ease-standard),
@@ -120,11 +119,11 @@
   --ms-toast-glow: var(--ms-color-glow);
 }
 
-/* 发光总闸:data-ms-fx="off" 时彻底关断辉光层(仅留强调条 + 立体投影) */
+/* 发光总闸:data-ms-fx="off" 时仅留强调条 + 柔和立体投影 */
 [data-ms-fx="off"] .ms-toast {
   box-shadow:
     inset 3px 0 0 var(--ms-toast-accent),
-    0 12px 32px -16px rgb(0 0 0 / 0.4);
+    0 12px 32px -16px rgb(0 0 0 / 0.28);
 }
 
 /* —— 整条可点击(onClick 透传):指针态 + 悬停微提亮,内部按钮 stopPropagation 不触发 —— */

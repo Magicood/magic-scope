@@ -20,7 +20,7 @@ function Playground({ values }: { values: ControlValues }) {
         onClose={() => setOpen(false)}
       >
         <Dialog.Header>
-          <Dialog.Title>奥术对话框</Dialog.Title>
+          <Dialog.Title>对话框示例</Dialog.Title>
           <Dialog.Description>
             原生 &lt;dialog&gt; + showModal():焦点陷阱、Esc、::backdrop 遮罩、入场动画。
             {values.dismissable ? '点遮罩可关闭。' : '已禁用点遮罩关闭,只能按按钮。'}

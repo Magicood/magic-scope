@@ -8,7 +8,7 @@ export default function Demo() {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
     const on = data.get('newsletter') === 'on';
-    setSubmitted(on ? '已订阅奥术周报 ✦' : '未订阅');
+    setSubmitted(on ? '已订阅产品周报' : '未订阅');
   }
 
   return (
@@ -17,8 +17,8 @@ export default function Demo() {
       style={{ display: 'inline-grid', gap: '0.75rem', justifyItems: 'start' }}
     >
       <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.75rem' }}>
-        <Switch name="newsletter" defaultChecked aria-label="订阅奥术周报" />
-        <span style={{ color: 'var(--ms-color-fg-muted)' }}>订阅奥术周报</span>
+        <Switch name="newsletter" defaultChecked aria-label="订阅产品周报" />
+        <span style={{ color: 'var(--ms-color-fg-muted)' }}>订阅产品周报</span>
       </div>
       <button type="submit" style={{ font: 'inherit', cursor: 'pointer' }}>
         提交

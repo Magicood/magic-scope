@@ -68,7 +68,7 @@
   outline: none;
   background-color: var(--ms-c-soft);
   color: var(--ms-c-hover);
-  box-shadow: 0 0 calc(18px * var(--ms-fx-glow, 1)) -10px var(--ms-c-glow);
+  box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) -12px var(--ms-c-glow);
 }
 
 /* 键盘聚焦:可达性发光环(不受 fx 门控) */
@@ -179,12 +179,10 @@
   border: 1px solid var(--ms-color-border);
   border-radius: var(--ms-radius-lg);
   background-color: var(--ms-color-surface-raised);
-  box-shadow:
-    0 24px 64px -24px rgb(0 0 0 / 0.45),
-    0 0 calc(48px * var(--ms-fx-glow, 1)) -20px var(--ms-c-glow);
+  box-shadow: 0 24px 64px -24px rgb(0 0 0 / 0.32);
 }
 [data-ms-fx="off"] .ms-navmenu__viewport-inner {
-  box-shadow: 0 24px 64px -24px rgb(0 0 0 / 0.45);
+  box-shadow: 0 24px 64px -24px rgb(0 0 0 / 0.32);
 }
 
 /* —— 锚定位:支持 anchor-name 时,Viewport 锚到 <nav> 的底边 —— */
@@ -243,14 +241,12 @@
   border: 1px solid var(--ms-color-border);
   border-radius: var(--ms-radius-lg);
   background-color: var(--ms-color-surface-raised);
-  box-shadow:
-    0 24px 64px -24px rgb(0 0 0 / 0.45),
-    0 0 calc(48px * var(--ms-fx-glow, 1)) -20px var(--ms-c-glow);
+  box-shadow: 0 24px 64px -24px rgb(0 0 0 / 0.32);
   /* 入场动画 */
   animation: ms-navmenu-pop var(--ms-dur-base) var(--ms-ease-emphasized);
 }
 [data-ms-fx="off"] .ms-navmenu__content {
-  box-shadow: 0 24px 64px -24px rgb(0 0 0 / 0.45);
+  box-shadow: 0 24px 64px -24px rgb(0 0 0 / 0.32);
 }
 
 @supports not (anchor-name: --x) {
@@ -324,7 +320,7 @@
 .ms-navmenu__grid-link:focus-visible {
   outline: none;
   background-color: var(--ms-c-soft);
-  box-shadow: 0 0 calc(16px * var(--ms-fx-glow, 1)) -10px var(--ms-c-glow);
+  box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) -12px var(--ms-c-glow);
 }
 .ms-navmenu__grid-link:focus-visible {
   box-shadow: 0 0 0 2px var(--ms-color-focus-ring);

@@ -5,9 +5,9 @@ export default function Demo() {
     <Tooltip
       content={
         <div style={{ display: 'grid', gap: '0.35rem', maxInlineSize: '16rem' }}>
-          <strong>奥术飞弹</strong>
+          <strong>键盘快捷键</strong>
           <span style={{ color: 'var(--ms-color-fg-muted)' }}>
-            塑能系 · 法力 3 · 必中三道魔法飞弹。
+            按 ⌘K 打开命令面板,⌘/ 查看全部快捷键。
           </span>
         </div>
       }

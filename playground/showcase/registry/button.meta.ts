@@ -4,7 +4,7 @@ export const meta: ComponentMeta = {
   id: 'button',
   name: 'Button',
   category: 'actions',
-  summary: '主操作按钮,三种视觉变体与三档尺寸,solid 带奥术发光。',
+  summary: '主操作按钮,五种视觉变体与三档尺寸,solid 带发光。',
   description:
     '自研、零依赖,消费 @magic-scope/tokens 的 --ms-* 变量。\n完整覆盖 hover / active / focus-visible / disabled 状态与平滑过渡;solid 变体带可调发光(受顶栏「光影」开关控制)。',
   controls: [
@@ -72,7 +72,7 @@ export const meta: ComponentMeta = {
     { type: 'boolean', prop: 'loading', label: '加载 loading', default: false },
     { type: 'boolean', prop: 'fullWidth', label: '铺满 fullWidth', default: false },
     { type: 'boolean', prop: 'disabled', label: '禁用 disabled', default: false },
-    { type: 'text', prop: 'children', label: '文案', default: '施法 ✦' },
+    { type: 'text', prop: 'children', label: '文案', default: '保存更改' },
   ],
   spread: 'button',
 };

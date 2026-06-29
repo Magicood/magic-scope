@@ -6,12 +6,12 @@ export default function Demo() {
   return (
     <div style={{ inlineSize: 'min(22rem, 100%)', color: 'var(--ms-color-fg-muted)' }}>
       <p style={{ marginBlockStart: 0, overflowWrap: 'anywhere' }}>
-        超长无空格串:奥术飞弹符文链路阿瓦达索命传送门坐标超长串
-        AbracadabraAlohomoraExpelliarmusWingardiumLeviosaAvadaKedavra1234567890
+        超长无空格串:数据库连接字符串与无分隔超长链接压测样本
+        https://api.example.com/v1/workspaces/projects/deployments/logs?token=abcdef1234567890
       </p>
       <Divider />
       <p style={{ overflowWrap: 'anywhere' }}>
-        巨量正文:法师在风暴之巅持续吟诵咒语,每一个音节都牵动着位面之间的丝线,长篇累牍的禁咒不断堆叠在魔典的边缘,文字几乎要溢出页面的边界,而分隔线仍稳稳地横跨整个容器,把上下两段隔得清清楚楚。
+        巨量正文:用于压力测试的超长正文,会持续延伸并不断堆叠段落内容,文字几乎要溢出容器的边界,而分隔线仍稳稳地横跨整个容器,把上下两段隔得清清楚楚。
       </p>
       <Divider />
       <div
@@ -23,7 +23,7 @@ export default function Demo() {
         }}
       >
         <span style={{ overflowWrap: 'anywhere', minInlineSize: 0 }}>
-          行内极限WingardiumLeviosaAvadaKedavra
+          行内极限deployment-pipeline-config-v2
         </span>
         <Divider orientation="vertical" />
         <span>尾项</span>

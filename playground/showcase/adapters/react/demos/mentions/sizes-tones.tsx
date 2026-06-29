@@ -4,9 +4,9 @@ import { Mentions } from '@magic-scope/react';
 // 尺寸 × 色调:size 影响 font-size 与 min-block-size(随密度缩放),
 // tone 决定聚焦发光环的色调。tone 不写死配色,只读 --ms-tone-* 槽位。
 const options: MentionOption[] = [
-  { value: 'arcanist', label: '奥术师·墨', icon: '🔮' },
-  { value: 'frostweaver', label: '霜织者·凛', icon: '❄️' },
-  { value: 'emberkin', label: '余烬使·焰', icon: '🔥' },
+  { value: 'mira', label: 'Mira Chen', icon: '🧭' },
+  { value: 'jonas', label: 'Jonas Park', icon: '🛠️' },
+  { value: 'ann', label: 'Ann Lee', icon: '🎨' },
 ];
 
 const sizes: MentionsSize[] = ['sm', 'md', 'lg'];

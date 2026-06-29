@@ -16,10 +16,6 @@
   background-position:
     -150% 0,
     0 0;
-  /* 微弱奥术发光,呼应主题:外层柔光 + 内侧描边微光,模糊半径受 fx-glow 调控 */
-  box-shadow:
-    0 0 calc(8px * var(--ms-fx-glow, 1)) -2px var(--ms-color-glow),
-    inset 0 0 calc(1px * var(--ms-fx-glow, 1)) 0 var(--ms-color-glow);
 }
 
 /* —— 动画分档:shimmer 横向流光 / pulse 透明度呼吸 / wave 渐变波动 / none 静态 —— */
@@ -119,7 +115,6 @@
   background-position:
     -150% 0,
     0 0;
-  box-shadow: inset 0 0 calc(1px * var(--ms-fx-glow, 1)) 0 var(--ms-color-glow);
 }
 /* 多行继承外层动画档:行级动画跟随根的 anim-* 类 */
 .ms-skeleton--anim-shimmer .ms-skeleton__line {

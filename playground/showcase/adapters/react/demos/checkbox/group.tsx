@@ -6,18 +6,18 @@ import { useState } from 'react';
  * 切换回传新的选中数组。tone / size / disabled 在组上统一下发,无需逐项重复。
  */
 export default function Demo() {
-  const [picked, setPicked] = useState<string[]>(['evocation', 'illusion']);
+  const [picked, setPicked] = useState<string[]>(['email', 'push']);
 
   return (
     <div style={{ display: 'grid', gap: '0.8rem' }}>
       <CheckboxGroup tone="accent" value={picked} onChange={setPicked} orientation="horizontal">
-        <Checkbox value="evocation">塑能</Checkbox>
-        <Checkbox value="conjuration">咒法</Checkbox>
-        <Checkbox value="illusion">惑控</Checkbox>
-        <Checkbox value="necromancy">死灵</Checkbox>
+        <Checkbox value="email">邮件</Checkbox>
+        <Checkbox value="push">推送</Checkbox>
+        <Checkbox value="sms">短信</Checkbox>
+        <Checkbox value="webhook">Webhook</Checkbox>
       </CheckboxGroup>
       <span style={{ color: 'var(--ms-fg-muted)', fontSize: '0.85rem' }}>
-        已选学派:{picked.length ? picked.join('、') : '(无)'}
+        已选渠道:{picked.length ? picked.join('、') : '(无)'}
       </span>
     </div>
   );

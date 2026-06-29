@@ -36,12 +36,12 @@ function Playground({ values }: { values: ControlValues }) {
       inline={values.inline as boolean}
       style={{ inlineSize: 'min(36rem, 100%)' }}
     >
-      <Cell>① 奥术</Cell>
-      <Cell>② 冰霜</Cell>
-      <Cell>③ 余烬</Cell>
-      <Cell>④ 虚空</Cell>
-      <Cell>⑤ 自然</Cell>
-      <Cell>⑥ 神圣</Cell>
+      <Cell>① 概览</Cell>
+      <Cell>② 活动</Cell>
+      <Cell>③ 成员</Cell>
+      <Cell>④ 计费</Cell>
+      <Cell>⑤ 集成</Cell>
+      <Cell>⑥ 设置</Cell>
     </Grid>
   );
 }

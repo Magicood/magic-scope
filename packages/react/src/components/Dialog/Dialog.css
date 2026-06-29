@@ -102,13 +102,11 @@
   overflow-y: auto;
   overscroll-behavior: contain;
   font-family: var(--ms-font-sans);
-  box-shadow:
-    0 24px 64px -24px rgb(0 0 0 / 0.45),
-    0 0 calc(40px * var(--ms-fx-glow, 1)) -16px var(--ms-c-glow, var(--ms-color-glow));
+  box-shadow: 0 24px 64px -24px rgb(0 0 0 / 0.32);
 }
 
 [data-ms-fx="off"] .ms-dialog__panel {
-  box-shadow: 0 24px 64px -24px rgb(0 0 0 / 0.45);
+  box-shadow: 0 24px 64px -24px rgb(0 0 0 / 0.32);
 }
 
 /* full 尺寸:面板铺满、去圆角与边框(定义在基础 panel 之后,避免降序特异性) */

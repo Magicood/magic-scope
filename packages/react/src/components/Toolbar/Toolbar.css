@@ -118,7 +118,6 @@
   background-color: var(--ms-c);
   border-color: var(--ms-c);
   color: var(--ms-on-c);
-  box-shadow: 0 0 calc(12px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow);
 }
 .ms-toolbar__button--outline {
   color: var(--ms-c);
@@ -137,7 +136,7 @@
   .ms-toolbar__button--solid:hover:not(:disabled) {
     background-color: var(--ms-c-hover);
     border-color: var(--ms-c-hover);
-    box-shadow: 0 0 calc(18px * var(--ms-fx-glow, 1)) -6px var(--ms-c-glow);
+    box-shadow: 0 0 calc(9px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow);
   }
   .ms-toolbar__button--outline:hover:not(:disabled) {
     background-color: var(--ms-c-soft);
@@ -150,14 +149,13 @@
   transform: scale(calc(1 - 0.03 * var(--ms-motion-scale, 1)));
 }
 
-/* —— focus-visible:tone 发光环 —— */
+/* —— focus-visible:干净细环(Linear/Stripe 风,无发光晕) —— */
 .ms-toolbar__button:focus-visible,
 .ms-toolbar__link:focus-visible {
   outline: none;
   box-shadow:
     0 0 0 2px var(--ms-color-bg),
-    0 0 0 4px var(--ms-color-focus-ring),
-    0 0 calc(14px * var(--ms-fx-glow, 1)) -4px var(--ms-c-glow);
+    0 0 0 4px var(--ms-color-focus-ring);
 }
 
 /* —— disabled —— */
@@ -269,9 +267,7 @@
   background-color: var(--ms-c-soft);
   border-color: color-mix(in oklch, var(--ms-c) 45%, transparent);
   color: var(--ms-c);
-  box-shadow:
-    inset 0 0 0 1px color-mix(in oklch, var(--ms-c) 30%, transparent),
-    0 0 calc(12px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow);
+  box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--ms-c) 30%, transparent);
 }
 @media (hover: hover) {
   .ms-toolbar__toggle-item--on:hover:not(:disabled) {

@@ -76,8 +76,7 @@
   outline: none;
   box-shadow:
     0 0 0 2px var(--ms-color-bg),
-    0 0 0 4px var(--ms-color-focus-ring),
-    0 0 calc(12px * var(--ms-fx-glow, 1)) -2px var(--ms-c-glow, var(--ms-color-glow));
+    0 0 0 4px var(--ms-color-focus-ring);
 }
 
 .ms-pagination__btn:active:not(:disabled) {
@@ -90,12 +89,11 @@
   opacity: 0.4;
 }
 
-/* —— 当前页:主色实底 + 奥术发光(读 tone 6 槽位) —— */
+/* —— 当前页:主色实底(读 tone 6 槽位,静息不发光) —— */
 .ms-pagination__btn--current {
   background-color: var(--ms-c, var(--ms-color-primary));
   border-color: var(--ms-c, var(--ms-color-primary));
   color: var(--ms-on-c, var(--ms-color-on-primary));
-  box-shadow: 0 0 calc(16px * var(--ms-fx-glow, 1)) -3px var(--ms-c-glow, var(--ms-color-glow));
   cursor: default;
 }
 
@@ -220,12 +218,11 @@
 .ms-pagination__size-select:focus-visible {
   outline: none;
   border-color: var(--ms-c, var(--ms-color-focus-ring));
-  box-shadow:
-    0 0 0 3px color-mix(in oklch, var(--ms-c-glow, var(--ms-color-focus-ring)) 30%, transparent),
-    0 0 calc(14px * var(--ms-fx-glow, 1)) -6px var(--ms-c-glow, var(--ms-color-glow));
+  box-shadow: 0 0 0 3px
+    color-mix(in oklch, var(--ms-c-glow, var(--ms-color-focus-ring)) 28%, transparent);
 }
 [data-ms-fx="off"] .ms-pagination__size-select:focus-visible {
-  box-shadow: 0 0 0 3px color-mix(in oklch, var(--ms-color-focus-ring) 30%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--ms-color-focus-ring) 28%, transparent);
 }
 
 /* —— 快速跳页 —— */
@@ -259,12 +256,11 @@
 .ms-pagination__jumper-input:focus-visible {
   outline: none;
   border-color: var(--ms-c, var(--ms-color-focus-ring));
-  box-shadow:
-    0 0 0 3px color-mix(in oklch, var(--ms-c-glow, var(--ms-color-focus-ring)) 30%, transparent),
-    0 0 calc(14px * var(--ms-fx-glow, 1)) -6px var(--ms-c-glow, var(--ms-color-glow));
+  box-shadow: 0 0 0 3px
+    color-mix(in oklch, var(--ms-c-glow, var(--ms-color-focus-ring)) 28%, transparent);
 }
 [data-ms-fx="off"] .ms-pagination__jumper-input:focus-visible {
-  box-shadow: 0 0 0 3px color-mix(in oklch, var(--ms-color-focus-ring) 30%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--ms-color-focus-ring) 28%, transparent);
 }
 
 /* —— 降级:reduced-motion / motion 总闸 关掉过渡与位移 —— */

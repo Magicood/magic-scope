@@ -7,7 +7,7 @@ export default function Demo() {
     <Steps current={1} direction="vertical" style={{ inlineSize: 'min(24rem, 100%)' }}>
       <Steps.Step
         title="超长标题对抗"
-        description="AbracadabraSupercalifragilisticexpialidocious超长无空格魔咒名应自动换行而非撑破布局"
+        description="AbracadabraSupercalifragilisticexpialidocious超长无空格标识符应自动换行而非撑破布局"
       />
       <Steps.Step
         title="长描述对抗"

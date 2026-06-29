@@ -56,7 +56,7 @@ export const meta: ComponentMeta = {
       type: 'text',
       prop: 'tooltip',
       label: '提示 tooltip',
-      default: '魔法操作',
+      default: '新建',
       placeholder: '留空则不显示',
     },
     {

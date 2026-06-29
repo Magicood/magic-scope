@@ -221,35 +221,35 @@ export function App() {
 
         <div style={{ display: 'grid', gap: '0.75rem' }}>
           <Text size="sm" tone="primary" weight="semibold" transform="uppercase" tracking="wider">
-            Typography · Text(多态 / 全属性 / 魔法 / 动效)
+            Typography · Text(多态 / 全属性 / 渐变 / 动效)
           </Text>
 
-          {/* 魔法静态:display 字体 / 渐变 / 辉光 / 描边 */}
+          {/* 静态视觉:display 字体 / 渐变 / 光晕 / 描边 */}
           <div style={row}>
             <Text size="3xl" family="display" weight="bold">
-              魔法标题 Aa
+              渐变标题 Aa
             </Text>
             <Text size="3xl" gradient="aurora" weight="bold">
-              渐变流光
+              极光渐变
             </Text>
             <Text size="3xl" glow="strong" tone="accent" weight="bold">
-              辉光
+              光晕
             </Text>
             <Text size="3xl" stroke tone="primary" weight="bold">
               描边字
             </Text>
           </div>
 
-          {/* 魔法动效:浏览器里是动的(受 motion 档调制) */}
+          {/* 文字动效:浏览器里是动的(受 motion 档调制) */}
           <div style={row}>
             <Text size="2xl" weight="bold" animate="shimmer">
-              流光扫过 shimmer
+              高光扫过 shimmer
             </Text>
             <Text size="2xl" weight="bold" animate="flow" tone="accent">
               渐变流动 flow
             </Text>
             <Text size="2xl" weight="bold" animate="pulse" tone="danger">
-              辉光呼吸 pulse
+              呼吸式发光 pulse
             </Text>
           </div>
           <div style={row}>
@@ -354,7 +354,7 @@ export function App() {
           </Text>
           <Input prefix="¥" placeholder="金额" defaultValue="1280" clearable />
           <Input type="password" placeholder="密码" defaultValue="secret" />
-          <Input showCount maxLength={20} placeholder="带计数" defaultValue="魔法文字" />
+          <Input showCount maxLength={20} placeholder="带计数" defaultValue="示例文字" />
           <Input addonBefore="https://" addonAfter=".com" placeholder="域名" />
         </div>
 
@@ -416,7 +416,7 @@ export function App() {
         <Button variant="outline" onClick={() => setDrawerOpen(true)}>
           打开 Drawer
         </Button>
-        <Tooltip content="奥术提示气泡 ✦">
+        <Tooltip content="提示气泡">
           <Button variant="outline">悬停看 Tooltip</Button>
         </Tooltip>
         <Popover
@@ -474,7 +474,7 @@ export function App() {
       </div>
 
       <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
-        <h3 style={{ marginBlockStart: 0 }}>奥术对话框</h3>
+        <h3 style={{ marginBlockStart: 0 }}>对话框</h3>
         <p style={{ color: 'var(--ms-color-fg-muted)' }}>
           原生 &lt;dialog&gt; + showModal:焦点陷阱、Esc、遮罩、入场动画。
         </p>

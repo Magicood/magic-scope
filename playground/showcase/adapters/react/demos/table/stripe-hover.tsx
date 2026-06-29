@@ -2,14 +2,14 @@ import { Table } from '@magic-scope/react';
 
 const columns = [
   { key: 'rank', header: '#', align: 'end' as const },
-  { key: 'name', header: '法术' },
-  { key: 'cost', header: '法力', align: 'end' as const },
+  { key: 'name', header: '套餐' },
+  { key: 'cost', header: '月费', align: 'end' as const },
 ];
 
 const data = [
-  { rank: 1, name: '奥术飞弹', cost: 3 },
-  { rank: 2, name: '火球术', cost: 5 },
-  { rank: 3, name: '传送门', cost: 7 },
+  { rank: 1, name: 'Starter 入门版', cost: 9 },
+  { rank: 2, name: 'Pro 专业版', cost: 29 },
+  { rank: 3, name: 'Team 团队版', cost: 79 },
 ];
 
 export default function Demo() {

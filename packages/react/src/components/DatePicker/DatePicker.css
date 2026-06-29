@@ -44,9 +44,7 @@
 .ms-datepicker__trigger:focus-visible {
   outline: none;
   border-color: var(--ms-c, var(--ms-color-primary));
-  box-shadow:
-    0 0 0 3px color-mix(in oklab, var(--ms-c, var(--ms-color-primary)) 25%, transparent),
-    0 0 calc(8px * var(--ms-fx-glow, 1)) var(--ms-c-glow, transparent);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--ms-c, var(--ms-color-primary)) 25%, transparent);
 }
 .ms-datepicker--invalid .ms-datepicker__trigger {
   border-color: var(--ms-color-danger);
@@ -234,7 +232,6 @@
   background: var(--ms-c, var(--ms-color-primary));
   color: var(--ms-c-on, #fff);
   font-weight: 600;
-  box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) var(--ms-c-glow, transparent);
 }
 .ms-calendar__cell--range-start {
   border-start-start-radius: var(--ms-radius-sm);

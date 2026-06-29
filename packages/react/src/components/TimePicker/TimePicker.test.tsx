@@ -190,6 +190,41 @@ describe('TimePicker', () => {
     vi.useRealTimers();
   });
 
+  // —— 回归:用户 style 不得覆盖 CSS Anchor Positioning 的 anchor-name / position-anchor ——
+  // 结构上 anchor-name 在根 span、position-anchor 在浮层 div,二者都不接收 {...rest},
+  // 用户 style 经 rest 落到内层 input,无法触及锚点元素 —— 本就安全。本测试锁定该不变量,
+  // 防后续重构把 {...rest} 误展开到锚点元素上而悄悄退化(弹层掉到 top-layer 左上角)。
+  it('用户传 style 时,根的 anchor-name 与浮层的 position-anchor 都不被覆盖', () => {
+    render(<TimePicker aria-label="时间" style={{ maxInlineSize: '16rem' }} />);
+    const trigger = screen.getByRole('combobox', { name: '时间' });
+
+    // 1) 用户 style 经 {...rest} 落到 trigger input,确实生效。
+    expect(trigger).toHaveStyle({ maxInlineSize: '16rem' });
+
+    // 2) 根 span(承载 anchor-name)未被用户 style 触及,anchor-name 完好。
+    const root = trigger.closest('.ms-time-picker') as HTMLElement;
+    expect(root).not.toBeNull();
+    const anchorName = root.style.getPropertyValue('anchor-name');
+    expect(anchorName).toMatch(/^--ms-time-/);
+    // 根 span 不应收到用户 style(rest 落在 input 上),anchor-name 不被挤掉。
+    expect(root.style.getPropertyValue('max-inline-size')).toBe('');
+
+    // 3) 浮层 panel(承载 position-anchor)同样完好,且与根的 anchor-name 同名。
+    const panel = root.querySelector('.ms-time-picker__panel') as HTMLElement;
+    expect(panel).not.toBeNull();
+    expect(panel.style.getPropertyValue('position-anchor')).toBe(anchorName);
+  });
+
+  // 用户 style 与 anchor-name 落在不同元素上,断言它们不会互相覆盖(同元素被覆盖才是 Select 那类 bug)。
+  it('用户 style 与 anchor-name 处于不同元素,inline style 各自完整', () => {
+    render(<TimePicker aria-label="时间" style={{ maxInlineSize: '12rem' }} />);
+    const trigger = screen.getByRole('combobox', { name: '时间' });
+    const root = trigger.closest('.ms-time-picker') as HTMLElement;
+    // trigger 的 inline style 含用户样式;根 span 的 inline style 含 anchor-name。
+    expect(trigger.getAttribute('style') ?? '').toContain('max-inline-size: 12rem');
+    expect(root.getAttribute('style') ?? '').toContain('anchor-name:');
+  });
+
   it('size 与 classNames 槽位生效', () => {
     render(
       <TimePicker

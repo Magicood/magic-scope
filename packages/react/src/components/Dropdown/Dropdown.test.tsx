@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 import '@testing-library/jest-dom/vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
+import type { CSSProperties } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { Dropdown, type DropdownItem } from './Dropdown';
 
@@ -313,5 +314,72 @@ describe('Dropdown', () => {
       'my-overlay',
     );
     expect(screen.getByRole('menuitem', { name: '动作', hidden: true })).toHaveClass('my-item');
+  });
+
+  // 回归:CSS Anchor Positioning 锚定不被用户 style 覆盖
+  // —— 触发器侧 anchor-name、面板侧 position-anchor 都要在用户 style 之后,
+  // 否则锚点丢失,popover 退化到 top-layer 左上角。
+  describe('CSS Anchor Positioning:用户 style 不覆盖锚定', () => {
+    it('trigger 子元素传 style:同时保留用户样式与 anchor-name', () => {
+      render(
+        <Dropdown
+          trigger={
+            <button type="button" style={{ maxInlineSize: '16rem' }}>
+              菜单
+            </button>
+          }
+          items={baseItems}
+        />,
+      );
+      const trigger = screen.getByRole('button', { name: '菜单' });
+      // 用户样式仍在。
+      expect(trigger.style.maxInlineSize).toBe('16rem');
+      // anchor-name 也在(未被用户 style 覆盖)——以 --ms-dropdown- 开头。
+      expect(trigger.style.getPropertyValue('anchor-name')).toMatch(/^--ms-dropdown-/);
+      // inline style 字符串里两者并存。
+      const cssText = trigger.getAttribute('style') ?? '';
+      expect(cssText).toContain('max-inline-size: 16rem');
+      expect(cssText).toContain('anchor-name:');
+    });
+
+    it('面板传 style:同时保留用户样式与 position-anchor', () => {
+      render(
+        <Dropdown
+          trigger={<button type="button">菜单</button>}
+          items={baseItems}
+          defaultOpen
+          style={{ maxInlineSize: '20rem' }}
+        />,
+      );
+      const panel = screen
+        .getByRole('menu', { hidden: true })
+        .closest('.ms-dropdown') as HTMLElement;
+      // 用户样式仍在。
+      expect(panel.style.maxInlineSize).toBe('20rem');
+      // position-anchor 未被覆盖,指向与 trigger 相同的 --ms-dropdown- 锚名。
+      expect(panel.style.getPropertyValue('position-anchor')).toMatch(/^--ms-dropdown-/);
+      const cssText = panel.getAttribute('style') ?? '';
+      expect(cssText).toContain('max-inline-size: 20rem');
+      expect(cssText).toContain('position-anchor:');
+    });
+
+    it('用户 style 显式带 position-anchor 也不能盖掉组件锚定(锚名放最后)', () => {
+      render(
+        <Dropdown
+          trigger={<button type="button">菜单</button>}
+          items={baseItems}
+          defaultOpen
+          // 用户恶意/无意传入冲突的 position-anchor:不得生效。
+          // positionAnchor 不在标准 CSSProperties 上,经 Record 透传给 DOM。
+          style={{ positionAnchor: '--evil' } as unknown as CSSProperties}
+        />,
+      );
+      const panel = screen
+        .getByRole('menu', { hidden: true })
+        .closest('.ms-dropdown') as HTMLElement;
+      // 组件锚定胜出(--ms-dropdown-*),而非 --evil。
+      expect(panel.style.getPropertyValue('position-anchor')).toMatch(/^--ms-dropdown-/);
+      expect(panel.style.getPropertyValue('position-anchor')).not.toBe('--evil');
+    });
   });
 });

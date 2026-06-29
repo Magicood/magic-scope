@@ -26,9 +26,8 @@
   visibility: hidden;
   transform: translateY(8px) scale(0.92);
   pointer-events: none;
-  box-shadow:
-    0 6px 20px -8px color-mix(in oklch, var(--ms-color-fg) 30%, transparent),
-    0 0 calc(14px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow);
+  /* 静息只留结构性中性阴影,不发光 */
+  box-shadow: 0 6px 20px -8px color-mix(in oklch, var(--ms-color-fg) 30%, transparent);
   transition:
     opacity var(--ms-dur-base) var(--ms-ease-standard),
     visibility var(--ms-dur-base) var(--ms-ease-standard),
@@ -71,7 +70,7 @@
     transform: translateY(-2px) scale(1);
     box-shadow:
       0 10px 26px -10px color-mix(in oklch, var(--ms-color-fg) 36%, transparent),
-      0 0 calc(22px * var(--ms-fx-glow, 1)) -6px var(--ms-c-glow);
+      0 0 calc(9px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow);
   }
 }
 
@@ -80,13 +79,12 @@
   transform: scale(calc(1 - 0.04 * var(--ms-motion-scale, 1)));
 }
 
-/* —— focus-visible:tone 发光环 —— */
+/* —— focus-visible:干净细环(无发光晕) —— */
 .ms-back-top:focus-visible {
   outline: none;
   box-shadow:
     0 0 0 2px var(--ms-color-bg),
-    0 0 0 4px var(--ms-color-focus-ring),
-    0 0 calc(16px * var(--ms-fx-glow, 1)) -4px var(--ms-c-glow);
+    0 0 0 4px var(--ms-color-focus-ring);
 }
 
 /* —— 触控:热区不低于目标尺寸 —— */

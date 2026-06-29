@@ -6,7 +6,8 @@ import { AspectRatio } from '@magic-scope/react';
  * 焦点环:链接放在带 padding 的内层,outline 不被 overflow 裁掉。
  */
 const LONG_TOKEN = 'ABRACADABRA-'.repeat(24);
-const LONG_TEXT = '奥术回路在虚空中盘旋,符文逐字点亮又熄灭,反复推演每一种坍缩的可能。'.repeat(20);
+const LONG_TEXT =
+  '这是一段用于压力测试的超长正文,会沿着容器持续向下延伸,反复堆叠以验证溢出处理。'.repeat(20);
 
 export default function Demo() {
   return (

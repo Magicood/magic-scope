@@ -20,7 +20,7 @@ function Playground({ values }: { values: ControlValues }) {
       <Popconfirm
         trigger={
           <Button variant={variant === 'danger' ? 'outline' : 'solid'}>
-            {variant === 'danger' ? '删除条目' : '提交施法'}
+            {variant === 'danger' ? '删除条目' : '提交审核'}
           </Button>
         }
         title={values.title as string}

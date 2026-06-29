@@ -10,7 +10,7 @@ export default function Demo() {
         step={2}
         showValue
         formatValue={(n) => `${n} 级`}
-        aria-label="法术等级"
+        aria-label="音量等级"
       />
       <Slider
         defaultValue={50}

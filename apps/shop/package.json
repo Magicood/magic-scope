@@ -1,0 +1,26 @@
+{
+  "name": "@magic-scope/demo-shop",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Daybreak — 用 @magic-scope 组件库搭的精品咖啡电商店铺(浅色暖色零售风),用于检验组件库在电商场景的实战效果",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@magic-scope/react": "workspace:*",
+    "@magic-scope/tokens": "workspace:*",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^4.7.0",
+    "typescript": "^6.0.3",
+    "vite": "^5.4.21"
+  }
+}

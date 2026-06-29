@@ -173,17 +173,14 @@
   border-radius: 0;
 }
 
-/* 选中:实心 + 发光(受 --ms-fx-glow 调) */
+/* 选中:实心填充(静息不发光,克制优雅) */
 .ms-cal__cell--selected {
   background: var(--ms-c, var(--ms-color-primary));
   color: var(--ms-on-c, #fff);
   font-weight: 600;
-  box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) var(--ms-c-glow, transparent);
 }
 .ms-cal__cell--selected.ms-cal__cell--today {
-  box-shadow:
-    inset 0 0 0 1px var(--ms-on-c, #fff),
-    0 0 calc(8px * var(--ms-fx-glow, 1)) var(--ms-c-glow, transparent);
+  box-shadow: inset 0 0 0 1px var(--ms-on-c, #fff);
 }
 .ms-cal__cell--range-start {
   border-start-start-radius: var(--ms-radius-sm);

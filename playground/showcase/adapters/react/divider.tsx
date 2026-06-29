@@ -18,19 +18,19 @@ function Playground({ values }: { values: ControlValues }) {
           color: 'var(--ms-color-fg-muted)',
         }}
       >
-        <span>奥术</span>
+        <span>概览</span>
         <Divider orientation="vertical" />
-        <span>秘法</span>
+        <span>活动</span>
         <Divider orientation="vertical" />
-        <span>禁咒</span>
+        <span>计费</span>
       </div>
     );
   }
   return (
     <div style={{ inlineSize: 'min(28rem, 100%)' }}>
-      <p style={{ marginBlockStart: 0, color: 'var(--ms-color-fg-muted)' }}>上半段魔典正文。</p>
+      <p style={{ marginBlockStart: 0, color: 'var(--ms-color-fg-muted)' }}>上半段说明正文。</p>
       <Divider orientation="horizontal" />
-      <p style={{ marginBlockEnd: 0, color: 'var(--ms-color-fg-muted)' }}>下半段魔典正文。</p>
+      <p style={{ marginBlockEnd: 0, color: 'var(--ms-color-fg-muted)' }}>下半段说明正文。</p>
     </div>
   );
 }

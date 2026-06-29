@@ -12,11 +12,7 @@ const tones: { tone: AutoCompleteTone; label: string }[] = [
   { tone: 'info', label: 'info 信息' },
 ];
 
-const options = [
-  { value: 'Arcane 奥术紫' },
-  { value: 'Frost 霜寒青' },
-  { value: 'Ember 余烬品红' },
-];
+const options = [{ value: 'Indigo 靛蓝' }, { value: 'Frost 霜蓝' }, { value: 'Ember 余烬橙' }];
 
 export default function Demo() {
   return (

@@ -15,24 +15,24 @@ const STEPS: {
 }[] = [
   {
     variant: 'success',
-    title: '咏唱完成',
-    time: '00:00',
+    title: '构建通过',
+    time: '09:00',
     icon: '✓',
-    body: '法阵已点亮,奥术能量注入完毕。',
+    body: '依赖安装与单元测试全部通过。',
   },
   {
     variant: 'primary',
-    title: '凝聚法球',
-    time: '00:03',
+    title: '部署预发',
+    time: '09:03',
     icon: '✦',
-    body: '元素汇聚成型,等待引导。',
+    body: '产物已发布到预发环境,等待验收。',
   },
   {
     variant: 'warning',
-    title: '能量过载',
-    time: '00:07',
+    title: '错误率上升',
+    time: '09:07',
     icon: '!',
-    body: '法球亮度异常,建议立即释放。',
+    body: '监控告警:错误率异常,建议立即排查。',
   },
 ];
 

@@ -15,7 +15,7 @@ export const meta: ComponentMeta = {
       default: 'primary',
       options: [
         { value: 'default', label: 'default 中性' },
-        { value: 'primary', label: 'primary 奥术' },
+        { value: 'primary', label: 'primary 主要' },
         { value: 'success', label: 'success 成功' },
         { value: 'warning', label: 'warning 警示' },
         { value: 'danger', label: 'danger 危险' },
@@ -47,7 +47,7 @@ export const meta: ComponentMeta = {
     { type: 'boolean', prop: 'pending', label: '进行中末节点 pending', default: false },
     { type: 'boolean', prop: 'showIcon', label: '显示图标 icon', default: true },
     { type: 'boolean', prop: 'showTime', label: '显示时间 time', default: true },
-    { type: 'text', prop: 'title', label: '首条标题 title', default: '法术初始化' },
+    { type: 'text', prop: 'title', label: '首条标题 title', default: '部署初始化' },
   ],
   spread: 'ol',
   alsoProps: ['TimelineItem'],

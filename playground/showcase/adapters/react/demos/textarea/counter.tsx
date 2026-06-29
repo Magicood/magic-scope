@@ -4,7 +4,7 @@ import { useState } from 'react';
 const MAX = 60;
 
 export default function Demo() {
-  const [value, setValue] = useState('在此写下你的咒文,字数将被实时统计。');
+  const [value, setValue] = useState('在此填写工单描述,字数将被实时统计。');
   const over = value.length > MAX;
   return (
     <div style={{ display: 'grid', gap: '0.4rem', inlineSize: 'min(28rem, 100%)' }}>

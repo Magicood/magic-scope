@@ -354,4 +354,41 @@ describe('NavigationMenu', () => {
     expect(onEscapeKeyDown).toHaveBeenCalledTimes(1);
     expect(company).toHaveAttribute('aria-expanded', 'false');
   });
+
+  /* —— 回归:CSS Anchor Positioning 不被用户 style 覆盖 ——
+   * 背景:同类浮层组件(如 Select)把 anchor-name 写进触发器的 inline style,若用户 style 在
+   * `{...rest}` 里二次展开会覆盖掉 anchor 样式,锚点丢失 → 浮层掉到 top-layer 左上角。
+   * NavigationMenu 走的是「另一套更稳的方案」:anchor-name / position-anchor 完全由 CSS 静态
+   * 声明(.ms-navmenu / .ms-navmenu__viewport,锚名固定为 --ms-navmenu-anchor),组件的 inline
+   * style 只放 --ms-navmenu-offset(间距变量),从不写 anchorName。因此用户 style 无论怎么覆盖
+   * inline style,都动不了 CSS 里的 anchor —— 结构上免疫该 bug。下面两条把这个不变式锁死。 */
+  it('回归(anchor):用户传 style 落到 <nav> 上,且不触碰任何 inline anchor-name(锚点不丢)', () => {
+    const { container } = render(
+      <NavigationMenu items={items} style={{ maxInlineSize: '16rem' }} />,
+    );
+    const nav = container.querySelector('.ms-navmenu') as HTMLElement;
+    expect(nav).toBeInTheDocument();
+    // 用户 style 生效(说明 style 经 {...rest} 落到了 nav 上)。
+    expect(nav.style.maxInlineSize).toBe('16rem');
+    // 组件从不把 anchor-name 写进 inline style(它在 CSS 里),所以用户 style 覆盖不到它。
+    // jsdom 下读 inline style 的 anchor-name 应为空 —— 证明锚点不依赖 inline、不会被用户 style 顶掉。
+    expect(nav.style.getPropertyValue('anchor-name')).toBe('');
+    // panel 侧(共享 Viewport)同理:打开后其 inline style 也不含 position-anchor。
+    fireEvent.click(screen.getByRole('button', { name: /公司/ }));
+    const viewport = container.querySelector('.ms-navmenu__viewport') as HTMLElement;
+    expect(viewport).toBeInTheDocument();
+    expect(viewport.style.getPropertyValue('position-anchor')).toBe('');
+  });
+
+  it('回归(anchor):CSS 契约 —— anchor-name 锚 <nav>、position-anchor 锚 Viewport(固定锚名,免疫 inline 覆盖)', () => {
+    // 这些声明都在 `@supports (anchor-name: --x) { … }` 内,锚名固定为 --ms-navmenu-anchor。
+    const supportsBlock = navMenuCss.match(/@supports \(anchor-name:[^)]*\)\s*\{[\s\S]*?\n\}/);
+    expect(supportsBlock).not.toBeNull();
+    const css = supportsBlock?.[0] ?? '';
+    // 触发器侧:.ms-navmenu 设 anchor-name(经 CSS,非 inline)。
+    expect(css).toMatch(/\.ms-navmenu\s*\{[^}]*anchor-name:\s*--ms-navmenu-anchor/);
+    // 面板侧:.ms-navmenu__viewport 设 position-anchor 指向同一锚名 + position-area。
+    expect(css).toMatch(/\.ms-navmenu__viewport\s*\{[^}]*position-anchor:\s*--ms-navmenu-anchor/);
+    expect(css).toMatch(/\.ms-navmenu__viewport\s*\{[^}]*position-area:/);
+  });
 });

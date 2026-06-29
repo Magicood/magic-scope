@@ -1,27 +1,27 @@
 import { Pagination } from '@magic-scope/react';
 import { useState } from 'react';
 
-const spells = [
-  '奥术飞弹',
-  '火球术',
-  '传送门',
-  '心灵感应',
-  '时间停滞',
-  '群体治疗',
-  '闪现',
-  '元素护盾',
-  '召唤魔仆',
-  '能量吸取',
+const members = [
+  'Mira Chen — 产品负责人',
+  'Jonas Park — 前端工程师',
+  'Ann Lee — 设计师',
+  'David Wu — 后端工程师',
+  'Sofia Reyes — 数据分析师',
+  'Liam Brooks — QA 工程师',
+  'Nina Petrov — 运营',
+  'Omar Haddad — 客户成功',
+  'Grace Kim — 市场',
+  'Tom Nguyen — 销售',
 ];
 
 const pageSize = 3;
-const total = Math.ceil(spells.length / pageSize);
+const total = Math.ceil(members.length / pageSize);
 
 // 生产用法:受控 page 驱动列表分片,onPageChange 切换数据。
 export default function Demo() {
   const [page, setPage] = useState(1);
   const start = (page - 1) * pageSize;
-  const slice = spells.slice(start, start + pageSize);
+  const slice = members.slice(start, start + pageSize);
   return (
     <div
       style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', minInlineSize: '14rem' }}

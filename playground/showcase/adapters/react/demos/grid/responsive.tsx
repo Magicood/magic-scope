@@ -29,14 +29,14 @@ export default function Demo() {
         <code>gap={'{{ base: 2, md: 4 }}'}</code> —— 缩放窗口宽度观察列数与间距跳档。
       </p>
       <Grid columns={{ base: 1, sm: 2, md: 3, lg: 4 }} gap={{ base: 2, md: 4 }}>
-        <Cell>奥术</Cell>
-        <Cell>冰霜</Cell>
-        <Cell>余烬</Cell>
-        <Cell>虚空</Cell>
-        <Cell>自然</Cell>
-        <Cell>神圣</Cell>
-        <Cell>暗影</Cell>
-        <Cell>秘法</Cell>
+        <Cell>概览</Cell>
+        <Cell>项目</Cell>
+        <Cell>成员</Cell>
+        <Cell>活动</Cell>
+        <Cell>文档</Cell>
+        <Cell>报表</Cell>
+        <Cell>计费</Cell>
+        <Cell>设置</Cell>
       </Grid>
     </div>
   );

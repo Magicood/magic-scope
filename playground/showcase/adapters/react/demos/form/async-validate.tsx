@@ -5,13 +5,13 @@ interface Values extends Record<string, unknown> {
   handle: string;
 }
 
-const TAKEN = ['admin', 'merlin', 'gandalf'];
+const TAKEN = ['admin', 'mira', 'jonas'];
 
 /** 模拟一次远端查重(自带防抖 + 竞态取消,旧请求会被 AbortSignal 取消)。 */
 function checkRemote(name: string, signal?: AbortSignal): Promise<true | string> {
   return new Promise((resolve, reject) => {
     const t = setTimeout(() => {
-      if (TAKEN.includes(name.toLowerCase())) resolve('该名号已被占用');
+      if (TAKEN.includes(name.toLowerCase())) resolve('该用户名已被占用');
       else resolve(true);
     }, 700);
     signal?.addEventListener('abort', () => {
@@ -47,14 +47,14 @@ export default function Demo() {
       <Form
         form={form}
         disabled={locked}
-        onSubmit={() => alert('名号可用,注册成功!')}
+        onSubmit={() => alert('用户名可用,注册成功!')}
         style={{ display: 'grid', gap: 'var(--ms-space-3, 0.75rem)' }}
       >
         <Form.Field
           name="handle"
-          label="法师名号"
+          label="用户名"
           required
-          help="输入后约 0.7s 远端查重;试试 merlin / gandalf(已占用)。"
+          help="输入后约 0.7s 远端查重;试试 mira / jonas(已占用)。"
         >
           {(field, state) => (
             <div style={{ display: 'grid', gap: '0.3rem' }}>

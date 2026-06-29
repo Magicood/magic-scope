@@ -62,14 +62,14 @@
   color: var(--ms-c-hover);
 }
 
-/* 打开态触发器:主色填充 + 微光,标识当前活动菜单 */
+/* 打开态触发器:主色填充 + 底部指示条标识当前活动菜单(静息不发光) */
 .ms-menubar__trigger--open,
 .ms-menubar__trigger[aria-expanded="true"] {
   background-color: var(--ms-c-soft);
   color: var(--ms-c-hover);
   box-shadow:
     inset 0 -2px 0 var(--ms-c),
-    0 0 calc(16px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow);
+    0 0 calc(8px * var(--ms-fx-glow, 1)) -10px var(--ms-c-glow);
 }
 
 /* 键盘聚焦发光环(不受 fx 门控,保证可达性) */
@@ -138,12 +138,10 @@
   border: 1px solid var(--ms-color-border);
   border-radius: var(--ms-radius-lg);
   background-color: var(--ms-color-surface-raised);
-  box-shadow:
-    0 24px 64px -24px rgb(0 0 0 / 0.45),
-    0 0 calc(40px * var(--ms-fx-glow, 1)) -16px var(--ms-c-glow);
+  box-shadow: 0 24px 64px -24px rgb(0 0 0 / 0.32);
 }
 [data-ms-fx="off"] .ms-menubar__panel {
-  box-shadow: 0 24px 64px -24px rgb(0 0 0 / 0.45);
+  box-shadow: 0 24px 64px -24px rgb(0 0 0 / 0.32);
 }
 
 /* 锚定位:支持 anchor-name 时按 placement 锚到触发器,offset 控制间距 */
@@ -260,7 +258,7 @@
   color: var(--ms-c-hover);
   box-shadow:
     inset 2px 0 0 var(--ms-c),
-    0 0 calc(16px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow);
+    0 0 calc(8px * var(--ms-fx-glow, 1)) -10px var(--ms-c-glow);
 }
 .ms-menubar__item:focus-visible {
   box-shadow:
@@ -293,7 +291,7 @@
   color: var(--ms-color-danger);
   box-shadow:
     inset 2px 0 0 var(--ms-color-danger),
-    0 0 calc(16px * var(--ms-fx-glow, 1)) -8px var(--ms-color-danger);
+    0 0 calc(8px * var(--ms-fx-glow, 1)) -10px var(--ms-color-danger);
 }
 .ms-menubar__item--danger:focus-visible {
   box-shadow:
@@ -360,12 +358,10 @@
   border: 1px solid var(--ms-color-border);
   border-radius: var(--ms-radius-lg);
   background-color: var(--ms-color-surface-raised);
-  box-shadow:
-    0 24px 64px -24px rgb(0 0 0 / 0.45),
-    0 0 calc(40px * var(--ms-fx-glow, 1)) -16px var(--ms-c-glow);
+  box-shadow: 0 24px 64px -24px rgb(0 0 0 / 0.32);
 }
 [data-ms-fx="off"] .ms-menubar__submenu {
-  box-shadow: 0 24px 64px -24px rgb(0 0 0 / 0.45);
+  box-shadow: 0 24px 64px -24px rgb(0 0 0 / 0.32);
 }
 .ms-menubar__item--has-submenu[aria-expanded="true"] {
   background-color: var(--ms-c-soft);

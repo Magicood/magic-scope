@@ -485,6 +485,7 @@ const MenubarMenu = forwardRef<HTMLButtonElement, MenubarMenuProps>(
       disabled: menuDisabled = false,
       textValue,
       className,
+      style,
       onClick,
       onKeyDown,
       onPointerEnter,
@@ -1024,7 +1025,10 @@ const MenubarMenu = forwardRef<HTMLButtonElement, MenubarMenuProps>(
       .filter(Boolean)
       .join(' ');
 
-    const triggerStyle: AnchorStyle = { anchorName };
+    // 用户 style 与 anchorName 合并:anchorName 放最后,确保不被用户 style(或下方 {...rest})覆盖
+    // ——style 已从 props 解构出、不在 rest 里,故 {...rest} 不会二次覆盖 anchor-name
+    // (否则触发器锚点丢失 → 菜单浮层掉到 top-layer 左上角)。
+    const triggerStyle: AnchorStyle = { ...style, anchorName };
 
     const side = ctx.placement.startsWith('top') ? 'top' : 'bottom';
     const align = ctx.placement.endsWith('-end') ? 'end' : 'start';

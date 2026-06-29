@@ -11,7 +11,7 @@ import { buildDemos } from '../../core/collectDemos';
 import type { ReactAdapter } from '../../core/types';
 import type { ControlValues } from '../../types';
 
-// 占位块:用半透明奥术色块直观展示堆叠/对齐/分布,不依赖文字内容。
+// 占位块:用半透明强调色块直观展示堆叠/对齐/分布,不依赖文字内容。
 const blockStyle: CSSProperties = {
   display: 'grid',
   placeItems: 'center',

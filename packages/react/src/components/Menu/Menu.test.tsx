@@ -239,6 +239,41 @@ describe('Menu', () => {
     expect(onOpenChange).not.toHaveBeenCalledWith(false);
   });
 
+  it('trigger 传入的用户 style 与 anchor-name 共存(anchor-name 不被用户 style 覆盖)', () => {
+    render(
+      <Menu
+        trigger={
+          <button type="button" style={{ maxInlineSize: '16rem' }}>
+            操作
+          </button>
+        }
+        items={items}
+      />,
+    );
+    const trigger = screen.getByRole('button', { name: '操作' });
+    // 用户样式保留
+    expect(trigger.style.maxInlineSize).toBe('16rem');
+    // anchor-name 仍在(以 --ms-menu- 开头),未被用户 style 覆盖丢失
+    const anchorName = trigger.style.getPropertyValue('anchor-name');
+    expect(anchorName).toMatch(/^--ms-menu-/);
+  });
+
+  it('浮层根传入的用户 style 与 position-anchor 共存(position-anchor 不被用户 style 覆盖)', () => {
+    render(
+      <Menu
+        trigger={<button type="button">操作</button>}
+        items={items}
+        style={{ maxInlineSize: '16rem' }}
+      />,
+    );
+    const menu = screen.getByRole('menu', { hidden: true });
+    // 用户样式保留
+    expect(menu.style.maxInlineSize).toBe('16rem');
+    // position-anchor 仍在(以 --ms-menu- 开头),未被用户 style 覆盖丢失
+    const positionAnchor = menu.style.getPropertyValue('position-anchor');
+    expect(positionAnchor).toMatch(/^--ms-menu-/);
+  });
+
   it('组合式 Menu.Item / Separator / Group 可独立渲染', () => {
     render(
       <Menu.Group label="文件">

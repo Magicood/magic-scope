@@ -4,7 +4,7 @@ import { useRef, useState } from 'react';
 // 事件触发:multiple 受控(value 走 useState),每次回调把事件名+实参实时打印到列表。
 // onExpandedChange 在 onValueChange 之前触发,故日志里靠下的那条更早(列表 newest-first)。
 export default function Demo() {
-  const [value, setValue] = useState<string[]>(['arcane']);
+  const [value, setValue] = useState<string[]>(['general']);
   const [log, setLog] = useState<{ id: number; text: string }[]>([]);
   const idRef = useRef(0);
   const push = (text: string) => setLog((l) => [{ id: idRef.current++, text }, ...l].slice(0, 6));
@@ -16,18 +16,18 @@ export default function Demo() {
         value={value}
         items={[
           {
-            value: 'arcane',
-            title: '奥术回路 Arcane',
+            value: 'general',
+            title: '常见问题',
             content: '点击任意头部:观察下方实时打印的事件名与实参。',
           },
           {
-            value: 'frost',
-            title: '霜结协议 Frost',
+            value: 'account',
+            title: '账户与登录',
             content: 'onTriggerClick → onExpandedChange → onValueChange 依次触发。',
           },
           {
-            value: 'ember',
-            title: '余烬通道 Ember',
+            value: 'billing',
+            title: '计费与发票',
             content: 'multiple 受控:onValueChange 回 string[],需自行写回 value。',
           },
         ]}

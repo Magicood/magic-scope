@@ -206,7 +206,7 @@
 }
 
 .ms-descriptions--bordered:hover .ms-descriptions__body {
-  box-shadow: 0 0 calc(12px * var(--ms-fx-glow, 0))
+  box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 0)) -2px
     color-mix(in oklch, var(--ms-c-glow) 40%, transparent);
 }
 

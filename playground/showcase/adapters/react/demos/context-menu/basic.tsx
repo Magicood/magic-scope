@@ -6,9 +6,9 @@ export default function Demo() {
   const [last, setLast] = useState('');
 
   const items: MenuItem[] = [
-    { label: '✦ 召唤法阵', onSelect: () => setLast('召唤法阵') },
-    { label: '↻ 重铸符文', onSelect: () => setLast('重铸符文') },
-    { label: '⌖ 标记目标', onSelect: () => setLast('标记目标') },
+    { label: '✎ 重命名', onSelect: () => setLast('重命名') },
+    { label: '⧉ 复制副本', onSelect: () => setLast('复制副本') },
+    { label: '⤴ 分享链接', onSelect: () => setLast('分享链接') },
   ];
 
   return (

@@ -3,23 +3,27 @@ import { Tabs } from '@magic-scope/react';
 
 const items: TabItem[] = [
   {
-    value: 'arcane',
-    label: 'Arcane 奥术',
-    content: <p style={{ margin: 0 }}>奥术系:瞬发与爆发。</p>,
+    value: 'overview',
+    label: 'Overview 概览',
+    content: <p style={{ margin: 0 }}>概览:进度、成员与关键指标一览。</p>,
   },
   {
-    value: 'frost',
-    label: 'Frost 冰霜',
-    content: <p style={{ margin: 0 }}>冰霜系:减速与控场。</p>,
+    value: 'activity',
+    label: 'Activity 活动',
+    content: <p style={{ margin: 0 }}>活动:最近的变更与评论。</p>,
   },
-  { value: 'ember', label: 'Ember 余烬', content: <p style={{ margin: 0 }}>余烬系:持续灼烧。</p> },
+  {
+    value: 'settings',
+    label: 'Settings 设置',
+    content: <p style={{ margin: 0 }}>设置:偏好、通知与权限。</p>,
+  },
 ];
 
 export default function Demo() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', inlineSize: '100%' }}>
-      <Tabs items={items} defaultValue="arcane" variant="underline" />
-      <Tabs items={items} defaultValue="arcane" variant="pill" />
+      <Tabs items={items} defaultValue="overview" variant="underline" />
+      <Tabs items={items} defaultValue="overview" variant="pill" />
     </div>
   );
 }

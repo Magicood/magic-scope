@@ -13,7 +13,7 @@ function Playground({ values }: { values: ControlValues }) {
     setChecked(initial);
   }, [initial]);
 
-  const label = (values.label as string) || '启用魔法';
+  const label = (values.label as string) || '桌面通知';
   return (
     <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.75rem' }}>
       <Switch
@@ -26,7 +26,7 @@ function Playground({ values }: { values: ControlValues }) {
         aria-label={label}
       />
       <span style={{ color: 'var(--ms-color-fg-muted)', userSelect: 'none' }}>
-        {label}:{checked ? '开 ✦' : '关'}
+        {label}:{checked ? '已开启' : '已关闭'}
       </span>
     </div>
   );

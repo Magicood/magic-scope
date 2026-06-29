@@ -207,10 +207,7 @@
 .ms-transfer__op-button:focus-visible {
   outline: none;
   border-color: var(--ms-color-primary);
-  box-shadow:
-    0 0 0 3px var(--ms-color-focus-ring),
-    /* 魔法发光:fx-glow 开时溢出微光,关时为 0 */
-    0 0 calc(10px * var(--ms-fx-glow, 0)) var(--ms-color-glow);
+  box-shadow: 0 0 0 3px var(--ms-color-focus-ring);
 }
 
 .ms-transfer__op-button:disabled {

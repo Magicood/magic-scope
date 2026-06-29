@@ -5,27 +5,27 @@ import { buildDemos } from '../../core/collectDemos';
 import type { ReactAdapter } from '../../core/types';
 import type { ControlValues } from '../../types';
 
-const SCHOOLS = [
-  { value: 'arcane', label: 'Arcane 奥术' },
-  { value: 'frost', label: 'Frost 冰霜' },
-  { value: 'ember', label: 'Ember 烈焰' },
-  { value: 'void', label: 'Void 虚空(禁用)', disabled: true },
+const TABS = [
+  { value: 'overview', label: 'Overview 概览' },
+  { value: 'activity', label: 'Activity 活动' },
+  { value: 'members', label: 'Members 成员' },
+  { value: 'billing', label: 'Billing 计费(禁用)', disabled: true },
 ];
 
 function Playground({ values }: { values: ControlValues }) {
-  const [school, setSchool] = useState('frost');
+  const [tab, setTab] = useState('activity');
   return (
     <RadioGroup
-      value={school}
-      onValueChange={setSchool}
+      value={tab}
+      onValueChange={setTab}
       orientation={values.orientation as 'horizontal' | 'vertical'}
       size={values.size as RadioSize}
       tone={values.tone as RadioTone}
       appearance={values.appearance as RadioAppearance}
       disabled={values.disabled as boolean}
-      aria-label="法术流派"
+      aria-label="页面分区"
     >
-      {SCHOOLS.map((item) => (
+      {TABS.map((item) => (
         <Radio key={item.value} value={item.value} disabled={item.disabled}>
           {item.label}
         </Radio>

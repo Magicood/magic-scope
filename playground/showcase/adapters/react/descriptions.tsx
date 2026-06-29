@@ -11,19 +11,19 @@ import type { ReactAdapter } from '../../core/types';
 import type { ControlValues } from '../../types';
 
 const items: DescriptionsItem[] = [
-  { key: 'name', label: '法师', value: '艾莉雅·星语' },
-  { key: 'school', label: '主修学派', value: '塑能 / 咒法' },
-  { key: 'rank', label: '阶位', value: '大魔导师' },
-  { key: 'mana', label: '法力上限', value: '1280' },
-  { key: 'affinity', label: '元素亲和', value: '奥术 · 寒霜 · 雷' },
-  { key: 'guild', label: '所属议会', value: '银月秘法议会', span: 2 },
+  { key: 'name', label: '成员', value: 'Mira Chen' },
+  { key: 'role', label: '角色', value: '产品负责人' },
+  { key: 'level', label: '权限', value: 'Owner 管理员' },
+  { key: 'seats', label: '席位上限', value: '1280' },
+  { key: 'scope', label: '可访问项目', value: 'Atlas · Beacon · Relay' },
+  { key: 'team', label: '所属团队', value: '平台体验组', span: 2 },
 ];
 
 function Playground({ values }: { values: ControlValues }) {
   return (
     <Descriptions
       items={items}
-      title="法师档案"
+      title="成员档案"
       layout={values.layout as DescriptionsLayout}
       size={values.size as DescriptionsSize}
       tone={values.tone as DescriptionsTone}
