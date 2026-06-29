@@ -2,7 +2,7 @@ import { Input } from '@magic-scope/react';
 import { useState } from 'react';
 
 export default function Demo() {
-  const [bio, setBio] = useState('魔法成分超标');
+  const [bio, setBio] = useState('产品设计师,负责设计系统');
   return (
     <div style={{ display: 'grid', gap: '0.6rem', inlineSize: 'min(360px, 80vw)' }}>
       <Input clearable defaultValue="有值时出现清除按钮" placeholder="clearable 清除" />

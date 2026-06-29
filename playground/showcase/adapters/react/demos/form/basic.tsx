@@ -21,7 +21,7 @@ export default function Demo() {
       <Form.Field name="name" label="昵称">
         <Input placeholder="请输入昵称" />
       </Form.Field>
-      <Form.Field name="email" label="邮箱" help="仅用于接收法术回执。">
+      <Form.Field name="email" label="邮箱" help="仅用于接收通知与回执。">
         <Input type="email" placeholder="you@example.com" />
       </Form.Field>
       <Form.Submit>提交</Form.Submit>

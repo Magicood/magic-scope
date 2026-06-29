@@ -16,7 +16,7 @@ export default function Demo() {
   };
 
   const askDelete = async () => {
-    const ok = await confirm('删除后无法恢复,确定移除这道法术吗?', {
+    const ok = await confirm('删除后无法恢复,确定移除这个项目吗?', {
       title: '危险操作',
       variant: 'danger',
       confirmText: '删除',

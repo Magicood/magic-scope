@@ -1,10 +1,10 @@
 import { Tag } from '@magic-scope/react';
 import { useState } from 'react';
 
-const SCHOOLS = ['塑能', '咒法', '惑控', '防护', '预言'];
+const SCHOOLS = ['前端', '后端', '设计', '产品', '运维'];
 
 export default function Demo() {
-  const [picked, setPicked] = useState<string[]>(['塑能', '惑控']);
+  const [picked, setPicked] = useState<string[]>(['前端', '设计']);
 
   const toggle = (school: string) =>
     setPicked((prev) =>

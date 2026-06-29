@@ -18,16 +18,16 @@ export default function Demo() {
         dismissable={false}
       >
         <Dialog.Header>
-          <Dialog.Title>奥术核心 v2 升级</Dialog.Title>
+          <Dialog.Title>升级到 Pro 套餐</Dialog.Title>
           <Dialog.Description>隐藏了内建关闭按钮,只能通过底部明确操作离开。</Dialog.Description>
         </Dialog.Header>
         <Dialog.Body>
           <p style={{ marginBlockStart: 0, color: 'var(--ms-color-fg-muted)' }}>
-            升级后法术编译流水线将全量切换到新内核,旧符文缓存会被清空并重建。
+            升级后将立即按新套餐计费,当前计费周期的余额会折算为抵扣金额。
           </p>
           <ul style={{ color: 'var(--ms-color-fg-muted)', paddingInlineStart: '1.25rem' }}>
-            <li>动效参数全部可热切换</li>
-            <li>光影辉光随 tone 槽位派生</li>
+            <li>团队席位提升至 50 人</li>
+            <li>解锁高级权限与审计日志</li>
             <li>焦点陷阱与 top-layer 由原生 dialog 托管</li>
           </ul>
         </Dialog.Body>

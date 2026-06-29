@@ -1,7 +1,7 @@
 import { Button, Tooltip } from '@magic-scope/react';
 
 const longWord =
-  'supercalifragilisticexpialidocious-奥术超长无空格连续串-1234567890-' +
+  'supercalifragilisticexpialidocious-用于压测的超长无空格连续串-1234567890-' +
   'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA';
 
 const longText =

@@ -2,14 +2,14 @@ import { Radio, RadioGroup } from '@magic-scope/react';
 import { useState } from 'react';
 
 export default function Demo() {
-  const [school, setSchool] = useState('frost');
+  const [tab, setTab] = useState('activity');
   return (
-    <RadioGroup value={school} onValueChange={setSchool} aria-label="法术流派">
-      <Radio value="arcane">Arcane 奥术</Radio>
-      <Radio value="frost">Frost 冰霜</Radio>
-      <Radio value="ember">Ember 烈焰</Radio>
-      <Radio value="void" disabled>
-        Void 虚空(单项禁用)
+    <RadioGroup value={tab} onValueChange={setTab} aria-label="页面分区">
+      <Radio value="overview">Overview 概览</Radio>
+      <Radio value="activity">Activity 活动</Radio>
+      <Radio value="members">Members 成员</Radio>
+      <Radio value="billing" disabled>
+        Billing 计费(单项禁用)
       </Radio>
     </RadioGroup>
   );

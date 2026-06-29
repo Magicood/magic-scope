@@ -5,32 +5,32 @@ export default function Demo() {
   return (
     <Accordion
       type="single"
-      defaultValue="ritual"
+      defaultValue="checklist"
       items={[
         {
-          value: 'ritual',
+          value: 'checklist',
           title: (
             <span>
-              仪式清单 <code>ritual</code>
+              上线清单 <code>checklist</code>
             </span>
           ),
           content: (
             <ul style={{ margin: 0, paddingInlineStart: '1.2rem' }}>
-              <li>校准奥术回路</li>
-              <li>注入霜结协议</li>
-              <li>封印余烬通道</li>
+              <li>跑通端到端测试</li>
+              <li>更新变更日志</li>
+              <li>切换功能开关</li>
             </ul>
           ),
         },
         {
-          value: 'sealed',
-          title: '虚空封印 Void(禁用)',
+          value: 'archived',
+          title: '历史版本(已归档,禁用)',
           content: '此项被禁用,既不可展开也不会成为键盘焦点的落点。',
           disabled: true,
         },
         {
-          value: 'log',
-          title: '施法日志 Log',
+          value: 'changelog',
+          title: '变更日志 Changelog',
           content: (
             <p style={{ margin: 0, color: 'var(--ms-color-fg-muted)' }}>
               内容区是 <code>role="region"</code> 并 <code>aria-labelledby</code> 关联头部。

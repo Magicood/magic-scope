@@ -8,42 +8,42 @@ import type { ControlValues } from '../../types';
 
 const items: TabItem[] = [
   {
-    value: 'arcane',
-    label: 'Arcane 奥术',
+    value: 'overview',
+    label: 'Overview 概览',
     content: (
       <p style={{ margin: 0, color: 'var(--ms-color-fg-muted)' }}>
-        奥术系主打瞬发与爆发,适合需要高频施法的场景。下划线变体的选中条带带主色发光。
+        概览汇总进度、成员与关键指标,适合作为默认落地页。下划线变体的选中条带带主色发光。
       </p>
     ),
   },
   {
-    value: 'frost',
-    label: 'Frost 冰霜',
+    value: 'activity',
+    label: 'Activity 活动',
     content: (
       <p style={{ margin: 0, color: 'var(--ms-color-fg-muted)' }}>
-        冰霜系以控场见长,减速与冻结让节奏尽在掌握。切换标签时面板内容平滑替换。
+        活动按时间线汇总提交、评论与状态变更。切换标签时面板内容平滑替换。
       </p>
     ),
   },
   {
-    value: 'ember',
-    label: 'Ember 余烬',
+    value: 'settings',
+    label: 'Settings 设置',
     content: (
       <p style={{ margin: 0, color: 'var(--ms-color-fg-muted)' }}>
-        余烬系持续灼烧,以时间换取可观的总伤害。键盘 ← → 可在可用标签间循环切换。
+        设置集中权限、通知与集成配置,改动即时保存。键盘 ← → 可在可用标签间循环切换。
       </p>
     ),
   },
   {
-    value: 'void',
-    label: 'Void 虚空',
+    value: 'billing',
+    label: 'Billing 计费',
     disabled: true,
-    content: <p style={{ margin: 0 }}>虚空系尚未解锁。</p>,
+    content: <p style={{ margin: 0 }}>当前套餐不可用。</p>,
   },
 ];
 
 function Playground({ values }: { values: ControlValues }) {
-  const [value, setValue] = useState('frost');
+  const [value, setValue] = useState('activity');
   return (
     <div style={{ inlineSize: 'min(32rem, 100%)' }}>
       <Tabs

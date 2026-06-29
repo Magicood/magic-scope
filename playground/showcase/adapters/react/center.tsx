@@ -20,7 +20,7 @@ function Playground({ values }: { values: ControlValues }) {
         borderRadius: 'var(--ms-radius-md)',
       }}
     >
-      <span style={{ fontWeight: 600 }}>奥术核心 ✦</span>
+      <span style={{ fontWeight: 600 }}>欢迎登录</span>
       <span style={{ color: 'var(--ms-color-fg-muted)' }}>居中的子内容</span>
     </Center>
   );

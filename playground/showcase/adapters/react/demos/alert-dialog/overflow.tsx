@@ -6,7 +6,7 @@ const LONG_TOKEN =
   'wsswwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww';
 
 const LONG_BODY =
-  '这是一段刻意拉得很长的法术注解,用来验证当用户传入超量正文时,弹窗会在固定宽度内自动换行铺开而不会无限撑高或溢出屏幕。' +
+  '这是一段刻意拉得很长的说明文字,用来验证当用户传入超量正文时,弹窗会在固定宽度内自动换行铺开而不会无限撑高或溢出屏幕。' +
   '它应当始终把确认与取消按钮留在可点击范围内,焦点环也不会被裁切。' +
   '即便文字再多,容器边界与圆角也保持稳定,背景滚动也被锁住。';
 

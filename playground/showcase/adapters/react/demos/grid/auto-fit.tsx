@@ -27,11 +27,11 @@ export default function Demo() {
         <code>minChildWidth="12rem"</code> —— 列宽由内容驱动,容器变窄时自动减列、折行。
       </p>
       <Grid minChildWidth="12rem" gap={3}>
-        <Cell title="塑能" body="爆发型瞬时伤害,稳定命中。" />
-        <Cell title="咒法" body="召唤造物与远距传送。" />
-        <Cell title="惑控" body="心智操纵与隐匿。" />
-        <Cell title="防护" body="护盾与减伤,守住前排。" />
-        <Cell title="预言" body="揭示先机,规避陷阱。" />
+        <Cell title="概览" body="项目进度、成员与关键指标一览。" />
+        <Cell title="活动" body="最近的提交、评论与状态变更。" />
+        <Cell title="成员" body="团队席位、角色与权限管理。" />
+        <Cell title="集成" body="连接代码仓库、CI 与第三方服务。" />
+        <Cell title="计费" body="订阅方案、用量与发票记录。" />
       </Grid>
     </div>
   );

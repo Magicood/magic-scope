@@ -2,10 +2,10 @@ import type { StepItem } from '@magic-scope/react';
 import { Steps } from '@magic-scope/react';
 
 const items: StepItem[] = [
-  { title: '准备符文', description: '采集与排列法阵符文' },
-  { title: '注入魔力', description: '当前步配合 percent 在圆点上画进度环' },
-  { title: '稳定结界', description: '校准能量回路' },
-  { title: '封印归档', description: '保存结果与溯源' },
+  { title: '拉取代码', description: '检出与依赖安装' },
+  { title: '构建打包', description: '当前步配合 percent 在圆点上画进度环' },
+  { title: '部署上线', description: '推送到生产环境' },
+  { title: '归档记录', description: '保存结果与溯源' },
 ];
 
 // 垂直方向 + 当前步进度环(percent):current=1、status=process、percent=65 → 第二步圆点画 65% 环。

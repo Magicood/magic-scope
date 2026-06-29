@@ -49,7 +49,7 @@ export const meta: ComponentMeta = {
     },
     { type: 'boolean', prop: 'mono', label: '等宽 mono', default: true },
     { type: 'boolean', prop: 'glow', label: '辉光 glow', default: false },
-    { type: 'text', prop: 'children', label: '内容', default: 'cast(spell)' },
+    { type: 'text', prop: 'children', label: '内容', default: 'npm install' },
   ],
   spread: 'code',
 };

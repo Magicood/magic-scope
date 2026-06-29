@@ -5,18 +5,18 @@ import { buildDemos } from '../../core/collectDemos';
 import type { ReactAdapter } from '../../core/types';
 import type { ControlValues } from '../../types';
 
-// 主交互演示用的候选名单(法师同袍):带头像 emoji 与副描述,展示 option 的完整结构。
+// 主交互演示用的候选名单(团队成员):带头像 emoji 与副描述,展示 option 的完整结构。
 const options: MentionOption[] = [
-  { value: 'arcanist', label: '奥术师·墨', icon: '🔮', description: '@arcanist · 符文研究' },
-  { value: 'frostweaver', label: '霜织者·凛', icon: '❄️', description: '@frost · 冰封领域' },
-  { value: 'emberkin', label: '余烬使·焰', icon: '🔥', description: '@ember · 烈焰爆发' },
-  { value: 'stormcaller', label: '唤雷者·霆', icon: '⚡', description: '@storm · 雷电连锁' },
-  { value: 'verdant', label: '翠生者·苏', icon: '🌿', description: '@verdant · 治愈召唤' },
+  { value: 'mira', label: 'Mira Chen', icon: '🧭', description: '@mira · 产品负责人' },
+  { value: 'jonas', label: 'Jonas Park', icon: '🛠️', description: '@jonas · 前端工程师' },
+  { value: 'ann', label: 'Ann Lee', icon: '🎨', description: '@ann · 设计师' },
+  { value: 'leo', label: 'Leo Wang', icon: '📊', description: '@leo · 数据分析' },
+  { value: 'sara', label: 'Sara Kim', icon: '🚀', description: '@sara · 项目经理' },
   {
-    value: 'void',
-    label: '虚空者·阒(已封印)',
-    icon: '🌀',
-    description: '禁忌之力',
+    value: 'guest',
+    label: 'Guest 访客(已离职)',
+    icon: '🚫',
+    description: '账号已停用',
     disabled: true,
   },
 ];
@@ -35,7 +35,7 @@ function Playground({ values }: { values: ControlValues }) {
         disabled={values.disabled as boolean}
         loading={values.loading as boolean}
         rows={values.rows as number}
-        placeholder="敲 @ 召唤同袍…"
+        placeholder="敲 @ 提及成员…"
         aria-label="提及输入演示"
       />
       <small style={{ color: 'var(--ms-color-fg-muted)' }}>当前文本:{text || '(空)'}</small>

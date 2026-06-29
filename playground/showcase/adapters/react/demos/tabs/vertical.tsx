@@ -5,33 +5,33 @@ import { Tabs } from '@magic-scope/react';
 // 同时演示 icon 前置图标与 badge 后置徽标签名特性。
 const items: TabItem[] = [
   {
-    value: 'arcane',
-    label: 'Arcane 奥术',
+    value: 'overview',
+    label: 'Overview 概览',
     icon: <span aria-hidden="true">✦</span>,
     content: (
       <p style={{ margin: 0, color: 'var(--ms-color-fg-muted)' }}>
-        奥术系主打瞬发与爆发。竖排时 indicator 沿块向(上下)平滑滑动,焦点在标签上时按 ↑ / ↓ 切换。
+        概览汇总进度与关键指标。竖排时 indicator 沿块向(上下)平滑滑动,焦点在标签上时按 ↑ / ↓ 切换。
       </p>
     ),
   },
   {
-    value: 'frost',
-    label: 'Frost 冰霜',
+    value: 'inbox',
+    label: 'Inbox 收件箱',
     icon: <span aria-hidden="true">❄</span>,
     badge: <span>3</span>,
     content: (
       <p style={{ margin: 0, color: 'var(--ms-color-fg-muted)' }}>
-        冰霜系以控场见长,badge 徽标可承载未读数等附加信息。
+        收件箱集中待办与通知,badge 徽标可承载未读数等附加信息。
       </p>
     ),
   },
   {
-    value: 'ember',
-    label: 'Ember 余烬',
+    value: 'settings',
+    label: 'Settings 设置',
     icon: <span aria-hidden="true">✸</span>,
     content: (
       <p style={{ margin: 0, color: 'var(--ms-color-fg-muted)' }}>
-        余烬系持续灼烧,以时间换取可观的总伤害。
+        设置区集中权限、通知与集成配置,改动即时保存。
       </p>
     ),
   },
@@ -40,7 +40,7 @@ const items: TabItem[] = [
 export default function Demo() {
   return (
     <div style={{ inlineSize: 'min(36rem, 100%)' }}>
-      <Tabs items={items} defaultValue="arcane" orientation="vertical" tone="info" />
+      <Tabs items={items} defaultValue="overview" orientation="vertical" tone="info" />
     </div>
   );
 }

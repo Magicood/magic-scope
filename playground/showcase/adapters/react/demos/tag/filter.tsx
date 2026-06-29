@@ -2,10 +2,10 @@ import type { TagTone } from '@magic-scope/react';
 import { Tag } from '@magic-scope/react';
 import { useState } from 'react';
 
-const SCHOOLS = ['塑能', '咒法', '惑控', '防护'];
+const SCHOOLS = ['全部', '进行中', '已完成', '已归档'];
 
 export default function Demo() {
-  const [active, setActive] = useState<string>('塑能');
+  const [active, setActive] = useState<string>('全部');
 
   return (
     <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
@@ -15,7 +15,7 @@ export default function Demo() {
           <Tag
             key={school}
             tone={(selected ? 'primary' : 'neutral') as TagTone}
-            title={`按 ${school} 学派过滤`}
+            title={`按「${school}」状态过滤`}
             onClick={() => setActive(school)}
             style={{ cursor: 'pointer', userSelect: 'none' }}
           >

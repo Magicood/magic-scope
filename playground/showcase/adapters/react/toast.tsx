@@ -16,7 +16,7 @@ function Playground({ values }: { values: ControlValues }) {
       variant: values.variant as ToastVariant,
       duration: Number(values.duration),
     };
-    if (values.withDescription) options.description = '可在「我的法器」中随时取回。';
+    if (values.withDescription) options.description = '可在「我的草稿」中随时取回。';
     if (values.withAction) {
       options.action = { label: '撤销', onClick: () => toast.success('已撤销') };
     }
@@ -27,10 +27,10 @@ function Playground({ values }: { values: ControlValues }) {
   return (
     <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
       <Button onClick={fire}>弹出提示</Button>
-      <Button variant="outline" onClick={() => toast.success('传送门已开启')}>
+      <Button variant="outline" onClick={() => toast.success('设置已保存')}>
         成功
       </Button>
-      <Button variant="outline" onClick={() => toast.error('咒语反噬,施法失败')}>
+      <Button variant="outline" onClick={() => toast.error('提交失败,请重试')}>
         失败
       </Button>
       <Button variant="outline" onClick={() => toast.dismiss(PLAYGROUND_ID)}>

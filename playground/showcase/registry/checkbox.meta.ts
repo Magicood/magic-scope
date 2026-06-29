@@ -8,7 +8,7 @@ export const meta: ComponentMeta = {
   description:
     '自研、零依赖,消费 @magic-scope/tokens 的 --ms-* 变量。\nlabel 包视觉隐藏的原生 input + 视觉方块(checked 画对勾、indeterminate 画横杠)+ 可选文字,可访问性与键盘可达性来自原生。\n完整覆盖 hover / focus-visible(发光环) / checked / indeterminate / disabled 状态与过渡;coarse 指针下用隐形 ::before 把命中区扩到 --ms-target-min;尊重 reduced-motion。',
   controls: [
-    { type: 'text', prop: 'children', label: '标签文案', default: '启用奥术增幅 ✦' },
+    { type: 'text', prop: 'children', label: '标签文案', default: '接收邮件通知' },
     { type: 'text', prop: 'description', label: '次级说明 description', default: '' },
     {
       type: 'select',

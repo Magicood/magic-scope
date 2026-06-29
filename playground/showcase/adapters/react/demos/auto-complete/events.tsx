@@ -4,11 +4,7 @@ import { useRef, useState } from 'react';
 // 事件演示:绑 onChange / onSelect / onSearch / onOpenChange / onClear
 // 实时回显。注意 onChange(每次键入)与 onSelect(点选 / Enter 选中高亮项)
 // 是两条不同通道 —— 后者带完整 option。
-const OPTIONS = [
-  { value: 'Arcane 奥术紫' },
-  { value: 'Frost 霜寒青' },
-  { value: 'Ember 余烬品红' },
-];
+const OPTIONS = [{ value: 'Indigo 靛蓝' }, { value: 'Frost 霜蓝' }, { value: 'Ember 余烬橙' }];
 
 export default function Demo() {
   const [value, setValue] = useState('');

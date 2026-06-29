@@ -10,15 +10,15 @@ function Playground({ values }: { values: ControlValues }) {
   const label = (values.label as string) || '在此区域右键';
 
   const items: MenuItem[] = [
-    { label: '✦ 召唤法阵', onSelect: () => setLast('召唤法阵') },
-    { label: '↻ 重铸符文', onSelect: () => setLast('重铸符文') },
-    { label: '⌖ 标记目标', onSelect: () => setLast('标记目标') },
+    { label: '✎ 重命名', onSelect: () => setLast('重命名') },
+    { label: '⧉ 复制副本', onSelect: () => setLast('复制副本') },
+    { label: '⤴ 分享链接', onSelect: () => setLast('分享链接') },
   ];
   if (values.disabledItem as boolean) {
-    items.push({ label: '✕ 封印(已锁定)', disabled: true });
+    items.push({ label: '↧ 导出(暂不可用)', disabled: true });
   }
   if (values.dangerItem as boolean) {
-    items.push({ label: '🜂 解离结界', danger: true, onSelect: () => setLast('解离结界') });
+    items.push({ label: '🗑 删除', danger: true, onSelect: () => setLast('删除') });
   }
 
   return (

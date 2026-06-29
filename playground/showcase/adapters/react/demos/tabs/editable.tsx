@@ -6,11 +6,11 @@ import { useRef, useState } from 'react';
 // 增删均经 onEdit(value, 'add' | 'remove') 回流,内容区状态在文件内自管。
 export default function Demo() {
   const [items, setItems] = useState<TabItem[]>([
-    { value: 'arcane', label: 'Arcane 奥术', closable: true, content: <Panel name="奥术" /> },
-    { value: 'frost', label: 'Frost 冰霜', closable: true, content: <Panel name="冰霜" /> },
-    { value: 'ember', label: 'Ember 余烬', closable: true, content: <Panel name="余烬" /> },
+    { value: 'overview', label: 'Overview 概览', closable: true, content: <Panel name="概览" /> },
+    { value: 'activity', label: 'Activity 活动', closable: true, content: <Panel name="活动" /> },
+    { value: 'members', label: 'Members 成员', closable: true, content: <Panel name="成员" /> },
   ]);
-  const [active, setActive] = useState('arcane');
+  const [active, setActive] = useState('overview');
   const nextRef = useRef(4);
 
   const handleEdit = (value: string, action: TabsEditAction) => {

@@ -5,21 +5,25 @@ import { useRef, useState } from 'react';
 
 const items: TabItem[] = [
   {
-    value: 'arcane',
-    label: 'Arcane 奥术',
-    content: <p style={{ margin: 0 }}>奥术系:瞬发与爆发。</p>,
+    value: 'overview',
+    label: 'Overview 概览',
+    content: <p style={{ margin: 0 }}>概览:进度、成员与关键指标一览。</p>,
   },
   {
-    value: 'frost',
-    label: 'Frost 冰霜',
-    content: <p style={{ margin: 0 }}>冰霜系:减速与控场。</p>,
+    value: 'activity',
+    label: 'Activity 活动',
+    content: <p style={{ margin: 0 }}>活动:最近的提交、评论与状态变更。</p>,
   },
-  { value: 'ember', label: 'Ember 余烬', content: <p style={{ margin: 0 }}>余烬系:持续灼烧。</p> },
   {
-    value: 'void',
-    label: 'Void 虚空',
+    value: 'settings',
+    label: 'Settings 设置',
+    content: <p style={{ margin: 0 }}>设置:权限、通知与集成配置。</p>,
+  },
+  {
+    value: 'billing',
+    label: 'Billing 计费',
     disabled: true,
-    content: <p style={{ margin: 0 }}>尚未解锁。</p>,
+    content: <p style={{ margin: 0 }}>当前套餐不可用。</p>,
   },
 ];
 
@@ -27,7 +31,7 @@ const items: TabItem[] = [
 // 受控选中值用 useState 回显;onTabClick 在点「已选中」标签时也会触发(此时 onChange 不触发),
 // 可借此观察两个事件的差异;勾选「锁定」后 onTabClick 调用 preventDefault 阻断内部切换。
 export default function Demo() {
-  const [value, setValue] = useState('frost');
+  const [value, setValue] = useState('activity');
   const [locked, setLocked] = useState(false);
   const [log, setLog] = useState<{ id: number; text: string }[]>([]);
   const idRef = useRef(0);

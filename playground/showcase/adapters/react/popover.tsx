@@ -15,7 +15,7 @@ function Playground({ values }: { values: ControlValues }) {
       trigger={<Button variant="outline">{open ? '收起浮层 ✦' : '展开浮层 ✦'}</Button>}
     >
       <div style={{ display: 'grid', gap: '0.5rem', maxInlineSize: '15rem' }}>
-        <strong style={{ fontSize: '0.9rem' }}>奥术浮层</strong>
+        <strong style={{ fontSize: '0.9rem' }}>概览浮层</strong>
         <p style={{ margin: 0, color: 'var(--ms-color-fg-muted)', fontSize: '0.85rem' }}>
           进 top-layer 的原生 Popover API,点外 / Esc 自动关闭;定位走 CSS Anchor
           Positioning,贴着触发器的「{values.placement as string}」方位弹出。

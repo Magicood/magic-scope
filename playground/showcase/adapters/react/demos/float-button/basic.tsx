@@ -1,6 +1,6 @@
 import { FloatButton } from '@magic-scope/react';
 
-// 默认占位为加号符文;单钮 position:relative,可直接内联渲染(无需固定到视口角)。
+// 默认占位为加号图标;单钮 position:relative,可直接内联渲染(无需固定到视口角)。
 export default function Demo() {
   return (
     <div style={{ display: 'flex', gap: 'var(--ms-space-4)', alignItems: 'center' }}>

@@ -5,13 +5,13 @@ import { useRef, useState } from 'react';
 // 事件演示:onChange 回显完整文本变化,onSelect 在选中候选时回显被选项与本次前缀。
 // split 改为「、」演示自定义分隔符:选中后回填的不是空格而是顿号。
 const options: MentionOption[] = [
-  { value: 'arcanist', label: '奥术师·墨', icon: '🔮', description: '@arcanist' },
-  { value: 'frostweaver', label: '霜织者·凛', icon: '❄️', description: '@frost' },
-  { value: 'emberkin', label: '余烬使·焰', icon: '🔥', description: '@ember' },
+  { value: 'mira', label: 'Mira Chen', icon: '🧭', description: '@mira' },
+  { value: 'jonas', label: 'Jonas Park', icon: '🛠️', description: '@jonas' },
+  { value: 'ann', label: 'Ann Lee', icon: '🎨', description: '@ann' },
 ];
 
 export default function Demo() {
-  const [text, setText] = useState('召集 @');
+  const [text, setText] = useState('同步给 @');
   const [log, setLog] = useState<{ id: number; text: string }[]>([]);
   const idRef = useRef(0);
   const push = (line: string) =>

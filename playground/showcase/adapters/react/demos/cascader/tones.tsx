@@ -5,19 +5,19 @@ import { Cascader } from '@magic-scope/react';
 // 不写死配色,只读 --ms-* 槽位。展开任一个即可看到选中态随 tone 着色。
 const options: CascaderOption[] = [
   {
-    value: 'arcane',
-    label: '奥术',
+    value: 'engineering',
+    label: '研发',
     children: [
-      { value: 'fire', label: '火焰' },
-      { value: 'frost', label: '霜寒' },
+      { value: 'frontend', label: '前端' },
+      { value: 'backend', label: '后端' },
     ],
   },
   {
-    value: 'nature',
-    label: '自然',
+    value: 'design',
+    label: '设计',
     children: [
-      { value: 'wind', label: '清风' },
-      { value: 'thorn', label: '荆棘' },
+      { value: 'product', label: '产品设计' },
+      { value: 'brand', label: '品牌设计' },
     ],
   },
 ];
@@ -47,7 +47,7 @@ export default function Demo() {
           <Cascader
             tone={tone}
             options={options}
-            defaultValue={['arcane', 'frost']}
+            defaultValue={['engineering', 'backend']}
             aria-label={label}
           />
         </div>

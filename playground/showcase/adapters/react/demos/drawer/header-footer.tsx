@@ -16,7 +16,7 @@ export default function Demo() {
         hideCloseButton
         header={
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <strong style={{ fontSize: '1.05rem' }}>法术配置</strong>
+            <strong style={{ fontSize: '1.05rem' }}>项目配置</strong>
             <Badge tone="accent" variant="soft">
               草稿
             </Badge>

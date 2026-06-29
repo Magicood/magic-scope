@@ -6,7 +6,7 @@ export const meta: ComponentMeta = {
   category: 'feedback',
   summary: '进度条,确定态按 value 驱动填充宽度,不确定态填充段左右往返流动。',
   description:
-    '自研、零依赖,消费 @magic-scope/tokens 的 --ms-* 变量。\nrole="progressbar",aria-valuemin=0 / aria-valuemax=100;确定态设 aria-valuenow 并按 value% 平滑驱动填充宽度,不确定态(indeterminate 或缺省 value)让一段奥术发光左右往返流动。value 自动夹到 0-100,非法值回退 0,填充永不溢出轨道。尊重 reduced-motion(放慢往返,保留语义)。',
+    '自研、零依赖,消费 @magic-scope/tokens 的 --ms-* 变量。\nrole="progressbar",aria-valuemin=0 / aria-valuemax=100;确定态设 aria-valuenow 并按 value% 平滑驱动填充宽度,不确定态(indeterminate 或缺省 value)让一段发光填充段左右往返流动。value 自动夹到 0-100,非法值回退 0,填充永不溢出轨道。尊重 reduced-motion(放慢往返,保留语义)。',
   controls: [
     {
       type: 'select',
@@ -24,7 +24,7 @@ export const meta: ComponentMeta = {
       label: '色调 tone',
       default: 'primary',
       options: [
-        { value: 'primary', label: 'primary 奥术' },
+        { value: 'primary', label: 'primary 主色' },
         { value: 'accent', label: 'accent 强调' },
         { value: 'success', label: 'success 成功' },
         { value: 'warning', label: 'warning 警示' },

@@ -16,10 +16,10 @@ export default function Demo() {
         items={[
           { label: '首页', href: '#/' },
           {
-            label: '召唤一个名字超级超级长且中间完全没有任何空格用于断行的远古传送门法术节点',
-            href: '#/grimoire/portal',
+            label: '一个名字超级超级长且中间完全没有任何空格用于断行的项目配置节点用于压力测试',
+            href: '#/projects/atlas',
           },
-          { label: 'summon_an_extremely_long_unbreakable_portal_spell_identifier_token' },
+          { label: 'an_extremely_long_unbreakable_project_configuration_identifier_token' },
         ]}
       />
     </div>

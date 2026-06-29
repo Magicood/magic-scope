@@ -27,7 +27,7 @@ function Playground({ values }: { values: ControlValues }) {
           background: 'var(--ms-color-bg-subtle, rgba(255,255,255,0.03))',
         }}
       >
-        <strong style={{ color: 'var(--ms-color-fg, #e8e8ef)' }}>奥术法器面板</strong>
+        <strong style={{ color: 'var(--ms-color-fg, #e8e8ef)' }}>数据面板</strong>
         <p style={{ margin: 0, color: 'var(--ms-color-fg-muted, #9a9aa6)', fontSize: '0.86rem' }}>
           下方按钮在加载时会被遮罩屏蔽交互,但内容不卸载、布局不抖。
         </p>
@@ -44,7 +44,7 @@ function Playground({ values }: { values: ControlValues }) {
             cursor: 'pointer',
           }}
         >
-          已注魔 {count} 次
+          已刷新 {count} 次
         </button>
       </div>
     </Spin>

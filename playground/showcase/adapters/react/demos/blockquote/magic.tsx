@@ -10,7 +10,7 @@ export default function Demo() {
 
       {/* 辉光 glow:soft / strong 两档,受全局 --ms-fx-glow 调制 */}
       <Blockquote variant="filled" tone="accent" glow="soft" quoteMark>
-        soft 辉光:柔和的奥术光晕,克制而不喧宾夺主。
+        soft 辉光:柔和的光晕,克制而不喧宾夺主。
       </Blockquote>
       <Blockquote variant="filled" tone="danger" glow="strong" quoteMark>
         strong 辉光:危险色调下更强的光压,用于警示型引述。

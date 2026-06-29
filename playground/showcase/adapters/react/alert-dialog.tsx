@@ -9,7 +9,7 @@ function Playground() {
   const [result, setResult] = useState('(尚未触发,点上方按钮试试)');
 
   const handleConfirm = async () => {
-    const ok = await confirm('确定要删除「奥术飞弹」吗?此操作不可撤销。', {
+    const ok = await confirm('确定要删除项目「Atlas 平台」吗?此操作不可撤销。', {
       title: '删除确认',
       variant: 'danger',
       confirmText: '删除',
@@ -19,7 +19,7 @@ function Playground() {
   };
 
   const handleAlert = async () => {
-    await alert('「奥术飞弹」已成功保存到奥术档案库。', {
+    await alert('项目「Atlas 平台」已成功保存到工作区。', {
       title: '操作完成',
       confirmText: '好的',
     });
@@ -27,10 +27,10 @@ function Playground() {
   };
 
   const handlePrompt = async () => {
-    const name = await prompt('给这道法术起个名字:', {
-      title: '命名法术',
-      placeholder: '例如:奥术飞弹',
-      defaultValue: '奥术飞弹',
+    const name = await prompt('给这个项目起个名字:', {
+      title: '命名项目',
+      placeholder: '例如:Atlas 平台',
+      defaultValue: 'Atlas 平台',
     });
     setResult(name === null ? 'prompt → 已取消(返回 null)' : `prompt → 输入值:「${name}」`);
   };

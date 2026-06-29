@@ -7,10 +7,10 @@ export default function Demo() {
 
   // 覆盖 MenuItem 的全部能力:普通项 / 禁用项(不可聚焦、不触发)/ 危险项(danger 色)。
   const items: MenuItem[] = [
-    { label: '✦ 召唤法阵', onSelect: () => setLast('召唤法阵') },
-    { label: '↻ 重铸符文', onSelect: () => setLast('重铸符文') },
-    { label: '✕ 封印(已锁定)', disabled: true },
-    { label: '🜂 解离结界', danger: true, onSelect: () => setLast('解离结界') },
+    { label: '✎ 重命名', onSelect: () => setLast('重命名') },
+    { label: '⧉ 复制副本', onSelect: () => setLast('复制副本') },
+    { label: '↧ 导出(暂不可用)', disabled: true },
+    { label: '🗑 删除', danger: true, onSelect: () => setLast('删除') },
   ];
 
   return (

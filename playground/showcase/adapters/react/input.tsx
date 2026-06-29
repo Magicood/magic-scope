@@ -7,7 +7,7 @@ import type { ReactAdapter } from '../../core/types';
 import type { ControlValues } from '../../types';
 
 function Playground({ values }: { values: ControlValues }) {
-  const [text, setText] = useState('魔法成分超标');
+  const [text, setText] = useState('产品设计师,负责设计系统');
   return (
     <Input
       size={values.size as InputSize}

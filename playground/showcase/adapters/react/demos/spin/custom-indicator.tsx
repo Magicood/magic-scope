@@ -1,14 +1,14 @@
 import { Spin } from '@magic-scope/react';
 
 /**
- * indicator 自定义指示器:给出任意 ReactNode 取代默认 Spinner 符文。
- * 这里用一个纯 CSS 旋转的奥术符文 + tip 文字。
+ * indicator 自定义指示器:给出任意 ReactNode 取代默认 Spinner。
+ * 这里用一个纯 CSS 旋转的圆环 + tip 文字。
  */
 export default function Demo() {
   return (
     <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
       <Spin
-        tip="符文充能中…"
+        tip="上传中…"
         indicator={
           <span
             aria-hidden="true"

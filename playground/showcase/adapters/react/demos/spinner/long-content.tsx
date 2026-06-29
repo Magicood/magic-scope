@@ -1,10 +1,9 @@
 import { Spinner } from '@magic-scope/react';
 
-const LONG_WORD =
-  '正在召唤超长奥术传送门-supercalifragilisticexpialidocious-赋能跨位面持续施法0123456789';
+const LONG_WORD = '正在同步超长数据集-supercalifragilisticexpialidocious-跨区域增量拉取0123456789';
 
 const LONG_TEXT =
-  '正在加载海量法术索引,这条说明很长很长用来验证多行正文会自然换行而不会把旋转器挤变形或撑破容器边界,旋转器始终保持原始尺寸与发光焦点环完整不被裁切。';
+  '正在加载海量数据索引,这条说明很长很长用来验证多行正文会自然换行而不会把旋转器挤变形或撑破容器边界,旋转器始终保持原始尺寸与发光焦点环完整不被裁切。';
 
 export default function Demo() {
   return (

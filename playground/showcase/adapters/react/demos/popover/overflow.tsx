@@ -19,7 +19,7 @@ export default function Demo() {
             overflowWrap: 'anywhere',
           }}
         >
-          urn:magic-scope:spell:teleportation-circle-of-the-arcane-sanctum-0xDEADBEEFCAFEBABE0123456789ABCDEF
+          urn:magic-scope:resource:project-atlas-platform-settings-billing-invoice-0xDEADBEEFCAFEBABE0123456789ABCDEF
         </code>
         <p
           style={{
