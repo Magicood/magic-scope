@@ -48,7 +48,7 @@ describe('engine / compile', () => {
     const css = compileThemeToCss(arcaneDark);
     expect(css).toContain('[data-ms-theme="arcane"][data-ms-scheme="dark"]');
     expect(css).toContain('color-scheme: dark;');
-    expect(css).toContain('--ms-color-bg: #0A0710;');
+    expect(css).toContain(`--ms-color-bg: ${arcaneDark.color.bg};`);
   });
 
   it('selector 可覆盖为 :root', () => {

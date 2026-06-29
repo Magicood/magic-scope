@@ -19,3 +19,6 @@ registry/manifest.json
 
 # docs 生成物(由 pnpm gen:docs-tokens 生成)
 docs/.vitepress/theme/tokens.css
+
+# 本地 preview / 编辑器配置
+.claude/
