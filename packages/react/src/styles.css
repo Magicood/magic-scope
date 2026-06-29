@@ -19,7 +19,7 @@
 /* 效果开关:动效 / 发光乘子 */
 @import "./effects.css" layer(ms.motion);
 /* 进场 / 滚动特效系统(必须晚于 effects.css —— 引用 --ms-motion-scale / --ms-dur-* / --ms-ease-*) */
-@import "./reveal.css" layer(ms.motion);
+@import "./reveal/reveal.css" layer(ms.motion);
 /* 文字排版共享尺度 token:字号阶梯 / 行高 / 字距(文件内部已自带 @layer ms.tokens) */
 @import "./typography.css";
 
