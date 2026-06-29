@@ -6,7 +6,7 @@ import '@magic-scope/react/styles.css';
 import { App } from './App';
 import './styles/app.css';
 
-// 主题引导:注册所有预设(供运行时换肤)、注册可补间的 @property、应用默认深色奥术。
+// 主题引导:注册所有预设(供运行时换肤)、注册可补间的 @property、应用默认深色主题。
 registerThemes(presetThemes);
 registerProperties();
 applyTheme(arcaneDark);
