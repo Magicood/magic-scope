@@ -30,10 +30,8 @@
   /* —— 锚定定位:position-area 由 JS 按 12 向写入(--ms-tooltip-area) —— */
   position-area: var(--ms-tooltip-area, block-start span-inline);
 
-  /* 奥术微光:tone 发光色的 glow,受 fx 总闸门控 */
-  box-shadow:
-    0 8px 24px -12px rgb(0 0 0 / 0.4),
-    0 0 calc(18px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow);
+  /* 柔和立体投影(静息不发光,克制优雅) */
+  box-shadow: 0 8px 24px -12px rgb(0 0 0 / 0.28);
 
   /* 入场前的终态归零,真正的入场态见各主轴位移与 @starting-style */
   opacity: 0;
@@ -194,9 +192,9 @@
   }
 }
 
-/* —— fx 总闸:关断发光的模糊光晕,保留可读的实色投影 —— */
+/* —— fx 总闸:仅留可读的柔和实色投影 —— */
 [data-ms-fx="off"] .ms-tooltip {
-  box-shadow: 0 8px 24px -12px rgb(0 0 0 / 0.4);
+  box-shadow: 0 8px 24px -12px rgb(0 0 0 / 0.28);
 }
 
 /* —— 尊重 reduced-motion:去过渡 / 去位移(覆盖各主轴入场微移) —— */

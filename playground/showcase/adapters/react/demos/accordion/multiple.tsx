@@ -5,21 +5,21 @@ export default function Demo() {
   return (
     <Accordion
       type="multiple"
-      defaultValue={['arcane', 'frost']}
+      defaultValue={['shipping', 'returns']}
       items={[
         {
-          value: 'arcane',
-          title: '奥术回路 Arcane',
+          value: 'shipping',
+          title: '配送与时效',
           content: '多开模式下,本项与下方项可同时保持展开。',
         },
         {
-          value: 'frost',
-          title: '霜结协议 Frost',
+          value: 'returns',
+          title: '退换货政策',
           content: '初始即展开,点击头部独立收起,不影响其它项。',
         },
         {
-          value: 'ember',
-          title: '余烬通道 Ember',
+          value: 'warranty',
+          title: '保修与售后',
           content: '初始收起,展开它不会收起已展开的项。',
         },
       ]}

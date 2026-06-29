@@ -9,9 +9,9 @@ const EVENTS: {
   time: string;
   icon: string;
 }[] = [
-  { variant: 'success', title: '咏唱完成', time: '00:00', icon: '✓' },
-  { variant: 'primary', title: '凝聚法球', time: '00:03', icon: '✦' },
-  { variant: 'warning', title: '能量过载', time: '00:07', icon: '!' },
+  { variant: 'success', title: '构建通过', time: '09:00', icon: '✓' },
+  { variant: 'primary', title: '部署预发', time: '09:03', icon: '✦' },
+  { variant: 'warning', title: '错误率上升', time: '09:07', icon: '!' },
 ];
 
 const MODES: { mode: TimelineMode; label: string }[] = [

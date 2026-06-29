@@ -5,9 +5,9 @@ import { useEffect, useState } from 'react';
 // loading 时展开浮层显示「加载中…」、trigger 标记 aria-busy;
 // 这里模拟异步拉取,1.2s 后选项就绪;有值时 clearable 显示清除按钮。
 const ready = [
-  { value: 'arcane', label: 'Arcane 奥术紫' },
-  { value: 'frost', label: 'Frost 霜寒青' },
-  { value: 'ember', label: 'Ember 余烬品红' },
+  { value: 'arcane', label: 'Arcane 紫' },
+  { value: 'frost', label: 'Frost 蓝' },
+  { value: 'ember', label: 'Ember 品红' },
 ];
 
 export default function Demo() {
@@ -29,8 +29,8 @@ export default function Demo() {
         onChange={(next) => setValue(next as string)}
         options={loading ? [] : ready}
         tone="info"
-        placeholder={loading ? '加载流派…' : '请选择流派'}
-        aria-label="异步加载流派(可清除)"
+        placeholder={loading ? '加载主题…' : '请选择主题'}
+        aria-label="异步加载主题(可清除)"
       />
       <small style={{ color: 'var(--ms-color-fg-muted)' }}>
         {loading ? '正在拉取选项…' : `已就绪 ${ready.length} 项`}

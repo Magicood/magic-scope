@@ -38,7 +38,7 @@ export const meta: ComponentMeta = {
     { type: 'boolean', prop: 'showCount', label: '显示字数 showCount', default: false },
     { type: 'boolean', prop: 'invalid', label: '校验失败 invalid', default: false },
     { type: 'boolean', prop: 'disabled', label: '禁用 disabled', default: false },
-    { type: 'text', prop: 'placeholder', label: '占位文案 placeholder', default: '写下你的咒语…' },
+    { type: 'text', prop: 'placeholder', label: '占位文案 placeholder', default: '写点什么…' },
   ],
   spread: 'textarea',
 };

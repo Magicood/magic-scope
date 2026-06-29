@@ -102,7 +102,7 @@
 .ms-carousel__arrow:hover:not(:disabled) {
   border-color: var(--ms-c);
   color: var(--ms-c);
-  box-shadow: 0 0 calc(16px * var(--ms-fx-glow, 1)) -6px var(--ms-c-glow);
+  box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow);
 }
 .ms-carousel__arrow:focus-visible {
   outline: 2px solid var(--ms-c);
@@ -187,10 +187,9 @@
   outline-offset: 2px;
 }
 .ms-carousel__dot--active {
-  /* 活动点拉长成胶囊 + tone 发光,作为「魔法」高亮 */
+  /* 活动点拉长成胶囊,tone 实色高亮(静息不发光,克制优雅) */
   inline-size: calc(var(--ms-carousel-dot-size) * 2.4);
   background-color: var(--ms-c);
-  box-shadow: 0 0 calc(10px * var(--ms-fx-glow, 1)) -2px var(--ms-c-glow);
 }
 .ms-carousel--vertical .ms-carousel__dot--active {
   inline-size: var(--ms-carousel-dot-size);

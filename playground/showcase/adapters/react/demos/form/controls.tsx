@@ -22,9 +22,9 @@ interface Values extends Record<string, unknown> {
 }
 
 const ELEMENTS = [
-  { value: 'fire', label: '火' },
-  { value: 'water', label: '水' },
-  { value: 'wind', label: '风' },
+  { value: 'email', label: '邮件' },
+  { value: 'sms', label: '短信' },
+  { value: 'push', label: '推送' },
 ];
 
 /**
@@ -37,9 +37,9 @@ export default function Demo() {
   const [snapshot, setSnapshot] = useState<string | null>(null);
   const form = useForm<Values>({
     defaultValues: {
-      nick: '萌新',
+      nick: 'Mira Chen',
       level: 3,
-      element: 'fire',
+      element: 'email',
       plan: 'pro',
       power: 40,
       stars: 4,
@@ -55,26 +55,26 @@ export default function Demo() {
       onSubmit={(v) => setSnapshot(JSON.stringify(v))}
       style={{ display: 'grid', gap: 'var(--ms-space-3, 0.75rem)', inlineSize: 'min(480px, 100%)' }}
     >
-      <Form.Field name="nick" label="名号">
-        <Input placeholder="名号" />
+      <Form.Field name="nick" label="昵称">
+        <Input placeholder="昵称" />
       </Form.Field>
-      <Form.Field name="level" label="等级">
+      <Form.Field name="level" label="席位">
         <NumberInput min={1} max={99} />
       </Form.Field>
-      <Form.Field name="element" label="元素">
-        <RadioGroup options={ELEMENTS} aria-label="元素" />
+      <Form.Field name="element" label="通知">
+        <RadioGroup options={ELEMENTS} aria-label="通知" />
       </Form.Field>
       <Form.Field name="plan" label="套餐">
         <Segmented options={['free', 'pro', 'max']} aria-label="套餐" />
       </Form.Field>
-      <Form.Field name="power" label="法力">
-        <Slider min={0} max={100} aria-label="法力" />
+      <Form.Field name="power" label="用量">
+        <Slider min={0} max={100} aria-label="用量" />
       </Form.Field>
       <Form.Field name="stars" label="评分">
         <Rate count={5} aria-label="评分" />
       </Form.Field>
       <Form.Field name="newsletter">
-        <Switch>订阅奥术周报</Switch>
+        <Switch>订阅产品周报</Switch>
       </Form.Field>
 
       <Form.Submit>保存设置</Form.Submit>

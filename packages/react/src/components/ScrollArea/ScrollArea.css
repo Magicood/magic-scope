@@ -114,7 +114,7 @@
 }
 .ms-scroll-area__thumb:active {
   background-color: var(--ms-c, currentcolor);
-  box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) -3px var(--ms-c-glow, transparent);
+  box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) -4px var(--ms-c-glow, transparent);
 }
 
 /* —— 触控:轨道命中区拓宽到目标尺寸(视觉厚度仍由 thumb 决定) —— */

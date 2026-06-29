@@ -5,7 +5,7 @@ export default function Demo() {
     <Result
       status="success"
       size="lg"
-      // icon 传 ReactNode 覆盖默认符文;children 作为补充内容区,extra 承载操作区。
+      // icon 传 ReactNode 覆盖默认图标;children 作为补充内容区,extra 承载操作区。
       icon={
         <svg viewBox="0 0 24 24" width="40" height="40" fill="none" aria-hidden="true">
           <path
@@ -17,12 +17,12 @@ export default function Demo() {
           />
         </svg>
       }
-      title="传送门已开启"
-      subtitle="目的地坐标已校验,可携带至多 6 名同伴一同穿越。"
+      title="部署已完成"
+      subtitle="新版本已上线,可邀请至多 6 名成员一同验收。"
       extra={
         <>
-          <Button variant="solid">立即穿越</Button>
-          <Button variant="outline">复制坐标</Button>
+          <Button variant="solid">查看站点</Button>
+          <Button variant="outline">复制链接</Button>
           <Button variant="ghost">取消</Button>
         </>
       }
@@ -39,9 +39,9 @@ export default function Demo() {
           textAlign: 'start',
         }}
       >
-        <div>目的地:第七秘境 · 星界回廊</div>
-        <div>耗费法力:42 / 120</div>
-        <div>有效时长:00:15:00</div>
+        <div>环境:生产 · 主区域</div>
+        <div>构建耗时:42s</div>
+        <div>缓存有效期:00:15:00</div>
       </div>
     </Result>
   );

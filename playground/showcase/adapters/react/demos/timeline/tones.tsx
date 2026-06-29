@@ -1,7 +1,7 @@
 import type { TimelineVariant } from '@magic-scope/react';
 import { Timeline, TimelineItem } from '@magic-scope/react';
 
-// variant 色调系统:全库统一差异点。每条节点经 tone resolver 派生强调色 / 柔底 / 辉光,
+// variant 色调系统:全库统一差异点。每条节点经 tone resolver 派生强调色 / 柔底 / 光晕,
 // 覆盖全部 8 个语义色调(default 中性不上色,其余 7 色经 ms-tone-* 着色)。
 const TONES: {
   variant: TimelineVariant;
@@ -12,10 +12,10 @@ const TONES: {
 }[] = [
   {
     variant: 'primary',
-    title: 'primary 奥术',
+    title: 'primary 主要',
     time: '✦ 主要',
     icon: '✦',
-    body: '主线节点,奥术紫高亮。',
+    body: '主线节点,主色高亮。',
   },
   {
     variant: 'accent',

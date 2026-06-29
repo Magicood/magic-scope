@@ -47,7 +47,7 @@ export const meta: ComponentMeta = {
     { type: 'boolean', prop: 'closable', label: '可关闭 closable', default: false },
     { type: 'boolean', prop: 'checkable', label: '可选 checkable', default: false },
     { type: 'boolean', prop: 'selected', label: '选中 selected', default: false },
-    { type: 'text', prop: 'children', label: '文案', default: '奥术 ✦' },
+    { type: 'text', prop: 'children', label: '文案', default: '已上线 ✦' },
   ],
   spread: 'span',
 };

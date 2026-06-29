@@ -9,14 +9,14 @@ interface Values extends Record<string, unknown> {
 }
 
 const REALMS = [
-  { value: 'arcane', label: 'Arcane 奥术' },
-  { value: 'frost', label: 'Frost 霜寒' },
-  { value: 'ember', label: 'Ember 余烬' },
+  { value: 'product', label: '产品' },
+  { value: 'frontend', label: '前端' },
+  { value: 'backend', label: '后端' },
 ];
 
 export default function Demo() {
   const [layout, setLayout] = useState<Layout>('horizontal');
-  const form = useForm<Values>({ defaultValues: { user: '', realm: 'frost' } });
+  const form = useForm<Values>({ defaultValues: { user: '', realm: 'frontend' } });
 
   return (
     <div
@@ -47,8 +47,8 @@ export default function Demo() {
         <Form.Field name="user" label="账号">
           <Input placeholder="账号" />
         </Form.Field>
-        <Form.Field name="realm" label="学派">
-          <Select options={REALMS} aria-label="学派" />
+        <Form.Field name="realm" label="团队">
+          <Select options={REALMS} aria-label="团队" />
         </Form.Field>
         <Form.Submit>查询</Form.Submit>
       </Form>

@@ -4,9 +4,9 @@ import { useState } from 'react';
 
 // 单步显式 status 覆盖自动派生:第三步标 error;第四步 disabled 不可跳。
 const items: StepItem[] = [
-  { title: '登记', description: '已完成' },
+  { title: '注册', description: '已完成' },
   { title: '验证', description: '已完成' },
-  { title: '施法', description: '能量回路异常', status: 'error' },
+  { title: '支付', description: '银行卡校验失败', status: 'error' },
   { title: '完成', description: '尚未解锁', disabled: true },
 ];
 

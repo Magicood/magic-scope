@@ -4,7 +4,7 @@ import { Progress } from '@magic-scope/react';
 // tone 色调系统:全库统一差异点。每个 tone 经 tone resolver 只读 6 槽位派生配色与发光,不写死颜色。
 // 覆盖全部 7 个语义色调,同一确定态进度下展示色调差异(showValue 显示末尾百分比)。
 const TONES: { tone: ProgressTone; label: string; value: number }[] = [
-  { tone: 'primary', label: 'primary 奥术', value: 72 },
+  { tone: 'primary', label: 'primary 主色', value: 72 },
   { tone: 'accent', label: 'accent 强调', value: 64 },
   { tone: 'success', label: 'success 成功', value: 100 },
   { tone: 'warning', label: 'warning 警示', value: 48 },

@@ -2,7 +2,7 @@ import { Form, Input, useForm } from '@magic-scope/react';
 import { useState } from 'react';
 
 interface Values extends Record<string, unknown> {
-  spells: string[];
+  members: string[];
 }
 
 const btnStyle = {
@@ -16,21 +16,21 @@ const btnStyle = {
 
 /**
  * Form.List 动态字段数组:每行持稳定 id(增删移动时 id 跟随,避免切片订阅与 DOM 错位),
- * 值仍存 store(唯一真相源)。每行字段路径形如 spells.0、spells.1。
+ * 值仍存 store(唯一真相源)。每行字段路径形如 members.0、members.1。
  */
 export default function Demo() {
   const [result, setResult] = useState<string | null>(null);
   const form = useForm<Values>({
-    defaultValues: { spells: ['火球术', '冰霜新星'] },
+    defaultValues: { members: ['Mira Chen', 'Jonas Park'] },
   });
 
   return (
     <Form
       form={form}
-      onSubmit={(v) => setResult(v.spells.filter(Boolean).join('、'))}
+      onSubmit={(v) => setResult(v.members.filter(Boolean).join('、'))}
       style={{ display: 'grid', gap: 'var(--ms-space-3, 0.75rem)', inlineSize: 'min(460px, 100%)' }}
     >
-      <Form.List name="spells">
+      <Form.List name="members">
         {({ fields, append, remove, move }) => (
           <div style={{ display: 'grid', gap: 'var(--ms-space-2, 0.5rem)' }}>
             {fields.map((f, i) => (
@@ -40,7 +40,7 @@ export default function Demo() {
               >
                 <div style={{ flex: 1, minInlineSize: 0 }}>
                   <Form.Field name={f.name} rule={{ required: true }}>
-                    <Input placeholder={`法术 ${i + 1}`} style={{ inlineSize: '100%' }} />
+                    <Input placeholder={`成员 ${i + 1}`} style={{ inlineSize: '100%' }} />
                   </Form.Field>
                 </div>
                 <button
@@ -57,14 +57,14 @@ export default function Demo() {
               </div>
             ))}
             <button type="button" style={btnStyle} onClick={() => append('')}>
-              + 添加法术
+              + 添加成员
             </button>
           </div>
         )}
       </Form.List>
 
-      <Form.Submit>保存法术书</Form.Submit>
-      {result && <small style={{ color: 'var(--ms-color-fg-muted)' }}>法术书:{result}</small>}
+      <Form.Submit>保存成员</Form.Submit>
+      {result && <small style={{ color: 'var(--ms-color-fg-muted)' }}>成员:{result}</small>}
     </Form>
   );
 }

@@ -7,14 +7,14 @@ import { Checkbox } from '@magic-scope/react';
 export default function Demo() {
   return (
     <form style={{ display: 'grid', gap: '0.6rem' }} onSubmit={(e) => e.preventDefault()}>
-      <Checkbox name="scope" value="arcane" defaultChecked>
-        奥术学派
+      <Checkbox name="scope" value="profile" defaultChecked>
+        个人资料
       </Checkbox>
-      <Checkbox name="scope" value="divine">
-        神圣学派
+      <Checkbox name="scope" value="billing">
+        计费信息
       </Checkbox>
       <Checkbox name="agree" required>
-        我已阅读并同意契约条款(required)
+        我已阅读并同意服务条款(required)
       </Checkbox>
     </form>
   );

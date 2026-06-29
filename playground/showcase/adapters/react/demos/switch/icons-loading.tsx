@@ -2,7 +2,7 @@ import { Switch } from '@magic-scope/react';
 import { useState } from 'react';
 
 // 轨道内两端图标(checkedIcon / uncheckedIcon,随开关状态显隐)+ loading 加载态:
-// 滑块转为旋转符文、禁用交互并标记 aria-busy。
+// 滑块转为旋转加载指示、禁用交互并标记 aria-busy。
 export default function Demo() {
   const [theme, setTheme] = useState(true);
   const [syncing, setSyncing] = useState(true);

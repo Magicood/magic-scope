@@ -6,9 +6,9 @@ export default function Demo() {
       {/* 超长无空格串:不撑破容器,在边界内换行 */}
       <div style={{ display: 'grid', gap: '0.4rem' }}>
         <Label htmlFor="ms-label-long-url" required style={{ overflowWrap: 'anywhere' }}>
-          施法坐标https://arcane.example.com/portal/teleport?seed=超长无空格法术链接不该撑破布局a1b2c3d4e5f6g7h8
+          回调地址https://api.example.com/v1/webhooks/deploy?token=超长无空格链接不该撑破布局a1b2c3d4e5f6g7h8
         </Label>
-        <Input id="ms-label-long-url" placeholder="目标坐标" aria-required />
+        <Input id="ms-label-long-url" placeholder="目标地址" aria-required />
       </div>
 
       {/* 巨量正文:多行换行,星号始终贴在文末 */}

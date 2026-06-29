@@ -27,12 +27,10 @@
   inline-size: var(--ms-result-icon-size);
   block-size: var(--ms-result-icon-size);
   border-radius: var(--ms-radius-full);
-  /* 柔底:tone 浅底槽位;发光由 --ms-fx-glow 门控(静态视觉,不受 motion 影响) */
+  /* 柔底:tone 浅底槽位;静息不发光,仅保留结构性发丝内描边(克制优雅) */
   background-color: var(--ms-c-soft);
   color: var(--ms-c);
-  box-shadow:
-    0 0 calc(28px * var(--ms-fx-glow, 1)) -6px var(--ms-c-glow),
-    inset 0 0 0 var(--ms-hairline) color-mix(in oklch, var(--ms-c) 26%, transparent);
+  box-shadow: inset 0 0 0 var(--ms-hairline) color-mix(in oklch, var(--ms-c) 26%, transparent);
 }
 .ms-result__glyph {
   display: inline-flex;
@@ -41,8 +39,6 @@
   font-size: var(--ms-result-glyph-size);
   line-height: 1;
   font-weight: 600;
-  /* 符文柔发光,克制(text-shadow × fx-glow) */
-  text-shadow: 0 0 calc(12px * var(--ms-fx-glow, 1)) var(--ms-c-glow);
 }
 /* HTTP 异常码:纯数字,缩小字号并用等宽数字,避免“404”过宽撑破圆 */
 .ms-result__icon--code .ms-result__glyph {

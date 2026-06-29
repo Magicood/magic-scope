@@ -6,7 +6,7 @@ export default function Demo() {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
       <Popconfirm
-        trigger={<Button>提交施法</Button>}
+        trigger={<Button>提交审核</Button>}
         title="确定提交?"
         description="提交后将进入审核队列。"
         onConfirm={() => setSubmitted(true)}

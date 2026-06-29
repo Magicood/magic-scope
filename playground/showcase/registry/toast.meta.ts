@@ -41,6 +41,6 @@ export const meta: ComponentMeta = {
     { type: 'boolean', prop: 'withDescription', label: '带描述 description', default: false },
     { type: 'boolean', prop: 'withAction', label: '带行动 action', default: false },
     { type: 'boolean', prop: 'noIcon', label: '关闭图标 icon=false', default: false },
-    { type: 'text', prop: 'message', label: '文案', default: '施法已记录 ✦' },
+    { type: 'text', prop: 'message', label: '文案', default: '操作已记录' },
   ],
 };

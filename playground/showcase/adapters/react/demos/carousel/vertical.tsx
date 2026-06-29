@@ -3,9 +3,9 @@ import { Carousel } from '@magic-scope/react';
 // 纵向轮播:vertical 让 slide 沿 Y 轴位移,箭头改为上/下中央、指示点改为右侧竖排。
 // 拖拽方向也随之改为纵向。
 const ITEMS = [
-  { title: '北境', desc: '霜风与极光', bg: 'var(--ms-color-info)' },
-  { title: '中原', desc: '奥术与商路', bg: 'var(--ms-color-primary)' },
-  { title: '南陲', desc: '余烬与熔火', bg: 'var(--ms-color-warning)' },
+  { title: '产品设计', desc: '原型与组件库', bg: 'var(--ms-color-info)' },
+  { title: '前端工程', desc: '构建与发布', bg: 'var(--ms-color-primary)' },
+  { title: '数据分析', desc: '指标与看板', bg: 'var(--ms-color-warning)' },
 ];
 
 export default function Demo() {

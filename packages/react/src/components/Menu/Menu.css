@@ -22,9 +22,8 @@
   background-color: var(--ms-color-surface-raised);
   color: var(--ms-color-fg);
   font-family: var(--ms-font-sans);
-  box-shadow:
-    0 24px 64px -24px rgb(0 0 0 / 0.45),
-    0 0 calc(40px * var(--ms-fx-glow, 1)) -16px var(--ms-c-glow);
+  /* 静息不发光:仅保留柔和中性投影 */
+  box-shadow: 0 24px 64px -28px rgb(0 0 0 / 0.3);
 
   /* 入场动画:淡入 + 自顶部展开下滑,位移受 motion-scale 门控 */
   opacity: 0;
@@ -50,9 +49,9 @@
   }
 }
 
-/* 发光总闸关断 */
+/* 发光总闸关断:静息已无光晕,保持中性投影 */
 [data-ms-fx="off"] .ms-menu {
-  box-shadow: 0 24px 64px -24px rgb(0 0 0 / 0.45);
+  box-shadow: 0 24px 64px -28px rgb(0 0 0 / 0.3);
 }
 
 /* —— 锚定位:支持 anchor-name 时按 placement/align 锚定,offset 控制间距 —— */
@@ -153,7 +152,7 @@
   color: var(--ms-c-hover);
   box-shadow:
     inset 2px 0 0 var(--ms-c),
-    0 0 calc(16px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow);
+    0 0 calc(8px * var(--ms-fx-glow, 1)) -10px var(--ms-c-glow);
 }
 
 /* 键盘聚焦再叠加发光环,保证可达性(不受 fx 门控) */
@@ -192,7 +191,7 @@
   color: var(--ms-color-danger);
   box-shadow:
     inset 2px 0 0 var(--ms-color-danger),
-    0 0 calc(16px * var(--ms-fx-glow, 1)) -8px var(--ms-color-danger);
+    0 0 calc(8px * var(--ms-fx-glow, 1)) -10px var(--ms-color-danger);
 }
 .ms-menu__item--danger:focus-visible {
   box-shadow:

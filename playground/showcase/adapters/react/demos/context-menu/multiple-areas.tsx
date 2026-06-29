@@ -30,20 +30,20 @@ export default function Demo() {
   const [last, setLast] = useState('在任一卡片上右键。');
 
   const canvasItems: MenuItem[] = [
-    { label: '✦ 新建法阵', onSelect: () => setLast('画布:新建法阵') },
+    { label: '✦ 新建画板', onSelect: () => setLast('画布:新建画板') },
     { label: '⌖ 居中视图', onSelect: () => setLast('画布:居中视图') },
   ];
-  const runeItems: MenuItem[] = [
-    { label: '↻ 重铸', onSelect: () => setLast('符文:重铸') },
-    { label: '⧉ 复制', onSelect: () => setLast('符文:复制') },
-    { label: '🜂 销毁', danger: true, onSelect: () => setLast('符文:销毁') },
+  const layerItems: MenuItem[] = [
+    { label: '↻ 重命名', onSelect: () => setLast('图层:重命名') },
+    { label: '⧉ 复制', onSelect: () => setLast('图层:复制') },
+    { label: '🗑 删除', danger: true, onSelect: () => setLast('图层:删除') },
   ];
 
   return (
     <div style={{ display: 'grid', gap: '0.75rem', inlineSize: 'min(28rem, 100%)' }}>
       <div style={{ display: 'grid', gap: '0.75rem', gridTemplateColumns: '1fr 1fr' }}>
         <Area title="画布区域" items={canvasItems} />
-        <Area title="符文区域" items={runeItems} />
+        <Area title="图层区域" items={layerItems} />
       </div>
       <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--ms-color-fg-muted)' }}>{last}</p>
     </div>

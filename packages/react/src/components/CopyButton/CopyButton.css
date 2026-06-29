@@ -15,9 +15,9 @@
     opacity var(--ms-dur-fast, 120ms) var(--ms-ease-standard, ease);
 }
 .ms-copy-button__content[data-copied] > svg {
-  /* 对勾出现时一次轻弹,并叠一层 tone 发光(经全库 fx-glow 总开关缩放)。 */
+  /* 对勾出现时一次轻弹,叠一层克制的 tone 微光(经全库 fx-glow 总开关缩放)。 */
   animation: ms-copy-pop var(--ms-dur-base, 200ms) var(--ms-ease-standard, ease);
-  filter: drop-shadow(0 0 calc(6px * var(--ms-fx-glow, 1)) var(--ms-c-glow, transparent));
+  filter: drop-shadow(0 0 calc(4px * var(--ms-fx-glow, 1)) var(--ms-c-glow, transparent));
 }
 
 @keyframes ms-copy-pop {
@@ -35,9 +35,9 @@
   }
 }
 
-/* 已复制态:整钮短暂强化发光,呼应「成功」语义(只读 tone 槽位,零硬编码色)。 */
+/* 已复制态:整钮短暂收敛微光,呼应「成功」语义(只读 tone 槽位,零硬编码色)。 */
 .ms-copy-button[data-copied] {
-  box-shadow: 0 0 calc(16px * var(--ms-fx-glow, 1)) -6px var(--ms-c-glow, transparent);
+  box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow, transparent);
 }
 
 /* 尊重降级:reduced-motion 或全库动效关闭时,去掉弹入 / 发光动画,仅做即时切换。 */

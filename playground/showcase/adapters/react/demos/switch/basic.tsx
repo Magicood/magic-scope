@@ -5,9 +5,9 @@ export default function Demo() {
   const [on, setOn] = useState(true);
   return (
     <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.75rem' }}>
-      <Switch checked={on} onChange={(e) => setOn(e.target.checked)} aria-label="启用魔法" />
+      <Switch checked={on} onChange={(e) => setOn(e.target.checked)} aria-label="桌面通知" />
       <span style={{ color: 'var(--ms-color-fg-muted)', userSelect: 'none' }}>
-        启用魔法:{on ? '开 ✦' : '关'}
+        桌面通知:{on ? '已开启' : '已关闭'}
       </span>
     </div>
   );

@@ -22,14 +22,11 @@
   inline-size: var(--ms-tour-w, 0);
   block-size: var(--ms-tour-h, 0);
   border-radius: var(--ms-radius-md);
-  /* 洞内点透;洞边一圈 tone 高亮描边 + 发光 */
+  /* 洞内点透;洞边一圈 tone 高亮描边(静息不发光,克制优雅) */
   pointer-events: none;
   outline: 2px solid color-mix(in oklch, var(--ms-c, var(--ms-color-focus-ring)) 70%, transparent);
   outline-offset: 2px;
-  box-shadow:
-    0 0 0 9999px var(--ms-color-overlay, rgb(10 7 16 / 0.66)),
-    0 0 calc(24px * var(--ms-fx-glow, 1)) 0
-    color-mix(in oklch, var(--ms-c-glow, var(--ms-color-glow)) 60%, transparent);
+  box-shadow: 0 0 0 9999px var(--ms-color-overlay, rgb(10 7 16 / 0.66));
   transition:
     inset-block-start var(--ms-dur-base) var(--ms-ease-emphasized),
     inset-inline-start var(--ms-dur-base) var(--ms-ease-emphasized),
@@ -78,9 +75,7 @@
   border: 1px solid color-mix(in oklch, var(--ms-color-border) 76%, var(--ms-c) 24%);
   border-radius: var(--ms-radius-lg);
   padding: calc(var(--ms-space-4) * var(--ms-density-scale, 1));
-  box-shadow:
-    0 20px 56px -22px rgb(0 0 0 / 0.5),
-    0 0 calc(34px * var(--ms-fx-glow, 1)) -16px var(--ms-c-glow, var(--ms-color-glow));
+  box-shadow: 0 20px 56px -22px rgb(0 0 0 / 0.32);
   /* 入场过渡 */
   transition:
     inset-block-start var(--ms-dur-base) var(--ms-ease-emphasized),
@@ -89,7 +84,7 @@
 }
 
 [data-ms-fx="off"] .ms-tour__card {
-  box-shadow: 0 20px 56px -22px rgb(0 0 0 / 0.5);
+  box-shadow: 0 20px 56px -22px rgb(0 0 0 / 0.32);
 }
 
 .ms-tour__card:focus-visible {
@@ -238,7 +233,6 @@
   background-color: var(--ms-c, var(--ms-color-primary));
   color: var(--ms-color-on-accent, #fff);
   border-color: transparent;
-  box-shadow: 0 0 calc(18px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow, var(--ms-color-glow));
 }
 
 .ms-tour__btn--primary:hover {

@@ -7,7 +7,7 @@ export default function Demo() {
     <>
       <Button onClick={() => setOpen(true)}>打开对话框</Button>
       <Dialog open={open} onClose={() => setOpen(false)}>
-        <h3 style={{ marginBlockStart: 0 }}>奥术对话框</h3>
+        <h3 style={{ marginBlockStart: 0 }}>账户设置</h3>
         <p style={{ color: 'var(--ms-color-fg-muted)' }}>焦点陷阱、Esc、点遮罩关闭都开箱即用。</p>
         <Button onClick={() => setOpen(false)}>知道了</Button>
       </Dialog>

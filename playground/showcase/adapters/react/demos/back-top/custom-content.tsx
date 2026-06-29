@@ -1,7 +1,7 @@
 import { BackTop } from '@magic-scope/react';
 import { useRef } from 'react';
 
-// children 留口:不传时是默认向上箭头符文,传入即可换成文字 / emoji / 自定义图标。
+// children 留口:不传时是默认向上箭头图标,传入即可换成文字 / emoji / 自定义图标。
 // 内容部件类名可经 iconClassName 再定制。这里放一个文字版「顶」。
 export default function Demo() {
   const ref = useRef<HTMLDivElement>(null);

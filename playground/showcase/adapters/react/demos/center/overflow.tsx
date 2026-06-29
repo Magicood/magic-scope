@@ -1,7 +1,7 @@
 import { Center } from '@magic-scope/react';
 
 const longWord =
-  'supercalifragilisticexpialidocious超长无空格法术名节点禁止横向撑破容器必须自动换行不溢出';
+  'supercalifragilisticexpialidocious超长无空格标识符节点禁止横向撑破容器必须自动换行不溢出';
 
 const longText = `${'巨量文本压力测试:'.repeat(8)}居中盒在固定宽度下应让内容纵向流动而非把容器撑破或顶出布局。`;
 

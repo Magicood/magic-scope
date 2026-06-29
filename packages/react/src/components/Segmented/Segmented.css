@@ -28,9 +28,8 @@
   block-size: var(--ms-segmented-h, 0);
   border-radius: calc(var(--ms-radius-lg, 0.625rem) - 0.18rem);
   background-color: var(--ms-color-bg, #fff);
-  box-shadow:
-    0 1px 2px color-mix(in oklch, var(--ms-color-fg) 14%, transparent),
-    0 0 calc(16px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow);
+  /* 静息不发光,仅保留结构性投影抬升滑块(克制优雅) */
+  box-shadow: 0 1px 2px color-mix(in oklch, var(--ms-color-fg) 14%, transparent);
   translate: var(--ms-segmented-x, 0) var(--ms-segmented-y, 0);
   opacity: 0;
   pointer-events: none;
@@ -105,13 +104,12 @@
   font-weight: var(--ms-font-weight-medium, 500);
 }
 
-/* —— focus-visible:tone 发光环 —— */
+/* —— focus-visible:干净细环(Linear/Stripe 风,无发光晕) —— */
 .ms-segmented__item:focus-visible {
   outline: none;
   box-shadow:
     0 0 0 2px var(--ms-color-bg),
-    0 0 0 4px var(--ms-color-focus-ring),
-    0 0 calc(14px * var(--ms-fx-glow, 1)) -4px var(--ms-c-glow);
+    0 0 0 4px var(--ms-color-focus-ring);
 }
 
 /* —— 禁用:单段 / 整组 —— */

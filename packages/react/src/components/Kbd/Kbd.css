@@ -24,8 +24,7 @@
   font-weight: 600;
   line-height: 1;
   white-space: nowrap;
-  /* idle 态:键帽边缘的奥术微光,发光色用 tone 槽位 --ms-c-glow */
-  box-shadow: 0 0 calc(6px * var(--ms-fx-glow, 1)) -3px var(--ms-c-glow);
+  /* 静息不发光:键帽立体感由加粗底边承载,克制优雅 */
   /* 无交互态,但保留过渡以备未来 */
   transition:
     background-color var(--ms-dur-fast) var(--ms-ease-standard),
@@ -35,10 +34,10 @@
     color var(--ms-dur-fast) var(--ms-ease-standard);
 }
 
-/* —— hover:微光强化,键帽边框点亮(用 tone 主色) —— */
+/* —— hover:键帽边框点亮(用 tone 主色),收敛微光 —— */
 .ms-kbd:hover {
   border-color: var(--ms-c);
-  box-shadow: 0 0 calc(14px * var(--ms-fx-glow, 1)) -3px var(--ms-c-glow);
+  box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) -5px var(--ms-c-glow);
 }
 
 /* —— active:模拟按键下压的触感反馈;必要位移用固定值,motion-scale 仅调装饰强度 —— */
@@ -58,7 +57,7 @@
   color: var(--ms-c);
 }
 .ms-kbd:not(.ms-tone-neutral):hover {
-  box-shadow: 0 0 calc(16px * var(--ms-fx-glow, 1)) -3px var(--ms-c-glow);
+  box-shadow: 0 0 calc(9px * var(--ms-fx-glow, 1)) -5px var(--ms-c-glow);
 }
 
 /* —— 多键帽(combo):每键帽是独立 .ms-kbd__key,外壳收口为容纳容器 —— */
@@ -98,7 +97,7 @@
   );
   color: var(--ms-color-fg);
   line-height: 1;
-  box-shadow: 0 0 calc(6px * var(--ms-fx-glow, 1)) -3px var(--ms-c-glow);
+  /* 静息不发光:键帽立体感由加粗底边承载 */
   transition:
     border-color var(--ms-dur-fast) var(--ms-ease-standard),
     box-shadow var(--ms-dur-base) var(--ms-ease-standard),
@@ -119,7 +118,7 @@
 
 .ms-kbd--combo:hover .ms-kbd__key {
   border-color: var(--ms-c);
-  box-shadow: 0 0 calc(14px * var(--ms-fx-glow, 1)) -3px var(--ms-c-glow);
+  box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) -5px var(--ms-c-glow);
 }
 .ms-kbd--combo:active .ms-kbd__key {
   transform: translateY(1px) scale(calc(1 - 0.015 * var(--ms-motion-scale, 1)));

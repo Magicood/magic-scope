@@ -33,7 +33,7 @@ export default function Demo() {
           httpsmagicscopeexamplecomverylongunbreakableurlwithoutanyspacesatallthatwouldotherwiseoverflowthegridtrack
         </Cell>
         <Cell title="巨量正文">
-          奥术飞弹是最基础的塑能法术,稳定命中无需投骰;火球术覆盖范围更广但需要骰豁免;传送门则属于高阶咒法,连接两个固定地点。这段文本刻意写得很长,用来验证网格列在内容溢出时仍把正文换行收在轨道内,不会撑宽列、不会破坏另一列的等宽,也不会顶破容器边界。
+          这是一段用于压力测试的超长正文,会持续延伸,用来模拟真实业务中字段值或描述过长的情况。这段文本刻意写得很长,用来验证网格列在内容溢出时仍把正文换行收在轨道内,不会撑宽列、不会破坏另一列的等宽,也不会顶破容器边界。
         </Cell>
       </Grid>
     </div>

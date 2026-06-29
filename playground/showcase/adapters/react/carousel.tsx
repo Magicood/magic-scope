@@ -8,26 +8,26 @@ import type { ControlValues } from '../../types';
 // 演示用 slide:四块渐变面板,文案居中,展示 children 即一屏的直觉 API。
 const SLIDES: { title: string; sub: string; from: string; to: string }[] = [
   {
-    title: '奥术回廊',
-    sub: '第一屏 · Arcane',
+    title: '数据概览',
+    sub: '第一屏 · Overview',
     from: 'var(--ms-color-primary)',
     to: 'var(--ms-color-accent)',
   },
   {
-    title: '霜寒秘境',
-    sub: '第二屏 · Frost',
+    title: '团队协作',
+    sub: '第二屏 · Team',
     from: 'var(--ms-color-info)',
     to: 'var(--ms-color-primary)',
   },
   {
-    title: '余烬熔炉',
-    sub: '第三屏 · Ember',
+    title: '集成与自动化',
+    sub: '第三屏 · Integrations',
     from: 'var(--ms-color-danger)',
     to: 'var(--ms-color-warning)',
   },
   {
-    title: '虚空深渊',
-    sub: '第四屏 · Void',
+    title: '安全与权限',
+    sub: '第四屏 · Security',
     from: 'var(--ms-color-accent)',
     to: 'var(--ms-color-success)',
   },

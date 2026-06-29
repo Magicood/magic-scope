@@ -7,28 +7,28 @@ import { Descriptions } from '@magic-scope/react';
 export default function Demo() {
   return (
     <Descriptions
-      title="法杖详情"
+      title="产品详情"
       columns={{ base: 1, md: 2, lg: 3 }}
       bordered
       size="sm"
       style={{ inlineSize: 'min(680px, 100%)' }}
     >
-      <Descriptions.Item label="名称" value="星界回响法杖" />
-      <Descriptions.Item label="品质">
-        <span style={{ color: 'var(--ms-color-accent, #a78bfa)', fontWeight: 600 }}>传说</span>
+      <Descriptions.Item label="名称" value="Pro 协作套件" />
+      <Descriptions.Item label="状态">
+        <span style={{ color: 'var(--ms-color-accent, #a78bfa)', fontWeight: 600 }}>已上线</span>
       </Descriptions.Item>
-      <Descriptions.Item label="属性强化" value="奥术 +24%" />
-      <Descriptions.Item label="镶嵌">
+      <Descriptions.Item label="计费方式" value="按年订阅" />
+      <Descriptions.Item label="标签">
         <span style={{ display: 'inline-flex', gap: '0.35rem' }}>
-          <span>寒霜符文</span>
+          <span>团队版</span>
           <span aria-hidden>·</span>
-          <span>聚能符文</span>
+          <span>SSO</span>
         </span>
       </Descriptions.Item>
-      <Descriptions.Item label="耐久" value="—" />
+      <Descriptions.Item label="库存" value="—" />
       {/* span 跨满整行 */}
-      <Descriptions.Item label="特效" span={3}>
-        施法后 20% 概率触发「奥术回响」,免费再次释放上一个法术。
+      <Descriptions.Item label="说明" span={3}>
+        续费后自动延长一年,到期前 30 天发送提醒邮件,可随时在设置中取消。
       </Descriptions.Item>
     </Descriptions>
   );

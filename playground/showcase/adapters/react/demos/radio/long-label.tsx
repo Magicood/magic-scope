@@ -11,10 +11,10 @@ export default function Demo() {
     >
       <Radio value="normal">普通选项</Radio>
       <Radio value="url">
-        超长无空格串:https://magic-scope.example.com/arcane/spellbook/incantation?ref=verylongtokenwithoutanyspaces1234567890
+        超长无空格串:https://magic-scope.example.com/dashboard/projects/settings?ref=verylongtokenwithoutanyspaces1234567890
       </Radio>
       <Radio value="prose">
-        巨量正文:奥术能量在指尖凝聚,符文沿着空气中无形的纹路缓缓铺展,术者低声吟诵着古老的咒语,直到整片空间都被微光浸透,这段标签会随容器宽度自然换行而不会撑破单选组的边界。
+        巨量正文:这是一段用于压力测试的超长正文,会持续延伸以验证标签在受限宽度下的换行行为,直到内容铺满整行也不应撑破布局,这段标签会随容器宽度自然换行而不会撑破单选组的边界。
       </Radio>
     </RadioGroup>
   );

@@ -8,10 +8,10 @@ import type { ControlValues } from '../../types';
 /** 完整层级,depth 旋钮按需截取。 */
 const TRAIL: BreadcrumbItem[] = [
   { label: '首页', href: '#/' },
-  { label: '法术书', href: '#/grimoire' },
-  { label: '奥术', href: '#/grimoire/arcane' },
-  { label: '传送门', href: '#/grimoire/arcane/portal' },
-  { label: '召唤阵' },
+  { label: '项目', href: '#/projects' },
+  { label: 'Atlas 平台', href: '#/projects/atlas' },
+  { label: '设置', href: '#/projects/atlas/settings' },
+  { label: '成员' },
 ];
 
 /** 依据 depth 旋钮裁剪层级,并把末项标为当前页。 */

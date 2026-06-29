@@ -7,8 +7,8 @@ export default function Demo() {
   const [done, setDone] = useState(false);
 
   const notify = async () => {
-    await alert('卷轴已封存到「我的法器」,有效期 30 天。', {
-      title: '操作完成',
+    await alert('报表已导出到「我的文件」,下载链接 30 天内有效。', {
+      title: '导出完成',
       confirmText: '好的',
     });
     setDone(true);

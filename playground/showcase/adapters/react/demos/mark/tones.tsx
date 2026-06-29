@@ -19,8 +19,8 @@ export default function Demo() {
       {tones.map(({ tone, label }) => (
         <div key={tone} style={{ display: 'grid', gap: '0.2rem' }}>
           <span style={{ fontSize: '0.8rem', color: 'var(--ms-color-fg-muted)' }}>{label}</span>
-          <Mark search="魔法高亮" tone={tone}>
-            这是一段魔法高亮示例,关键词随 tone 染色。
+          <Mark search="关键词" tone={tone}>
+            这是一段搜索结果摘要,命中的关键词随 tone 染色。
           </Mark>
         </div>
       ))}

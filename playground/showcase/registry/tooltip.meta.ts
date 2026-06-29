@@ -44,6 +44,6 @@ export const meta: ComponentMeta = {
       max: 1000,
       step: 50,
     },
-    { type: 'text', prop: 'content', label: '提示内容 content', default: '✦ 奥术提示气泡' },
+    { type: 'text', prop: 'content', label: '提示内容 content', default: '查看更多详情' },
   ],
 };

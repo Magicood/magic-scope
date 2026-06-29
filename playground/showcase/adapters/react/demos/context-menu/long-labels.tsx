@@ -10,20 +10,19 @@ export default function Demo() {
 
   const items: MenuItem[] = [
     {
-      label:
-        '召唤一道贯穿九重奥术回廊的超长无空格符文链路WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW',
-      onSelect: () => setLast('已触发:超长无空格符文链路(已换行收住)'),
+      label: '复制这条没有任何空格的超长文件路径WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW',
+      onSelect: () => setLast('已触发:超长无空格路径(已换行收住)'),
     },
     {
       label:
-        '这是一条没有任何标点也不会断开的连续中文文案用来检验多行正文能否在菜单宽度内自然换行收拢不溢出',
+        '这是一段没有任何标点也不会断开的连续中文说明用来检验多行正文能否在菜单宽度内自然换行收拢不溢出',
       onSelect: () => setLast('已触发:超长中文连续文案(已换行收住)'),
     },
     ...Array.from({ length: 16 }, (_, i) => ({
-      label: `符文条目 #${String(i + 1).padStart(2, '0')} · 用以撑出纵向滚动`,
-      onSelect: () => setLast(`已触发:符文条目 #${String(i + 1).padStart(2, '0')}`),
+      label: `菜单项 #${String(i + 1).padStart(2, '0')} · 用以撑出纵向滚动`,
+      onSelect: () => setLast(`已触发:菜单项 #${String(i + 1).padStart(2, '0')}`),
     })),
-    { label: '🜂 解离整条链路', danger: true, onSelect: () => setLast('已触发:解离整条链路') },
+    { label: '🗑 删除全部', danger: true, onSelect: () => setLast('已触发:删除全部') },
   ];
 
   return (

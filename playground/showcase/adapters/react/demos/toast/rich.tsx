@@ -6,8 +6,8 @@ export default function Demo() {
       <Button
         variant="outline"
         onClick={() =>
-          toast.success('卷轴已封存', {
-            description: '可在「我的法器」中随时取回,有效期 30 天。',
+          toast.success('草稿已保存', {
+            description: '可在「我的草稿」中随时取回,有效期 30 天。',
           })
         }
       >
@@ -16,9 +16,9 @@ export default function Demo() {
       <Button
         variant="outline"
         onClick={() =>
-          toast('已将传送门移除', {
-            description: '该法阵已从你的收藏中删除。',
-            action: { label: '撤销', onClick: () => toast.success('传送门已恢复') },
+          toast('已移除该项目', {
+            description: '该项目已从你的收藏中删除。',
+            action: { label: '撤销', onClick: () => toast.success('项目已恢复') },
           })
         }
       >
@@ -27,15 +27,15 @@ export default function Demo() {
       <Button
         variant="outline"
         onClick={() =>
-          toast.warning('结界常驻中,需手动关闭', {
-            id: 'ward',
+          toast.warning('提示常驻中,需手动关闭', {
+            id: 'persistent',
             duration: 0,
           })
         }
       >
         常驻 duration=0
       </Button>
-      <Button variant="outline" onClick={() => toast.dismiss('ward')}>
+      <Button variant="outline" onClick={() => toast.dismiss('persistent')}>
         关闭常驻 dismiss
       </Button>
     </div>

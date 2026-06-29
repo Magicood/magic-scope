@@ -4,7 +4,7 @@ import { applyTheme, arcaneDark, registerProperties } from '../packages/tokens/s
 import '../packages/react/src/styles.css';
 import { App } from './App';
 
-// 应用默认主题(深色奥术)并注册可补间 @property。
+// 应用默认主题(深色)并注册可补间 @property。
 applyTheme(arcaneDark);
 registerProperties();
 document.body.style.background = 'var(--ms-color-bg)';

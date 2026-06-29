@@ -18,7 +18,7 @@ export default function Demo() {
         marks={marks}
         tone="accent"
         formatValue={(n) => `${n}%`}
-        aria-label="带刻度的法力强度"
+        aria-label="带刻度的音量强度"
       />
       <Slider
         defaultValue={70}

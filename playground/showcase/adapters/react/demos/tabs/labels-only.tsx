@@ -10,9 +10,9 @@ const items: TabItem[] = [
 ];
 
 const buckets: Record<string, string[]> = {
-  all: ['奥术飞弹', '冰霜新星', '余烬爆发'],
-  active: ['冰霜新星'],
-  done: ['奥术飞弹', '余烬爆发'],
+  all: ['修复登录重定向', '梳理周报模板', '迁移图表组件'],
+  active: ['梳理周报模板'],
+  done: ['修复登录重定向', '迁移图表组件'],
 };
 
 export default function Demo() {

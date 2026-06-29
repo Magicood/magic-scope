@@ -7,7 +7,7 @@ export const meta: ComponentMeta = {
   summary:
     '块级正文段落,围绕 <p> 的生产级排版原语:size/leading/tone/dimmed/align,多行省略与一键复制。',
   description:
-    '自研、复用全库 tone resolver,消费 @magic-scope/tokens 的 --ms-* 变量。\nsize 走流式字阶(--ms-type-step-*),leading 为行高语义档(正文默认 relaxed 更舒展);tone 上色、dimmed 弱化为次要前景、align 逻辑对齐(RTL 友好)。\nellipsis 多行 clamp(可带 AntD 式「展开/收起」),copyable 一键复制(成功瞬间触发魔法 glow 一闪,受全局光影开关与 reduced-motion 调制)。\n留口:...rest 透传原生属性/事件,as 多态、asChild Slot,classNames 映射子部件。展开/收起/复制文案走 i18n。',
+    '自研、复用全库 tone resolver,消费 @magic-scope/tokens 的 --ms-* 变量。\nsize 走流式字阶(--ms-type-step-*),leading 为行高语义档(正文默认 relaxed 更舒展);tone 上色、dimmed 弱化为次要前景、align 逻辑对齐(RTL 友好)。\nellipsis 多行 clamp(可带 AntD 式「展开/收起」),copyable 一键复制(成功瞬间触发 glow 光晕一闪,受全局光影开关与 reduced-motion 调制)。\n留口:...rest 透传原生属性/事件,as 多态、asChild Slot,classNames 映射子部件。展开/收起/复制文案走 i18n。',
   controls: [
     {
       type: 'select',
@@ -68,7 +68,7 @@ export const meta: ComponentMeta = {
       prop: 'children',
       label: '文案',
       default:
-        '在魔法的世界里,文字不只是信息的载体,更是咒语本身。每一个字符都承载着施法者的意图,从微弱的低语到震彻天地的吟唱。',
+        '正文段落用于承载产品介绍、帮助文档与说明文字。它需要在不同字号、行高与色调下保持清晰的阅读节奏,既能容纳一两句简短提示,也能展开成完整的多段说明。',
     },
   ],
   spread: 'p',

@@ -2,7 +2,7 @@ import { Timeline, TimelineItem } from '@magic-scope/react';
 import { useState } from 'react';
 
 // 交互式时间线:每条 interactive 可聚焦、hover / active 高亮,点击或键盘 Enter·Space 触发 onSelect。
-// 当前选中条 pulse 呼吸辉光强调「进行中」。active 受控,选中态由组件外的 state 驱动。
+// 当前选中条 pulse 呼吸光晕强调「进行中」。active 受控,选中态由组件外的 state 驱动。
 const STAGES: { title: string; time: string; body: string }[] = [
   { title: '排队等待', time: '已入队', body: '任务进入收录队列。' },
   { title: '抓取来源', time: '截图 / 需求', body: '采集来源截图与需求原文。' },

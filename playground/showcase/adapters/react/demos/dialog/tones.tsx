@@ -3,7 +3,7 @@ import { Button, Dialog } from '@magic-scope/react';
 import { useState } from 'react';
 
 // tone 色调系统:全库统一差异点。Dialog 设置 tone 后根元素加 ms-tone-*,
-// focus 环与面板辉光走对应 tone 槽位。覆盖全部 7 个语义色调,点开看辉光差异。
+// focus 环与面板光晕走对应 tone 槽位。覆盖全部 7 个语义色调,点开看光晕差异。
 const TONES: { tone: DialogTone; label: string }[] = [
   { tone: 'primary', label: 'primary 主色' },
   { tone: 'accent', label: 'accent 强调' },
@@ -27,7 +27,7 @@ export default function Demo() {
         <Dialog.Header>
           <Dialog.Title>{active} 色调</Dialog.Title>
           <Dialog.Description>
-            根元素挂上 ms-tone-{active},focus 环与面板辉光跟随该语义色调切换。
+            根元素挂上 ms-tone-{active},focus 环与面板光晕跟随该语义色调切换。
           </Dialog.Description>
         </Dialog.Header>
         <Dialog.Footer>

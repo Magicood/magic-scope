@@ -60,25 +60,22 @@
     calc(var(--ms-space-6) + var(--ms-safe-right, 0px));
   padding-block-end: max(var(--ms-space-6), var(--ms-safe-bottom, 0px));
   font-family: var(--ms-font-sans);
-  box-shadow:
-    0 24px 64px -24px rgb(0 0 0 / 0.45),
-    0 0 calc(40px * var(--ms-fx-glow, 1)) -16px var(--ms-c-glow, var(--ms-color-glow));
+  box-shadow: 0 24px 64px -24px rgb(0 0 0 / 0.3);
 }
-/* 非 default tone:面板起始边语义色强调条 + 辉光,读 tone 槽位(零硬编码) */
+/* 非 default tone:面板起始边语义色强调条(静息不发光) */
 .ms-alert-dialog__panel--accent {
   box-shadow:
     inset 3px 0 0 var(--ms-c),
-    0 24px 64px -24px rgb(0 0 0 / 0.45),
-    0 0 calc(40px * var(--ms-fx-glow, 1)) -16px var(--ms-c-glow);
+    0 24px 64px -24px rgb(0 0 0 / 0.3);
 }
 [data-ms-fx="off"] .ms-alert-dialog__panel,
 [data-ms-fx="off"] .ms-alert-dialog__panel--accent {
-  box-shadow: 0 24px 64px -24px rgb(0 0 0 / 0.45);
+  box-shadow: 0 24px 64px -24px rgb(0 0 0 / 0.3);
 }
 [data-ms-fx="off"] .ms-alert-dialog__panel--accent {
   box-shadow:
     inset 3px 0 0 var(--ms-c),
-    0 24px 64px -24px rgb(0 0 0 / 0.45);
+    0 24px 64px -24px rgb(0 0 0 / 0.3);
 }
 
 /* —— 警示图标槽:跨标题/消息纵向贯通,语义色着色 —— */
@@ -91,10 +88,6 @@
   font-size: 1.5rem;
   line-height: 1;
   color: var(--ms-c, var(--ms-color-fg));
-  filter: drop-shadow(0 0 calc(8px * var(--ms-fx-glow, 1)) var(--ms-c-glow, transparent));
-}
-[data-ms-fx="off"] .ms-alert-dialog__icon {
-  filter: none;
 }
 /* 正文:默认占满两列(无图标态);min-inline-size:0 让子项收缩换行,不撑破网格列 */
 .ms-alert-dialog__body {

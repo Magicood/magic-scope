@@ -6,7 +6,7 @@ import { Tabs } from '@magic-scope/react';
 const items: TabItem[] = [
   {
     value: 'long-label',
-    label: '超长无空格标签Supercalifragilisticexpialidocious奥术咒文不会换行',
+    label: '超长无空格标签Supercalifragilisticexpialidocious不会自动换行撑破容器',
     content: (
       <p style={{ margin: 0, color: 'var(--ms-color-fg-muted)' }}>
         标签过长时 tablist 横向溢出可滚动,标签本身不撑破容器。
@@ -19,11 +19,13 @@ const items: TabItem[] = [
     content: (
       <div style={{ color: 'var(--ms-color-fg-muted)' }}>
         <p style={{ marginBlockStart: 0 }}>
-          {'奥术能量在指尖凝聚,符文沿着法杖一圈圈亮起。'.repeat(24)}
+          {'这是一段用于压力测试的超长正文,会持续延伸,以验证面板内的自动换行与垂直滚动表现。'.repeat(
+            16,
+          )}
         </p>
         <p style={{ marginBlockEnd: 0 }}>
           参考:
-          https://magic-scope.example.com/spells/arcane/missile?from=showcase&trace=aVeryLongUnbreakableQueryStringThatMustWrapInsteadOfOverflowing0123456789
+          https://magic-scope.example.com/docs/components/tabs?from=showcase&trace=aVeryLongUnbreakableQueryStringThatMustWrapInsteadOfOverflowing0123456789
         </p>
       </div>
     ),

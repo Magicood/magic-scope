@@ -10,10 +10,10 @@ export default function Demo() {
         maxInlineSize: 'min(32rem, 100%)',
       }}
     >
-      <Alert variant="info">信息:新版本咒文库已同步至本地缓存。</Alert>
-      <Alert variant="success">成功:奥术回路校准完成,可以释放。</Alert>
-      <Alert variant="warning">警告:法力储备低于 20%,谨慎施放高阶法术。</Alert>
-      <Alert variant="danger">危险:检测到不稳定的虚空裂隙,立即中止仪式。</Alert>
+      <Alert variant="info">信息:已为你同步最新版本,刷新即可生效。</Alert>
+      <Alert variant="success">成功:导出已完成,文件已发送到你的邮箱。</Alert>
+      <Alert variant="warning">警告:存储空间已使用 80%,请及时清理。</Alert>
+      <Alert variant="danger">危险:无法连接到服务器,你的更改尚未保存。</Alert>
     </div>
   );
 }
