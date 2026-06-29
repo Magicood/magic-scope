@@ -33,6 +33,18 @@ export const IconBag = (p: SVGProps<SVGSVGElement>) => (
   </Base>
 );
 
+export const IconPlus = (p: SVGProps<SVGSVGElement>) => (
+  <Base {...p}>
+    <path d="M12 5v14M5 12h14" />
+  </Base>
+);
+
+export const IconMinus = (p: SVGProps<SVGSVGElement>) => (
+  <Base {...p}>
+    <path d="M5 12h14" />
+  </Base>
+);
+
 export const IconCup = (p: SVGProps<SVGSVGElement>) => (
   <Base {...p}>
     <path d="M5 8h11v5a5 5 0 0 1-5 5H10a5 5 0 0 1-5-5z" />

@@ -35,7 +35,7 @@ export function Reviews() {
                 margin: 0,
               }}
             >
-              <Rate value={review.rating} readOnly size="sm" />
+              <Rate value={review.rating} readOnly size="sm" tone="warning" />
 
               <blockquote
                 style={{

@@ -1,7 +1,6 @@
 import {
   Breadcrumb,
   Button,
-  Carousel,
   Empty,
   NumberInput,
   Rate,
@@ -37,30 +36,6 @@ const BREW_TIPS = [
   '意式:18g 粉萃出约 36g 液重,时间 25–30 秒,根据流速微调研磨度。',
   '存放:开封后挤出空气密封,阴凉避光,建议两周内喝完以获得最佳风味。',
 ];
-
-function infoSlide(label: string, value: string, accent: string) {
-  return (
-    <div
-      style={{
-        display: 'grid',
-        placeItems: 'center',
-        aspectRatio: '1 / 1',
-        gap: '0.5rem',
-        textAlign: 'center',
-        padding: '2rem',
-        background: `radial-gradient(120% 120% at 30% 20%, color-mix(in oklab, ${accent} 20%, var(--ms-color-surface)), var(--ms-color-surface-sunken, var(--ms-color-surface)))`,
-      }}
-    >
-      <span className="db-eyebrow">{label}</span>
-      <span
-        className="db-display"
-        style={{ fontSize: 'clamp(1.4rem, 3vw, 2rem)', maxInlineSize: '14rem' }}
-      >
-        {value}
-      </span>
-    </div>
-  );
-}
 
 export function ProductPage({ id }: ProductPageProps) {
   const product = getProduct(id);
@@ -153,7 +128,7 @@ export function ProductPage({ id }: ProductPageProps) {
         <div style={{ display: 'grid', gap: '1.1rem' }}>
           {reviews.slice(0, 3).map((r) => (
             <div key={r.name} style={{ display: 'grid', gap: '0.35rem' }}>
-              <Rate value={r.rating} readOnly size="sm" />
+              <Rate value={r.rating} readOnly size="sm" tone="warning" />
               <p style={{ margin: 0, lineHeight: 1.7 }}>{r.body}</p>
               <span style={{ fontSize: '0.82rem', color: 'var(--ms-color-fg-subtle)' }}>
                 {r.name} · {r.date}
@@ -183,23 +158,23 @@ export function ProductPage({ id }: ProductPageProps) {
       />
 
       <div className="db-product__grid">
-        {/* 左:图廊 */}
-        <div
-          style={{
-            borderRadius: 'var(--ms-radius-xl, 1.25rem)',
-            overflow: 'hidden',
-            border: '1px solid var(--ms-color-border)',
-          }}
-        >
-          <Carousel effect="fade" dots arrows={false} tone="primary">
-            <ProductVisual product={product as Product} rounded={false} />
-            {infoSlide('风味', product.flavors.join(' · '), product.accent)}
-            {infoSlide(
-              isBean ? '产地' : '关于',
-              product.origin ?? product.subtitle,
-              product.accent,
-            )}
-          </Carousel>
+        {/* 左:主视觉 + 风味标签 */}
+        <div className="db-product__media">
+          <ProductVisual product={product as Product} />
+          <div
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '0.5rem',
+              marginBlockStart: '1.1rem',
+            }}
+          >
+            {product.flavors.map((f) => (
+              <Tag key={f} variant="soft" tone="accent" size="sm">
+                {f}
+              </Tag>
+            ))}
+          </div>
         </div>
 
         {/* 右:商品信息 */}
@@ -220,7 +195,7 @@ export function ProductPage({ id }: ProductPageProps) {
           </h1>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <Rate value={product.rating} readOnly allowHalf size="sm" />
+            <Rate value={product.rating} readOnly allowHalf size="sm" tone="warning" />
             <span style={{ fontSize: '0.85rem', color: 'var(--ms-color-fg-subtle)' }}>
               {product.rating} · {product.reviewCount} 条评价
             </span>
