@@ -85,9 +85,8 @@ describe('<RevealGroup>', () => {
     );
     const kids = Array.from(container.querySelectorAll('[data-ms-reveal]')) as HTMLElement[];
     expect(kids.length).toBe(3);
-    expect(kids[0]).toHaveAttribute('data-ms-reveal', 'up');
-    expect(kids[0].style.getPropertyValue('--i')).toBe('0');
-    expect(kids[2].style.getPropertyValue('--i')).toBe('2');
+    expect(kids.map((k) => k.getAttribute('data-ms-reveal'))).toEqual(['up', 'up', 'up']);
+    expect(kids.map((k) => k.style.getPropertyValue('--i'))).toEqual(['0', '1', '2']);
   });
 
   it('order="reverse" 反转序号', () => {
@@ -98,8 +97,7 @@ describe('<RevealGroup>', () => {
       </RevealGroup>,
     );
     const kids = Array.from(container.querySelectorAll('[data-ms-reveal]')) as HTMLElement[];
-    expect(kids[0].style.getPropertyValue('--i')).toBe('1');
-    expect(kids[1].style.getPropertyValue('--i')).toBe('0');
+    expect(kids.map((k) => k.style.getPropertyValue('--i'))).toEqual(['1', '0']);
   });
 });
 
