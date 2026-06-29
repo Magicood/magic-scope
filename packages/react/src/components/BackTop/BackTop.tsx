@@ -32,7 +32,7 @@ export interface BackTopProps extends Omit<ComponentPropsWithoutRef<'button'>, '
   shape?: BackTopShape | undefined;
   /** 语义色调,经全库 tone resolver 派生配色与 glow。默认 primary。 */
   tone?: BackTopTone | undefined;
-  /** 自定义内容(默认向上箭头符文)。 */
+  /** 自定义内容(默认向上箭头图标)。 */
   children?: ReactNode | undefined;
   /** 图标/内容部件类名留口。 */
   iconClassName?: string | undefined;
@@ -201,7 +201,7 @@ export const BackTop = forwardRef<HTMLButtonElement, BackTopProps>(
 );
 BackTop.displayName = 'BackTop';
 
-/** 默认向上箭头符文(纯装饰,SVG 跟随 currentColor)。 */
+/** 默认向上箭头图标(纯装饰,SVG 跟随 currentColor)。 */
 function ArrowUpRune() {
   return (
     <svg

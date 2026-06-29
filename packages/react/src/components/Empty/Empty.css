@@ -1,4 +1,4 @@
-/* —— Empty 空状态:垂直居中堆叠(插画 / 描述 / 操作区),tone 槽位驱动插画着色与辉光 —— */
+/* —— Empty 空状态:垂直居中堆叠(插画 / 描述 / 操作区),tone 槽位驱动插画着色与发光 —— */
 .ms-empty {
   /* 插画基准边长(随 size 改写,再乘密度 scale);描述与间距同样按 size 档切换 */
   --ms-empty-img: 5rem;
@@ -40,7 +40,7 @@
   --ms-empty-desc-size: var(--ms-type-step-0);
 }
 
-/* —— 插画列:用 tone 主色着色 currentColor,带克制辉光(总闸可关) —— */
+/* —— 插画列:用 tone 主色着色 currentColor,带克制发光(总闸可关) —— */
 .ms-empty__image {
   display: flex;
   align-items: center;
@@ -97,7 +97,7 @@
   }
 }
 
-/* —— 发光总闸:data-ms-fx="off" 时清掉插画辉光 —— */
+/* —— 发光总闸:data-ms-fx="off" 时清掉插画发光 —— */
 [data-ms-fx="off"] .ms-empty__image {
   filter: none;
 }

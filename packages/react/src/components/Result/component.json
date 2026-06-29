@@ -1,7 +1,7 @@
 {
   "id": "result",
   "name": "Result",
-  "description": "结果页:七态(success/error/info/warning/404/403/500)派生默认图标与 tone 配色,大号符文/SVG + 柔底发光圆,title/subtitle/extra/children 四槽位,size 随密度缩放,多态 as / asChild。",
+  "description": "结果页:七态(success/error/info/warning/404/403/500)派生默认图标与 tone 配色,大号字符/SVG + 柔底发光圆,title/subtitle/extra/children 四槽位,size 随密度缩放,多态 as / asChild。",
   "category": "feedback",
   "tags": [
     "result",
@@ -25,7 +25,7 @@
   "source": {
     "type": "original",
     "capturedAt": "2026-06-26",
-    "requirements": "结果页组件,对标 AntD Result。status: success/error/info/warning/404/403/500;按 status 给默认图标(可自定义 icon)与配色(tone 联动,success→success 等);title?/subtitle?: ReactNode;extra?: ReactNode(操作区,如返回/重试按钮);children(补充内容)。图标用大号符文/SVG + tone 柔底圆。size。多态 as。需遵守 magic-scope 旗舰标准(tone 槽位、动效双降级、strict TS、留口、纯逻辑下沉 logic.ts)。"
+    "requirements": "结果页组件,对标 AntD Result。status: success/error/info/warning/404/403/500;按 status 给默认图标(可自定义 icon)与配色(tone 联动,success→success 等);title?/subtitle?: ReactNode;extra?: ReactNode(操作区,如返回/重试按钮);children(补充内容)。图标用大号字符/SVG + tone 柔底圆。size。多态 as。需遵守 magic-scope 旗舰标准(tone 槽位、动效双降级、strict TS、留口、纯逻辑下沉 logic.ts)。"
   },
   "dependencies": ["@magic-scope/tokens"],
   "files": ["Result.tsx", "Result.css", "logic.ts", "index.ts"]

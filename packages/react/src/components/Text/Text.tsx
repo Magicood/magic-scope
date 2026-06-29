@@ -84,12 +84,12 @@ export interface TextOwnProps {
   /** 是否可选中(false → user-select:none)。 */
   selectable?: boolean;
   /**
-   * 渐变文字:true/'tone' 用 tone 槽位渐变;'aurora' 加流光动画(受 motion 档调制)。
+   * 渐变文字:true/'tone' 用 tone 槽位渐变;'aurora' 加渐变流动动画(受 motion 档调制)。
    * 兼容:基于 background-clip:text(+ -webkit- 前缀),广泛支持;
    *   不支持环境(@supports 检测)自动回退为 tone 实色,绝不透明裸奔。
    */
   gradient?: boolean | 'tone' | 'aurora';
-  /** 辉光文字(text-shadow,受全局 --ms-fx-glow 调制,data-ms-fx=off 时消失)。 */
+  /** 发光文字(text-shadow,受全局 --ms-fx-glow 调制,data-ms-fx=off 时消失)。 */
   glow?: boolean | 'soft' | 'strong';
   /**
    * 描边/镂空文字(-webkit-text-stroke)。
@@ -97,7 +97,7 @@ export interface TextOwnProps {
    */
   stroke?: boolean;
   /**
-   * 魔法动效:reveal 上浮淡入 / blur-in 模糊聚焦入场;shimmer 流光扫过 / pulse 辉光呼吸 /
+   * 魔法动效:reveal 上浮淡入 / blur-in 模糊聚焦入场;shimmer 渐变扫过 / pulse 发光呼吸 /
    * flow 渐变流动(持续)。全部受全局 data-ms-motion 与 prefers-reduced-motion 调制,
    * 关闭时自动降级为静态(入场态直接呈现、不卡在隐藏)。shimmer/pulse/flow 复用 tone 槽位。
    */
@@ -118,7 +118,7 @@ const cx = (...parts: Array<string | false | undefined>): string => parts.filter
  *
  * 多态(`as` / `asChild`)的内联/块级文字原语,把「所有可控文字属性」收成 props:
  * 字族/字号/字重/斜体、tone 着色、对齐/行高/字距、装饰/transform、截断(单行+多行)、
- * 折行/空白/断词/方向、数字变体/小型大写,以及魔法文字(渐变/辉光/描边)。
+ * 折行/空白/断词/方向、数字变体/小型大写,以及魔法文字(渐变/发光/描边)。
  *
  * **留口**:`...rest` 透传所有原生属性与事件;`className`/`style` 与组件计算值合并(用户值优先);
  * `forwardRef` 到渲染元素;`asChild` 把样式合并到自带子元素。

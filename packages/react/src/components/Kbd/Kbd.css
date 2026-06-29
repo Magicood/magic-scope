@@ -167,7 +167,7 @@
   padding-inline: var(--ms-space-3);
 }
 
-/* —— 发光总闸关断:data-ms-fx="off" 时熄灭所有辉光 —— */
+/* —— 发光总闸关断:data-ms-fx="off" 时熄灭所有发光 —— */
 [data-ms-fx="off"] .ms-kbd,
 [data-ms-fx="off"] .ms-kbd:hover,
 [data-ms-fx="off"] .ms-kbd__key {

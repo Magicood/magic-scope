@@ -208,7 +208,7 @@
     center / 1px 0.5rem repeat-y;
 }
 
-/* —— 呼吸圆点:tone 辉光脉冲。强度 / 位移乘 motion-scale;reduced-motion / 总闸停 —— */
+/* —— 呼吸圆点:tone 发光脉冲。强度 / 位移乘 motion-scale;reduced-motion / 总闸停 —— */
 .ms-timeline__dot--pulse {
   position: relative;
 }

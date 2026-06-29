@@ -141,7 +141,7 @@ export interface MenubarProps
   extends Omit<ComponentPropsWithoutRef<'div'>, 'onChange' | 'onSelect' | 'defaultValue'> {
   /** 顶级菜单(<Menubar.Menu>)。 */
   children?: ReactNode;
-  /** 语义色调,经全库 tone resolver 派生 hover/focus/danger 配色与辉光。默认 primary。 */
+  /** 语义色调,经全库 tone resolver 派生 hover/focus/danger 配色与发光。默认 primary。 */
   tone?: MenubarTone;
   /** 顶级菜单方位。默认 bottom-start(贴触发器左下展开)。 */
   placement?: MenubarMenuPlacement;

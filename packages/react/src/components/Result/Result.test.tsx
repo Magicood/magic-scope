@@ -5,7 +5,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { Result } from './Result';
 
 describe('Result', () => {
-  it('默认 info:基础类名 + 尺寸/状态/tone 类,渲染默认符文', () => {
+  it('默认 info:基础类名 + 尺寸/状态/tone 类,渲染默认图标', () => {
     const { container } = render(<Result title="提示" />);
     const root = container.querySelector('.ms-result');
     expect(root).toHaveClass(
@@ -15,7 +15,7 @@ describe('Result', () => {
       'ms-tone-info',
     );
     expect(container.querySelector('.ms-result__title')).toHaveTextContent('提示');
-    // 默认图标符文(info → ℹ)
+    // 默认图标字符(info → ℹ)
     expect(container.querySelector('.ms-result__glyph')).toHaveTextContent('ℹ');
   });
 
@@ -48,7 +48,7 @@ describe('Result', () => {
 
   it('HTTP 异常:默认数字码 + 默认标题兜底,title 可覆盖', () => {
     const { container, rerender } = render(<Result status="404" />);
-    // 默认符文为数字码,带 --code 修饰类
+    // 默认图标为数字码,带 --code 修饰类
     expect(container.querySelector('.ms-result__icon')).toHaveClass('ms-result__icon--code');
     expect(container.querySelector('.ms-result__glyph')).toHaveTextContent('404');
     // 默认标题兜底
@@ -58,7 +58,7 @@ describe('Result', () => {
     expect(container.querySelector('.ms-result__title')).toHaveTextContent('找不到啦');
   });
 
-  it('自定义 icon 覆盖默认符文;icon={false} 关闭整个图标区', () => {
+  it('自定义 icon 覆盖默认图标;icon={false} 关闭整个图标区', () => {
     const { container, rerender } = render(
       <Result status="success" icon={<svg data-testid="custom-svg" />} title="带 SVG" />,
     );

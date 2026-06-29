@@ -131,7 +131,7 @@ export interface NavigationMenuProps
   items?: NavMenuItem[] | undefined;
   /** 复合用法:塞 <NavigationMenu.List> 等子组件。仅在不传 items 时生效。 */
   children?: ReactNode;
-  /** 语义色调,经全库 tone resolver 派生 hover / active / 辉光配色。默认 primary。 */
+  /** 语义色调,经全库 tone resolver 派生 hover / active / 发光配色。默认 primary。 */
   tone?: NavigationMenuTone;
   /** 受控:当前打开 panel 的项 value(null = 全关)。传入即受控,需配合 onValueChange。 */
   value?: string | null | undefined;

@@ -57,7 +57,7 @@ export interface MenuProps extends Omit<ComponentPropsWithoutRef<'div'>, 'childr
   trigger: ReactElement;
   /** 菜单项列表(支持 item / separator / group)。 */
   items: MenuItem[];
-  /** 语义色调,经全库 tone resolver 派生 hover/focus/danger 配色与辉光。默认 primary。 */
+  /** 语义色调,经全库 tone resolver 派生 hover/focus/danger 配色与发光。默认 primary。 */
   tone?: MenuTone;
   /** 主轴方位:菜单出现在 trigger 的哪一侧。默认 bottom。 */
   placement?: MenuPlacement;
@@ -136,7 +136,7 @@ function positionAreaFor(placement: MenuPlacement, align: MenuAlign): string {
  *
  * 深度能力:
  * - 项类型 item / separator / group(带标题),项支持 icon / shortcut(Kbd)/ checked(checkbox/radio)/ href 链接多态;
- * - tone 7 色调只读 6 槽位(不写死配色)+ 辉光;
+ * - tone 7 色调只读 6 槽位(不写死配色)+ 发光;
  * - 受控 open / defaultOpen + onOpenChange 双通道;菜单级 onSelect、可拦截的 onEscapeKeyDown / onPointerDownOutside;
  * - trigger 全事件 + ref compose;...rest 透传到浮层根;组合式 API(Menu.Item / Separator / Group / Trigger)+ renderItem。
  *

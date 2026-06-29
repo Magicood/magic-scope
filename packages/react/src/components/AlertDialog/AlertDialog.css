@@ -114,7 +114,7 @@
   inline-size: 100%;
   margin-block-start: var(--ms-space-4);
 }
-/* 无效态:边框/辉光走危险角色,与校验提示呼应 */
+/* 无效态:边框/发光走危险角色,与校验提示呼应 */
 .ms-alert-dialog__input[aria-invalid="true"] {
   border-color: var(--ms-color-danger);
 }

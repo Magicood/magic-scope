@@ -81,7 +81,7 @@ function buildStyle(
  * - 有内容(children / label):渲染 <div>,两侧伪线 aria-hidden、中间承载可读文字,
  *   分隔语义由可见文字承载(不套 splitter 语义的 separator role),textAlign 控制文字偏置。
  *
- * 接全库统一 tone(线色 / 奥术微光读 --ms-c / --ms-c-glow,默认 neutral);
+ * 接全库统一 tone(线色 / 微光读 --ms-c / --ms-c-glow,默认 neutral);
  * variant 实/虚/点线;thickness / spacing 随密度 data-ms-density 缩放;
  * 发光受 --ms-fx-glow 调制、data-ms-fx="off" 总闸关断;尊重 prefers-reduced-motion 与 data-ms-motion。
  * ...rest 透传所有原生属性与事件到根。样式见同目录 Divider.css,需引入 @magic-scope/react/styles.css。

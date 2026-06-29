@@ -62,7 +62,7 @@ export interface EmptyOwnProps {
   description?: ReactNode | false;
   /** 尺寸(随 data-ms-density 缩放)。默认 md。 */
   size?: EmptySize;
-  /** 语义色调:驱动内置插画着色与辉光(读统一 6 槽位)。默认 neutral。 */
+  /** 语义色调:驱动内置插画着色与发光(读统一 6 槽位)。默认 neutral。 */
   tone?: EmptyTone;
   /** 各部件细粒度 className。 */
   classNames?: EmptyClassNames;
@@ -125,9 +125,9 @@ function PresetIllustration({ preset, size }: { preset: EmptyPreset; size: Empty
  *
  * 特性:`image`(内置预设 default/simple 极简插画 · currentColor + tone 着色,或自定义 ReactNode,或 false 关闭)、
  * `description`(默认走 i18n empty.description,可覆盖或 false 关闭)、`children`(底部操作区,如重试按钮)、
- * `size`(sm/md/lg,随 data-ms-density 缩放)、`tone`(7 档语义色驱动插画着色与辉光,读统一 6 槽位)、
+ * `size`(sm/md/lg,随 data-ms-density 缩放)、`tone`(7 档语义色驱动插画着色与发光,读统一 6 槽位)、
  * 多态 `as` + `asChild`(Slot,mergeAsChildProps + composeRefs)、`classNames` 部件级定制、forwardRef 到根、`...rest` 透传根。
- * 纯展示;辉光与微动尊重 prefers-reduced-motion 与 data-ms-motion/data-ms-fx 总闸。
+ * 纯展示;发光与微动尊重 prefers-reduced-motion 与 data-ms-motion/data-ms-fx 总闸。
  * 样式见同目录 Empty.css,需引入 @magic-scope/react/styles.css。
  */
 export const Empty = forwardRef<HTMLElement, EmptyProps>(

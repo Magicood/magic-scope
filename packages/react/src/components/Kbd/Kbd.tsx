@@ -17,7 +17,7 @@ export interface KbdProps extends ComponentPropsWithoutRef<'kbd'> {
   separator?: ReactNode;
   /** 尺寸:sm 紧凑 / md 默认 / lg 放大(随 data-ms-density 缩放)。默认 md。 */
   size?: KbdSize;
-  /** 语义色调,经全库 tone resolver 派生配色与辉光。默认 neutral。 */
+  /** 语义色调,经全库 tone resolver 派生配色与发光。默认 neutral。 */
   tone?: KbdTone;
   /** 渲染为子元素并保留键帽样式(Radix Slot 风格;由子元素自带内容)。 */
   asChild?: boolean;
@@ -32,13 +32,13 @@ export interface KbdProps extends ComponentPropsWithoutRef<'kbd'> {
 
 /**
  * Kbd —— 键盘按键样式(深度组件)。自研、零依赖,消费 @magic-scope/tokens 的 --ms-* 变量。
- * surface-raised 底 + 1px 描边 + 加粗底边模拟键帽立体感;idle/hover 的奥术微光接 --ms-fx-glow,
+ * surface-raised 底 + 1px 描边 + 加粗底边模拟键帽立体感;idle/hover 的微光接 --ms-fx-glow,
  * active 下压触感接 --ms-motion-scale,均尊重 prefers-reduced-motion / data-ms-motion。
  *
  * 旗舰深度:
  * - keys('cmd+shift+k' 或数组)经纯逻辑解析器拆成多键帽,平台符号化(cmd→⌘ ctrl→⌃ alt→⌥ shift→⇧ …),
  *   platform=auto 探测 navigator;separator 可传任意 ReactNode。
- * - 接全库 tone resolver(7 色调只读 6 槽位,不写死配色),危险/确认键位可着语义色 + tone 辉光。
+ * - 接全库 tone resolver(7 色调只读 6 槽位,不写死配色),危险/确认键位可着语义色 + tone 发光。
  * - size sm/md/lg 随密度缩放;asChild 多态;classNames 定制子部件;...rest 透传到根。
  *
  * 解析逻辑在同目录 logic.ts(纯函数、零 React 依赖,可平移 core)。

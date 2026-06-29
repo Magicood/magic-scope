@@ -159,7 +159,7 @@
   flex-basis: var(--ms-space-4);
 }
 
-/* —— 发光总闸:data-ms-fx="off" 时清掉所有辉光,只留实线 —— */
+/* —— 发光总闸:data-ms-fx="off" 时清掉所有发光,只留实线 —— */
 [data-ms-fx="off"] .ms-divider--horizontal,
 [data-ms-fx="off"] .ms-divider--vertical {
   background-image: none;

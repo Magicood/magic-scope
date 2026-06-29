@@ -43,7 +43,7 @@ export interface CodeOwnProps {
   copyTimeout?: number;
   /** 复制完成回调(无论成功与否都触发,带 success 标志,便于上报/toast)。 */
   onCopy?: (text: string, success: boolean) => void;
-  /** 辉光(text-shadow,受全局 --ms-fx-glow 调制;data-ms-fx=off 时消失)。魔法点缀。 */
+  /** 发光(text-shadow,受全局 --ms-fx-glow 调制;data-ms-fx=off 时消失)。视觉点缀。 */
   glow?: boolean | 'soft' | 'strong';
   /** 渲染为唯一子元素并合并样式/props(Slot 模式;仅非块级、非 copyable 场景)。 */
   asChild?: boolean;
@@ -66,7 +66,7 @@ const cx = (...parts: Array<string | false | undefined>): string => parts.filter
  * 行内默认 `<code>`,`block` 切到 `<pre><code>`(保留空白 + 横向滚动 + tabSize)。
  * 变体 solid/soft/outline/ghost × tone 走全库 tone resolver(只读 6 槽位,零硬编码配色);
  * mono 等宽字体、size 走流式字阶;块级支持 copyable(剪贴板 + 已复制反馈,文案走 i18n)、
- * lineNumbers(CSS counter,不污染复制内容);glow 辉光点缀(尊重 data-ms-fx / reduced-motion)。
+ * lineNumbers(CSS counter,不污染复制内容);glow 发光点缀(尊重 data-ms-fx / reduced-motion)。
  *
  * **留口**:`...rest` 透传所有原生属性与事件;`className`/`style` 与计算值合并(用户值优先);
  * `forwardRef` 到根;`asChild` 把样式合并到子元素(行内场景);`classNames` 定制内层 code / 复制按钮;

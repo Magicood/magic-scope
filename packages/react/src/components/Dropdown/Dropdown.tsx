@@ -91,7 +91,7 @@ export interface DropdownProps
   items?: DropdownItem[] | undefined;
   /** 复合用法:直接塞自定义菜单内容(如 <Menu.Item>)。仅在不传 items 时生效。 */
   children?: ReactNode;
-  /** 语义色调,经全库 tone resolver 派生 hover/focus/danger 配色与辉光。默认 primary。 */
+  /** 语义色调,经全库 tone resolver 派生 hover/focus/danger 配色与发光。默认 primary。 */
   tone?: DropdownTone;
   /** 菜单方位(12 向,与 Popover 对齐)。默认 bottom-start。 */
   placement?: DropdownPlacement;

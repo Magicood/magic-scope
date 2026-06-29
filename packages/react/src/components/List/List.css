@@ -1,5 +1,5 @@
 /* —— List 基座:列表排版旗舰(category: typography)——
- * 三形态(ul / ol / dl)、原生 + 自定义标记、间距密度、tone 着色 ::marker、魔法辉光。
+ * 三形态(ul / ol / dl)、原生 + 自定义标记、间距密度、tone 着色 ::marker、发光。
  * 间距走 var(--ms-space-*) × var(--ms-density-scale)(密度闭环);着色读 tone 槽位 --ms-c。
  * 内容边界:max-inline-size:100% + overflow-wrap,超长项不撑破容器。需引入 styles.css。 */
 
@@ -81,8 +81,8 @@
   overflow-wrap: anywhere;
 }
 
-/* 魔法辉光:自定义标记用 text-shadow(原生 ::marker 不支持阴影,只能改色)。
- * 受全局 --ms-fx-glow 调制;data-ms-fx=off 时彻底去辉光。 */
+/* 发光:自定义标记用 text-shadow(原生 ::marker 不支持阴影,只能改色)。
+ * 受全局 --ms-fx-glow 调制;data-ms-fx=off 时彻底去发光。 */
 .ms-list--glow .ms-list__marker {
   color: var(--ms-c);
   text-shadow: 0 0 calc(0.4em * var(--ms-fx-glow, 1)) var(--ms-c-glow);

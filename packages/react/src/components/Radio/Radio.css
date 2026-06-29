@@ -217,7 +217,7 @@
   }
 }
 
-/* —— 发光总闸:fx 关断时去掉所有装饰辉光(focus-ring 仍保留可达性) —— */
+/* —— 发光总闸:fx 关断时去掉所有装饰发光(focus-ring 仍保留可达性) —— */
 [data-ms-fx="off"] .ms-radio__input:hover:not(:disabled) + .ms-radio__control,
 [data-ms-fx="off"] .ms-radio__input:checked:hover:not(:disabled) + .ms-radio__control,
 [data-ms-fx="off"] .ms-radio__input:checked + .ms-radio__control,

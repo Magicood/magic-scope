@@ -1,7 +1,7 @@
 {
   "id": "toast",
   "name": "Toast",
-  "description": "命令式通知(旗舰深度):模块级 store + toast() 函数(可在组件外任意处调用,无需 Provider)+ <Toaster /> 渲染容器(useSyncExternalStore 订阅、portal 到 body、6 向定位、安全区避让,透传 ...rest / className / style / onMouseEnter|Leave 到 <ol>,可注入 max/duration/gap/expand)。变体 default/success/warning/danger/info/loading(快捷方法 toast.success/error/warning/info/loading),变体着色读统一 tone 6 槽位(随换肤联动、data-ms-fx 总闸可关辉光);toast.promise 跟踪异步(loading→success/danger,文案支持函数派生)。每条可带图标(icon 可 false / 自定义,loading 显示旋转符文)、描述、行动按钮、自定义 closeIcon、细粒度 classNames(root/icon/message/description/action/close)。事件:onDismiss(携带来源 manual/auto/action/replace)、onAutoClose、整条 onClick(内部按钮 stopPropagation 不误触)。自动消失 + 悬停/聚焦暂停、可手动关闭;持久 live region 解耦播报(danger/warning→assertive、其余→polite);进出场动画(@starting-style + 退场标记),尊重 reduced-motion / data-ms-motion、触控热区达标;i18n 文案走字典(toast.close / toaster.region)。",
+  "description": "命令式通知(旗舰深度):模块级 store + toast() 函数(可在组件外任意处调用,无需 Provider)+ <Toaster /> 渲染容器(useSyncExternalStore 订阅、portal 到 body、6 向定位、安全区避让,透传 ...rest / className / style / onMouseEnter|Leave 到 <ol>,可注入 max/duration/gap/expand)。变体 default/success/warning/danger/info/loading(快捷方法 toast.success/error/warning/info/loading),变体着色读统一 tone 6 槽位(随换肤联动、data-ms-fx 总闸可关发光);toast.promise 跟踪异步(loading→success/danger,文案支持函数派生)。每条可带图标(icon 可 false / 自定义,loading 显示旋转图标)、描述、行动按钮、自定义 closeIcon、细粒度 classNames(root/icon/message/description/action/close)。事件:onDismiss(携带来源 manual/auto/action/replace)、onAutoClose、整条 onClick(内部按钮 stopPropagation 不误触)。自动消失 + 悬停/聚焦暂停、可手动关闭;持久 live region 解耦播报(danger/warning→assertive、其余→polite);进出场动画(@starting-style + 退场标记),尊重 reduced-motion / data-ms-motion、触控热区达标;i18n 文案走字典(toast.close / toaster.region)。",
   "category": "feedback",
   "tags": [
     "toast",

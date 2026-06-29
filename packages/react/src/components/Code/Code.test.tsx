@@ -50,7 +50,7 @@ describe('Code', () => {
     expect(pre?.style.getPropertyValue('--ms-code-tab-size')).toBe('4');
   });
 
-  it('glow → 辉光类;无显式 tone 默认 neutral 槽位', () => {
+  it('glow → 发光类;无显式 tone 默认 neutral 槽位', () => {
     render(<Code glow="strong">x</Code>);
     const el = screen.getByText('x');
     expect(el).toHaveClass('ms-code--glow', 'ms-code--glow-strong', 'ms-tone-neutral');

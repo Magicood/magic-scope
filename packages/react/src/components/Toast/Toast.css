@@ -113,7 +113,7 @@
     scale(calc(1 - 0.03 * var(--ms-motion-scale, 1)));
 }
 
-/* —— default 变体:无语义色,强调条回退中性,辉光压低(不抢眼) —— */
+/* —— default 变体:无语义色,强调条回退中性,发光压低(不抢眼) —— */
 .ms-toast--default {
   --ms-toast-accent: var(--ms-color-border-strong);
   --ms-toast-glow: var(--ms-color-glow);
@@ -137,7 +137,7 @@
   }
 }
 
-/* —— 图标列:读 tone 主色,与变体强调条 / 辉光同源 —— */
+/* —— 图标列:读 tone 主色,与变体强调条 / 发光同源 —— */
 .ms-toast__icon {
   flex: 0 0 auto;
   display: inline-flex;
@@ -154,7 +154,7 @@
   color: var(--ms-color-fg-muted);
 }
 
-/* loading 旋转符文:奥术细环,reduced-motion / motion=off 下停转(仍可见静态环) */
+/* loading 旋转图标:细环,reduced-motion / motion=off 下停转(仍可见静态环) */
 .ms-toast__spinner {
   inline-size: 1rem;
   block-size: 1rem;

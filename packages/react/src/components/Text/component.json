@@ -1,7 +1,7 @@
 {
   "id": "text",
   "name": "Text",
-  "description": "文字排版旗舰核心(typography 分类)。多态 as/asChild 的文字原语,把所有可控文字属性收成 props:字族(sans/serif/mono/display)、流式字号档、字重(语义档+数值)、斜体、tone 着色、对齐、行高、字距、transform、下划线/删除线、单行 truncate(头/尾)+多行 lineClamp、折行 text-wrap(balance/pretty)、空白处理、断词、连字符、方向 dir、数字变体(tabular 等宽)、小型大写、竖排 writingMode,以及魔法文字(渐变/辉光/描边)与魔法动效(reveal/blur-in 入场 + shimmer/pulse/flow 持续,全部受 data-ms-motion 与 prefers-reduced-motion 调制、一键降级)。留口充分:...rest 透传所有原生属性与事件,className/style 与计算值合并(用户优先),逃生舱走 style/className。兼容性备注见各 prop TSDoc。",
+  "description": "文字排版旗舰核心(typography 分类)。多态 as/asChild 的文字原语,把所有可控文字属性收成 props:字族(sans/serif/mono/display)、流式字号档、字重(语义档+数值)、斜体、tone 着色、对齐、行高、字距、transform、下划线/删除线、单行 truncate(头/尾)+多行 lineClamp、折行 text-wrap(balance/pretty)、空白处理、断词、连字符、方向 dir、数字变体(tabular 等宽)、小型大写、竖排 writingMode,以及魔法文字(渐变/发光/描边)与魔法动效(reveal/blur-in 入场 + shimmer/pulse/flow 持续,全部受 data-ms-motion 与 prefers-reduced-motion 调制、一键降级)。留口充分:...rest 透传所有原生属性与事件,className/style 与计算值合并(用户优先),逃生舱走 style/className。兼容性备注见各 prop TSDoc。",
   "category": "typography",
   "tags": [
     "text",

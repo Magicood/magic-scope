@@ -1,5 +1,5 @@
 /**
- * Result 纯逻辑(零 React)—— status → tone / 默认符文 / 默认标题 的映射与解析。
+ * Result 纯逻辑(零 React)—— status → tone / 默认图标 / 默认标题 的映射与解析。
  * 抽到这里便于将来平移到其它框架(vue / web component),React 壳只做渲染。
  */
 
@@ -23,7 +23,7 @@ const STATUS_TONE: Record<ResultStatus, ResultTone> = {
   '500': 'danger',
 };
 
-/** status → 默认符文(可被 icon prop 覆盖;HTTP 异常默认用大号数字码,语义更直观)。 */
+/** status → 默认图标(可被 icon prop 覆盖;HTTP 异常默认用大号数字码,语义更直观)。 */
 const STATUS_GLYPH: Record<ResultStatus, string> = {
   success: '✓',
   error: '✕',
@@ -51,13 +51,13 @@ const STATUS_DEFAULT_TITLE_KEY: Partial<Record<ResultStatus, ResultTitleKey>> = 
 /** 取某 status 的默认 tone。 */
 export const resolveTone = (status: ResultStatus): ResultTone => STATUS_TONE[status];
 
-/** 取某 status 的默认符文。 */
+/** 取某 status 的默认图标。 */
 export const resolveGlyph = (status: ResultStatus): string => STATUS_GLYPH[status];
 
 /** 取某 status 的默认标题 i18n key(无则 undefined)。 */
 export const resolveDefaultTitleKey = (status: ResultStatus): ResultTitleKey | undefined =>
   STATUS_DEFAULT_TITLE_KEY[status];
 
-/** HTTP 异常码(默认符文是纯数字,样式上需缩小字号、加单等宽)。 */
+/** HTTP 异常码(默认图标是纯数字,样式上需缩小字号、加单等宽)。 */
 export const isHttpStatus = (status: ResultStatus): boolean =>
   status === '404' || status === '403' || status === '500';

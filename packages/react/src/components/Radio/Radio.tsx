@@ -11,7 +11,7 @@ export type RadioTone =
   | 'danger'
   | 'info'
   | 'neutral';
-/** 外观:control = 经典圆点;card = 可点描边卡片(选中染柔底 + 主色边 + 辉光)。 */
+/** 外观:control = 经典圆点;card = 可点描边卡片(选中染柔底 + 主色边 + 发光)。 */
 export type RadioAppearance = 'control' | 'card';
 
 /** 数据驱动入口的单个选项(与 children 二选一)。 */
@@ -163,7 +163,7 @@ export interface RadioProps
 /**
  * Radio —— 单选项,基于原生 input[type=radio]。通常置于 RadioGroup 内(从 context 取 name / 选中态 / 尺寸 / 禁用 / tone / appearance)。
  * 结构:label 包视觉隐藏的原生 input + 视觉圆点控件(checked 时染 tone 主色并以 ::after 显内点)+ 可选文字。
- * appearance=card 时整行渲染为可点描边卡片(选中柔底 + 主色边 + 辉光),圆点仍在。
+ * appearance=card 时整行渲染为可点描边卡片(选中柔底 + 主色边 + 发光),圆点仍在。
  * 完整覆盖 hover / focus-visible(发光环) / checked / disabled 状态与过渡;触控热区达标、尊重 reduced-motion 与 data-ms-motion=off。
  * 事件:...rest 摊到根 label(onMouseEnter/onClick/data-* 可挂);input 的 onChange 经 composeEventHandlers 合并(先用户、再内部选中),用户 preventDefault 可拦截。
  * 留口:labelClassName / controlClassName 暴露子部件。

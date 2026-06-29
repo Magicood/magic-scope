@@ -70,7 +70,7 @@ describe('BackTop', () => {
     expect(btn).toHaveAttribute('aria-hidden', 'true');
   });
 
-  it('自定义 children 覆盖默认箭头符文', () => {
+  it('自定义 children 覆盖默认箭头图标', () => {
     render(<BackTop>顶</BackTop>);
     const btn = screen.getByRole('button', { hidden: true });
     expect(btn).toHaveTextContent('顶');

@@ -148,7 +148,7 @@
   }
 }
 
-/* —— 发光总闸:data-ms-fx="off" 时清掉所有辉光 —— */
+/* —— 发光总闸:data-ms-fx="off" 时清掉所有发光 —— */
 [data-ms-fx="off"] .ms-alert {
   box-shadow: inset 1px 0 0 0 color-mix(in oklch, var(--ms-c) 30%, transparent);
 }

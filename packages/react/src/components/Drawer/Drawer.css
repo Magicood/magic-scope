@@ -106,7 +106,7 @@
   }
 }
 
-/* —— 面板:满抽屉、纵向布局,body 滚动;辉光读 tone 槽位 —— */
+/* —— 面板:满抽屉、纵向布局,body 滚动;发光读 tone 槽位 —— */
 .ms-drawer__panel {
   position: relative;
   display: flex;

@@ -24,7 +24,7 @@ export interface AlertProps extends Omit<ComponentPropsWithoutRef<'div'>, 'title
   /** 语义变体:信息 / 成功 / 警告 / 危险。映射到统一 tone 槽位。默认 info。 */
   variant?: AlertVariant;
   /**
-   * 图标:不传按 variant 给默认符文;传 ReactNode 覆盖;传 false 完全关闭图标列。
+   * 图标:不传按 variant 给默认图标;传 ReactNode 覆盖;传 false 完全关闭图标列。
    */
   icon?: ReactNode | false;
   /** 标题行(渲染在正文上方,加粗)。 */
@@ -54,7 +54,7 @@ const VARIANT_TONE: Record<AlertVariant, string> = {
   danger: 'ms-tone-danger',
 };
 
-/** variant → 默认图标符文(可被 icon prop 覆盖或 false 关闭)。 */
+/** variant → 默认图标(可被 icon prop 覆盖或 false 关闭)。 */
 const VARIANT_ICON: Record<AlertVariant, string> = {
   info: 'ℹ',
   success: '✓',
@@ -122,7 +122,7 @@ export const Alert = forwardRef<HTMLDivElement, AlertProps>(
       });
     }
 
-    // 图标:false 关闭整列;未传按 variant 给默认符文;传 ReactNode 覆盖
+    // 图标:false 关闭整列;未传按 variant 给默认图标;传 ReactNode 覆盖
     const showIcon = icon !== false;
     const iconNode = icon === false ? null : (icon ?? VARIANT_ICON[variant]);
 

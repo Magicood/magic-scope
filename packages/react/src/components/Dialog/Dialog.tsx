@@ -106,7 +106,7 @@ export interface DialogProps
   size?: DialogSize;
   /** 位置:center(默认,垂直居中)/ top(贴顶,长表单更稳)。 */
   placement?: DialogPlacement;
-  /** 语义色调:设置后根元素加 ms-tone-*,focus 环 / 面板辉光走 tone 槽位。 */
+  /** 语义色调:设置后根元素加 ms-tone-*,focus 环 / 面板发光走 tone 槽位。 */
   tone?: DialogTone;
   /** 隐藏内建关闭按钮(自定义头部时)。 */
   hideCloseButton?: boolean;
@@ -147,7 +147,7 @@ const CloseGlyph = () => (
  * 自带焦点陷阱、Esc 关闭、::backdrop 遮罩、top-layer(永远最上,无需 z-index)。
  *
  * 深度:Header / Title / Description / Body / Footer 子部件(自动挂 id 关联 aria-labelledby/-describedby);
- * size(sm/md/lg/full)× placement(center/top)变体;tone 语义色(focus 环 / 面板辉光走 tone 槽位)。
+ * size(sm/md/lg/full)× placement(center/top)变体;tone 语义色(focus 环 / 面板发光走 tone 槽位)。
  * 留口:classNames(backdrop/panel/close)、panelProps 透传、asChild / renderPanel 替换 panel 外壳、
  * closeIcon / hideCloseButton。事件:onOpenChange 双通道、onEscapeKeyDown / onPointerDownOutside /
  * onInteractOutside 可 preventDefault 拦截关闭;根 ...rest 透传所有原生事件,onClick / onClose / onCancel 走 compose。

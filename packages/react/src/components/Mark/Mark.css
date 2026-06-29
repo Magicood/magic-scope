@@ -16,11 +16,11 @@
   padding-inline: 0.12em;
   /* 抵消 padding 带来的行内基线位移,避免高亮把行高顶开 */
   margin-inline: -0.04em;
-  /* 高亮辉光:受全局 --ms-fx-glow 调制,fx 关闭时消失 */
+  /* 高亮发光:受全局 --ms-fx-glow 调制,fx 关闭时消失 */
   box-shadow: 0 0 calc(0.4em * var(--ms-fx-glow, 0)) var(--ms-c-glow);
 }
 
-/* fx 总闸开启时给一点点辉光(默认 --ms-fx-glow 为 0 则无,避免噪声) */
+/* fx 总闸开启时给一点点发光(默认 --ms-fx-glow 为 0 则无,避免噪声) */
 [data-ms-fx="on"] .ms-mark__hit {
   box-shadow: 0 0 calc(0.35em * var(--ms-fx-glow, 1)) var(--ms-c-glow);
 }

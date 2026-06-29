@@ -1,7 +1,7 @@
 {
   "id": "list",
   "name": "List",
-  "description": "列表排版组件:无序(ul)/有序(ol)/描述(dl)三形态一参切换,标记支持原生 list-style-type 与自定义 ReactNode 图标,间距随密度缩放,tone 着色 ::marker 与魔法辉光;带命名空间子部件 List.Item / List.Term / List.Detail,嵌套友好。",
+  "description": "列表排版组件:无序(ul)/有序(ol)/描述(dl)三形态一参切换,标记支持原生 list-style-type 与自定义 ReactNode 图标,间距随密度缩放,tone 着色 ::marker 与发光;带命名空间子部件 List.Item / List.Term / List.Detail,嵌套友好。",
   "category": "typography",
   "tags": [
     "list",

@@ -17,7 +17,7 @@ export interface ButtonProps extends ComponentPropsWithoutRef<'button'> {
   size?: ButtonSize;
   /** 形状:默认圆角 / 胶囊 / 直角。默认 default。 */
   shape?: ButtonShape;
-  /** 加载态:显示旋转符文、保持宽度防抖动、禁用交互、aria-busy。 */
+  /** 加载态:显示旋转图标、保持宽度防抖动、禁用交互、aria-busy。 */
   loading?: boolean;
   /** 前置图标。 */
   leftIcon?: ReactNode;

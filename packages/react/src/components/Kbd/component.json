@@ -1,7 +1,7 @@
 {
   "id": "kbd",
   "name": "Kbd",
-  "description": "键盘按键样式组件,surface-raised 底配加粗底边模拟键帽立体感。深度:keys 解析器把 'cmd+shift+k'/数组拆成多键帽并平台符号化(cmd→⌘ ctrl→⌃ alt→⌥ shift→⇧),platform=auto 经 navigator 探测;接全库 tone 色调(7 色,危险/确认键位可着语义色 + tone 辉光);size sm/md/lg 随密度缩放;separator 可传 ReactNode;asChild 多态、classNames 定制子部件。发光/动效尊重 data-ms-fx / prefers-reduced-motion。",
+  "description": "键盘按键样式组件,surface-raised 底配加粗底边模拟键帽立体感。深度:keys 解析器把 'cmd+shift+k'/数组拆成多键帽并平台符号化(cmd→⌘ ctrl→⌃ alt→⌥ shift→⇧),platform=auto 经 navigator 探测;接全库 tone 色调(7 色,危险/确认键位可着语义色 + tone 发光);size sm/md/lg 随密度缩放;separator 可传 ReactNode;asChild 多态、classNames 定制子部件。发光/动效尊重 data-ms-fx / prefers-reduced-motion。",
   "category": "data-display",
   "tags": [
     "kbd",

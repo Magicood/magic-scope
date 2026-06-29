@@ -156,7 +156,7 @@
 .ms-code__copy:active {
   transform: scale(calc(1 - 0.06 * var(--ms-motion-scale, 1)));
 }
-/* 已复制:着成功色 + 轻辉光 */
+/* 已复制:着成功色 + 轻发光 */
 .ms-code__copy[data-copied] {
   color: var(--ms-color-success, var(--ms-c));
   border-color: color-mix(in oklch, var(--ms-color-success, var(--ms-c)) 50%, transparent);
@@ -166,7 +166,7 @@
   line-height: 0;
 }
 
-/* —— 魔法:辉光(text-shadow,受 --ms-fx-glow 调制) —— */
+/* —— 发光(text-shadow,受 --ms-fx-glow 调制) —— */
 .ms-code--glow {
   text-shadow: 0 0 calc(0.35em * var(--ms-fx-glow, 1)) var(--ms-c-glow);
 }
@@ -175,7 +175,7 @@
     0 0 calc(0.6em * var(--ms-fx-glow, 1)) var(--ms-c-glow),
     0 0 calc(0.25em * var(--ms-fx-glow, 1)) var(--ms-c-glow);
 }
-/* fx 总闸关闭时去辉光 */
+/* fx 总闸关闭时去发光 */
 [data-ms-fx="off"] .ms-code--glow,
 [data-ms-fx="off"] .ms-code--glow-strong {
   text-shadow: none;

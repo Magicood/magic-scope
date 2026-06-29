@@ -45,7 +45,7 @@ export interface ListOwnProps {
   spacing?: ListSpacing;
   /** 语义色调(着色 ::marker 与自定义标记;复用 tone resolver 的 --ms-c)。 */
   tone?: ListTone;
-  /** 标记辉光(text-shadow,受全局 --ms-fx-glow 调制;data-ms-fx=off 时消失)。 */
+  /** 标记发光(text-shadow,受全局 --ms-fx-glow 调制;data-ms-fx=off 时消失)。 */
   glow?: boolean | undefined;
   /** 标记位置:outside(默认,标记在内容框外)/ inside(标记随首行内嵌)。 */
   markerPosition?: 'outside' | 'inside';
@@ -70,7 +70,7 @@ const isMarkerNode = (marker: unknown): marker is ReactNode =>
  * List —— 列表排版旗舰(category: typography)。
  *
  * 一个 props 把三种语义列表(ul / ol / dl)、原生与自定义标记、间距密度、tone 着色、
- * 魔法辉光全收口。子部件走命名空间:`List.Item`(li)/ `List.Term`(dt)/ `List.Detail`(dd)。
+ * 发光全收口。子部件走命名空间:`List.Item`(li)/ `List.Term`(dt)/ `List.Detail`(dd)。
  *
  * **嵌套友好**:List 嵌 List 时子列表标记/间距独立(CSS 不向下穿透),天然形成层级缩进。
  * **留口**:`forwardRef` 到根;`...rest` 透传所有原生属性与事件;`as`/`asChild` 多态;
@@ -99,7 +99,7 @@ const ListRoot = forwardRef<HTMLElement, ListProps>(function List(
   const markerType = customMarker ? undefined : (marker as ListMarkerType | undefined);
   const effectiveType = markerType ?? defaultMarkerType(variant);
 
-  // 标记着色 / 辉光需要 tone 槽位;未显式给 tone 但要 glow 时兜底 primary
+  // 标记着色 / 发光需要 tone 槽位;未显式给 tone 但要 glow 时兜底 primary
   const needsSlot = tone != null || glow === true;
   const effectiveTone = tone ?? (needsSlot ? 'primary' : undefined);
 

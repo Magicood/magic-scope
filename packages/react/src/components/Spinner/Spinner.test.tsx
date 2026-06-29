@@ -14,8 +14,8 @@ describe('Spinner', () => {
   });
 
   it('自定义 label 覆盖 aria-label', () => {
-    render(<Spinner label="召唤中" />);
-    expect(screen.getByRole('status')).toHaveAttribute('aria-label', '召唤中');
+    render(<Spinner label="加载中" />);
+    expect(screen.getByRole('status')).toHaveAttribute('aria-label', '加载中');
   });
 
   it('tone 映射到 ms-tone-* 类;不传 tone 时不加 tone 类(跟随 currentColor)', () => {

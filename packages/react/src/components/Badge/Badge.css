@@ -71,7 +71,7 @@
   color: var(--ms-c);
 }
 
-/* glow:实底 + 常亮辉光(发光实底徽标,受 --ms-fx-glow 门控) */
+/* glow:实底 + 常亮发光(发光实底徽标,受 --ms-fx-glow 门控) */
 .ms-badge--glow {
   background-color: var(--ms-c);
   border-color: var(--ms-c);
@@ -81,7 +81,7 @@
     0 0 calc(5px * var(--ms-fx-glow, 1)) -3px var(--ms-c-glow);
 }
 
-/* —— hover(仅具备 hover 能力的指针):克制强化辉光 —— */
+/* —— hover(仅具备 hover 能力的指针):克制强化发光 —— */
 @media (hover: hover) {
   .ms-badge--solid:hover {
     background-color: var(--ms-c-hover);
@@ -201,7 +201,7 @@
   inset-inline-start: 0;
   transform: translate(-50%, 50%);
 }
-/* —— pulse:呼吸辉光(受 --ms-motion-scale 门控,可一键降级) —— */
+/* —— pulse:呼吸发光(受 --ms-motion-scale 门控,可一键降级) —— */
 .ms-badge--pulse {
   animation: ms-badge-pulse 1.8s var(--ms-ease-standard) infinite;
 }

@@ -1,7 +1,7 @@
 {
   "id": "heading",
   "name": "Heading",
-  "description": "h1–h6 语义标题,视觉与语义解耦(level 定标签 / variant 定视觉档:display·title·subtitle·overline·caption)。复用 Text 的字族·tone·字重·对齐·截断·折行(默认 balance 均衡)·魔法渐变与辉光;支持 anchor 永久链接(hover 浮出 # permalink,自动派生可读 slug,CJK 友好)。",
+  "description": "h1–h6 语义标题,视觉与语义解耦(level 定标签 / variant 定视觉档:display·title·subtitle·overline·caption)。复用 Text 的字族·tone·字重·对齐·截断·折行(默认 balance 均衡)·渐变与发光;支持 anchor 永久链接(hover 浮出 # permalink,自动派生可读 slug,CJK 友好)。",
   "category": "typography",
   "tags": [
     "heading",

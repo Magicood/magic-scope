@@ -1,7 +1,7 @@
 {
   "id": "divider",
   "name": "Divider",
-  "description": "分隔线(深度组件):水平/垂直朝向,solid/dashed/dotted 线型,thickness/spacing(随密度缩放),tone 语义色调(线色与奥术微光读 6 槽位),children/label 文字分隔(role=separator + 两侧画线 + textAlign 偏置)。无内容用语义 <hr>,有内容升级为 separator;...rest 全量透传原生属性与事件。",
+  "description": "分隔线(深度组件):水平/垂直朝向,solid/dashed/dotted 线型,thickness/spacing(随密度缩放),tone 语义色调(线色与微光读 6 槽位),children/label 文字分隔(role=separator + 两侧画线 + textAlign 偏置)。无内容用语义 <hr>,有内容升级为 separator;...rest 全量透传原生属性与事件。",
   "category": "layout",
   "tags": [
     "divider",

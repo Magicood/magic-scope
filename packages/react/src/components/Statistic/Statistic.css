@@ -159,7 +159,7 @@
   animation-duration: 2.4s;
 }
 
-/* —— 系统 reduced-motion:位移流光降为透明度呼吸,保留「加载中」语义,放慢不停止 —— */
+/* —— 系统 reduced-motion:位移高亮降为透明度呼吸,保留「加载中」语义,放慢不停止 —— */
 @media (prefers-reduced-motion: reduce) {
   .ms-statistic__skeleton-bar {
     background-image: linear-gradient(

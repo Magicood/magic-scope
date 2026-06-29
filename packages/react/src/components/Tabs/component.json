@@ -36,7 +36,7 @@
   "source": {
     "type": "original",
     "capturedAt": "2026-06-25",
-    "requirements": "标签页组件,支持受控/非受控、方向键切换与 underline / pill 两种奥术风格变体。补强到旗舰深度(对标 Button/Input/Text):tone 7 色调读 6 槽位、横向/竖排、size、魔法滑块 indicator、可编辑(closable/addable/onEdit)、icon/badge/renderTab、keepMounted、onTabClick、根透传原生事件 + composeEventHandlers。magic-scope 结构/导航组件:自研、消费 tokens,完整状态、键盘可达、fx/motion 开关、逻辑属性。"
+    "requirements": "标签页组件,支持受控/非受控、方向键切换与 underline / pill 两种风格变体。补强到旗舰深度(对标 Button/Input/Text):tone 7 色调读 6 槽位、横向/竖排、size、魔法滑块 indicator、可编辑(closable/addable/onEdit)、icon/badge/renderTab、keepMounted、onTabClick、根透传原生事件 + composeEventHandlers。magic-scope 结构/导航组件:自研、消费 tokens,完整状态、键盘可达、fx/motion 开关、逻辑属性。"
   },
   "dependencies": ["@magic-scope/tokens"],
   "files": ["Tabs.tsx", "Tabs.css", "logic.ts", "index.ts"]

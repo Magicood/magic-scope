@@ -1,7 +1,7 @@
 {
   "id": "radio",
   "name": "Radio",
-  "description": "单选控件(旗舰深度):RadioGroup(role=radiogroup,context 管 name/选中值/尺寸/tone/外观,支持受控与非受控,options 数据驱动入口与 children 二选一)+ Radio(基于原生 input[type=radio],同名自动获得方向键导航与 roving tabindex)。tone 色调经全库 tone resolver 派生 checked 染色与 glow(只读 6 槽位);圆点/内点随密度 data-ms-density 缩放;appearance=card 把每项渲染成可点描边卡片(选中柔底+主色边+辉光)。完整 hover/focus-visible(发光环)/disabled 状态,触控热区达标,尊重 reduced-motion 与 data-ms-motion=off,发光受 data-ms-fx=off 总闸。事件:onValueChange(value,event) 二参带原生事件、onChange 原生回调透传、input.onChange 经 composeEventHandlers 合并(用户 preventDefault 可拦截内部选中)、...rest 摊到根 label(原生事件/data-* 可挂)。留口:labelClassName/controlClassName。",
+  "description": "单选控件(旗舰深度):RadioGroup(role=radiogroup,context 管 name/选中值/尺寸/tone/外观,支持受控与非受控,options 数据驱动入口与 children 二选一)+ Radio(基于原生 input[type=radio],同名自动获得方向键导航与 roving tabindex)。tone 色调经全库 tone resolver 派生 checked 染色与 glow(只读 6 槽位);圆点/内点随密度 data-ms-density 缩放;appearance=card 把每项渲染成可点描边卡片(选中柔底+主色边+发光)。完整 hover/focus-visible(发光环)/disabled 状态,触控热区达标,尊重 reduced-motion 与 data-ms-motion=off,发光受 data-ms-fx=off 总闸。事件:onValueChange(value,event) 二参带原生事件、onChange 原生回调透传、input.onChange 经 composeEventHandlers 合并(用户 preventDefault 可拦截内部选中)、...rest 摊到根 label(原生事件/data-* 可挂)。留口:labelClassName/controlClassName。",
   "category": "forms",
   "tags": [
     "radio",

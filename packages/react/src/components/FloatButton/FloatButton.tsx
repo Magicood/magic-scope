@@ -110,7 +110,7 @@ export interface FloatButtonProps extends FloatButtonHostProps {
   children?: ReactNode | undefined;
 }
 
-/** 默认占位图标(纯装饰加号符文,跟随 currentColor)。 */
+/** 默认占位图标(纯装饰加号图标,跟随 currentColor)。 */
 function PlusRune() {
   return (
     <svg
@@ -298,9 +298,9 @@ export interface FloatButtonGroupProps extends FloatButtonGroupHostProps {
   type?: FloatButtonType | undefined;
   /** 语义色调(触发钮)。默认 primary。 */
   tone?: FloatButtonTone | undefined;
-  /** 收起态触发钮图标。默认加号符文。 */
+  /** 收起态触发钮图标。默认加号图标。 */
   icon?: ReactNode | undefined;
-  /** 展开态触发钮图标(收/展切换)。默认叉号符文。 */
+  /** 展开态触发钮图标(收/展切换)。默认叉号图标。 */
   closeIcon?: ReactNode | undefined;
   /** 触发钮 tooltip(收起态提示)。 */
   tooltip?: ReactNode | undefined;
@@ -318,7 +318,7 @@ export interface FloatButtonGroupProps extends FloatButtonGroupHostProps {
   style?: CSSProperties | undefined;
 }
 
-/** 默认叉号符文(展开态触发钮,纯装饰)。 */
+/** 默认叉号图标(展开态触发钮,纯装饰)。 */
 function CloseRune() {
   return (
     <svg

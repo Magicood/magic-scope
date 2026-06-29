@@ -170,7 +170,7 @@
     0 0 0 4px var(--ms-color-focus-ring);
 }
 
-/* —— loading:滑块内旋转符文,装饰用 motion-scale 调强度 —— */
+/* —— loading:滑块内旋转图标,装饰用 motion-scale 调强度 —— */
 .ms-switch__spinner {
   display: inline-block;
   inline-size: calc(var(--ms-switch-thumb) * 0.625);
@@ -193,7 +193,7 @@
   }
 }
 
-/* —— 发光总闸:fx 关断时去掉所有装饰辉光(focus-ring 仍保留可达性) —— */
+/* —— 发光总闸:fx 关断时去掉所有装饰发光(focus-ring 仍保留可达性) —— */
 [data-ms-fx="off"] .ms-switch__input:not(:disabled):hover + .ms-switch__track,
 [data-ms-fx="off"] .ms-switch__input:checked + .ms-switch__track,
 [data-ms-fx="off"] .ms-switch__input:checked:not(:disabled):hover + .ms-switch__track {
