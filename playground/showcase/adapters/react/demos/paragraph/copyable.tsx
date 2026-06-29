@@ -2,7 +2,7 @@ import { Paragraph } from '@magic-scope/react';
 import { useState } from 'react';
 
 // 一键复制 copyable:true 复制段落自身可见文本;对象 { text, onCopy } 自定义文本与成功回调。
-// 复制成功瞬间触发 glow 辉光一闪(受全局光影开关 / reduced-motion 调制),按钮文案走 i18n。
+// 复制成功瞬间触发 glow 光晕一闪(受全局光影开关 / reduced-motion 调制),按钮文案走 i18n。
 const COMMAND = 'npm install @magic-scope/react';
 
 export default function Demo() {

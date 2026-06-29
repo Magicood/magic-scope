@@ -4,9 +4,9 @@ export const meta: ComponentMeta = {
   id: 'heading',
   name: 'Heading',
   category: 'typography',
-  summary: '语义标题 h1–h6,视觉与语义解耦(level 定标签、variant 定视觉),渐变/辉光/anchor。',
+  summary: '语义标题 h1–h6,视觉与语义解耦(level 定标签、variant 定视觉),渐变/光晕/anchor。',
   description:
-    '自研、复用 Text 的字族/tone/字重/对齐/截断/折行能力。\nlevel 定语义标签(h1–h6,可访问性大纲),variant 定视觉档(display/title/subtitle/overline/caption),二者独立(MUI 式)。\n标题默认 text-wrap:balance 多行均衡;支持渐变(可 aurora 极光)、辉光(受全局光影开关调制)、permalink anchor(CJK 友好 slug)。',
+    '自研、复用 Text 的字族/tone/字重/对齐/截断/折行能力。\nlevel 定语义标签(h1–h6,可访问性大纲),variant 定视觉档(display/title/subtitle/overline/caption),二者独立(MUI 式)。\n标题默认 text-wrap:balance 多行均衡;支持渐变(可 aurora 极光)、光晕(受全局光影开关调制)、permalink anchor(CJK 友好 slug)。',
   controls: [
     {
       type: 'select',
@@ -61,7 +61,7 @@ export const meta: ComponentMeta = {
         { value: 'aurora', label: 'aurora 极光' },
       ],
     },
-    { type: 'boolean', prop: 'glow', label: '辉光 glow', default: false },
+    { type: 'boolean', prop: 'glow', label: '光晕 glow', default: false },
     { type: 'boolean', prop: 'dimmed', label: '弱化 dimmed', default: false },
     { type: 'text', prop: 'children', label: '文案', default: '产品概览 ✦ Product Overview' },
   ],
