@@ -5,19 +5,19 @@ import { useReveal } from './useReveal';
 
 export interface RevealGroupProps {
   /** 下发给各子项的默认变体(子项可自带 data-ms-reveal 覆写),默认 'up'。 */
-  variant?: RevealVariant;
+  variant?: RevealVariant | undefined;
   /** 错峰步长 → --ms-reveal-stagger,默认沿用 CSS 的 60ms。 */
-  stagger?: number | string;
+  stagger?: number | string | undefined;
   /** 序号策略:forward 顺序 / reverse 倒序 / center 由中间向两端,默认 forward。 */
-  order?: 'forward' | 'reverse' | 'center';
+  order?: 'forward' | 'reverse' | 'center' | undefined;
   /** 触发模式(整组共用一次观察),默认 'view'。 */
-  trigger?: Exclude<RevealTrigger, 'scrub'>;
-  as?: ElementType;
-  once?: boolean;
-  amount?: number;
-  margin?: string;
-  className?: string;
-  style?: CSSProperties;
+  trigger?: Exclude<RevealTrigger, 'scrub'> | undefined;
+  as?: ElementType | undefined;
+  once?: boolean | undefined;
+  amount?: number | undefined;
+  margin?: string | undefined;
+  className?: string | undefined;
+  style?: CSSProperties | undefined;
   children?: ReactNode;
 }
 

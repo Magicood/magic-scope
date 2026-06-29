@@ -9,33 +9,33 @@ const TEXT = new Set<RevealVariant>(['text-lines', 'text-words', 'text-chars']);
 
 export interface RevealProps {
   /** 特效变体,默认 'up'。 */
-  variant?: RevealVariant;
+  variant?: RevealVariant | undefined;
   /** 触发模式,默认 'view'(滚动进视口)。 */
-  trigger?: RevealTrigger;
+  trigger?: RevealTrigger | undefined;
   /** 渲染标签,默认 'div'。 */
-  as?: ElementType;
+  as?: ElementType | undefined;
   /** 不加 DOM 层,把特效属性合并进唯一子元素(mask/text 变体不适用)。 */
-  asChild?: boolean;
+  asChild?: boolean | undefined;
   /** 位移量 → 行内 --ms-reveal-distance(数字按 px)。 */
-  distance?: number | string;
+  distance?: number | string | undefined;
   /** 时长 → --ms-reveal-duration(数字按 ms;仍乘 motion-scale)。 */
-  duration?: number | string;
+  duration?: number | string | undefined;
   /** 延迟 → --ms-reveal-delay。 */
-  delay?: number | string;
+  delay?: number | string | undefined;
   /** 缓动 → --ms-reveal-ease。 */
-  ease?: string;
+  ease?: string | undefined;
   /** 错峰步长 → --ms-reveal-stagger(配合 text-* 内部单元)。 */
-  stagger?: number | string;
+  stagger?: number | string | undefined;
   /** 命中一次即定格(默认 true);false 时进出反复。 */
-  once?: boolean;
+  once?: boolean | undefined;
   /** IntersectionObserver threshold 0–1,默认 0.2。 */
-  amount?: number;
+  amount?: number | undefined;
   /** IntersectionObserver rootMargin。 */
-  margin?: string;
+  margin?: string | undefined;
   /** 进视口回调(挂 count-up / 描线等)。 */
-  onReveal?: () => void;
-  className?: string;
-  style?: CSSProperties;
+  onReveal?: (() => void) | undefined;
+  className?: string | undefined;
+  style?: CSSProperties | undefined;
   children?: ReactNode;
 }
 
