@@ -28,7 +28,7 @@ export {
   verdantLight,
 };
 
-/** 内置预设主题(供 registerThemes 一次注册;深色奥术为默认)。 */
+/** 内置预设主题(供 registerThemes 一次注册;深色为默认)。 */
 export const presetThemes: ThemeContract[] = [
   arcaneDark,
   arcaneLight,
@@ -46,7 +46,7 @@ export const presetThemes: ThemeContract[] = [
 
 /** 预设家族清单(name + label),供主题画廊 / 选择器动态渲染 —— 配色「多重选择」的数据源。 */
 export const presetFamilies: ReadonlyArray<{ name: string; label: string }> = [
-  { name: 'arcane', label: '奥术' },
+  { name: 'arcane', label: '暮紫' },
   { name: 'frost', label: '霜蓝' },
   { name: 'ember', label: '余烬' },
   { name: 'verdant', label: '苍翠' },
