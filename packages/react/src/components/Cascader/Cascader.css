@@ -50,9 +50,9 @@
   box-shadow: 0 0 0 3px color-mix(in oklch, var(--ms-c, var(--ms-color-primary)) 28%, transparent);
 }
 
+/* open:面板已可见 + tone 边框即足够标识;聚焦细环留给 :focus-visible,两态可辨 */
 .ms-cascader--open {
   border-color: var(--ms-c, var(--ms-color-primary));
-  box-shadow: 0 0 0 3px color-mix(in oklch, var(--ms-c, var(--ms-color-primary)) 28%, transparent);
 }
 
 .ms-cascader--disabled {

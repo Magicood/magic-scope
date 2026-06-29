@@ -5,7 +5,6 @@
 .ms-divider {
   /* 线色:默认读 tone 主色;neutral 下覆盖为 border 色(见下),保持「分隔不抢眼」 */
   --ms-divider-color: var(--ms-c);
-  --ms-divider-glow: var(--ms-c-glow);
   /* 兜底:thickness / spacing 未注入时的默认值 */
   --ms-divider-thickness: 1px;
   --ms-divider-spacing: 0px;
@@ -16,10 +15,9 @@
     box-shadow var(--ms-dur-base) var(--ms-ease-standard);
 }
 
-/* neutral(默认 tone):线用 border 色,微光仍用全局 glow —— 克制、不抢视觉 */
+/* neutral(默认 tone):线用 border 色 —— 克制、不抢视觉 */
 .ms-divider.ms-tone-neutral {
   --ms-divider-color: var(--ms-color-border);
-  --ms-divider-glow: var(--ms-color-glow);
 }
 
 /* —— horizontal:横跨容器,上边框成线 —— */
