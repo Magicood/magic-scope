@@ -3,23 +3,24 @@ import { palette } from '../primitive/palette';
 import { sharedDimension, sharedMotion, sharedTypography } from './shared';
 
 /**
- * 浅色奥术(Arcane) —— 默认预设主题的 light 变体。
- * 初版色值按 OKLCH 思路从 dark 反推(决策 16 授权);深色文字 on 浅底,对比天然充裕。
- * 后续 OKLCH 派生器接入后可精校。
+ * 浅色(Arcane) —— 默认预设主题的 light 变体。
+ * 底色族走中性 zinc 阶字面量(清爽、留白);深色文字 on 浅底,对比充裕(WCAG AA 全过)。品牌紫只保留在 primary/accent/selection/glow。
  */
 export const arcaneLight: ThemeContract = {
-  meta: { name: 'arcane', colorScheme: 'light', label: '浅色奥术' },
+  meta: { name: 'arcane', colorScheme: 'light', label: '浅色' },
   color: {
-    bg: '#FAF8FF',
+    // 底色族:中性近白(去紫调),层次柔。
+    bg: '#FCFCFD',
     surface: '#FFFFFF',
     surfaceRaised: '#FFFFFF',
-    surfaceSunken: palette.void[50],
-    overlay: 'rgba(46, 40, 66, 0.40)',
-    fg: palette.void[900],
-    fgMuted: palette.void[600],
-    fgSubtle: palette.void[500],
-    border: palette.void[100],
-    borderStrong: palette.void[200],
+    surfaceSunken: '#F4F4F5',
+    overlay: 'rgba(24, 24, 27, 0.40)',
+    fg: '#18181B',
+    fgMuted: '#52525B',
+    fgSubtle: '#6E6E78',
+    // 半透明黑 hairline(与 dark 的半透明白同一套思路)。
+    border: 'rgba(24, 24, 27, 0.08)',
+    borderStrong: 'rgba(24, 24, 27, 0.16)',
     primary: palette.arcane[600],
     primaryHover: palette.arcane[700],
     primaryActive: palette.arcane[800],
@@ -37,8 +38,8 @@ export const arcaneLight: ThemeContract = {
     link: palette.arcane[600],
     linkHover: palette.arcane[700],
     linkVisited: palette.ember[700],
-    selection: palette.arcane[200],
-    onSelection: palette.void[900],
+    selection: '#DDD6FE',
+    onSelection: '#18181B',
     focusRing: palette.arcane[500],
     glow: palette.arcane[400],
   },
