@@ -45,8 +45,9 @@ export function deriveTheme(input: DeriveThemeInput): ThemeContract {
         fg: neutral[50],
         fgMuted: neutral[200],
         fgSubtle: neutral[400],
-        border: neutral[700],
-        borderStrong: neutral[500],
+        // 半透明白 hairline:全派生族统一轻线条(与 arcane 一致),不带色温、不抢眼。
+        border: 'rgba(255, 255, 255, 0.08)',
+        borderStrong: 'rgba(255, 255, 255, 0.16)',
         primary: primary[500],
         primaryHover: primary[400],
         primaryActive: primary[600],
@@ -78,8 +79,9 @@ export function deriveTheme(input: DeriveThemeInput): ThemeContract {
         fg: neutral[900],
         fgMuted: neutral[600],
         fgSubtle: neutral[500],
-        border: neutral[200],
-        borderStrong: neutral[300],
+        // 半透明黑 hairline(与 dark 的半透明白同一套思路)。
+        border: 'rgba(24, 24, 27, 0.08)',
+        borderStrong: 'rgba(24, 24, 27, 0.16)',
         primary: primary[600],
         primaryHover: primary[700],
         primaryActive: primary[800],
