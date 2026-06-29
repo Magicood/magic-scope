@@ -1,0 +1,302 @@
+/* ============================================================================
+ * 营销落地页:标杆区块样式(SiteNav / Hero / Footer 等由主会话拥有)。
+ * fan-out 的区块只用 app.css 里的 v- 工具类 + inline style,不改本文件。
+ * ========================================================================== */
+
+/* ---------- 顶部导航 ---------- */
+.v-nav {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 50;
+  inline-size: 100%;
+  transition:
+    background-color 0.3s var(--ms-ease-standard, ease),
+    border-color 0.3s var(--ms-ease-standard, ease),
+    backdrop-filter 0.3s ease;
+  border-block-end: 1px solid transparent;
+}
+
+.v-nav.is-scrolled {
+  background-color: color-mix(in oklab, var(--ms-color-bg) 72%, transparent);
+  backdrop-filter: blur(14px) saturate(1.4);
+  border-block-end-color: var(--ms-color-border);
+}
+
+.v-nav__inner {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  block-size: 4rem;
+}
+
+.v-nav__brand {
+  display: inline-flex;
+  align-items: center;
+}
+
+.v-nav__links {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-inline: auto;
+}
+
+.v-nav__link {
+  padding: 0.4rem 0.7rem;
+  border-radius: var(--ms-radius-md, 0.5rem);
+  font-size: 0.9rem;
+  color: var(--ms-color-fg-muted);
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.v-nav__link:hover {
+  color: var(--ms-color-fg);
+  background-color: var(--ms-color-surface-hover, var(--ms-color-surface));
+}
+
+.v-nav__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.v-nav__burger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  inline-size: 2.25rem;
+  block-size: 2.25rem;
+  padding: 0 0.5rem;
+  background: transparent;
+  border: 1px solid var(--ms-color-border);
+  border-radius: var(--ms-radius-md, 0.5rem);
+  cursor: pointer;
+}
+
+.v-nav__burger span {
+  display: block;
+  block-size: 1.5px;
+  background-color: var(--ms-color-fg);
+  border-radius: 2px;
+}
+
+.v-nav__sheet {
+  border-block-end: 1px solid var(--ms-color-border);
+  background-color: color-mix(in oklab, var(--ms-color-bg) 92%, transparent);
+  backdrop-filter: blur(14px);
+}
+
+.v-nav__sheet-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding-block: 1rem;
+}
+
+@media (max-width: 820px) {
+  .v-nav__links,
+  .v-nav__actions {
+    display: none;
+  }
+  .v-nav__burger {
+    display: flex;
+    margin-inline-start: auto;
+  }
+}
+
+@media (min-width: 821px) {
+  .v-nav__sheet {
+    display: none;
+  }
+}
+
+/* ---------- Hero ---------- */
+.v-hero {
+  position: relative;
+  padding-block: clamp(3.5rem, 8vw, 6.5rem) clamp(3rem, 7vw, 5.5rem);
+}
+
+.v-hero__grid {
+  display: grid;
+  gap: clamp(2.5rem, 5vw, 4rem);
+  align-items: center;
+}
+
+@media (min-width: 940px) {
+  .v-hero__grid {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  }
+}
+
+.v-hero__title {
+  margin-block: 1.25rem 0;
+  font-size: clamp(2.25rem, 5vw, 3.5rem);
+  line-height: 1.08;
+  letter-spacing: var(--ms-tracking-tighter, -0.03em);
+  white-space: pre-line;
+  text-wrap: balance;
+}
+
+.v-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-block-start: 2rem;
+}
+
+.v-hero__note {
+  margin-block-start: 1rem;
+  font-size: 0.85rem;
+  color: var(--ms-color-fg-subtle);
+}
+
+/* Hero 产品预览面板 */
+.v-preview {
+  position: relative;
+  padding: 1rem;
+  border-radius: var(--ms-radius-xl, 1rem);
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--ms-color-surface-raised) 88%, transparent),
+    var(--ms-color-surface)
+  );
+  border: 1px solid var(--ms-color-border);
+  box-shadow: 0 30px 80px -40px color-mix(in oklab, var(--ms-color-primary) 40%, transparent);
+}
+
+.v-preview__bar {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.4rem 0.85rem;
+}
+
+.v-preview__dot {
+  inline-size: 0.55rem;
+  block-size: 0.55rem;
+  border-radius: var(--ms-radius-full, 9999px);
+  background-color: var(--ms-color-border-strong);
+}
+
+.v-preview__kpis {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.65rem;
+  margin-block-start: 0.85rem;
+}
+
+.v-preview__kpi {
+  padding: 0.7rem 0.8rem;
+  border-radius: var(--ms-radius-md, 0.5rem);
+  background-color: var(--ms-color-surface-sunken, var(--ms-color-surface));
+  border: 1px solid var(--ms-color-border);
+}
+
+/* 脉动小圆点(eyebrow / 实时标识) */
+.v-dot-pulse {
+  display: inline-block;
+  inline-size: 0.42rem;
+  block-size: 0.42rem;
+  border-radius: var(--ms-radius-full, 9999px);
+  background-color: var(--ms-color-primary);
+  box-shadow: 0 0 0 0 color-mix(in oklab, var(--ms-color-primary) 60%, transparent);
+  animation: v-pulse 2.4s var(--ms-ease-standard, ease) infinite;
+}
+
+@keyframes v-pulse {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--ms-color-primary) 55%, transparent);
+  }
+  70% {
+    box-shadow: 0 0 0 0.5rem transparent;
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .v-dot-pulse {
+    animation: none;
+  }
+}
+
+/* ---------- Logo 墙 ---------- */
+.v-logos {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: clamp(1.5rem, 5vw, 3.5rem);
+}
+
+.v-logos__item {
+  font-size: 1.05rem;
+  font-weight: var(--ms-font-weight-semibold, 600);
+  letter-spacing: var(--ms-tracking-tight, -0.01em);
+  color: var(--ms-color-fg-subtle);
+  opacity: 0.85;
+  transition:
+    color 0.25s ease,
+    opacity 0.25s ease;
+}
+
+.v-logos__item:hover {
+  color: var(--ms-color-fg-muted);
+  opacity: 1;
+}
+
+/* ---------- Footer ---------- */
+.v-footer {
+  position: relative;
+  padding-block: clamp(3rem, 6vw, 4.5rem) 2rem;
+  border-block-start: 1px solid var(--ms-color-border);
+}
+
+.v-footer__top {
+  display: grid;
+  gap: 2.5rem;
+}
+
+@media (min-width: 760px) {
+  .v-footer__top {
+    grid-template-columns: 1.4fr repeat(3, 1fr);
+  }
+}
+
+.v-footer__col-title {
+  margin-block-end: 0.9rem;
+  font-size: 0.8rem;
+  font-weight: var(--ms-font-weight-semibold, 600);
+  letter-spacing: var(--ms-tracking-wider, 0.06em);
+  text-transform: uppercase;
+  color: var(--ms-color-fg-subtle);
+}
+
+.v-footer__link {
+  display: block;
+  padding-block: 0.35rem;
+  font-size: 0.9rem;
+  color: var(--ms-color-fg-muted);
+  transition: color 0.2s ease;
+}
+
+.v-footer__link:hover {
+  color: var(--ms-color-fg);
+}
+
+.v-footer__bottom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-block-start: 2.5rem;
+  padding-block-start: 1.5rem;
+  border-block-start: 1px solid var(--ms-color-border);
+  font-size: 0.85rem;
+  color: var(--ms-color-fg-subtle);
+}

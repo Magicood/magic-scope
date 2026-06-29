@@ -1,0 +1,30 @@
+{
+  "id": "navigation-menu",
+  "name": "NavigationMenu",
+  "description": "网站导航菜单:横向一排导航项,每项可是纯链接或带下拉 panel(mega-menu)的触发器;同一时刻至多一个 panel 打开,带平滑过渡;指针 hover(open/close 延迟 + 触发器↔panel 穿越宽限)与键盘(← → 横向 roving、↓/Enter 打开并进入、Esc 关闭回触发器)双可达。区别于 Menubar 命令菜单——这是站点导航,触发器/内容用 link/button 语义(非 menu role),面向页面跳转与信息架构。",
+  "category": "navigation",
+  "tags": [
+    "navigation-menu",
+    "navigation",
+    "mega-menu",
+    "menu",
+    "navbar",
+    "header",
+    "dropdown",
+    "hover-intent",
+    "keyboard",
+    "a11y"
+  ],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "inspired",
+    "url": "https://www.radix-ui.com/primitives/docs/components/navigation-menu",
+    "capturedAt": "2026-06-26",
+    "requirements": "需要一个『站点级导航』组件,而不是命令菜单(Menubar/Menu)。设计意图:页头横向一排导航项,有的就是纯跳转链接(可标当前页 aria-current=page),有的点开是 mega-menu——放富内容或链接网格做信息架构入口。核心约束:同一时刻至多一个 panel 打开,切换要平滑过渡(不能闪);鼠标用户靠 hover 操作时,指针从触发器移到下拉 panel 的途中会短暂离开触发器热区,绝不能因此误关(需要 open/close 延迟 + 穿越宽限的 hover-intent);键盘用户要能 Tab 在触发器/链接间走、← → 横向 roving、↓/Enter/Space 打开 panel 并把焦点送进去、panel 内自然 Tab 遍历、Esc 关闭并回焦触发器。语义上必须区别于 menu:外层是 nav 地标、触发器是 button(aria-expanded/aria-controls)、panel 用 id 关联并回指触发器、链接是真链接而非 menuitem——因为这是导航不是命令。受控/非受控(value/onValueChange)。共享 Viewport(单浮层容器,尺寸/位置随 active panel 过渡)是 Radix 的标志性体验,要对齐。",
+    "notes": "几处诚实备注:(1) Viewport 的尺寸/位置过渡用纯 CSS(transform + position-area),不测量 DOM,因此 SSR 安全、无首帧布局抖动;代价是极端超宽 panel 在窄视口靠 max-inline-size + 内部滚动兜底,而非 JS 动态测宽。(2) 定位用 CSS Anchor Positioning,@supports not (anchor-name) 降级为 fixed 居顶,保证不支持的浏览器仍可用。(3) hover-intent 状态机(active 单值不变式 + open/close 延迟 + switch 即切)是零 React 纯逻辑,放 logic.ts 可平移其它框架。(4) 数据驱动(items)与复合(children)二选一;复合自定义 panel 内容时,键盘移入 panel 后的遍历交给原生 Tab,组件只负责把焦点送进 panel 第一个可聚焦元素。(5) hover 仅对 pointerType=mouse/pen 生效,触屏(coarse)走点击避免误开。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["NavigationMenu.tsx", "NavigationMenu.css", "logic.ts", "index.ts"]
+}

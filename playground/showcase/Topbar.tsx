@@ -1,15 +1,5 @@
-import { useState } from 'react';
-import {
-  setDensity,
-  setMotion,
-  setTheme,
-  withViewTransition,
-} from '../../packages/tokens/src/index';
-
-type Scheme = 'dark' | 'light';
-type Density = 'comfortable' | 'compact' | 'spacious';
-type Motion = 'full' | 'subtle' | 'off';
-type Fx = 'full' | 'subtle' | 'off';
+import { withViewTransition } from '@magic-scope/tokens';
+import { type Density, type Scheme, setPrefs, type Tri, useThemePrefs } from './core/themeState';
 
 interface SegProps<T extends string> {
   label: string;
@@ -47,10 +37,7 @@ export interface TopbarProps {
 
 /** 顶栏:品牌 + 搜索 + 主题/密度/动效/光影一键切换(用 View Transitions 平滑过渡)。 */
 export function Topbar({ query, onQuery }: TopbarProps) {
-  const [scheme, setScheme] = useState<Scheme>('dark');
-  const [density, setDens] = useState<Density>('comfortable');
-  const [motion, setMot] = useState<Motion>('full');
-  const [fx, setFxLevel] = useState<Fx>('subtle');
+  const prefs = useThemePrefs();
 
   return (
     <header className="sc-topbar">
@@ -86,54 +73,42 @@ export function Topbar({ query, onQuery }: TopbarProps) {
       <div className="sc-topbar__controls">
         <Segmented<Scheme>
           label="配色"
-          value={scheme}
+          value={prefs.scheme}
           options={[
             { value: 'dark', label: '暗' },
             { value: 'light', label: '亮' },
           ]}
-          onChange={(v) => {
-            setScheme(v);
-            withViewTransition(() => setTheme('arcane', v));
-          }}
+          onChange={(v) => withViewTransition(() => setPrefs({ scheme: v }))}
         />
         <Segmented<Density>
           label="密度"
-          value={density}
+          value={prefs.density}
           options={[
             { value: 'compact', label: '紧' },
             { value: 'comfortable', label: '适中' },
             { value: 'spacious', label: '松' },
           ]}
-          onChange={(v) => {
-            setDens(v);
-            setDensity(v);
-          }}
+          onChange={(v) => setPrefs({ density: v })}
         />
-        <Segmented<Motion>
+        <Segmented<Tri>
           label="动效"
-          value={motion}
+          value={prefs.motion}
           options={[
             { value: 'full', label: '全' },
             { value: 'subtle', label: '弱' },
             { value: 'off', label: '关' },
           ]}
-          onChange={(v) => {
-            setMot(v);
-            setMotion(v);
-          }}
+          onChange={(v) => setPrefs({ motion: v })}
         />
-        <Segmented<Fx>
+        <Segmented<Tri>
           label="光影"
-          value={fx}
+          value={prefs.fx}
           options={[
             { value: 'full', label: '强' },
             { value: 'subtle', label: '弱' },
             { value: 'off', label: '关' },
           ]}
-          onChange={(v) => {
-            setFxLevel(v);
-            document.documentElement.dataset.msFx = v;
-          }}
+          onChange={(v) => setPrefs({ fx: v })}
         />
       </div>
     </header>

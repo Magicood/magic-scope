@@ -1,0 +1,32 @@
+{
+  "id": "hover-card",
+  "name": "HoverCard",
+  "description": "悬停富预览卡(生产级深度):trigger(链接/头像)hover 或 focus 延时 openDelay(默认 700ms)弹出可交互富内容卡,移开延时 closeDelay(默认 300ms)关闭;指针可从 trigger 移入卡内而不关闭(桥接宽限,纯逻辑做去向命中判定)。原生 Popover API(top-layer)+ CSS Anchor Positioning 锚定,12 向 placement + offset + 可选箭头 + tone 色调驱动边框/发光。复合 HoverCard / HoverCard.Trigger(asChild 注入)/ HoverCard.Content。受控(open+onOpenChange)/非受控(defaultOpen)双通道。a11y:补充信息层而非 dialog —— 不抢焦不困焦,trigger aria-describedby 关联卡片,Esc 关闭,键盘 focus 可触发;触屏(无 hover)诚实降级为 inert(建议改用点击触发的 Popover)。尊重 prefers-reduced-motion / [data-ms-motion=off] / [data-ms-fx=off],不支持锚定时优雅降级居中。",
+  "category": "overlay",
+  "tags": [
+    "hover-card",
+    "overlay",
+    "preview",
+    "popover-api",
+    "top-layer",
+    "anchor",
+    "placement",
+    "arrow",
+    "hover",
+    "bridge",
+    "tone",
+    "controllable",
+    "a11y"
+  ],
+  "status": "stable",
+  "version": "0.1.0",
+  "frameworks": ["react"],
+  "source": {
+    "type": "inspired",
+    "url": "https://www.radix-ui.com/primitives/docs/components/hover-card",
+    "capturedAt": "2026-06-26",
+    "requirements": "需要一个「鼠标悬停在链接/头像上预览富信息」的 overlay,区别于 Tooltip:Tooltip 只承载短文字、且不该放可交互内容;HoverCard 要能放图文、链接、按钮等可交互富内容,并允许指针从 trigger 平滑移入卡片内继续操作(中间空白不能一移开就关)。交互手感:进入延时约 700ms 再弹(避免扫过即弹的噪声),移开延时约 300ms 再关(给指针穿越 trigger 与卡片间隙留宽限)。可访问性上它是『补充信息』不是对话框——不能抢焦/困焦,键盘聚焦也要能触发(否则纯键盘用户拿不到),Esc 可关,trigger 用 aria-describedby 关联卡片。触屏没有 hover,要诚实降级(建议改点击触发的 Popover),不留一张无法关闭的悬空卡。定位复用与 Popover/Tooltip 同构的 placement→position-area 语义(多框架对等,不各写一套),进 top-layer 用原生 Popover API。"
+  },
+  "dependencies": ["@magic-scope/tokens"],
+  "files": ["HoverCard.tsx", "HoverCard.css", "logic.ts", "index.ts"]
+}
