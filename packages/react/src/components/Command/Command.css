@@ -98,13 +98,13 @@
     box-shadow var(--ms-dur-fast) var(--ms-ease-standard);
 }
 
-/* 高亮项(键盘 / 悬停):浮起表面 + 主色 + 内侧导轨 + 微光 */
+/* 高亮项(键盘 / 悬停):浮起表面 + 主色 + 内侧导轨 + 收敛微光 */
 .ms-command__item[data-active] {
   background-color: var(--ms-c-soft);
   color: var(--ms-c-hover, var(--ms-c));
   box-shadow:
     inset 2px 0 0 var(--ms-c),
-    0 0 calc(18px * var(--ms-fx-glow, 1)) -10px var(--ms-c-glow);
+    0 0 calc(8px * var(--ms-fx-glow, 1)) -12px var(--ms-c-glow);
 }
 
 /* 发光总闸关断:保留导轨,去外发光 */
@@ -144,12 +144,12 @@
   font-size: 0.85em;
 }
 
-/* —— 命中高亮片段:主色 + 微光,呼应魔法主题 —— */
+/* —— 命中高亮片段:主色 + 克制微光,呼应魔法主题 —— */
 .ms-command__highlight {
   background: transparent;
   color: var(--ms-c);
   font-weight: 700;
-  text-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) var(--ms-c-glow);
+  text-shadow: 0 0 calc(5px * var(--ms-fx-glow, 1)) var(--ms-c-glow);
 }
 
 [data-ms-fx="off"] .ms-command__highlight {

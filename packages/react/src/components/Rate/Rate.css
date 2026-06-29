@@ -65,13 +65,10 @@
   color: var(--ms-color-border-strong, #cbd5e1);
 }
 
-/* 满层:tone 主色 + 发光,默认完全裁掉(空态);按状态用 clip 揭示 */
+/* 满层:tone 主色,默认完全裁掉(空态);按状态用 clip 揭示。静息不发光(克制优雅) */
 .ms-rate__star--fill {
   color: var(--ms-c, var(--ms-color-warning));
   clip-path: inset(0 100% 0 0);
-  filter: drop-shadow(
-    0 0 calc(6px * var(--ms-fx-glow, 0.6)) var(--ms-c-glow, var(--ms-color-glow))
-  );
   transition: clip-path var(--ms-dur-base, 200ms) var(--ms-ease-standard, ease);
 }
 

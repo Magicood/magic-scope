@@ -116,7 +116,8 @@
   max-inline-size: 100%;
   background-color: var(--ms-color-surface-raised);
   font-family: var(--ms-font-sans);
-  box-shadow: 0 0 calc(40px * var(--ms-fx-glow, 1)) -16px var(--ms-c-glow);
+  /* 静息不发光:只留结构性中性阴影做抽屉浮层立体感 */
+  box-shadow: 0 16px 48px -24px rgb(0 0 0 / 0.32);
 }
 /* 各方向贴边的那条描边,用 tone 软色强调与背景分隔 */
 .ms-drawer--end .ms-drawer__panel {
@@ -238,9 +239,9 @@
   background-color: var(--ms-color-surface-raised);
 }
 
-/* —— 发光总闸关断:data-ms-fx="off" 时熄灭面板辉光 —— */
+/* —— 发光总闸关断:静息本就不发光,保留结构性阴影维持浮层立体 —— */
 [data-ms-fx="off"] .ms-drawer__panel {
-  box-shadow: none;
+  box-shadow: 0 16px 48px -24px rgb(0 0 0 / 0.32);
 }
 
 /* —— 动效降级:reduced-motion 与 data-ms-motion="off" 都瞬时切换(位移为必要位置,

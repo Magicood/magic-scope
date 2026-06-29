@@ -103,8 +103,6 @@
 .ms-tree__checkbox--half {
   background: var(--ms-color-primary);
   border-color: var(--ms-color-primary);
-  box-shadow: 0 0 calc(6px * var(--ms-fx-glow, 1))
-    color-mix(in oklab, var(--ms-color-primary) 45%, transparent);
 }
 .ms-tree__checkbox--checked::after {
   content: "";

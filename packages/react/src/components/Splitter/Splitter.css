@@ -85,7 +85,7 @@
 @media (hover: hover) {
   .ms-splitter__gutter:hover {
     background-color: color-mix(in oklch, var(--ms-c, currentcolor) 40%, transparent);
-    box-shadow: 0 0 calc(10px * var(--ms-fx-glow, 1)) -4px var(--ms-c-glow, transparent);
+    box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) -6px var(--ms-c-glow, transparent);
   }
   .ms-splitter__gutter:hover .ms-splitter__handle {
     background-color: var(--ms-c, currentcolor);
@@ -98,14 +98,13 @@
   }
 }
 
-/* —— focus-visible:tone 发光环,键盘可见 —— */
+/* —— focus-visible:干净细环(Linear/Stripe 风,无发光晕),键盘可见 —— */
 .ms-splitter__gutter:focus-visible {
   outline: none;
   background-color: color-mix(in oklch, var(--ms-c, currentcolor) 40%, transparent);
   box-shadow:
     0 0 0 2px var(--ms-color-bg, transparent),
-    0 0 0 4px var(--ms-color-focus-ring, var(--ms-c, currentcolor)),
-    0 0 calc(12px * var(--ms-fx-glow, 1)) -4px var(--ms-c-glow, transparent);
+    0 0 0 4px var(--ms-color-focus-ring, var(--ms-c, currentcolor));
 }
 .ms-splitter__gutter:focus-visible .ms-splitter__handle {
   background-color: var(--ms-c, currentcolor);

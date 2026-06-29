@@ -122,7 +122,6 @@
   background-position:
     -150% 0,
     0 0;
-  box-shadow: inset 0 0 calc(1px * var(--ms-fx-glow, 1)) 0 var(--ms-color-glow);
   animation: ms-statistic-shimmer 1.4s var(--ms-ease-standard) infinite;
 }
 .ms-statistic--sm .ms-statistic__skeleton-bar {
@@ -180,9 +179,4 @@
   50% {
     opacity: 0.55;
   }
-}
-
-/* —— 发光总闸关断 —— */
-[data-ms-fx="off"] .ms-statistic__skeleton-bar {
-  box-shadow: none;
 }

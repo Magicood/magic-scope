@@ -19,11 +19,6 @@
   border: 1px solid var(--ms-color-border);
   border-radius: var(--ms-radius-md);
   background-color: var(--ms-color-surface);
-  background-image: linear-gradient(
-    180deg,
-    color-mix(in oklch, var(--ms-color-glow) 4%, transparent),
-    transparent 60%
-  );
   color: var(--ms-color-fg);
   font-size: 1.25rem;
   font-weight: 600;
@@ -31,7 +26,6 @@
   line-height: 1;
   text-align: center;
   caret-color: var(--ms-color-primary);
-  box-shadow: inset 0 0 calc(12px * var(--ms-fx-glow, 1)) -10px var(--ms-color-glow);
   transition:
     border-color var(--ms-dur-fast) var(--ms-ease-standard),
     box-shadow var(--ms-dur-base) var(--ms-ease-standard),
@@ -50,28 +44,22 @@
   }
 }
 
-/* —— focus:发光环读 primary 槽位(invalid 时由 --invalid 覆盖为 danger) —— */
+/* —— focus:干净细环读 primary 槽位(invalid 时由 --invalid 覆盖为 danger) —— */
 .ms-pin-input__cell:focus {
   outline: none;
   border-color: var(--ms-color-primary);
-  box-shadow:
-    0 0 0 3px color-mix(in oklch, var(--ms-color-focus-ring) 35%, transparent),
-    0 0 calc(16px * var(--ms-fx-glow, 1)) -6px var(--ms-color-glow),
-    inset 0 0 calc(18px * var(--ms-fx-glow, 1)) -12px var(--ms-color-primary);
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--ms-color-focus-ring) 28%, transparent);
   transform: translateY(-1px);
 }
 
-/* —— invalid:染 danger 环(读 tone-danger 暴露的 --ms-c / --ms-c-glow) —— */
+/* —— invalid:染 danger 边(读 tone-danger 暴露的 --ms-c / --ms-c-glow,静息不发光) —— */
 .ms-pin-input--invalid .ms-pin-input__cell {
   border-color: var(--ms-c, var(--ms-color-danger));
-  box-shadow: inset 0 0 calc(12px * var(--ms-fx-glow, 1)) -10px var(--ms-c, var(--ms-color-danger));
 }
 .ms-pin-input--invalid .ms-pin-input__cell:focus {
   border-color: var(--ms-c, var(--ms-color-danger));
-  box-shadow:
-    0 0 0 3px color-mix(in oklch, var(--ms-c-glow, var(--ms-color-danger)) 35%, transparent),
-    0 0 calc(16px * var(--ms-fx-glow, 1)) -6px var(--ms-c-glow, var(--ms-color-danger)),
-    inset 0 0 calc(18px * var(--ms-fx-glow, 1)) -12px var(--ms-c, var(--ms-color-danger));
+  box-shadow: 0 0 0 3px
+    color-mix(in oklch, var(--ms-c-glow, var(--ms-color-danger)) 28%, transparent);
 }
 
 /* —— disabled —— */

@@ -53,13 +53,13 @@
   outline-offset: 2px;
 }
 
-/* dragover 高亮:tone 色描边 + 柔色底 + 发光 */
+/* dragover 高亮:tone 色描边 + 柔色底 + 收敛微光 */
 .ms-upload__trigger--dragover,
 .ms-upload__trigger[data-dragover] {
   border-color: var(--ms-c);
   border-style: solid;
   background: color-mix(in srgb, var(--ms-c) 8%, transparent);
-  box-shadow: 0 0 calc(20px * var(--ms-fx-glow, 1)) -6px var(--ms-c-glow);
+  box-shadow: 0 0 calc(9px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow);
 }
 
 .ms-upload__trigger--disabled {
@@ -234,7 +234,6 @@
   block-size: 100%;
   border-radius: inherit;
   background: var(--ms-c);
-  box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) -2px var(--ms-c-glow);
   transition: inline-size var(--ms-dur-base, 200ms) var(--ms-ease-standard);
 }
 

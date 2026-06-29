@@ -30,7 +30,6 @@
   block-size: var(--ms-anchor-ink-h, 0);
   border-radius: var(--ms-radius-full);
   background-color: var(--ms-c);
-  box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) -2px var(--ms-c-glow);
   opacity: 0;
   translate: 0 var(--ms-anchor-ink-y, 0);
   transition:
