@@ -40,6 +40,12 @@ interface AreaChartProps {
   height?: number;
   className?: string;
   tone?: 'primary' | 'accent';
+  /**
+   * 描线揭示开关。默认 undefined = 不介入(线直接可见)。
+   * 传 false:主折线初态收成一点(dashoffset 满);传 true:归零,沿路径生长描出。
+   * 由外层 Reveal 的 inView 门控(见 Hero:onReveal 里置 true)。
+   */
+  draw?: boolean;
 }
 
 /** 手搓的平滑面积图:品牌渐变填充 + 描边,responsive(viewBox 拉伸)。 */
@@ -49,6 +55,7 @@ export function AreaChart({
   height = 180,
   className,
   tone = 'primary',
+  draw,
 }: AreaChartProps) {
   const id = useId().replace(/:/g, '');
   const W = 600;
@@ -101,12 +108,41 @@ export function AreaChart({
         strokeWidth="2"
         strokeLinecap="round"
         vectorEffect="non-scaling-stroke"
+        // 描线揭示:draw!==undefined 时用 pathLength 归一化,dashoffset 从 1→0 沿路径生长。
+        // reduced-motion / motion=off 下 transition 时长被库的 --ms-motion-scale 吃掉,直接落终态。
+        {...(draw === undefined
+          ? {}
+          : {
+              pathLength: 1,
+              style: {
+                strokeDasharray: 1,
+                strokeDashoffset: draw ? 0 : 1,
+                transition:
+                  'stroke-dashoffset 1.15s var(--ms-ease-emphasized, cubic-bezier(0.2, 0, 0, 1))',
+              },
+            })}
       />
       {(() => {
         const pts = toPts(data);
         const last = pts[pts.length - 1];
         if (!last) return null;
-        return <circle cx={W - pad} cy={sy(last.y)} r="3.5" fill={stroke} />;
+        // 末端标记点:描线未完成前淡出,收尾时随之点亮。
+        return (
+          <circle
+            cx={W - pad}
+            cy={sy(last.y)}
+            r="3.5"
+            fill={stroke}
+            style={
+              draw === undefined
+                ? undefined
+                : {
+                    opacity: draw ? 1 : 0,
+                    transition: 'opacity 0.4s ease 0.85s',
+                  }
+            }
+          />
+        );
       })()}
     </svg>
   );

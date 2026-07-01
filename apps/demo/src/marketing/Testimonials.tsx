@@ -1,5 +1,4 @@
-import { Avatar, Heading, Text } from '@magic-scope/react';
-import { Reveal } from '../components/Reveal';
+import { Avatar, Heading, RevealGroup, Text } from '@magic-scope/react';
 import { testimonials } from '../data/content';
 
 export function Testimonials() {
@@ -22,7 +21,11 @@ export function Testimonials() {
           </Heading>
         </div>
 
-        <div
+        {/* 口碑卡:fade 纯淡入(不带位移)——与前面区块的 up/zoom 明显区隔,收束到安静的信任感 */}
+        <RevealGroup
+          variant="fade"
+          stagger={70}
+          amount={0.15}
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 22rem), 1fr))',
@@ -30,56 +33,55 @@ export function Testimonials() {
             marginBlockStart: 'var(--ms-space-8)',
           }}
         >
-          {testimonials.map((item, index) => (
-            <Reveal key={item.name} delay={index * 70}>
-              <figure
-                className="v-panel"
+          {testimonials.map((item) => (
+            <figure
+              key={item.name}
+              className="v-panel"
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 'var(--ms-space-5)',
+                height: '100%',
+                padding: 'var(--ms-space-6)',
+                margin: 0,
+                minInlineSize: 0,
+              }}
+            >
+              <Text
+                as="blockquote"
+                size="base"
+                leading="relaxed"
+                style={{
+                  margin: 0,
+                  color: 'var(--ms-color-fg)',
+                  overflowWrap: 'anywhere',
+                }}
+              >
+                {item.quote}
+              </Text>
+
+              <figcaption
                 style={{
                   display: 'flex',
-                  flexDirection: 'column',
-                  gap: 'var(--ms-space-5)',
-                  height: '100%',
-                  padding: 'var(--ms-space-6)',
-                  margin: 0,
+                  alignItems: 'center',
+                  gap: 'var(--ms-space-3)',
+                  marginBlockStart: 'auto',
                   minInlineSize: 0,
                 }}
               >
-                <Text
-                  as="blockquote"
-                  size="base"
-                  leading="relaxed"
-                  style={{
-                    margin: 0,
-                    color: 'var(--ms-color-fg)',
-                    overflowWrap: 'anywhere',
-                  }}
-                >
-                  {item.quote}
-                </Text>
-
-                <figcaption
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 'var(--ms-space-3)',
-                    marginBlockStart: 'auto',
-                    minInlineSize: 0,
-                  }}
-                >
-                  <Avatar name={item.name} size="md" />
-                  <div style={{ display: 'grid', gap: '0.1rem', minInlineSize: 0 }}>
-                    <Text weight="semibold" truncate style={{ color: 'var(--ms-color-fg)' }}>
-                      {item.name}
-                    </Text>
-                    <Text size="sm" truncate style={{ color: 'var(--ms-color-fg-muted)' }}>
-                      {item.role}
-                    </Text>
-                  </div>
-                </figcaption>
-              </figure>
-            </Reveal>
+                <Avatar name={item.name} size="md" />
+                <div style={{ display: 'grid', gap: '0.1rem', minInlineSize: 0 }}>
+                  <Text weight="semibold" truncate style={{ color: 'var(--ms-color-fg)' }}>
+                    {item.name}
+                  </Text>
+                  <Text size="sm" truncate style={{ color: 'var(--ms-color-fg-muted)' }}>
+                    {item.role}
+                  </Text>
+                </div>
+              </figcaption>
+            </figure>
           ))}
-        </div>
+        </RevealGroup>
       </div>
     </section>
   );

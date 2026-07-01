@@ -1,15 +1,61 @@
-import { Button, Heading } from '@magic-scope/react';
+import { Button, Heading, useReveal } from '@magic-scope/react';
 import { Reveal } from '../components/Reveal';
 import { navigate } from '../lib/router';
 
 /** 营销收尾 CTA 区块:居中抬升大面板 + 双按钮 + 信任小字。 */
 export function CtaBand() {
+  // 面板进视口时,一道对角高光扫过一次(shine sweep);经 data-ms-fx / reduced-motion 门控。
+  const { ref, inView } = useReveal<HTMLDivElement>({ amount: 0.35 });
+
   return (
     <section className="v-section">
       <div className="v-container">
+        {/* 扫光编排:进场触发一次性 sweep;fx=off 或 reduced-motion 时不播(直接不显示高光条) */}
+        <style>{`
+          .v-cta-shine {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+            border-radius: inherit;
+            opacity: 0;
+          }
+          .v-cta-shine::before {
+            content: "";
+            position: absolute;
+            inset-block: -50%;
+            inline-size: 40%;
+            inset-inline-start: -50%;
+            background: linear-gradient(
+              100deg,
+              transparent,
+              color-mix(in oklab, var(--ms-color-glow, #fff) 22%, transparent),
+              transparent
+            );
+            transform: skewX(-14deg);
+          }
+          .v-cta-band.is-in .v-cta-shine {
+            opacity: 1;
+          }
+          .v-cta-band.is-in .v-cta-shine::before {
+            animation: v-cta-sweep 1.15s var(--ms-ease-emphasized, cubic-bezier(0.2, 0, 0, 1)) 0.35s both;
+          }
+          @keyframes v-cta-sweep {
+            from { inset-inline-start: -50%; }
+            to { inset-inline-start: 150%; }
+          }
+          html[data-ms-fx="off"] .v-cta-shine,
+          [data-ms-motion="off"] .v-cta-shine {
+            display: none;
+          }
+          @media (prefers-reduced-motion: reduce) {
+            .v-cta-shine { display: none; }
+          }
+        `}</style>
         <Reveal>
           <div
-            className="v-panel v-panel--raised"
+            ref={ref}
+            className={`v-panel v-panel--raised v-cta-band${inView ? ' is-in' : ''}`}
             style={{
               position: 'relative',
               overflow: 'hidden',
@@ -29,6 +75,8 @@ export function CtaBand() {
                 pointerEvents: 'none',
               }}
             />
+            {/* 一次性扫光高光条(overflow 被面板裁剪) */}
+            <div className="v-cta-shine" aria-hidden="true" />
 
             <div
               style={{

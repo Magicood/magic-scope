@@ -6,7 +6,8 @@ export function Metrics() {
   return (
     <section className="v-section--tight">
       <div className="v-container">
-        <Reveal>
+        {/* 指标面板:clip-up 从下往上显影(clip-path 不改 DOM,不破坏内部 grid 分隔线) */}
+        <Reveal variant="clip-up">
           <div
             className="v-panel ms-metrics"
             style={{

@@ -1,4 +1,4 @@
-import { Heading, Tag, Text } from '@magic-scope/react';
+import { Heading, RevealGroup, Tag, Text } from '@magic-scope/react';
 import { useState } from 'react';
 import { Reveal } from '../components/Reveal';
 import { features } from '../data/content';
@@ -30,7 +30,11 @@ export function Features() {
           </div>
         </Reveal>
 
-        <div
+        {/* 卡片网格:zoom-in 缩放揭示 + RevealGroup 错峰(一个 observer 管整网格,与 Hero 的 up 形成节奏对比) */}
+        <RevealGroup
+          variant="zoom-in"
+          stagger={70}
+          amount={0.15}
           style={{
             display: 'grid',
             gap: 'clamp(1rem, 2vw, 1.25rem)',
@@ -44,6 +48,7 @@ export function Features() {
             const isHovered = hovered === feature.id;
 
             return (
+              // 外层 div 作为 RevealGroup 单元(承接 zoom-in 揭示);内层 article 独立 hover,transform 互不干扰
               <div
                 key={feature.id}
                 style={{
@@ -51,59 +56,57 @@ export function Features() {
                   minInlineSize: 0,
                 }}
               >
-                <Reveal delay={index * 60}>
-                  <article
-                    onMouseEnter={() => setHovered(feature.id)}
-                    onMouseLeave={() => setHovered(null)}
-                    className="v-panel"
+                <article
+                  onMouseEnter={() => setHovered(feature.id)}
+                  onMouseLeave={() => setHovered(null)}
+                  className="v-panel"
+                  style={{
+                    blockSize: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'flex-start',
+                    gap: 'var(--ms-space-3)',
+                    minInlineSize: 0,
+                    padding: 'clamp(1.25rem, 2.4vw, 1.75rem)',
+                    borderColor: isHovered
+                      ? 'var(--ms-color-border-strong, var(--ms-color-primary))'
+                      : 'var(--ms-color-border)',
+                    transform: isHovered ? 'translateY(-2px)' : 'translateY(0)',
+                    transition:
+                      'transform 0.2s var(--ms-ease-standard, cubic-bezier(0.2, 0, 0, 1)), border-color 0.2s var(--ms-ease-standard, cubic-bezier(0.2, 0, 0, 1))',
+                  }}
+                >
+                  <Tag size="sm" variant="soft" tone={tone}>
+                    {feature.tag}
+                  </Tag>
+
+                  <Heading
+                    level={3}
+                    variant="subtitle"
+                    wrap="balance"
+                    breakWord
+                    style={{ minInlineSize: 0 }}
+                  >
+                    {feature.title}
+                  </Heading>
+
+                  <Text
+                    as="p"
+                    size="sm"
+                    leading="relaxed"
                     style={{
-                      blockSize: '100%',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'flex-start',
-                      gap: 'var(--ms-space-3)',
+                      color: 'var(--ms-color-fg-muted)',
+                      overflowWrap: 'anywhere',
                       minInlineSize: 0,
-                      padding: 'clamp(1.25rem, 2.4vw, 1.75rem)',
-                      borderColor: isHovered
-                        ? 'var(--ms-color-border-strong, var(--ms-color-primary))'
-                        : 'var(--ms-color-border)',
-                      transform: isHovered ? 'translateY(-2px)' : 'translateY(0)',
-                      transition:
-                        'transform 0.2s var(--ms-ease-standard, cubic-bezier(0.2, 0, 0, 1)), border-color 0.2s var(--ms-ease-standard, cubic-bezier(0.2, 0, 0, 1))',
                     }}
                   >
-                    <Tag size="sm" variant="soft" tone={tone}>
-                      {feature.tag}
-                    </Tag>
-
-                    <Heading
-                      level={3}
-                      variant="subtitle"
-                      wrap="balance"
-                      breakWord
-                      style={{ minInlineSize: 0 }}
-                    >
-                      {feature.title}
-                    </Heading>
-
-                    <Text
-                      as="p"
-                      size="sm"
-                      leading="relaxed"
-                      style={{
-                        color: 'var(--ms-color-fg-muted)',
-                        overflowWrap: 'anywhere',
-                        minInlineSize: 0,
-                      }}
-                    >
-                      {feature.body}
-                    </Text>
-                  </article>
-                </Reveal>
+                    {feature.body}
+                  </Text>
+                </article>
               </div>
             );
           })}
-        </div>
+        </RevealGroup>
       </div>
     </section>
   );

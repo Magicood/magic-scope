@@ -1,3 +1,4 @@
+import { RevealGroup } from '@magic-scope/react';
 import { Reveal } from '../components/Reveal';
 import { logos } from '../data/content';
 
@@ -18,15 +19,14 @@ export function LogoCloud() {
             正在为 4,200+ 现代团队提供数据支撑
           </p>
         </Reveal>
-        <Reveal delay={80}>
-          <div className="v-logos">
-            {logos.map((name) => (
-              <span key={name} className="v-logos__item">
-                {name}
-              </span>
-            ))}
-          </div>
-        </Reveal>
+        {/* logo 墙:每枚依次淡入(fade + stagger,轻量不喧宾夺主) */}
+        <RevealGroup variant="fade" stagger={55} amount={0.3} className="v-logos">
+          {logos.map((name) => (
+            <span key={name} className="v-logos__item">
+              {name}
+            </span>
+          ))}
+        </RevealGroup>
       </div>
     </section>
   );
