@@ -80,7 +80,7 @@ export type BlockquoteProps = BlockquoteOwnProps &
  *
  * 语义 <blockquote> 原语:左强调条读全库 tone 槽位(--ms-c)、柔底读 --ms-c-soft;
  * 变体(bordered/filled/card/plain)× tone × size,出处槽(<footer><cite>)、
- * 图标/装饰大引号槽,以及魔法(渐变强调条 / 发光,受全局 motion·fx 双降级)。
+ * 图标/装饰大引号槽,以及特效(渐变强调条 / 发光,受全局 motion·fx 双降级)。
  *
  * **留口**:`...rest` 透传所有原生属性与事件;`className`/`style` 给根、`classNames` 给关键子部件;
  * `forwardRef` 到渲染元素;`as` / `asChild` 多态;`citeUrl` 写入原生 blockquote[cite]。

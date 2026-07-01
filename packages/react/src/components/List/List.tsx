@@ -74,7 +74,7 @@ const isMarkerNode = (marker: unknown): marker is ReactNode =>
  *
  * **嵌套友好**:List 嵌 List 时子列表标记/间距独立(CSS 不向下穿透),天然形成层级缩进。
  * **留口**:`forwardRef` 到根;`...rest` 透传所有原生属性与事件;`as`/`asChild` 多态;
- * `classNames` 注入关键子部件;魔法 glow 双降级(prefers-reduced-motion 不涉及,fx 总闸控制)。
+ * `classNames` 注入关键子部件;glow 双降级(prefers-reduced-motion 不涉及,fx 总闸控制)。
  * 样式见 List.css + 共享 token(typography.css / tone.css / device.css 密度),需引入 styles.css。
  */
 const ListRoot = forwardRef<HTMLElement, ListProps>(function List(

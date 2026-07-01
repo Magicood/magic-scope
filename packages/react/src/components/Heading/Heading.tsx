@@ -47,7 +47,7 @@ export interface HeadingOwnProps {
   as?: ElementType;
   /** 渲染为唯一子元素并合并样式/props(Slot 模式;如包裹路由 Link)。 */
   asChild?: boolean;
-  /** 字族(复用 Text 语义 token)。display=Cinzel 装饰衬线(魔法标题)。不传时 display variant 默认用 display 字族。 */
+  /** 字族(复用 Text 语义 token)。display=Cinzel 装饰衬线(展示型标题)。不传时 display variant 默认用 display 字族。 */
   family?: TextFamily;
   /** 字重:语义档或任意数值(可变字体)。不传由 variant 决定默认。 */
   weight?: TextWeight | number;
@@ -164,7 +164,7 @@ export const Heading = forwardRef<HTMLHeadingElement, HeadingProps>(function Hea
   const effectiveVariant = variant ?? LEVEL_DEFAULT_VARIANT[level];
   const effectiveFamily = family ?? VARIANT_DEFAULT_FAMILY[effectiveVariant];
 
-  // 魔法效果需要 tone 槽位(--ms-c / --ms-c-glow);未显式给 tone 时兜底 primary
+  // 特效需要 tone 槽位(--ms-c / --ms-c-glow);未显式给 tone 时兜底 primary
   const needsSlot = gradient != null || glow != null;
   const effectiveTone = tone ?? (needsSlot ? 'primary' : undefined);
 

@@ -34,7 +34,7 @@ export interface BlockquoteClassInput {
 
 /**
  * 计算根元素的 class 列表。
- * 魔法效果(gradient/glow)需要 tone 槽位(--ms-c / --ms-c-glow);
+ * 特效(gradient/glow)需要 tone 槽位(--ms-c / --ms-c-glow);
  * 未显式给 tone 时由调用方兜底 'primary'(见 resolveTone)。
  */
 export const blockquoteClasses = (input: BlockquoteClassInput, className?: string): string =>
@@ -53,7 +53,7 @@ export const blockquoteClasses = (input: BlockquoteClassInput, className?: strin
   );
 
 /**
- * 魔法效果是否需要 tone 槽位:gradient 或 glow(非 off)都依赖 --ms-c / --ms-c-glow。
+ * 特效是否需要 tone 槽位:gradient 或 glow(非 off)都依赖 --ms-c / --ms-c-glow。
  * 强调条(bordered/filled/card)本身也读 --ms-c,但 plain 无可视色块——
  * 仅当真正需要槽位且用户未显式给 tone 时,才兜底注入 primary 槽。
  */
@@ -63,8 +63,8 @@ export const needsToneSlot = (gradient: boolean, glow: BlockquoteGlow): boolean 
 /**
  * 解析最终生效 tone:
  * - 用户显式给了 tone → 用之;
- * - 否则若为「有色块的变体」(非 plain)或需要魔法槽位 → 兜底 primary(保证 --ms-c 有值);
- * - plain 且无魔法 → undefined(不染色,纯文字)。
+ * - 否则若为「有色块的变体」(非 plain)或需要特效槽位 → 兜底 primary(保证 --ms-c 有值);
+ * - plain 且无特效 → undefined(不染色,纯文字)。
  */
 export const resolveTone = (
   tone: BlockquoteTone | undefined,

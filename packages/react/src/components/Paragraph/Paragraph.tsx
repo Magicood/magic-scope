@@ -61,7 +61,7 @@ export interface ParagraphOwnProps {
   ellipsis?: EllipsisProp | undefined;
   /**
    * 复制:`true` 复制段落自身可见文本;对象 `{ text, onCopy }` 自定义文本与成功回调。
-   * 走 navigator.clipboard(降级 execCommand);复制成功瞬间触发一次魔法 glow 闪烁
+   * 走 navigator.clipboard(降级 execCommand);复制成功瞬间触发一次 glow 闪烁
    * (受 data-ms-fx / prefers-reduced-motion 降级)。文案走 typography.copy/copied。
    */
   copyable?: CopyableProp | undefined;
@@ -81,7 +81,7 @@ const cx = (...parts: Array<string | false | undefined>): string => parts.filter
  * Paragraph —— 块级正文段落(category: typography)。
  *
  * 围绕 `<p>` 的生产级正文原语:size/leading/tone/dimmed/align 排版档,
- * 多行省略(`ellipsis`,可带 AntD 式「展开/收起」),一键复制(`copyable`,复制成功触发魔法 glow 一闪)。
+ * 多行省略(`ellipsis`,可带 AntD 式「展开/收起」),一键复制(`copyable`,复制成功触发 glow 一闪)。
  * 复制与展开的纯逻辑抽到 ./logic(零 React),组件层只管 state 与渲染。
  *
  * **留口**:`...rest` 透传所有原生属性与事件(根上的用户 onClick 等原样透传、组件不抢占);

@@ -52,7 +52,7 @@ export interface LinkOwnProps {
    * 与 tone 互斥语义:给了 tone 以 tone 为准。
    */
   muted?: boolean;
-  /** 魔法微光(text-shadow,受全局 --ms-fx-glow 与 motion 调制):off / 仅 hover / 常亮。默认 off。 */
+  /** 微光效果(text-shadow,受全局 --ms-fx-glow 与 motion 调制):off / 仅 hover / 常亮。默认 off。 */
   glow?: LinkGlow;
   /** 前置图标(图标在文字前,随链接色);务必是装饰性内容(aria-hidden)。 */
   leftIcon?: ReactNode;
@@ -102,7 +102,7 @@ const DefaultExternalIcon = (
  * 真正的 `<a>` 原语,把链接的交互/语义/装饰收成 props:
  * 下划线四态(auto/hover/always/none)、tone 着色(默认走专用链接角色色)、字号档、
  * 外链一键安全化(target/rel + 图标 + sr-only 新窗口提示)、disabled(ARIA 模拟)、
- * muted 次级、前置图标、魔法微光,以及 asChild 多态(路由 Link)。
+ * muted 次级、前置图标、微光效果,以及 asChild 多态(路由 Link)。
  *
  * **留口**:`...rest` 透传所有原生 <a> 属性与事件;`className`/`style` 与计算值合并(用户优先);
  * `forwardRef` 到根 <a>;`asChild` 把样式/props 合并到自带子元素(事件 compose、ref 合并);
