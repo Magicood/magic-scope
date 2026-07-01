@@ -200,31 +200,8 @@ svg {
   overflow: clip;
 }
 
-/* --- 滚动进场系统(.db-rv,由 Reveal/RevealGroup 驱动)----------------------- */
-.db-rv {
-  opacity: var(--rv-o, 0);
-  transform: translate3d(var(--rv-x, 0), var(--rv-y, 0), 0) scale(var(--rv-s, 1));
-  filter: blur(var(--rv-b, 0px));
-  transition:
-    opacity var(--rv-dur, 0.8s) var(--db-ease) var(--rv-delay, 0s),
-    transform var(--rv-dur, 0.8s) var(--db-ease) var(--rv-delay, 0s),
-    filter var(--rv-dur, 0.8s) ease var(--rv-delay, 0s);
-  will-change: opacity, transform;
-}
-
-.db-rv.is-visible {
-  --rv-o: 1;
-  --rv-x: 0px;
-  --rv-y: 0px;
-  --rv-s: 1;
-  --rv-b: 0px;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .db-rv {
-    transition: none;
-  }
-}
+/* 进场 / 滚动特效已切到 @magic-scope/react 的 data-ms-reveal 系统(见 reveal.css),
+   本站不再自维护 .db-rv;区块编排由各 Reveal / RevealGroup 的 variant/trigger 决定。 */
 
 /* --- 网格 ------------------------------------------------------------------ */
 .db-grid {
