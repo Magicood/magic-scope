@@ -28,7 +28,7 @@ export default function Demo() {
       expandable={{
         defaultExpandedKeys: ['A-1001'],
         rowRender: (row) => (
-          <div style={{ padding: '0.4rem 0.2rem', color: 'var(--ms-fg-muted)' }}>
+          <div style={{ padding: '0.4rem 0.2rem', color: 'var(--ms-color-fg-muted)' }}>
             备注:{row.note}
           </div>
         ),
