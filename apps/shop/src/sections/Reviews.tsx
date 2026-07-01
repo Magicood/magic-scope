@@ -42,12 +42,27 @@ export function Reviews() {
             >
               <Rate value={review.rating} readOnly size="sm" tone="accent" />
 
+              {/* 克制的装饰引号:衬线大号、极淡 accent,作精品叙事点缀而非抢眼 */}
+              <span
+                aria-hidden="true"
+                style={{
+                  fontFamily: 'var(--ms-font-display)',
+                  fontSize: '2.6rem',
+                  lineHeight: 0.6,
+                  marginBlockEnd: '-0.5rem',
+                  color: 'color-mix(in oklab, var(--ms-color-accent) 30%, transparent)',
+                }}
+              >
+                &ldquo;
+              </span>
               <blockquote
                 style={{
                   margin: 0,
-                  fontSize: '1rem',
-                  lineHeight: 'var(--ms-leading-relaxed, 1.75)',
+                  fontFamily: 'var(--ms-font-display)',
+                  fontSize: 'clamp(1.02rem, 1.4vw, 1.15rem)',
+                  lineHeight: 'var(--ms-leading-relaxed, 1.7)',
                   color: 'var(--ms-color-fg)',
+                  textWrap: 'pretty',
                 }}
               >
                 {review.body}
