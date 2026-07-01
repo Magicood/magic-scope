@@ -1,49 +1,26 @@
-import type { ElementType, ReactNode } from 'react';
-import { useEffect, useRef, useState } from 'react';
+import { Reveal as MsReveal, type RevealProps as MsRevealProps } from '@magic-scope/react';
+import type { ReactNode } from 'react';
 
 interface RevealProps {
   children: ReactNode;
-  /** 渐入延迟(毫秒),用于同一区块内的错峰落位。 */
+  /** 渐入延迟(毫秒),区块内错峰落位 → 库的 --ms-reveal-delay。 */
   delay?: number;
-  /** 渲染的标签,默认 div。 */
-  as?: ElementType;
+  as?: MsRevealProps['as'];
   className?: string;
+  /** 特效变体,默认上滑进场;可换 zoom-in / clip-up / mask-up / blur 等。 */
+  variant?: MsRevealProps['variant'];
+  /** 触发模式;首屏区块用 'mount' 不等滚动。 */
+  trigger?: MsRevealProps['trigger'];
 }
 
-/** 进入视口时加 .is-visible,触发 app.css 里的渐入落位;尊重 prefers-reduced-motion。 */
-export function Reveal({ children, delay = 0, as: Tag = 'div', className }: RevealProps) {
-  const ref = useRef<HTMLElement | null>(null);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    if (typeof IntersectionObserver === 'undefined') {
-      setVisible(true);
-      return;
-    }
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            setVisible(true);
-            io.disconnect();
-          }
-        }
-      },
-      { threshold: 0.12, rootMargin: '0px 0px -8% 0px' },
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
-
+/**
+ * Vela 站的 Reveal —— 直接复用 @magic-scope/react 的进场特效系统(默认上滑)。
+ * 保留 delay 向后兼容;受全局「动效 全/弱/关」+ prefers-reduced-motion 自动调制。
+ */
+export function Reveal({ children, delay, as, className, variant = 'up', trigger }: RevealProps) {
   return (
-    <Tag
-      ref={ref}
-      className={['v-reveal', visible && 'is-visible', className].filter(Boolean).join(' ')}
-      style={delay ? { ['--v-reveal-delay' as string]: `${delay}ms` } : undefined}
-    >
+    <MsReveal variant={variant} trigger={trigger} as={as} delay={delay} className={className}>
       {children}
-    </Tag>
+    </MsReveal>
   );
 }
