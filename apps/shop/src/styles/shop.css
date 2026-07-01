@@ -4,213 +4,143 @@
  * ========================================================================== */
 
 /* ============================================================================
- * 商品主视觉(.pv)—— 整站最重要的视觉。
- * 取向:影棚静物(product still-life)。低饱和暖调背景墙 + 上方柔光聚光 +
- * 角落 vignette,产品(写实咖啡袋 / 器具剪影)站在虚化台面上,有真实接触阴影
- * 与落地投影。目标是「像精品店拍的产品图」,而非扁平 clip-art。
+ * 商品主视觉(.pv)—— 莫兰迪抽象色卡(Aesop 式)。
+ * 不画物件:低饱和莫兰迪色场 + 颗粒材质 + 双层柔光景深 + 巨大编号水印 +
+ * 展览级大衬线排版 + 极致留白。靠比例、留白、字体质感取胜,
+ * 10 个商品是「同款不同色」的一组高级色卡,天然协调、绝不 clip-art。
  * ========================================================================== */
 .pv {
-  --pv-ink: color-mix(in oklab, #1c140b 82%, var(--pv-accent));
-  /* 牛皮纸主体色(揉进 accent,低饱和) */
-  --pv-kraft: color-mix(in oklab, var(--pv-accent) 40%, #cbb894);
+  --pv-ink: color-mix(in oklab, #241a10 82%, var(--pv-accent));
   position: relative;
   aspect-ratio: 4 / 5;
   inline-size: 100%;
   overflow: hidden;
   isolation: isolate;
-  /* 影棚墙:上方柔光聚光 + 低饱和暖墙,底部略沉(墙→地过渡) */
-  background-color: color-mix(in oklab, var(--pv-accent) 20%, #e7ddca);
+  /* 建立容器上下文:内部 cqi 字号相对卡片自身缩放(小屏卡片也不会字太小) */
+  container-type: inline-size;
+  /* 莫兰迪色场:accent 大量揉进暖纸白 → 极低饱和(高明度、低彩度) */
+  background-color: color-mix(in oklab, var(--pv-accent) 15%, #ece4d4);
   background-image:
-    radial-gradient(80% 55% at 50% 12%, color-mix(in oklab, #fff 42%, transparent), transparent 60%),
-    linear-gradient(
-      180deg,
-      color-mix(in oklab, var(--pv-accent) 15%, #ece3d1) 0%,
-      color-mix(in oklab, var(--pv-accent) 26%, #ddd1b9) 58%,
-      color-mix(in oklab, var(--pv-accent) 40%, #c3b291) 100%
+    radial-gradient(92% 70% at 26% 10%, color-mix(in oklab, #fff 58%, transparent), transparent 58%),
+    radial-gradient(
+      104% 82% at 82% 110%,
+      color-mix(in oklab, var(--pv-accent) 32%, #cbbca2),
+      transparent 62%
     );
 }
 
-/* 角落 vignette + 台面反光,给纵深 */
+/* 双层柔光景深:摄影棚式体积光,消除平涂塑料感 */
 .pv::before {
   content: "";
   position: absolute;
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background:
-    radial-gradient(75% 55% at 50% 88%, color-mix(in oklab, #fff 20%, transparent), transparent 55%),
-    radial-gradient(
-      120% 90% at 50% 30%,
-      transparent 62%,
-      color-mix(in oklab, #2a1c0e 22%, transparent)
-    );
+  background: radial-gradient(
+    58% 42% at 30% 16%,
+    color-mix(in oklab, #fff 42%, transparent),
+    transparent 60%
+  );
 }
 
-/* 细颗粒材质叠层(soft-light),让色场有纸感而非纯色块 */
+/* 颗粒材质叠层(soft-light),让色场有纸感而非纯色块 */
 .pv__grain {
   position: absolute;
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  opacity: 0.5;
+  opacity: 0.45;
   mix-blend-mode: soft-light;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-/* 顶部一抹哑光高光,增加「材质在光下」的立体 */
-.pv::after {
-  content: "";
+/* 巨大编号水印:杂志式视觉锚点(极淡),让色卡有大尺度肌理而非纯小字排布 */
+.pv__watermark {
   position: absolute;
-  inset: 0;
   z-index: 0;
+  inset-block-start: -8%;
+  inset-inline-end: -2%;
+  font-family: var(--ms-font-display);
+  font-size: 52cqi;
+  font-weight: 500;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: color-mix(in oklab, var(--pv-ink) 9%, transparent);
   pointer-events: none;
-  background: linear-gradient(176deg, rgba(255, 255, 255, 0.16), transparent 30%);
+  user-select: none;
 }
 
-/* ---- 产品舞台:底部对齐,产品「站」在虚化台面上 ---- */
-.pv__stage {
+/* 排版卡:三段式,内容压到下部,上方大量留白(约 60%) */
+.pv__card {
   position: absolute;
   inset: 0;
   z-index: 1;
   display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  padding: clamp(1rem, 9%, 2.6rem) clamp(1rem, 10%, 2.8rem);
+  flex-direction: column;
+  padding: clamp(1.1rem, 6.5cqi, 2.3rem);
+  color: var(--pv-ink);
 }
 
-/* ---- 角落编辑元数据(N° / 类别),克制点缀,给精品编辑感 ---- */
-.pv__corner {
-  position: absolute;
-  z-index: 2;
-  font-size: clamp(0.5rem, 1vw, 0.62rem);
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: color-mix(in oklab, var(--pv-ink) 52%, transparent);
+.pv__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
 }
 
-.pv__corner--tl {
-  inset-block-start: clamp(0.85rem, 5%, 1.35rem);
-  inset-inline-start: clamp(0.9rem, 5%, 1.4rem);
+.pv__index {
   font-family: var(--ms-font-display);
+  font-size: clamp(0.72rem, 3.4cqi, 0.92rem);
   letter-spacing: 0.02em;
   font-variant-numeric: tabular-nums;
+  color: color-mix(in oklab, var(--pv-ink) 55%, transparent);
 }
 
-.pv__corner--tr {
-  inset-block-start: clamp(0.85rem, 5%, 1.35rem);
-  inset-inline-end: clamp(0.9rem, 5%, 1.4rem);
-}
-
-/* ================= 写实咖啡袋(圆柱面光影 + 牛皮纸材质 + 封口 + 标签)===== */
-.pv__bag {
-  position: relative;
-  inline-size: clamp(94px, 45%, 168px);
-  aspect-ratio: 0.7;
-  border-radius: 7px 7px 10px 10px;
-  /* 圆柱面光影(横向,高光偏左)叠牛皮纸底色(纵向) */
-  background:
-    linear-gradient(
-      90deg,
-      rgba(28, 17, 7, 0.26) 0%,
-      rgba(28, 17, 7, 0.05) 15%,
-      rgba(255, 251, 240, 0.16) 40%,
-      rgba(255, 251, 240, 0.02) 60%,
-      rgba(28, 17, 7, 0.09) 84%,
-      rgba(28, 17, 7, 0.28) 100%
-    ),
-    linear-gradient(
-      180deg,
-      color-mix(in oklab, var(--pv-kraft) 86%, #fff) 0%,
-      var(--pv-kraft) 46%,
-      color-mix(in oklab, var(--pv-kraft) 76%, #3f3016) 100%
-    );
-  box-shadow:
-    inset 0 2px 1px rgba(255, 255, 255, 0.35),
-    inset 0 -16px 24px rgba(40, 26, 12, 0.22),
-    0 28px 30px -16px rgba(30, 18, 8, 0.42);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 16% 12% 13%;
-}
-
-/* 顶部封口(tin-tie 折口):带高光与暗边的横条 */
-.pv__bag-cap {
-  position: absolute;
-  inset-block-start: -5.5%;
-  inset-inline: 13%;
-  block-size: 11%;
-  border-radius: 3px;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.42), transparent 42%),
-    linear-gradient(
-      180deg,
-      color-mix(in oklab, var(--pv-kraft) 72%, #6b5636),
-      color-mix(in oklab, var(--pv-kraft) 58%, #3a2c14)
-    );
-  box-shadow:
-    0 3px 5px rgba(40, 26, 12, 0.28),
-    inset 0 -2px 3px rgba(40, 26, 12, 0.3);
-}
-
-/* 贴纸式标签(米白纸,微阴影,像真的贴上去) */
-.pv__bag-label {
-  margin-block-start: auto;
-  inline-size: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.22em;
-  padding: 0.75em 0.5em;
-  border-radius: 3px;
-  background: linear-gradient(180deg, #f8f1e3, #efe5d1);
-  box-shadow:
-    0 2px 5px rgba(40, 26, 12, 0.16),
-    inset 0 1px 0 rgba(255, 255, 255, 0.65);
-  text-align: center;
-}
-
-/* 品牌压印:直接「印」在牛皮纸上(深于纸、带一点高光,像烫印) */
-.pv__bag-brand-print {
-  margin-block-start: 7%;
-  font-size: clamp(0.42rem, 0.9vw, 0.56rem);
-  font-weight: 700;
-  letter-spacing: 0.3em;
-  text-indent: 0.3em;
-  text-transform: uppercase;
-  color: color-mix(in oklab, #2a1c0e 52%, var(--pv-kraft));
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.28);
-}
-
-.pv__bag-origin {
-  font-family: var(--ms-font-display);
-  font-size: clamp(0.62rem, 1.35vw, 0.84rem);
+.pv__tag {
+  font-size: clamp(0.5rem, 2.4cqi, 0.62rem);
   font-weight: 600;
-  line-height: 1.12;
-  color: #33240f;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.pv__bag-roast {
-  font-size: clamp(0.38rem, 0.8vw, 0.48rem);
-  letter-spacing: 0.14em;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: #9a7c4f;
+  color: color-mix(in oklab, var(--pv-ink) 60%, transparent);
+  white-space: nowrap;
 }
 
-/* ================= 器具:填充剪影 + 接触阴影(影棚里站立的产品)========= */
-.pv__gear {
-  position: relative;
-  inline-size: clamp(88px, 52%, 176px);
-  aspect-ratio: 1;
-  display: grid;
-  place-items: center;
-  filter: drop-shadow(0 20px 15px rgba(30, 18, 8, 0.28));
+/* 中部焦点:产地小字 + 展览级大衬线名,margin-top:auto 把它压到下部 */
+.pv__mid {
+  margin-block-start: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+.pv__origin {
+  font-size: clamp(0.52rem, 2.5cqi, 0.66rem);
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--pv-ink) 58%, transparent);
+}
+
+.pv__name {
+  margin: 0;
+  font-family: var(--ms-font-display);
+  font-weight: 500;
+  /* 展览级大字:与元数据形成强烈字号对比,这是脱离「档案卡」的灵魂 */
+  font-size: clamp(1.5rem, 13cqi, 3rem);
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+  color: var(--pv-ink);
+  text-wrap: balance;
+}
+
+.pv__bottom {
+  margin-block-start: 1.15em;
+}
+
+.pv__flavors {
+  font-size: clamp(0.54rem, 2.7cqi, 0.68rem);
+  letter-spacing: 0.03em;
+  color: color-mix(in oklab, var(--pv-ink) 70%, transparent);
 }
 
 /* ================= 商品卡 ===================== */
