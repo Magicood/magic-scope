@@ -91,11 +91,15 @@ function PlanCard({ plan, cycle }: { plan: Plan; cycle: BillingCycle }) {
         blockSize: '100%',
         padding: 'clamp(1.5rem, 1rem + 1.5vw, 2rem)',
         borderRadius: 'var(--ms-radius-lg)',
+        // 与全站 .v-panel 对齐的表面层次:顶部微亮、底部收深 + 顶部内高光;featured 额外叠主色描边与辉光
         backgroundColor: featured ? 'var(--ms-color-surface-raised)' : 'var(--ms-color-surface)',
+        backgroundImage: featured
+          ? 'linear-gradient(180deg, color-mix(in oklab, var(--ms-color-surface-raised) 88%, #fff), var(--ms-color-surface-raised))'
+          : 'linear-gradient(180deg, color-mix(in oklab, var(--ms-color-surface-raised) 55%, var(--ms-color-surface)), var(--ms-color-surface))',
         border: featured ? '1px solid var(--ms-color-primary)' : '1px solid var(--ms-color-border)',
         boxShadow: featured
-          ? '0 0 0 1px var(--ms-color-primary), 0 18px 48px -28px var(--ms-color-primary)'
-          : 'none',
+          ? 'inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 0 0 1px var(--ms-color-primary), 0 24px 56px -26px color-mix(in oklab, var(--ms-color-primary) 55%, transparent)'
+          : 'inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 2px 4px rgba(0, 0, 0, 0.22), 0 26px 52px -34px rgba(0, 0, 0, 0.8)',
       }}
     >
       {featured ? (
