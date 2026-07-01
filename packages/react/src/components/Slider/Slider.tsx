@@ -65,7 +65,7 @@ export interface SliderProps
   orientation?: SliderOrientation;
   /** 刻度:沿轨道按值绝对定位 tick;有 label 时在其下/旁渲染文字。被填充覆盖的刻度高亮。 */
   marks?: SliderMark[];
-  /** 拖动时在滑块上方显示跟随气泡(showValue 同款格式),魔法差异化交互。默认 false。 */
+  /** 拖动时在滑块上方显示跟随气泡(showValue 同款格式)。默认 false。 */
   showTooltip?: boolean;
   /** 是否在末尾渲染当前值(role=status 的 output)。默认 false。 */
   showValue?: boolean;

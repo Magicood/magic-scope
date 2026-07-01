@@ -20,7 +20,7 @@ export interface TextOwnProps {
   as?: ElementType;
   /** 渲染为唯一子元素并把样式/props 合并上去(Slot 模式;如包裹路由 Link)。 */
   asChild?: boolean;
-  /** 字族(语义 token,不暴露字体栈)。display=Cinzel 装饰衬线(魔法标题)。 */
+  /** 字族(语义 token,不暴露字体栈)。display=Cinzel 装饰衬线(展示型标题)。 */
   family?: TextFamily;
   /** 字号档(走 --ms-type-step-* 流式字阶)。 */
   size?: TextSize;
@@ -97,7 +97,7 @@ export interface TextOwnProps {
    */
   stroke?: boolean;
   /**
-   * 魔法动效:reveal 上浮淡入 / blur-in 模糊聚焦入场;shimmer 渐变扫过 / pulse 发光呼吸 /
+   * 动效:reveal 上浮淡入 / blur-in 模糊聚焦入场;shimmer 渐变扫过 / pulse 发光呼吸 /
    * flow 渐变流动(持续)。全部受全局 data-ms-motion 与 prefers-reduced-motion 调制,
    * 关闭时自动降级为静态(入场态直接呈现、不卡在隐藏)。shimmer/pulse/flow 复用 tone 槽位。
    */
@@ -118,7 +118,7 @@ const cx = (...parts: Array<string | false | undefined>): string => parts.filter
  *
  * 多态(`as` / `asChild`)的内联/块级文字原语,把「所有可控文字属性」收成 props:
  * 字族/字号/字重/斜体、tone 着色、对齐/行高/字距、装饰/transform、截断(单行+多行)、
- * 折行/空白/断词/方向、数字变体/小型大写,以及魔法文字(渐变/发光/描边)。
+ * 折行/空白/断词/方向、数字变体/小型大写,以及文字特效(渐变/发光/描边)。
  *
  * **留口**:`...rest` 透传所有原生属性与事件;`className`/`style` 与组件计算值合并(用户值优先);
  * `forwardRef` 到渲染元素;`asChild` 把样式合并到自带子元素。
@@ -167,7 +167,7 @@ export const Text = forwardRef<HTMLElement, TextProps>(function Text(
   },
   ref,
 ) {
-  // 魔法效果需要 tone 槽位(--ms-c / --ms-c-glow);未显式给 tone 时兜底 primary
+  // 特效需要 tone 槽位(--ms-c / --ms-c-glow);未显式给 tone 时兜底 primary
   const animateNeedsSlot = animate === 'shimmer' || animate === 'pulse' || animate === 'flow';
   const needsSlot = gradient != null || glow != null || stroke != null || animateNeedsSlot;
   const effectiveTone = tone ?? (needsSlot ? 'primary' : undefined);

@@ -123,7 +123,7 @@ const sanitizeId = (raw: string): string => raw.replace(/:/g, '-');
  * - tone × 7 色调走全库 tone resolver(只读 --ms-c / --ms-on-c / --ms-c-glow 等 6 槽位)。
  * - variant:underline(滑块下划线)/ pill(实底胶囊);size sm/md/lg 随密度缩放。
  * - orientation:横向 / 竖排,竖排键盘改 ↑/↓,indicator 沿块向滑动。
- * - 魔法 indicator:单条滑块测当前 tab 的 offset/size 写 CSS 变量,跨 tab 平滑位移(可降级)。
+ * - 平滑 indicator:单条滑块测当前 tab 的 offset/size 写 CSS 变量,跨 tab 平滑位移(可降级)。
  * - 可编辑:TabItem.closable + addable + onEdit(value, 'add' | 'remove')。
  * - 留口:根 spread ...rest 透传所有原生属性 / 事件;classNames 精准定制子层;
  *   TabItem.icon/badge/renderTab/onClick;keepMounted 保留未选 panel。
@@ -186,7 +186,7 @@ export const Tabs = forwardRef<HTMLDivElement, TabsProps>(
 
     const selectedIndex = items.findIndex((it) => it.value === selected);
 
-    // —— 魔法 indicator:测当前选中 tab 的位置 / 尺寸,写成 CSS 变量驱动滑块平移 ——
+    // —— 平滑 indicator:测当前选中 tab 的位置 / 尺寸,写成 CSS 变量驱动滑块平移 ——
     const measureIndicator = useCallback(() => {
       const node = selectedIndex >= 0 ? tabRefs.current[selectedIndex] : null;
       const list = listRef.current;

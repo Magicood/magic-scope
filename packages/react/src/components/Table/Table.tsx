@@ -651,7 +651,7 @@ function TableImpl<T>(props: TableProps<T>, ref: ForwardedRef<HTMLTableElement>)
  * 渲染语义化 <table>;支持排序(受控/非受控)、行选择(全选三态 + onSelect/onSelectAll 细分)、
  * 可展开行(rowRender + expandedKeys 受控/非受控)、列固定(fixed left/right sticky)、
  * 行高三档密度、汇总/页脚行、空态/加载态、粘性表头、列对齐/自定义 render、斑马纹、行 hover。
- * 接全库 tone resolver(选中行/hover 强调条/排序箭头读 6 槽位);魔法动效:行 stagger 进场、
+ * 接全库 tone resolver(选中行/hover 强调条/排序箭头读 6 槽位);动效:行 stagger 进场、
  * 排序箭头脉冲、loading 遮罩淡入微模糊、选中行 inset glow(均可一键降级)。
  * 行级事件 onRowClick/onRowDoubleClick/onRowContextMenu + Ant 式 onRow 工厂;
  * 根 wrap spread ...rest 透传所有原生属性/事件,classNames 注入关键子部件类名。
