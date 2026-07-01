@@ -45,6 +45,9 @@ jobs:
       - name: Test
         run: pnpm test
 
+      - name: 展示站红线 (props.json 未漂移 + 新组件有覆盖)
+        run: pnpm check:docs
+
       - name: Registry 索引校验
         run: pnpm registry
 
