@@ -1,8 +1,12 @@
-import { Heading } from '@magic-scope/react';
+import { Heading, useReveal } from '@magic-scope/react';
+import type { CSSProperties } from 'react';
 import { Reveal } from '../components/Reveal';
 import { workflow } from '../data/content';
 
 export function WorkflowSection() {
+  // 观察步骤列表进视口一次:命中后序号依次点亮、连接线从左生长(错峰由 --i 驱动)。
+  const { ref, inView } = useReveal<HTMLOListElement>({ amount: 0.2 });
+
   return (
     <section id="workflow" className="v-section">
       <div className="v-container">
@@ -28,7 +32,49 @@ export function WorkflowSection() {
           </div>
         </Reveal>
 
+        {/* 序号点亮 + 连接线生长的编排:延迟由每步 --i 错峰;reduced-motion / motion=off 下经 --ms-motion-scale 归零直接落终态 */}
+        <style>{`
+          .v-flow__step {
+            opacity: 0;
+            transform: translateY(12px);
+            transition:
+              opacity 0.5s var(--ms-ease-standard, cubic-bezier(0.2, 0, 0, 1)),
+              transform 0.5s var(--ms-ease-standard, cubic-bezier(0.2, 0, 0, 1));
+            transition-delay: calc(var(--i, 0) * 110ms * var(--ms-motion-scale, 1));
+          }
+          .v-flow__num {
+            opacity: 0.14;
+            transition: opacity 0.5s ease, color 0.5s ease;
+            transition-delay: calc((var(--i, 0) * 110ms + 120ms) * var(--ms-motion-scale, 1));
+          }
+          .v-flow__line {
+            transform: scaleX(0);
+            transform-origin: left center;
+            transition: transform 0.6s var(--ms-ease-emphasized, cubic-bezier(0.2, 0, 0, 1));
+            transition-delay: calc((var(--i, 0) * 110ms + 260ms) * var(--ms-motion-scale, 1));
+          }
+          .v-flow.is-in .v-flow__step {
+            opacity: 1;
+            transform: none;
+          }
+          .v-flow.is-in .v-flow__num {
+            opacity: 0.4;
+          }
+          .v-flow.is-in .v-flow__line {
+            transform: scaleX(1);
+          }
+          @media (prefers-reduced-motion: reduce) {
+            .v-flow__step,
+            .v-flow__num,
+            .v-flow__line {
+              transition: none;
+            }
+          }
+        `}</style>
+
         <ol
+          ref={ref}
+          className={`v-flow${inView ? ' is-in' : ''}`}
           style={{
             listStyle: 'none',
             margin: 0,
@@ -45,7 +91,7 @@ export function WorkflowSection() {
             const isLast = index === workflow.length - 1;
 
             return (
-              <Reveal key={step.id} as="li" delay={index * 90}>
+              <li key={step.id} className="v-flow__step" style={{ '--i': index } as CSSProperties}>
                 <div
                   style={{
                     position: 'relative',
@@ -57,6 +103,7 @@ export function WorkflowSection() {
                 >
                   {!isLast ? (
                     <span
+                      className="v-flow__line"
                       aria-hidden="true"
                       style={{
                         position: 'absolute',
@@ -70,13 +117,13 @@ export function WorkflowSection() {
                   ) : null}
 
                   <span
+                    className="v-flow__num"
                     aria-hidden="true"
                     style={{
                       fontSize: 'clamp(2.25rem, 4vw, 3rem)',
                       fontWeight: 'var(--ms-font-weight-bold)',
                       lineHeight: 1,
                       color: 'var(--ms-color-primary)',
-                      opacity: 0.32,
                       fontVariantNumeric: 'tabular-nums',
                       letterSpacing: '-0.02em',
                     }}
@@ -110,7 +157,7 @@ export function WorkflowSection() {
                     {step.body}
                   </p>
                 </div>
-              </Reveal>
+              </li>
             );
           })}
         </ol>

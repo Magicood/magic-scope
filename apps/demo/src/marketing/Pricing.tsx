@@ -1,4 +1,4 @@
-import { Badge, Button, Heading, Segmented } from '@magic-scope/react';
+import { Badge, Button, Heading, RevealGroup, Segmented } from '@magic-scope/react';
 import { useState } from 'react';
 import { Reveal } from '../components/Reveal';
 import { type Plan, plans } from '../data/content';
@@ -77,113 +77,105 @@ function PriceDisplay({ plan, cycle }: { plan: Plan; cycle: BillingCycle }) {
   );
 }
 
-function PlanCard({ plan, cycle, delay }: { plan: Plan; cycle: BillingCycle; delay: number }) {
+function PlanCard({ plan, cycle }: { plan: Plan; cycle: BillingCycle }) {
   const featured = Boolean(plan.featured);
 
   return (
-    <Reveal delay={delay}>
-      <article
+    <article
+      style={{
+        position: 'relative',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 'var(--ms-space-4)',
+        minInlineSize: 0,
+        blockSize: '100%',
+        padding: 'clamp(1.5rem, 1rem + 1.5vw, 2rem)',
+        borderRadius: 'var(--ms-radius-lg)',
+        backgroundColor: featured ? 'var(--ms-color-surface-raised)' : 'var(--ms-color-surface)',
+        border: featured ? '1px solid var(--ms-color-primary)' : '1px solid var(--ms-color-border)',
+        boxShadow: featured
+          ? '0 0 0 1px var(--ms-color-primary), 0 18px 48px -28px var(--ms-color-primary)'
+          : 'none',
+      }}
+    >
+      {featured ? (
+        <div
+          style={{
+            position: 'absolute',
+            insetBlockStart: 0,
+            insetInlineStart: '50%',
+            transform: 'translate(-50%, -50%)',
+          }}
+        >
+          <Badge variant="solid" tone="primary" size="sm">
+            最受欢迎
+          </Badge>
+        </div>
+      ) : null}
+
+      <Heading level={3} variant="subtitle" style={{ margin: 0 }}>
+        {plan.name}
+      </Heading>
+
+      <div style={{ minBlockSize: '3.4rem', display: 'flex', alignItems: 'flex-end' }}>
+        <PriceDisplay plan={plan} cycle={cycle} />
+      </div>
+
+      <p
         style={{
-          position: 'relative',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 'var(--ms-space-4)',
-          minInlineSize: 0,
-          blockSize: '100%',
-          padding: 'clamp(1.5rem, 1rem + 1.5vw, 2rem)',
-          borderRadius: 'var(--ms-radius-lg)',
-          backgroundColor: featured ? 'var(--ms-color-surface-raised)' : 'var(--ms-color-surface)',
-          border: featured
-            ? '1px solid var(--ms-color-primary)'
-            : '1px solid var(--ms-color-border)',
-          boxShadow: featured
-            ? '0 0 0 1px var(--ms-color-primary), 0 18px 48px -28px var(--ms-color-primary)'
-            : 'none',
+          margin: 0,
+          color: 'var(--ms-color-fg-muted)',
+          fontSize: '0.95rem',
+          lineHeight: 1.6,
+          overflowWrap: 'anywhere',
         }}
       >
-        {featured ? (
-          <div
+        {plan.blurb}
+      </p>
+
+      <ul
+        style={{
+          listStyle: 'none',
+          margin: 0,
+          padding: 0,
+          display: 'grid',
+          gap: 'var(--ms-space-2)',
+        }}
+      >
+        {plan.features.map((feature) => (
+          <li
+            key={feature}
             style={{
-              position: 'absolute',
-              insetBlockStart: 0,
-              insetInlineStart: '50%',
-              transform: 'translate(-50%, -50%)',
+              display: 'flex',
+              alignItems: 'flex-start',
+              gap: '0.55rem',
+              fontSize: '0.925rem',
+              lineHeight: 1.5,
+              minInlineSize: 0,
             }}
           >
-            <Badge variant="solid" tone="primary" size="sm">
-              最受欢迎
-            </Badge>
-          </div>
-        ) : null}
-
-        <Heading level={3} variant="subtitle" style={{ margin: 0 }}>
-          {plan.name}
-        </Heading>
-
-        <div style={{ minBlockSize: '3.4rem', display: 'flex', alignItems: 'flex-end' }}>
-          <PriceDisplay plan={plan} cycle={cycle} />
-        </div>
-
-        <p
-          style={{
-            margin: 0,
-            color: 'var(--ms-color-fg-muted)',
-            fontSize: '0.95rem',
-            lineHeight: 1.6,
-            overflowWrap: 'anywhere',
-          }}
-        >
-          {plan.blurb}
-        </p>
-
-        <ul
-          style={{
-            listStyle: 'none',
-            margin: 0,
-            padding: 0,
-            display: 'grid',
-            gap: 'var(--ms-space-2)',
-          }}
-        >
-          {plan.features.map((feature) => (
-            <li
-              key={feature}
+            <span
+              aria-hidden="true"
               style={{
-                display: 'flex',
-                alignItems: 'flex-start',
-                gap: '0.55rem',
-                fontSize: '0.925rem',
-                lineHeight: 1.5,
-                minInlineSize: 0,
+                flex: 'none',
+                marginBlockStart: '0.05rem',
+                color: 'var(--ms-color-success)',
+                fontWeight: 'var(--ms-font-weight-semibold)',
               }}
             >
-              <span
-                aria-hidden="true"
-                style={{
-                  flex: 'none',
-                  marginBlockStart: '0.05rem',
-                  color: 'var(--ms-color-success)',
-                  fontWeight: 'var(--ms-font-weight-semibold)',
-                }}
-              >
-                ✓
-              </span>
-              <span style={{ overflowWrap: 'anywhere' }}>{feature}</span>
-            </li>
-          ))}
-        </ul>
+              ✓
+            </span>
+            <span style={{ overflowWrap: 'anywhere' }}>{feature}</span>
+          </li>
+        ))}
+      </ul>
 
-        <div style={{ marginBlockStart: 'auto', paddingBlockStart: 'var(--ms-space-2)' }}>
-          <Button
-            variant={featured ? 'solid' : 'outline'}
-            fullWidth
-            onClick={() => navigate('/app')}
-          >
-            {plan.cta}
-          </Button>
-        </div>
-      </article>
-    </Reveal>
+      <div style={{ marginBlockStart: 'auto', paddingBlockStart: 'var(--ms-space-2)' }}>
+        <Button variant={featured ? 'solid' : 'outline'} fullWidth onClick={() => navigate('/app')}>
+          {plan.cta}
+        </Button>
+      </div>
+    </article>
   );
 }
 
@@ -231,7 +223,11 @@ export function Pricing() {
           </div>
         </Reveal>
 
-        <div
+        {/* 价格卡:up 上滑揭示 + RevealGroup 错峰(与 Features 的 zoom-in 拉开节奏) */}
+        <RevealGroup
+          variant="up"
+          stagger={80}
+          amount={0.15}
           style={{
             display: 'grid',
             gap: 'clamp(1rem, 2vw, 1.75rem)',
@@ -240,10 +236,10 @@ export function Pricing() {
             marginBlockStart: 'clamp(2.5rem, 5vw, 3.5rem)',
           }}
         >
-          {plans.map((plan, index) => (
-            <PlanCard key={plan.id} plan={plan} cycle={cycle} delay={index * 80} />
+          {plans.map((plan) => (
+            <PlanCard key={plan.id} plan={plan} cycle={cycle} />
           ))}
-        </div>
+        </RevealGroup>
       </div>
     </section>
   );
