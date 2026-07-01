@@ -1,151 +1,125 @@
+import {
+  Reveal as MsReveal,
+  RevealGroup as MsRevealGroup,
+  type RevealGroupProps as MsRevealGroupProps,
+  type RevealProps as MsRevealProps,
+  type RevealVariant as MsRevealVariant,
+} from '@magic-scope/react';
 import type { CSSProperties, ElementType, ReactNode } from 'react';
-import { Children, isValidElement, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
-export type RevealVariant = 'fade' | 'up' | 'down' | 'left' | 'right' | 'blur' | 'scale' | 'rise';
+/**
+ * 电商站兼容的特效变体别名 —— 旧站自有 'rise' 语义(上滑 + 轻模糊),
+ * 映射到库的 'blur'(位移 + 模糊揭示),其余取值与库一一对应。
+ */
+export type RevealVariant = MsRevealVariant | 'rise';
 
-/** 各变体的初始(隐藏)态 CSS 变量;进入视口后 .is-visible 把它们归位,触发过渡。 */
-function fromVars(variant: RevealVariant, distance: number): CSSProperties {
-  const d = `${distance}px`;
-  const map: Record<RevealVariant, CSSProperties> = {
-    fade: {},
-    up: { ['--rv-y' as string]: d },
-    down: { ['--rv-y' as string]: `-${distance}px` },
-    left: { ['--rv-x' as string]: d },
-    right: { ['--rv-x' as string]: `-${distance}px` },
-    blur: { ['--rv-b' as string]: '12px', ['--rv-y' as string]: `${distance / 2}px` },
-    scale: { ['--rv-s' as string]: '0.92' },
-    rise: { ['--rv-y' as string]: d, ['--rv-b' as string]: '6px' },
-  };
-  return map[variant];
+/** 把站内别名解析成库变体。 */
+function resolveVariant(variant: RevealVariant): MsRevealVariant {
+  return variant === 'rise' ? 'blur' : variant;
 }
 
 interface RevealProps {
   children: ReactNode;
+  /** 特效变体,默认上滑;支持库全部变体 + 站内别名 'rise'。 */
   variant?: RevealVariant;
-  /** 位移距离 px(默认 28)。 */
+  /** 触发模式;首屏区块用 'mount' 不等滚动。 */
+  trigger?: MsRevealProps['trigger'];
+  /** 位移距离 px(透传库的 distance)。 */
   distance?: number;
-  /** 延迟毫秒。 */
+  /** 延迟毫秒(区块内错峰落位 → 库的 --ms-reveal-delay)。 */
   delay?: number;
-  /** 时长秒(默认 0.8)。 */
+  /** 时长毫秒(透传库的 duration;数字按 ms)。 */
   duration?: number;
+  /** 进视口回调(挂 count-up / 描线等)。 */
+  onReveal?: () => void;
   as?: ElementType;
   className?: string;
   style?: CSSProperties;
 }
 
-/** 进入视口时落位的进场动效;尊重 prefers-reduced-motion(由 CSS 兜底)。 */
+/**
+ * 电商站的 Reveal —— 直接复用 @magic-scope/react 的进场特效系统。
+ * 受全局「动效 全/弱/关」+ prefers-reduced-motion 自动调制,无需自写降级。
+ */
 export function Reveal({
   children,
   variant = 'up',
-  distance = 28,
-  delay = 0,
-  duration = 0.8,
-  as: Tag = 'div',
+  trigger,
+  distance,
+  delay,
+  duration,
+  onReveal,
+  as,
   className,
   style,
 }: RevealProps) {
-  const ref = useRef<HTMLElement | null>(null);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    // 偏好减少动效 / 无 IO 支持:直接落位,不做隐藏与过渡。
-    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-    if (reduce || typeof IntersectionObserver === 'undefined') {
-      setVisible(true);
-      return;
-    }
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            setVisible(true);
-            io.disconnect();
-          }
-        }
-      },
-      { threshold: 0.1, rootMargin: '0px 0px -6% 0px' },
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
-
-  // 关键:隐藏态/归位态都用「内联」CSS 变量(内联优先级高于 class),否则归位被内联初值压住、永远清不掉。
-  const stateVars: CSSProperties = visible
-    ? {
-        ['--rv-o' as string]: 1,
-        ['--rv-x' as string]: '0px',
-        ['--rv-y' as string]: '0px',
-        ['--rv-s' as string]: 1,
-        ['--rv-b' as string]: '0px',
-      }
-    : fromVars(variant, distance);
-
   return (
-    <Tag
-      ref={ref}
-      className={['db-rv', visible && 'is-visible', className].filter(Boolean).join(' ')}
-      style={{
-        ['--rv-dur' as string]: `${duration}s`,
-        ['--rv-delay' as string]: `${delay}ms`,
-        ...stateVars,
-        ...style,
-      }}
+    <MsReveal
+      variant={resolveVariant(variant)}
+      trigger={trigger}
+      distance={distance}
+      delay={delay}
+      duration={duration}
+      onReveal={onReveal}
+      as={as}
+      className={className}
+      style={style}
     >
       {children}
-    </Tag>
+    </MsReveal>
   );
 }
 
 interface RevealGroupProps {
   children: ReactNode;
+  /** 下发给各子项的默认变体,默认上滑。 */
   variant?: RevealVariant;
-  /** 相邻子项的错峰步进毫秒(默认 90)。 */
+  /** 错峰步长毫秒(→ 库的 --ms-reveal-stagger)。 */
   stagger?: number;
-  /** 整组起始延迟毫秒。 */
-  baseDelay?: number;
-  distance?: number;
-  duration?: number;
+  /** 序号策略:forward / reverse / center。 */
+  order?: MsRevealGroupProps['order'];
+  trigger?: MsRevealGroupProps['trigger'];
   as?: ElementType;
   className?: string;
   style?: CSSProperties;
 }
 
-/** 把每个直接子节点包成错峰落位的 Reveal —— 列表/网格出场用。 */
+/**
+ * 错峰容器 —— 一个 observer 管整组,进视口即给全组打波浪延迟(库 RevealGroup)。
+ * 列表 / 产品网格出场用,比逐个 Reveal 更省 observer。
+ */
 export function RevealGroup({
   children,
   variant = 'up',
-  stagger = 90,
-  baseDelay = 0,
-  distance = 28,
-  duration = 0.8,
-  as: Tag = 'div',
+  stagger,
+  order,
+  trigger,
+  as,
   className,
   style,
 }: RevealGroupProps) {
   return (
-    <Tag className={className} style={style}>
-      {Children.toArray(children)
-        .filter(isValidElement)
-        .map((child, i) => (
-          <Reveal
-            // biome-ignore lint/suspicious/noArrayIndexKey: 顺序稳定的展示列表,错峰延迟即用索引
-            key={i}
-            variant={variant}
-            distance={distance}
-            duration={duration}
-            delay={baseDelay + i * stagger}
-          >
-            {child}
-          </Reveal>
-        ))}
-    </Tag>
+    <MsRevealGroup
+      variant={variant === 'rise' ? 'blur' : variant}
+      stagger={stagger}
+      order={order}
+      trigger={trigger}
+      as={as}
+      className={className}
+      style={style}
+    >
+      {children}
+    </MsRevealGroup>
   );
 }
 
+// 门控 count-up / 描线等:进视口布尔,直接复用库 hook。
+export { useReveal } from '@magic-scope/react';
+
 /**
  * 视差:返回挂到元素的 ref;元素在滚动时按 strength 上下偏移(rAF 节流、尊重 reduce)。
+ * 库的 'parallax' 变体走 CSS scroll-timeline;此处保留 JS ref 版给 Hero 主视觉细控。
  * strength 正值典型 20~40。
  */
 export function useParallax<T extends HTMLElement>(strength = 30) {

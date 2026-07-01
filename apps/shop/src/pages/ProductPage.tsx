@@ -13,6 +13,7 @@ import {
 import { useState } from 'react';
 import { ProductCard } from '../components/ProductCard';
 import { ProductVisual } from '../components/ProductVisual';
+import { Reveal, RevealGroup } from '../components/Reveal';
 import {
   formatPrice,
   getProduct,
@@ -269,14 +270,20 @@ export function ProductPage({ id }: ProductPageProps) {
       </div>
 
       <div style={{ marginBlockStart: '3.5rem' }}>
-        <h2 className="db-display" style={{ fontSize: '1.5rem', marginBlockEnd: '1.25rem' }}>
+        <Reveal
+          as="h2"
+          variant="mask-up"
+          className="db-display"
+          style={{ fontSize: '1.5rem', marginBlockEnd: '1.25rem' }}
+        >
           你可能也喜欢
-        </h2>
-        <div className="db-grid db-grid--products">
+        </Reveal>
+        {/* 推荐位:zoom-in 错峰,和站内产品网格统一节奏 */}
+        <RevealGroup variant="zoom-in" stagger={70} className="db-grid db-grid--products">
           {recommend.map((p) => (
             <ProductCard key={p.id} product={p} />
           ))}
-        </div>
+        </RevealGroup>
       </div>
     </section>
   );

@@ -6,7 +6,8 @@ import { formatPrice, subscription } from '../data/catalog';
 export function SubscriptionCTA() {
   return (
     <section id="subscribe" className="db-section db-container">
-      <Reveal>
+      {/* CTA 大卡:clip-up 揭幕,和上下的 fade/up 拉开层次 */}
+      <Reveal variant="clip-up">
         <div
           className="db-card"
           style={{
