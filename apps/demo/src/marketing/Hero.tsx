@@ -1,35 +1,36 @@
-import { Badge, Button, Statistic, Tag } from '@magic-scope/react';
+import { Badge, Button, RevealGroup, Statistic, Tag } from '@magic-scope/react';
+import { useState } from 'react';
 import { AreaChart } from '../components/Chart';
 import { Reveal } from '../components/Reveal';
 import { hero, trafficSeries } from '../data/content';
 import { navigate } from '../lib/router';
 
 export function Hero() {
+  // 图表描线门控:clip-left 揭示进场(onReveal)时置 true,主折线沿路径生长。
+  const [chartDrawn, setChartDrawn] = useState(false);
+
   return (
     <section className="v-hero">
       <div className="v-container v-hero__grid">
-        <div>
-          <Reveal>
+        {/* 文案列:RevealGroup 逐行 stagger 落位(首屏 mount 即播,不等滚动) */}
+        <RevealGroup trigger="mount" stagger={90} className="v-hero__copy">
+          <div>
             <Badge variant="soft" tone="primary">
               <span className="v-dot-pulse" aria-hidden="true" /> {hero.eyebrow}
             </Badge>
-          </Reveal>
+          </div>
 
-          <Reveal delay={60}>
-            <h1 className="v-hero__title">
-              把产品的每一个信号,
-              <br />
-              <span className="v-gradient-text">汇成清晰的决策</span>
-            </h1>
-          </Reveal>
+          <h1 className="v-hero__title">
+            把产品的每一个信号,
+            <br />
+            <span className="v-gradient-text">汇成清晰的决策</span>
+          </h1>
 
-          <Reveal delay={120}>
-            <p className="v-lead" style={{ maxInlineSize: '34rem' }}>
-              {hero.subtitle}
-            </p>
-          </Reveal>
+          <p className="v-lead" style={{ maxInlineSize: '34rem' }}>
+            {hero.subtitle}
+          </p>
 
-          <Reveal delay={180}>
+          <div>
             <div className="v-hero__actions">
               <Button size="lg" onClick={() => navigate('/app')}>
                 {hero.primaryCta}
@@ -39,10 +40,11 @@ export function Hero() {
               </Button>
             </div>
             <p className="v-hero__note">{hero.note}</p>
-          </Reveal>
-        </div>
+          </div>
+        </RevealGroup>
 
-        <Reveal delay={140}>
+        {/* 产品预览:面板 up 进场;内部图表 clip-left 揭示 + 主折线描线;KPI 数字 count-up */}
+        <Reveal trigger="mount" delay={140}>
           <div className="v-preview" role="img" aria-label="Vela 实时面板预览">
             <div className="v-preview__bar">
               <span className="v-preview__dot" />
@@ -69,22 +71,52 @@ export function Hero() {
                   ▲ 12.4%
                 </span>
               </div>
-              <AreaChart
-                data={[...trafficSeries.thisWeek]}
-                compare={[...trafficSeries.lastWeek]}
-                height={148}
-              />
+              <Reveal
+                variant="clip-left"
+                trigger="mount"
+                delay={320}
+                onReveal={() => setChartDrawn(true)}
+              >
+                <AreaChart
+                  data={[...trafficSeries.thisWeek]}
+                  compare={[...trafficSeries.lastWeek]}
+                  height={148}
+                  draw={chartDrawn}
+                />
+              </Reveal>
             </div>
 
             <div className="v-preview__kpis">
               <div className="v-preview__kpi">
-                <Statistic title="转化" value={6.8} precision={1} suffix="%" size="sm" trend="up" />
+                <Statistic
+                  title="转化"
+                  value={6.8}
+                  precision={1}
+                  suffix="%"
+                  size="sm"
+                  trend="up"
+                  animateOnMount
+                  animateDuration={1100}
+                />
               </div>
               <div className="v-preview__kpi">
-                <Statistic title="事件/秒" value={1284} size="sm" />
+                <Statistic
+                  title="事件/秒"
+                  value={1284}
+                  size="sm"
+                  animateOnMount
+                  animateDuration={1100}
+                />
               </div>
               <div className="v-preview__kpi">
-                <Statistic title="P95" value={118} suffix="ms" size="sm" />
+                <Statistic
+                  title="P95"
+                  value={118}
+                  suffix="ms"
+                  size="sm"
+                  animateOnMount
+                  animateDuration={1100}
+                />
               </div>
             </div>
           </div>
