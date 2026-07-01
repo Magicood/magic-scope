@@ -1,6 +1,6 @@
 {
   "name": "@magic-scope/tokens",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "magic-scope 设计 token 与主题引擎(魔法主题,深色奥术默认预设)",
   "type": "module",
   "license": "MIT",
