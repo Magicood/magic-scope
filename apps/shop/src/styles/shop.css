@@ -262,8 +262,8 @@
 }
 
 .db-pcard__tag--sale {
-  background: var(--ms-color-accent);
-  color: var(--ms-color-on-accent);
+  background: var(--ms-color-primary);
+  color: var(--ms-color-on-primary);
 }
 
 .db-pcard__body {
@@ -319,7 +319,7 @@
 }
 
 .db-add:hover {
-  background: var(--ms-color-accent);
+  background: var(--ms-color-primary-hover);
   transform: scale(1.08);
 }
 
@@ -343,7 +343,8 @@
 .db-header.is-scrolled {
   background-color: color-mix(in oklab, var(--ms-color-bg) 82%, transparent);
   backdrop-filter: blur(16px) saturate(1.4);
-  box-shadow: 0 1px 0 color-mix(in oklab, var(--ms-color-fg) 8%, transparent);
+  /* 去 1px 硬底线,改极柔下沉阴影分隔 */
+  box-shadow: 0 10px 30px -20px color-mix(in oklab, var(--ms-color-fg) 22%, transparent);
 }
 
 .db-header__inner {
@@ -494,9 +495,11 @@
   align-items: center;
   gap: 0.55rem;
   padding: 0.6rem 0.95rem;
-  background-color: var(--ms-color-surface-raised);
+  /* 毛玻璃:半透明 surface + 背景模糊,融进柔和 hero 而非硬白卡片 */
+  background-color: color-mix(in oklab, var(--ms-color-surface) 72%, transparent);
+  backdrop-filter: blur(12px) saturate(1.2);
   border-radius: 999px;
-  box-shadow: 0 16px 36px -18px rgba(26, 18, 8, 0.4);
+  box-shadow: 0 14px 32px -22px rgba(26, 18, 8, 0.32);
   font-size: 0.85rem;
   white-space: nowrap;
 }

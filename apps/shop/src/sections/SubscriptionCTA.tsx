@@ -74,12 +74,12 @@ export function SubscriptionCTA() {
             {/* 右:价格卡 */}
             <div
               style={{
-                background: 'var(--ms-color-surface)',
-                border: '1px solid var(--ms-color-border)',
+                // 去硬边框:用更亮的 surface-raised + 柔影,从渐变大卡里自然「浮起」
+                background: 'var(--ms-color-surface-raised)',
                 borderRadius: 'var(--ms-radius-lg, 1rem)',
                 padding: 'clamp(1.5rem, 3vw, 2rem)',
                 boxShadow:
-                  '0 24px 50px -36px color-mix(in oklab, var(--ms-color-fg) 40%, transparent)',
+                  '0 1px 2px color-mix(in oklab, var(--ms-color-fg) 4%, transparent), 0 26px 50px -30px color-mix(in oklab, var(--ms-color-fg) 28%, transparent)',
                 display: 'grid',
                 gap: 'var(--ms-space-4, 1rem)',
                 justifyItems: 'center',
