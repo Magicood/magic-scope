@@ -224,6 +224,140 @@
   }
 }
 
+/* ---------- Features:bento 网格 ---------- */
+/* 6 列基座:桌面常规卡占 2 列(每行 3 张),lead 卡占 4 列、banner 卡整行,
+ * 由此形成非对称的编辑式 bento,而非六个等大方块。窄屏优雅坍缩为 2 列 / 单列。 */
+.v-bento {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: clamp(0.85rem, 1.6vw, 1.15rem);
+  margin-block-start: clamp(2.5rem, 5vw, 3.5rem);
+}
+
+.v-bento__cell {
+  display: grid;
+  min-inline-size: 0;
+  grid-column: span 6;
+}
+
+@media (min-width: 620px) {
+  .v-bento__cell {
+    grid-column: span 3;
+  }
+}
+
+@media (min-width: 900px) {
+  .v-bento__cell {
+    grid-column: span 2;
+  }
+  .v-bento__cell[data-span="wide"] {
+    grid-column: span 4;
+  }
+  .v-bento__cell[data-span="full"] {
+    grid-column: span 6;
+  }
+}
+
+/* 卡片:继承 .v-panel 的表面层次;这里叠加 padding、hover 抬升与主色微光 */
+.v-feature {
+  --v-feature-glow: 0;
+  block-size: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--ms-space-3);
+  min-inline-size: 0;
+  padding: clamp(1.25rem, 2.4vw, 1.75rem);
+  overflow: hidden;
+  transition:
+    transform 0.28s var(--ms-ease-standard, cubic-bezier(0.2, 0, 0, 1)),
+    border-color 0.28s var(--ms-ease-standard, cubic-bezier(0.2, 0, 0, 1)),
+    box-shadow 0.28s var(--ms-ease-standard, cubic-bezier(0.2, 0, 0, 1));
+}
+
+/* 角落极淡的主色辉光,hover 时点亮(fx=off 时不显示) */
+.v-feature::after {
+  content: "";
+  position: absolute;
+  inset-block-start: -40%;
+  inset-inline-end: -30%;
+  inline-size: 60%;
+  block-size: 80%;
+  background: radial-gradient(
+    circle at 70% 30%,
+    color-mix(in oklab, var(--ms-color-primary) 22%, transparent),
+    transparent 68%
+  );
+  opacity: var(--v-feature-glow);
+  transition: opacity 0.35s var(--ms-ease-standard, ease);
+  pointer-events: none;
+}
+
+@media (hover: hover) {
+  .v-feature:hover {
+    transform: translateY(-3px);
+    border-color: color-mix(in oklab, var(--ms-color-primary) 40%, var(--ms-color-border));
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.06),
+      0 4px 10px rgba(0, 0, 0, 0.28),
+      0 30px 60px -30px color-mix(in oklab, var(--ms-color-primary) 30%, rgba(0, 0, 0, 0.85));
+  }
+  .v-feature:hover::after {
+    opacity: 1;
+  }
+}
+
+html[data-ms-fx="off"] .v-feature::after {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .v-feature {
+    transition: none;
+  }
+}
+
+/* 卡片内部结构:标签+标题的 head、正文 body(基础规则在前,banner 覆盖在后) */
+.v-feature__head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--ms-space-3);
+  min-inline-size: 0;
+}
+
+.v-feature__body {
+  margin: 0;
+  color: var(--ms-color-fg-muted);
+  overflow-wrap: anywhere;
+  min-inline-size: 0;
+}
+
+/* lead 卡(占 4 列):默认就点亮一点角落辉光 + 略大留白,作为「主打特性」 */
+@media (min-width: 900px) {
+  .v-feature--lead {
+    --v-feature-glow: 0.6;
+    padding: clamp(1.6rem, 2.6vw, 2.2rem);
+  }
+}
+
+/* banner 卡(整行):桌面横向排布,标签+标题在左、正文在右,像刻意设计的收束条 */
+@media (min-width: 760px) {
+  .v-feature--banner {
+    flex-direction: row;
+    align-items: center;
+    gap: clamp(1.5rem, 4vw, 3rem);
+    padding-block: clamp(1.4rem, 2.4vw, 1.9rem);
+  }
+  .v-feature--banner .v-feature__head {
+    flex: 0 0 34%;
+    max-inline-size: 20rem;
+  }
+  .v-feature--banner .v-feature__body {
+    margin: 0;
+  }
+}
+
 /* ---------- Logo 墙 ---------- */
 .v-logos {
   display: flex;

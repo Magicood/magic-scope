@@ -8,7 +8,7 @@ export function WorkflowSection() {
   const { ref, inView } = useReveal<HTMLOListElement>({ amount: 0.2 });
 
   return (
-    <section id="workflow" className="v-section">
+    <section id="workflow" className="v-section v-section--band">
       <div className="v-container">
         <Reveal>
           <div className="v-section-head v-section-head--center">

@@ -1,14 +1,21 @@
 import { Heading, RevealGroup, Tag, Text } from '@magic-scope/react';
-import { useState } from 'react';
+import type { CSSProperties } from 'react';
 import { Reveal } from '../components/Reveal';
-import { features } from '../data/content';
+import { type Feature, features } from '../data/content';
 
 /** Tag 配色在 primary / accent 间轮换,给标签一点节奏感。 */
 type FeatureTone = 'primary' | 'accent';
 
-export function Features() {
-  const [hovered, setHovered] = useState<string | null>(null);
+/** bento 跨度:lead 卡占 4 列(主打特性)、banner 卡整行(收束条)、其余常规。 */
+type SpanKind = 'wide' | 'full' | 'normal';
 
+function spanOf(feature: Feature): SpanKind {
+  if (feature.id === 'realtime') return 'wide';
+  if (feature.id === 'collab') return 'full';
+  return 'normal';
+}
+
+export function Features() {
   return (
     <section id="features" className="v-section">
       <div className="v-container">
@@ -30,76 +37,37 @@ export function Features() {
           </div>
         </Reveal>
 
-        {/* 卡片网格:zoom-in 缩放揭示 + RevealGroup 错峰(一个 observer 管整网格,与 Hero 的 up 形成节奏对比) */}
-        <RevealGroup
-          variant="zoom-in"
-          stagger={70}
-          amount={0.15}
-          style={{
-            display: 'grid',
-            gap: 'clamp(1rem, 2vw, 1.25rem)',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))',
-            gridAutoRows: 'minmax(0, auto)',
-            marginBlockStart: 'clamp(2.5rem, 5vw, 3.5rem)',
-          }}
-        >
+        {/* bento 网格:非对称跨度 + zoom-in 缩放揭示 + RevealGroup 错峰(一个 observer 管整网格,
+            与 Hero 的 up 形成节奏对比)。lead/banner 卡制造层级,不再是六个等大方块。 */}
+        <RevealGroup variant="zoom-in" stagger={70} amount={0.15} className="v-bento">
           {features.map((feature, index) => {
             const tone: FeatureTone = index % 2 === 0 ? 'primary' : 'accent';
-            const isHovered = hovered === feature.id;
+            const span = spanOf(feature);
+            const isBanner = span === 'full';
+            const cardClass = `v-panel v-feature${span === 'wide' ? ' v-feature--lead' : ''}${
+              isBanner ? ' v-feature--banner' : ''
+            }`;
 
             return (
-              // 外层 div 作为 RevealGroup 单元(承接 zoom-in 揭示);内层 article 独立 hover,transform 互不干扰
-              <div
-                key={feature.id}
-                style={{
-                  display: 'grid',
-                  minInlineSize: 0,
-                }}
-              >
-                <article
-                  onMouseEnter={() => setHovered(feature.id)}
-                  onMouseLeave={() => setHovered(null)}
-                  className="v-panel"
-                  style={{
-                    blockSize: '100%',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'flex-start',
-                    gap: 'var(--ms-space-3)',
-                    minInlineSize: 0,
-                    padding: 'clamp(1.25rem, 2.4vw, 1.75rem)',
-                    borderColor: isHovered
-                      ? 'var(--ms-color-border-strong, var(--ms-color-primary))'
-                      : 'var(--ms-color-border)',
-                    transform: isHovered ? 'translateY(-2px)' : 'translateY(0)',
-                    transition:
-                      'transform 0.2s var(--ms-ease-standard, cubic-bezier(0.2, 0, 0, 1)), border-color 0.2s var(--ms-ease-standard, cubic-bezier(0.2, 0, 0, 1))',
-                  }}
-                >
-                  <Tag size="sm" variant="soft" tone={tone}>
-                    {feature.tag}
-                  </Tag>
+              // 外层 div 作为 RevealGroup 单元(承接 zoom-in 揭示 + 网格跨度);内层 article 独立 hover
+              <div key={feature.id} className="v-bento__cell" data-span={span}>
+                <article className={cardClass}>
+                  <div className="v-feature__head">
+                    <Tag size="sm" variant="soft" tone={tone}>
+                      {feature.tag}
+                    </Tag>
+                    <Heading
+                      level={3}
+                      variant="subtitle"
+                      wrap="balance"
+                      breakWord
+                      style={{ minInlineSize: 0 } as CSSProperties}
+                    >
+                      {feature.title}
+                    </Heading>
+                  </div>
 
-                  <Heading
-                    level={3}
-                    variant="subtitle"
-                    wrap="balance"
-                    breakWord
-                    style={{ minInlineSize: 0 }}
-                  >
-                    {feature.title}
-                  </Heading>
-
-                  <Text
-                    as="p"
-                    size="sm"
-                    leading="relaxed"
-                    style={{
-                      color: 'var(--ms-color-fg-muted)',
-                      overflowWrap: 'anywhere',
-                      minInlineSize: 0,
-                    }}
-                  >
+                  <Text as="p" size="sm" leading="relaxed" className="v-feature__body">
                     {feature.body}
                   </Text>
                 </article>
