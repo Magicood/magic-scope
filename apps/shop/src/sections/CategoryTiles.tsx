@@ -1,6 +1,6 @@
 import type { ComponentType, SVGProps } from 'react';
 import { IconCup, IconLeaf, IconTruck } from '../components/icons';
-import { Reveal } from '../components/Reveal';
+import { Reveal, RevealGroup } from '../components/Reveal';
 import { getProduct } from '../data/catalog';
 
 interface Tile {
@@ -53,19 +53,23 @@ const tiles: Tile[] = [
 export function CategoryTiles() {
   return (
     <section className="db-section db-container">
-      <Reveal>
-        <div className="db-section-head">
-          <span className="db-eyebrow">按需选购</span>
-          <h2
-            className="db-display"
-            style={{ marginBlockStart: '0.6rem', fontSize: 'clamp(1.7rem, 3.4vw, 2.5rem)' }}
-          >
-            找到适合你的那一支
-          </h2>
-        </div>
+      {/* 标题单独 mask-up 揭示,和下方网格的 zoom 错峰形成对比 */}
+      <Reveal variant="up" className="db-section-head">
+        <span className="db-eyebrow">按需选购</span>
+        <Reveal
+          as="h2"
+          variant="mask-up"
+          className="db-display"
+          style={{ marginBlockStart: '0.6rem', fontSize: 'clamp(1.7rem, 3.4vw, 2.5rem)' }}
+        >
+          找到适合你的那一支
+        </Reveal>
       </Reveal>
 
-      <div
+      {/* 整网格一个 observer 管:进视口后各卡片 zoom-in 逐个落位 */}
+      <RevealGroup
+        variant="zoom-in"
+        stagger={90}
         style={{
           display: 'grid',
           gap: 'clamp(1rem, 2vw, 1.5rem)',
@@ -73,8 +77,8 @@ export function CategoryTiles() {
           gridTemplateColumns: 'repeat(auto-fit, minmax(min(15rem, 100%), 1fr))',
         }}
       >
-        {tiles.map((tile, index) => (
-          <Reveal key={tile.name} delay={index * 90}>
+        {tiles.map((tile) => (
+          <div key={tile.name}>
             <a
               href={tile.href}
               className="db-card db-card--interactive"
@@ -143,9 +147,9 @@ export function CategoryTiles() {
                 </span>
               </span>
             </a>
-          </Reveal>
+          </div>
         ))}
-      </div>
+      </RevealGroup>
     </section>
   );
 }

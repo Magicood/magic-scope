@@ -1,7 +1,7 @@
 import { Button } from '@magic-scope/react';
 import { Hero } from '../components/Hero';
 import { ProductCard } from '../components/ProductCard';
-import { Reveal } from '../components/Reveal';
+import { Reveal, RevealGroup } from '../components/Reveal';
 import { products } from '../data/catalog';
 import { navigate } from '../lib/router';
 import { CategoryTiles } from '../sections/CategoryTiles';
@@ -25,27 +25,28 @@ function FeaturedProducts() {
           marginBlockEnd: '2rem',
         }}
       >
-        <div className="db-section-head">
+        <Reveal variant="up" className="db-section-head">
           <span className="db-eyebrow">本周精选</span>
-          <h2
+          <Reveal
+            as="h2"
+            variant="mask-up"
             className="db-display"
             style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.5rem)', marginBlockStart: '0.6rem' }}
           >
             最近烘得正好的几支
-          </h2>
-        </div>
+          </Reveal>
+        </Reveal>
         <Button variant="ghost" onClick={() => navigate('/shop')}>
           查看全部 →
         </Button>
       </div>
 
-      <div className="db-grid db-grid--products">
-        {featured.map((p, i) => (
-          <Reveal key={p.id} delay={i * 70}>
-            <ProductCard product={p} />
-          </Reveal>
+      {/* 产品网格:zoom-in 错峰进场,一个 observer 管全组 */}
+      <RevealGroup variant="zoom-in" stagger={70} className="db-grid db-grid--products">
+        {featured.map((p) => (
+          <ProductCard key={p.id} product={p} />
         ))}
-      </div>
+      </RevealGroup>
     </section>
   );
 }

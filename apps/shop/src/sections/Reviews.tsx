@@ -1,22 +1,27 @@
 import { Avatar, Rate } from '@magic-scope/react';
-import { Reveal } from '../components/Reveal';
+import { Reveal, RevealGroup } from '../components/Reveal';
 import { reviews } from '../data/catalog';
 
-/** 首页「顾客评价」区块:真实评价卡片网格(2→1),错峰渐入。 */
+/** 首页「顾客评价」区块:真实评价卡片网格(2→1),口碑区用 fade 错峰渐入(比位移更温和)。 */
 export function Reviews() {
   return (
     <section className="db-section db-container">
-      <div className="db-section-head db-section-head--center">
+      <Reveal variant="up" className="db-section-head db-section-head--center">
         <span className="db-eyebrow">真实评价</span>
-        <h2
+        <Reveal
+          as="h2"
+          variant="mask-up"
           className="db-display"
           style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.5rem)', marginBlockStart: '0.6rem' }}
         >
           他们的清晨
-        </h2>
-      </div>
+        </Reveal>
+      </Reveal>
 
-      <div
+      {/* 口碑卡片:fade 错峰,克制、不抢戏 */}
+      <RevealGroup
+        variant="fade"
+        stagger={80}
         style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 22rem), 1fr))',
@@ -24,8 +29,8 @@ export function Reviews() {
           marginBlockStart: 'var(--ms-space-8, 2.5rem)',
         }}
       >
-        {reviews.map((review, index) => (
-          <Reveal key={`${review.name}-${review.date}`} delay={index * 80}>
+        {reviews.map((review) => (
+          <div key={`${review.name}-${review.date}`}>
             <figure
               className="db-card"
               style={{
@@ -73,9 +78,9 @@ export function Reviews() {
                 </span>
               </figcaption>
             </figure>
-          </Reveal>
+          </div>
         ))}
-      </div>
+      </RevealGroup>
     </section>
   );
 }
