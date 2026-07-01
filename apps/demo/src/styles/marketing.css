@@ -119,7 +119,28 @@
   padding-block: clamp(3.5rem, 8vw, 6.5rem) clamp(3rem, 7vw, 5.5rem);
 }
 
+/* 锚定在右侧预览面板后的一道定向辉光,让 Hero 背景「被设计过」而不喧闹(呼应面板落地辉光)。
+ * 只此一层、9% 主色,accent 不叠加以免过曝;跟随 fx 开关。 */
+.v-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 55% 60% at 64% 42%,
+    color-mix(in oklab, var(--ms-color-primary) 9%, transparent),
+    transparent 60%
+  );
+}
+
+html[data-ms-fx="off"] .v-hero::before {
+  display: none;
+}
+
 .v-hero__grid {
+  position: relative;
+  z-index: 1;
   display: grid;
   gap: clamp(2.5rem, 5vw, 4rem);
   align-items: center;
@@ -134,8 +155,9 @@
 .v-hero__title {
   margin-block: 1.25rem 0;
   font-size: clamp(2.25rem, 5vw, 3.5rem);
-  line-height: 1.08;
-  letter-spacing: var(--ms-tracking-tighter, -0.03em);
+  font-weight: 600;
+  line-height: 1.14;
+  letter-spacing: -0.022em;
   white-space: pre-line;
   text-wrap: balance;
 }
@@ -333,11 +355,51 @@ html[data-ms-fx="off"] .v-feature::after {
   min-inline-size: 0;
 }
 
-/* lead 卡(占 4 列):默认就点亮一点角落辉光 + 略大留白,作为「主打特性」 */
+/* 卡片视觉锚点:细线单色图标 chip(色系由内联 tone 决定,primary/accent 轮换),
+ * 取代此前的标签 pill,给每张卡一个克制的识别点(Linear/Stripe 式)。 */
+.v-feature__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 2.5rem;
+  block-size: 2.5rem;
+  flex: none;
+  border-radius: var(--ms-radius-md, 0.5rem);
+  border: 1px solid color-mix(in oklab, currentColor 22%, transparent);
+  background-color: color-mix(in oklab, currentColor 12%, transparent);
+  transition: transform 0.28s var(--ms-ease-standard, cubic-bezier(0.2, 0, 0, 1));
+}
+
+.v-feature__icon svg {
+  inline-size: 1.3rem;
+  block-size: 1.3rem;
+}
+
+@media (hover: hover) {
+  .v-feature:hover .v-feature__icon {
+    transform: translateY(-1px) scale(1.04);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .v-feature__icon {
+    transition: none;
+  }
+}
+
+/* lead 卡(占 4 列):默认就点亮一点角落辉光 + 略大留白 + 更大图标,作为「主打特性」 */
 @media (min-width: 900px) {
   .v-feature--lead {
     --v-feature-glow: 0.6;
     padding: clamp(1.6rem, 2.6vw, 2.2rem);
+  }
+  .v-feature--lead .v-feature__icon {
+    inline-size: 3rem;
+    block-size: 3rem;
+  }
+  .v-feature--lead .v-feature__icon svg {
+    inline-size: 1.55rem;
+    block-size: 1.55rem;
   }
 }
 
@@ -371,15 +433,15 @@ html[data-ms-fx="off"] .v-feature::after {
   font-size: 1.05rem;
   font-weight: var(--ms-font-weight-semibold, 600);
   letter-spacing: var(--ms-tracking-tight, -0.01em);
-  color: var(--ms-color-fg-subtle);
-  opacity: 0.85;
+  color: var(--ms-color-fg-muted);
+  opacity: 0.9;
   transition:
     color 0.25s ease,
     opacity 0.25s ease;
 }
 
 .v-logos__item:hover {
-  color: var(--ms-color-fg-muted);
+  color: var(--ms-color-fg);
   opacity: 1;
 }
 

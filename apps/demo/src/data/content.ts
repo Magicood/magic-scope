@@ -85,12 +85,14 @@ export interface Metric {
   value: string;
   delta: string;
   trend: 'up' | 'down';
+  /** 数值中性显示:用于「下降是好事」的指标(如延迟),避免趋势红色误读为告警。 */
+  neutral?: boolean;
 }
 
 export const metrics: Metric[] = [
   { label: '接入团队', value: '4,200+', delta: '本季 +18%', trend: 'up' },
   { label: '日处理事件', value: '38 亿', delta: '同比 +64%', trend: 'up' },
-  { label: '查询 P95 延迟', value: '120ms', delta: '环比 -22%', trend: 'down' },
+  { label: '查询 P95 延迟', value: '120ms', delta: '环比 -22%', trend: 'down', neutral: true },
   { label: '服务可用性', value: '99.98%', delta: '过去 90 天', trend: 'up' },
 ];
 
