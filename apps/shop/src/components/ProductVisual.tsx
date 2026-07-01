@@ -1,49 +1,50 @@
 import type { CSSProperties } from 'react';
-import { type Product, ROAST_LABEL, type Roast } from '../data/catalog';
+import { CATEGORY_LABEL, type Product, products, ROAST_LABEL } from '../data/catalog';
 
-const ROAST_LEVEL: Record<Roast, number> = {
-  light: 1,
-  medium: 2,
-  'medium-dark': 3,
-  dark: 4,
-};
-
+/** 器具填充剪影:深墨实心 + 一道高光 + 接触阴影(比线描更有「产品」实体感)。 */
 function GearArt({ id }: { id: string }) {
-  const common = {
-    fill: 'none',
-    stroke: 'var(--ms-color-fg)',
-    strokeWidth: 3,
+  const ink = { fill: 'var(--pv-ink)' as const };
+  const shine = { fill: 'rgba(255, 255, 255, 0.15)' as const };
+  const stroke = {
+    fill: 'none' as const,
+    stroke: 'var(--pv-ink)' as const,
+    strokeWidth: 9,
     strokeLinecap: 'round' as const,
     strokeLinejoin: 'round' as const,
-    opacity: 0.82,
   };
-  if (id === 'grinder') {
-    return (
-      <svg viewBox="0 0 200 200" width="44%" aria-hidden="true" style={{ overflow: 'visible' }}>
-        <circle cx="100" cy="40" r="5" {...common} />
-        <path d="M100 45v20M100 56h32" {...common} />
-        <rect x="72" y="66" width="56" height="32" rx="5" {...common} />
-        <rect x="66" y="98" width="68" height="58" rx="9" {...common} />
-        <path d="M66 122h68" {...common} />
-      </svg>
-    );
-  }
+
   if (id === 'kettle') {
     return (
-      <svg viewBox="0 0 200 200" width="50%" aria-hidden="true" style={{ overflow: 'visible' }}>
-        <path d="M58 92q42-15 84 0l-9 58q-33 10-66 0z" {...common} />
-        <path d="M138 100q33-2 35-38 0-10-10-10" {...common} />
-        <path d="M70 92q28-32 0-40" {...common} />
-        <path d="M84 150q16 8 32 0" {...common} />
+      <svg viewBox="0 0 200 200" aria-hidden="true" style={{ inlineSize: '84%' }}>
+        <path {...ink} d="M52 98q48-16 96 0l-11 60q-37 12-74 0z" />
+        <path {...ink} d="M140 106q32-5 32-42 0-11-11-11l-2 11q6 0 6 6 0 21-21 25z" />
+        <path {...stroke} d="M66 98q30-34 3-42" />
+        <ellipse {...ink} cx="100" cy="94" rx="49" ry="9" />
+        <rect {...ink} x="92" y="74" width="16" height="16" rx="4" />
+        <path {...shine} d="M64 102q16-6 27-5l-6 52q-12-2-23-5z" />
       </svg>
     );
   }
+
+  if (id === 'grinder') {
+    return (
+      <svg viewBox="0 0 200 200" aria-hidden="true" style={{ inlineSize: '66%' }}>
+        <path {...ink} d="M64 78h72l-6 34H70z" />
+        <rect {...ink} x="66" y="112" width="68" height="60" rx="10" />
+        <path {...stroke} d="M100 78V54h30" />
+        <circle {...ink} cx="134" cy="54" r="7" />
+        <rect {...shine} x="74" y="118" width="12" height="48" rx="6" />
+      </svg>
+    );
+  }
+
+  // dripper（V60）
   return (
-    <svg viewBox="0 0 200 200" width="48%" aria-hidden="true" style={{ overflow: 'visible' }}>
-      <path d="M56 64h88l-30 66h-28z" {...common} />
-      <path d="M70 96h60" {...common} />
-      <path d="M88 130l-9 30h42l-9-30" {...common} />
-      <path d="M100 64v66" {...common} opacity="0.4" />
+    <svg viewBox="0 0 200 200" aria-hidden="true" style={{ inlineSize: '72%' }}>
+      <path {...ink} d="M50 74h100l-34 74H84z" />
+      <rect {...ink} x="82" y="148" width="36" height="12" rx="3" />
+      <rect {...ink} x="66" y="160" width="68" height="9" rx="4" />
+      <path {...shine} d="M62 80h15l-19 42h-11z" />
     </svg>
   );
 }
@@ -55,12 +56,15 @@ interface ProductVisualProps {
 }
 
 /**
- * 商品主视觉:art-directed 富色场 + 哑光咖啡袋(豆)或精致线描(器具)。
- * 无实拍图,但走「品牌包装视觉」路线 —— 排版标签让它像刻意设计而非凑数。
+ * 商品主视觉:影棚静物(product still-life)。
+ * 无实拍图,用低饱和暖调影棚墙 + 写实咖啡袋 / 器具剪影 + 真实接触阴影,
+ * 做到「像精品店拍的产品图」,而非扁平 clip-art。
  */
 export function ProductVisual({ product, className, style }: ProductVisualProps) {
   const isBean = product.type === 'bean';
-  const level = product.roast ? ROAST_LEVEL[product.roast] : 0;
+  const index = products.findIndex((p) => p.id === product.id);
+  const no = String(index + 1).padStart(2, '0');
+  const tag = product.roast ? ROAST_LABEL[product.roast] : CATEGORY_LABEL[product.category];
 
   return (
     <div
@@ -68,26 +72,26 @@ export function ProductVisual({ product, className, style }: ProductVisualProps)
       style={{ ['--pv-accent' as string]: product.accent, ...style }}
       aria-hidden="true"
     >
-      {isBean ? (
-        <div className="pv__bag">
-          <div className="pv__bag-top" />
-          <div className="pv__label">
-            <span className="pv__roast">{product.roast ? ROAST_LABEL[product.roast] : ''}</span>
-            <span className="pv__name">{product.name}</span>
-            <span className="pv__origin">{product.subtitle}</span>
-            <span className="pv__dots">
-              {[1, 2, 3, 4].map((n) => (
-                <i key={n} data-on={n <= level ? '' : undefined} />
-              ))}
-            </span>
-            <span className="pv__wm">DAYBREAK · 昼起</span>
+      <span className="pv__grain" />
+      <span className="pv__corner pv__corner--tl">N° {no}</span>
+      <span className="pv__corner pv__corner--tr">{tag}</span>
+
+      <div className="pv__stage">
+        {isBean ? (
+          <div className="pv__bag">
+            <span className="pv__bag-cap" />
+            <span className="pv__bag-brand-print">Daybreak</span>
+            <div className="pv__bag-label">
+              <span className="pv__bag-origin">{product.name}</span>
+              <span className="pv__bag-roast">{product.subtitle}</span>
+            </div>
           </div>
-        </div>
-      ) : (
-        <div className="pv__gear">
-          <GearArt id={product.id} />
-        </div>
-      )}
+        ) : (
+          <div className="pv__gear">
+            <GearArt id={product.id} />
+          </div>
+        )}
+      </div>
     </div>
   );
 }
