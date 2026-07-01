@@ -1,13 +1,31 @@
-import { Heading, RevealGroup, Tag, Text } from '@magic-scope/react';
-import type { CSSProperties } from 'react';
+import { Heading, RevealGroup, Text } from '@magic-scope/react';
+import type { ComponentType, CSSProperties, SVGProps } from 'react';
+import {
+  IconAlert,
+  IconEvents,
+  IconFunnel,
+  IconOverview,
+  IconSegment,
+  IconTeam,
+} from '../components/icons';
 import { Reveal } from '../components/Reveal';
 import { type Feature, features } from '../data/content';
 
-/** Tag 配色在 primary / accent 间轮换,给标签一点节奏感。 */
+/** 图标色系在 primary / accent 间轮换,给卡片一点节奏感。 */
 type FeatureTone = 'primary' | 'accent';
 
 /** bento 跨度:lead 卡占 4 列(主打特性)、banner 卡整行(收束条)、其余常规。 */
 type SpanKind = 'wide' | 'full' | 'normal';
+
+/** 每个特性对应一枚细线单色图标(取自统一图标集,几何、克制)。 */
+const ICONS: Record<string, ComponentType<SVGProps<SVGSVGElement>>> = {
+  realtime: IconEvents,
+  funnels: IconFunnel,
+  alerts: IconAlert,
+  segments: IconSegment,
+  sql: IconOverview,
+  collab: IconTeam,
+};
 
 function spanOf(feature: Feature): SpanKind {
   if (feature.id === 'realtime') return 'wide';
@@ -42,8 +60,11 @@ export function Features() {
         <RevealGroup variant="zoom-in" stagger={70} amount={0.15} className="v-bento">
           {features.map((feature, index) => {
             const tone: FeatureTone = index % 2 === 0 ? 'primary' : 'accent';
+            const toneColor =
+              tone === 'accent' ? 'var(--ms-color-accent)' : 'var(--ms-color-primary)';
             const span = spanOf(feature);
             const isBanner = span === 'full';
+            const Icon = ICONS[feature.id] ?? IconOverview;
             const cardClass = `v-panel v-feature${span === 'wide' ? ' v-feature--lead' : ''}${
               isBanner ? ' v-feature--banner' : ''
             }`;
@@ -53,9 +74,13 @@ export function Features() {
               <div key={feature.id} className="v-bento__cell" data-span={span}>
                 <article className={cardClass}>
                   <div className="v-feature__head">
-                    <Tag size="sm" variant="soft" tone={tone}>
-                      {feature.tag}
-                    </Tag>
+                    <span
+                      className="v-feature__icon"
+                      style={{ color: toneColor } as CSSProperties}
+                      aria-hidden="true"
+                    >
+                      <Icon />
+                    </span>
                     <Heading
                       level={3}
                       variant="subtitle"

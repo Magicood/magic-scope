@@ -6,6 +6,8 @@ export function LogoCloud() {
   return (
     <section className="v-section--tight">
       <div className="v-container">
+        {/* Hero 收束 ↔ 商标墙之间的极淡分隔,给长滚动页一个「章节到章节」的呼吸 */}
+        <hr className="v-hairline" style={{ marginBlockEnd: 'clamp(1.75rem, 3.5vw, 2.5rem)' }} />
         <Reveal>
           <p
             style={{

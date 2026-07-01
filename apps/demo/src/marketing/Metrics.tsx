@@ -57,6 +57,15 @@ export function Metrics() {
                   border-block-start: 1px solid var(--ms-color-border);
                 }
               }
+              /* 中性指标(如延迟下降=利好):把数字/后缀/趋势箭头拉回中性色,
+                 避免库按 trend=down 上红被误读为告警(不改库、不翻 trend)。 */
+              .ms-metric-neutral .ms-statistic__number,
+              .ms-metric-neutral .ms-statistic__suffix {
+                color: var(--ms-color-fg);
+              }
+              .ms-metric-neutral .ms-statistic__trend {
+                color: var(--ms-color-fg-subtle);
+              }
             `}</style>
             {metrics.map((metric) => (
               <div
@@ -76,6 +85,7 @@ export function Metrics() {
                   value={metric.value}
                   trend={metric.trend}
                   size="lg"
+                  className={metric.neutral ? 'ms-metric-neutral' : undefined}
                 />
                 <span
                   style={{
