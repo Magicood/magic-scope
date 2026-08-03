@@ -2,6 +2,7 @@
 import '@testing-library/jest-dom/vitest';
 import { act, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { MessagesProvider } from '../../i18n';
 import { Statistic } from './Statistic';
 
 /** 把 matchMedia(prefers-reduced-motion) 设为给定 matches。 */
@@ -68,6 +69,18 @@ describe('Statistic', () => {
     );
     const valueBox = container.querySelector('.ms-statistic__value');
     expect(valueBox).toHaveAttribute('aria-label', '收入 上升 ¥1,234元');
+  });
+
+  it('趋势读法走字典 statistic.trendUp/Down,可被 MessagesProvider 覆盖', () => {
+    const { container } = render(
+      <MessagesProvider messages={{ 'statistic.trendUp': 'up' }}>
+        <Statistic value={1234} title="收入" prefix="¥" suffix="元" trend="up" />
+      </MessagesProvider>,
+    );
+    expect(container.querySelector('.ms-statistic__value')).toHaveAttribute(
+      'aria-label',
+      '收入 up ¥1,234元',
+    );
   });
 
   it('aria-label 可被外部覆盖', () => {

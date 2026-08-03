@@ -1061,8 +1061,8 @@
     {
       "name": "ariaLabel",
       "type": "string",
-      "default": "页内导航",
-      "description": "nav 的可访问名(landmark 标签)。默认「页内导航」。",
+      "default": "—",
+      "description": "nav 的可访问名(landmark 标签)。不传则走字典 anchor.nav(默认「页内导航」)。",
       "required": false,
       "native": false
     },
@@ -27056,7 +27056,7 @@
       "name": "toolbarLabels",
       "type": "{ zoomIn?: string; zoomOut?: string; rotate?: string | undefined; reset?: string | undefined; close?: string | undefined; } | undefined",
       "default": "—",
-      "description": "灯箱工具按钮的 aria-label 覆盖(本组件 i18n 字典仅预置 image.error/image.preview,\n这些更细的工具标签作为可覆盖 prop 给出中文默认值,便于按需本地化)。",
+      "description": "灯箱工具按钮的 aria-label 覆盖;不传则走字典\nimage.zoomIn / zoomOut / rotate / reset / close。",
       "required": false,
       "native": false
     },
@@ -34987,8 +34987,8 @@
     {
       "name": "aria-label",
       "type": "string",
-      "default": "主导航",
-      "description": "外层 <nav> 的可访问名(屏读「导航地标」标签)。默认 '主导航'。",
+      "default": "—",
+      "description": "外层 <nav> 的可访问名(屏读「导航地标」标签)。不传则走字典 navigationMenu.nav(默认「主导航」)。",
       "required": false,
       "native": false
     },

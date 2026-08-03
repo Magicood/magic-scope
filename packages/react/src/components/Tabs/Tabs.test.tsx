@@ -2,6 +2,7 @@
 import '@testing-library/jest-dom/vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
+import { MessagesProvider } from '../../i18n';
 import { Tabs } from './Tabs';
 
 const items = [
@@ -97,6 +98,15 @@ describe('Tabs', () => {
     render(<Tabs items={items} addable onEdit={onEdit} />);
     fireEvent.click(screen.getByRole('button', { name: '新增标签' }));
     expect(onEdit).toHaveBeenCalledWith('', 'add');
+  });
+
+  it('新增按钮标签走字典 tabs.add,可被 MessagesProvider 覆盖', () => {
+    render(
+      <MessagesProvider messages={{ 'tabs.add': 'Add tab' }}>
+        <Tabs items={items} addable />
+      </MessagesProvider>,
+    );
+    expect(screen.getByRole('button', { name: 'Add tab' })).toBeInTheDocument();
   });
 
   it('根透传原生事件与属性(...rest):用户 onKeyDown 与内部导航都触发', () => {

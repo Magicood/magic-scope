@@ -3,6 +3,7 @@ import '@testing-library/jest-dom/vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { createRef } from 'react';
 import { describe, expect, it, vi } from 'vitest';
+import { MessagesProvider } from '../../i18n';
 import { Image } from './Image';
 
 const SRC = 'https://example.com/a.png';
@@ -167,6 +168,36 @@ describe('Image', () => {
     render(<Image src={SRC} alt="x" preview toolbarLabels={{ close: 'Close' }} />);
     fireEvent.click(screen.getByRole('button', { name: '预览' }));
     expect(screen.getByRole('button', { name: 'Close' })).toBeInTheDocument();
+  });
+
+  it('工具按钮默认标签走字典 image.*,可被 MessagesProvider 覆盖', () => {
+    render(
+      <MessagesProvider
+        messages={{
+          'image.zoomIn': 'Zoom in',
+          'image.zoomOut': 'Zoom out',
+          'image.rotate': 'Rotate',
+          'image.reset': 'Reset',
+          'image.close': 'Close',
+        }}
+      >
+        <Image src={SRC} alt="x" preview />
+      </MessagesProvider>,
+    );
+    fireEvent.click(screen.getByRole('button', { name: '预览' }));
+    for (const name of ['Zoom in', 'Zoom out', 'Rotate', 'Reset', 'Close']) {
+      expect(screen.getByRole('button', { name })).toBeInTheDocument();
+    }
+  });
+
+  it('toolbarLabels 优先于字典', () => {
+    render(
+      <MessagesProvider messages={{ 'image.close': 'Close' }}>
+        <Image src={SRC} alt="x" preview toolbarLabels={{ close: '关掉' }} />
+      </MessagesProvider>,
+    );
+    fireEvent.click(screen.getByRole('button', { name: '预览' }));
+    expect(screen.getByRole('button', { name: '关掉' })).toBeInTheDocument();
   });
 
   it('classNames 分槽透传到根', () => {

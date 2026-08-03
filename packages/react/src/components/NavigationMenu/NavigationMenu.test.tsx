@@ -5,6 +5,7 @@ import '@testing-library/jest-dom/vitest';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { createRef } from 'react';
 import { describe, expect, it, vi } from 'vitest';
+import { MessagesProvider } from '../../i18n';
 import { NavigationMenu, type NavMenuItem } from './NavigationMenu';
 
 /** 读 NavigationMenu.css 原文,用于断言 finding #2 的 CSS 契约(jsdom 不解析外部 CSS,直接验证规则文本)。 */
@@ -37,6 +38,18 @@ describe('NavigationMenu', () => {
     const nav = screen.getByRole('navigation', { name: '站点导航' });
     expect(nav).toBeInTheDocument();
     expect(container.querySelector('.ms-navmenu')).toBeInTheDocument();
+  });
+
+  it('未传 aria-label 时走字典 navigationMenu.nav,可被 MessagesProvider 覆盖', () => {
+    const { rerender } = render(<NavigationMenu items={items} />);
+    expect(screen.getByRole('navigation', { name: '主导航' })).toBeInTheDocument();
+
+    rerender(
+      <MessagesProvider messages={{ 'navigationMenu.nav': 'Main navigation' }}>
+        <NavigationMenu items={items} />
+      </MessagesProvider>,
+    );
+    expect(screen.getByRole('navigation', { name: 'Main navigation' })).toBeInTheDocument();
   });
 
   it('纯链接项渲染为 <a> 且 active 标 aria-current=page', () => {

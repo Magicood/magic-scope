@@ -3,6 +3,7 @@ import '@testing-library/jest-dom/vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { useState } from 'react';
 import { describe, expect, it, vi } from 'vitest';
+import { MessagesProvider } from '../../i18n';
 import { PinInput } from './PinInput';
 
 describe('PinInput', () => {
@@ -180,6 +181,19 @@ describe('PinInput', () => {
     expect(screen.getByRole('group', { name: '短信验证码' })).toBeInTheDocument();
     const cells = screen.getAllByRole('textbox');
     expect(cells[0]).toHaveAttribute('aria-label', '短信验证码 第 1 位');
+  });
+
+  it('每格标签走字典 pinInput.cell,可被 MessagesProvider 覆盖(含 label/index 插值)', () => {
+    render(
+      <MessagesProvider
+        messages={{ 'pinInput.label': 'Code', 'pinInput.cell': '{label} digit {index}' }}
+      >
+        <PinInput length={2} />
+      </MessagesProvider>,
+    );
+    const cells = screen.getAllByRole('textbox');
+    expect(cells[0]).toHaveAttribute('aria-label', 'Code digit 1');
+    expect(cells[1]).toHaveAttribute('aria-label', 'Code digit 2');
   });
 
   it('classNames 留口落到 root 与 cell;...rest 透传根容器属性', () => {

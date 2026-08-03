@@ -172,8 +172,7 @@ export const Breadcrumb = forwardRef<HTMLElement, BreadcrumbProps>(
                     className={['ms-breadcrumb__ellipsis', classNames?.ellipsis]
                       .filter(Boolean)
                       .join(' ')}
-                    // i18n: breadcrumb.expand 尚未登记到字典,先用中文字面量兜底(见 notes)
-                    aria-label={`展开省略的 ${collapsedCount} 项`}
+                    aria-label={t('breadcrumb.expand', { count: collapsedCount })}
                     aria-expanded={false}
                     onClick={() => setExpanded(true)}
                   >

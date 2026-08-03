@@ -3,6 +3,7 @@ import '@testing-library/jest-dom/vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { createRef } from 'react';
 import { describe, expect, it, vi } from 'vitest';
+import { MessagesProvider } from '../../i18n';
 import { TimePicker } from './TimePicker';
 
 describe('TimePicker', () => {
@@ -35,6 +36,29 @@ describe('TimePicker', () => {
     expect(screen.getByRole('combobox', { name: '时间' })).toHaveValue('01:05:00 PM');
     // 时/分/秒/子午线 = 4 列
     expect(screen.getAllByRole('listbox', { hidden: true })).toHaveLength(4);
+  });
+
+  it('列 aria-label 默认走字典 timePicker.*,可被 MessagesProvider 覆盖', () => {
+    const { rerender } = render(<TimePicker aria-label="时间" value="13:05:00" use12Hours />);
+    expect(
+      screen.getAllByRole('listbox', { hidden: true }).map((el) => el.getAttribute('aria-label')),
+    ).toEqual(['时', '分', '秒', '上午/下午']);
+
+    rerender(
+      <MessagesProvider
+        messages={{
+          'timePicker.hour': 'Hour',
+          'timePicker.minute': 'Minute',
+          'timePicker.second': 'Second',
+          'timePicker.meridiem': 'AM/PM',
+        }}
+      >
+        <TimePicker aria-label="时间" value="13:05:00" use12Hours />
+      </MessagesProvider>,
+    );
+    expect(
+      screen.getAllByRole('listbox', { hidden: true }).map((el) => el.getAttribute('aria-label')),
+    ).toEqual(['Hour', 'Minute', 'Second', 'AM/PM']);
   });
 
   it('点选某列的值触发 onChange,返回格式化字符串与 parts', () => {

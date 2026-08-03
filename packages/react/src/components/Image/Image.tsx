@@ -69,8 +69,8 @@ export interface ImageProps
   /** 错误态自定义内容;不传则显示内建图标 + i18n image.error 文案。 */
   fallback?: ReactNode;
   /**
-   * 灯箱工具按钮的 aria-label 覆盖(本组件 i18n 字典仅预置 image.error/image.preview,
-   * 这些更细的工具标签作为可覆盖 prop 给出中文默认值,便于按需本地化)。
+   * 灯箱工具按钮的 aria-label 覆盖;不传则走字典
+   * image.zoomIn / zoomOut / rotate / reset / close。
    */
   toolbarLabels?:
     | {
@@ -216,11 +216,11 @@ export const Image = forwardRef<HTMLImageElement, ImageProps>(function Image(
   const t = useMessages();
 
   const toolLabels = {
-    zoomOut: toolbarLabels?.zoomOut ?? '缩小',
-    zoomIn: toolbarLabels?.zoomIn ?? '放大',
-    rotate: toolbarLabels?.rotate ?? '旋转',
-    reset: toolbarLabels?.reset ?? '还原',
-    close: toolbarLabels?.close ?? '关闭',
+    zoomOut: toolbarLabels?.zoomOut ?? t('image.zoomOut'),
+    zoomIn: toolbarLabels?.zoomIn ?? t('image.zoomIn'),
+    rotate: toolbarLabels?.rotate ?? t('image.rotate'),
+    reset: toolbarLabels?.reset ?? t('image.reset'),
+    close: toolbarLabels?.close ?? t('image.close'),
   };
 
   // 来源回退:记录累计失败次数,交给纯函数 resolveSrc 决定当前 src / 是否错误态。

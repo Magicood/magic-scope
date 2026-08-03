@@ -2,6 +2,7 @@
 import '@testing-library/jest-dom/vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
+import { MessagesProvider } from '../../i18n';
 import { Breadcrumb } from './Breadcrumb';
 
 describe('Breadcrumb', () => {
@@ -173,6 +174,24 @@ describe('Breadcrumb', () => {
     expect(screen.getByText('C')).toBeInTheDocument();
     expect(screen.getByText('D')).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /展开省略/ })).not.toBeInTheDocument();
+  });
+
+  it('省略展开按钮标签走字典 breadcrumb.expand,可被 MessagesProvider 覆盖(含 count 插值)', () => {
+    render(
+      <MessagesProvider messages={{ 'breadcrumb.expand': 'Show {count} more' }}>
+        <Breadcrumb
+          maxItems={3}
+          items={[
+            { label: 'A', href: '/a' },
+            { label: 'B', href: '/b' },
+            { label: 'C', href: '/c' },
+            { label: 'D', href: '/d' },
+            { label: 'E' },
+          ]}
+        />
+      </MessagesProvider>,
+    );
+    expect(screen.getByRole('button', { name: 'Show 3 more' })).toBeInTheDocument();
   });
 
   it('linkAs 替换链接元素,itemRender / item.render 完全自定义渲染', () => {
