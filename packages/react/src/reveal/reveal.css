@@ -37,8 +37,12 @@
   );
 }
 
-/* —— 初态:派生受乘子门控的位移 / 缩放 / 模糊量 —— */
-[data-ms-reveal]:not([data-ms-inview]) {
+/* —— 初态:派生受乘子门控的位移 / 缩放 / 模糊量 ——
+ * scrub 族(parallax / progress)是持续滚动效果、无隐藏初态,必须排除:
+ * 它们的路径不写 data-ms-inview,keyframes 又不动 opacity,进了初态就永远 opacity:0。 */
+[data-ms-reveal]:not([data-ms-inview]):not([data-ms-reveal="parallax"]):not(
+  [data-ms-reveal="progress"]
+) {
   opacity: 0;
   --_d: calc(var(--ms-reveal-distance) * var(--ms-motion-scale, 1));
   --_blur: calc(var(--ms-reveal-blur) * var(--ms-motion-scale, 1));
