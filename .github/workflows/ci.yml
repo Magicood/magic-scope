@@ -54,6 +54,20 @@ jobs:
       - name: manifest.json 必须已提交最新结果
         run: git diff --exit-code registry/manifest.json
 
+      - name: docs 红线 (生成物与 meta/props/manifest 同步且已提交)
+        run: |
+          pnpm gen:docs
+          git diff --exit-code -- docs
+          UNTRACKED=$(git status --porcelain -- docs)
+          if [ -n "$UNTRACKED" ]; then
+            echo "::error::docs 生成物未提交(运行 pnpm gen:docs 后提交):"
+            echo "$UNTRACKED"
+            exit 1
+          fi
+
+      - name: docs 构建 (VitePress,含死链校验)
+        run: pnpm docs:build
+
       - name: 包发布质量 (publint)
         run: |
           npx -y publint packages/tokens
