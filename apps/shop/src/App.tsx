@@ -1,9 +1,10 @@
-import { Toaster } from '@magic-scope/react';
+import { ConfigProvider, Toaster } from '@magic-scope/react';
 import { AdminLayout } from './admin/AdminLayout';
 import { CartDrawer } from './components/CartDrawer';
 import { SiteFooter } from './components/SiteFooter';
 import { SiteHeader } from './components/SiteHeader';
 import { AppearanceProvider, type AppearanceState } from './lib/appearance';
+import { messagesEn } from './lib/messages-en';
 import {
   isAdminPath,
   orderIdFromPath,
@@ -27,8 +28,11 @@ export function App({ initialAppearance }: { initialAppearance: AppearanceState 
   return (
     <AppearanceProvider initial={initialAppearance}>
       <CartProvider>
-        <Routes />
-        <Toaster position="bottom-end" max={4} />
+        {/* 库组件文案全量切英文(默认字典是 zh-CN);Toaster 也要在 Provider 内取文案 */}
+        <ConfigProvider messages={messagesEn} locale="en">
+          <Routes />
+          <Toaster position="bottom-end" max={4} />
+        </ConfigProvider>
       </CartProvider>
     </AppearanceProvider>
   );

@@ -39,7 +39,13 @@ const ardenSeed = {
 };
 
 export const ardenLight = deriveTheme({ ...ardenSeed, scheme: 'light' });
-export const ardenDark = deriveTheme({ ...ardenSeed, scheme: 'dark' });
+// 深色端主色翻转为暖 bone 白(深底上深 ink CTA 会隐身),陶土点缀提亮一档
+export const ardenDark = deriveTheme({
+  ...ardenSeed,
+  primary: '#E7E1D5',
+  accent: '#C08A63',
+  scheme: 'dark',
+});
 
 /** 主题画廊数据源:品牌主题置顶,其后是库内置的 6 个预设家族。 */
 export const themeFamilies: ReadonlyArray<{ name: string; label: string }> = [
