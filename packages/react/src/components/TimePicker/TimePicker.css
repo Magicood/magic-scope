@@ -88,9 +88,11 @@
 }
 
 /* —— 交互态(在根容器上,因为 input 无边框) —— */
-.ms-time-picker:hover:not(.ms-time-picker--disabled) {
-  border-color: var(--ms-color-border-strong);
-  box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow, var(--ms-color-glow));
+@media (hover: hover) {
+  .ms-time-picker:hover:not(.ms-time-picker--disabled) {
+    border-color: var(--ms-color-border-strong);
+    box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow, var(--ms-color-glow));
+  }
 }
 
 /* 输入框聚焦时,把干净细环画到根容器 */

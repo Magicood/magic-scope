@@ -52,9 +52,12 @@
   color: var(--ms-c, var(--ms-color-primary));
 }
 
-.ms-select:hover:not(:disabled) {
-  border-color: var(--ms-color-border-strong);
-  box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow, var(--ms-color-glow));
+/* 装饰性 hover 守卫:仅具备 hover 能力的指针生效,触屏(hover: none)不再粘滞 */
+@media (hover: hover) {
+  .ms-select:hover:not(:disabled) {
+    border-color: var(--ms-color-border-strong);
+    box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow, var(--ms-color-glow));
+  }
 }
 
 .ms-select:focus-visible {
@@ -146,8 +149,10 @@
   opacity: 0.7;
   transition: opacity var(--ms-dur-fast) var(--ms-ease-standard);
 }
-.ms-select__tag-remove:hover {
-  opacity: 1;
+@media (hover: hover) {
+  .ms-select__tag-remove:hover {
+    opacity: 1;
+  }
 }
 
 /* —— 尺寸(逻辑属性 + 随密度缩放) —— */

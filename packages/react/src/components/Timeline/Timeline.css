@@ -241,8 +241,10 @@
   margin-inline: calc(var(--ms-space-2) * -1);
   transition: background-color var(--ms-dur-fast, 120ms) ease;
 }
-.ms-timeline__item--interactive:hover {
-  background-color: color-mix(in oklch, var(--ms-color-fg) 5%, transparent);
+@media (hover: hover) {
+  .ms-timeline__item--interactive:hover {
+    background-color: color-mix(in oklch, var(--ms-color-fg) 5%, transparent);
+  }
 }
 .ms-timeline__item--interactive.ms-timeline__item--active {
   background-color: var(--ms-tl-soft, color-mix(in oklch, var(--ms-color-fg) 8%, transparent));

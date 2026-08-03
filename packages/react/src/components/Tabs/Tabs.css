@@ -179,11 +179,13 @@
 }
 
 /* hover:字色提亮,pill 未选项预热背景(div role=tab 用 --disabled 修饰类排除) */
-.ms-tabs__tab:hover:not(.ms-tabs__tab--disabled):not(.ms-tabs__tab--selected) {
-  color: var(--ms-color-fg);
-}
-.ms-tabs--pill .ms-tabs__tab:hover:not(.ms-tabs__tab--disabled):not(.ms-tabs__tab--selected) {
-  background-color: var(--ms-color-surface);
+@media (hover: hover) {
+  .ms-tabs__tab:hover:not(.ms-tabs__tab--disabled):not(.ms-tabs__tab--selected) {
+    color: var(--ms-color-fg);
+  }
+  .ms-tabs--pill .ms-tabs__tab:hover:not(.ms-tabs__tab--disabled):not(.ms-tabs__tab--selected) {
+    background-color: var(--ms-color-surface);
+  }
 }
 
 /* 选中态字色 */
@@ -242,9 +244,11 @@
     opacity var(--ms-dur-fast) var(--ms-ease-standard),
     background-color var(--ms-dur-fast) var(--ms-ease-standard);
 }
-.ms-tabs__close:hover {
-  opacity: 1;
-  background-color: var(--ms-c-soft);
+@media (hover: hover) {
+  .ms-tabs__close:hover {
+    opacity: 1;
+    background-color: var(--ms-c-soft);
+  }
 }
 
 /* —— 新增按钮(addable) —— */
@@ -265,9 +269,11 @@
     color var(--ms-dur-fast) var(--ms-ease-standard),
     background-color var(--ms-dur-fast) var(--ms-ease-standard);
 }
-.ms-tabs__add:hover {
-  color: var(--ms-c);
-  background-color: var(--ms-c-soft);
+@media (hover: hover) {
+  .ms-tabs__add:hover {
+    color: var(--ms-c);
+    background-color: var(--ms-c-soft);
+  }
 }
 .ms-tabs__add:focus-visible {
   outline: none;

@@ -144,8 +144,19 @@
   font-size: 0.85em;
 }
 
-/* hover / focus 高亮:浮起表面 + 主色字 + 内侧微光导轨 */
-.ms-menu__item:hover:not(:disabled, [aria-disabled="true"]),
+/* hover 高亮:浮起表面 + 主色字 + 内侧微光导轨(hover 守卫:触屏不再粘滞) */
+@media (hover: hover) {
+  .ms-menu__item:hover:not(:disabled, [aria-disabled="true"]) {
+    outline: none;
+    background-color: var(--ms-c-soft);
+    color: var(--ms-c-hover);
+    box-shadow:
+      inset 2px 0 0 var(--ms-c),
+      0 0 calc(8px * var(--ms-fx-glow, 1)) -10px var(--ms-c-glow);
+  }
+}
+
+/* focus 高亮:与 hover 同观感,键盘聚焦全设备生效(不进 hover 守卫) */
 .ms-menu__item:focus-visible {
   outline: none;
   background-color: var(--ms-c-soft);
@@ -185,7 +196,15 @@
 .ms-menu__item--danger .ms-menu__check {
   color: var(--ms-color-danger);
 }
-.ms-menu__item--danger:hover:not(:disabled, [aria-disabled="true"]),
+@media (hover: hover) {
+  .ms-menu__item--danger:hover:not(:disabled, [aria-disabled="true"]) {
+    background-color: color-mix(in oklab, var(--ms-color-danger) 14%, transparent);
+    color: var(--ms-color-danger);
+    box-shadow:
+      inset 2px 0 0 var(--ms-color-danger),
+      0 0 calc(8px * var(--ms-fx-glow, 1)) -10px var(--ms-color-danger);
+  }
+}
 .ms-menu__item--danger:focus-visible {
   background-color: color-mix(in oklab, var(--ms-color-danger) 14%, transparent);
   color: var(--ms-color-danger);

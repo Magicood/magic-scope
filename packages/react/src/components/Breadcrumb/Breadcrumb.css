@@ -51,12 +51,15 @@
     box-shadow var(--ms-dur-base) var(--ms-ease-standard);
 }
 
-.ms-breadcrumb__link:hover {
-  color: var(--ms-c-hover);
-  background-color: var(--ms-c-soft);
-  /* hover 微光收敛:模糊半径乘 --ms-fx-glow,可被总闸关断 */
-  box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) -6px
-    color-mix(in oklch, var(--ms-c-glow) 70%, transparent);
+/* 装饰性 hover 守卫:仅具备 hover 能力的指针生效,触屏(hover: none)不再粘滞 */
+@media (hover: hover) {
+  .ms-breadcrumb__link:hover {
+    color: var(--ms-c-hover);
+    background-color: var(--ms-c-soft);
+    /* hover 微光收敛:模糊半径乘 --ms-fx-glow,可被总闸关断 */
+    box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) -6px
+      color-mix(in oklch, var(--ms-c-glow) 70%, transparent);
+  }
 }
 
 .ms-breadcrumb__link:active {
@@ -118,11 +121,13 @@
     box-shadow var(--ms-dur-base) var(--ms-ease-standard);
 }
 
-.ms-breadcrumb__ellipsis:hover {
-  color: var(--ms-c-hover);
-  background-color: var(--ms-c-soft);
-  box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) -6px
-    color-mix(in oklch, var(--ms-c-glow) 70%, transparent);
+@media (hover: hover) {
+  .ms-breadcrumb__ellipsis:hover {
+    color: var(--ms-c-hover);
+    background-color: var(--ms-c-soft);
+    box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) -6px
+      color-mix(in oklch, var(--ms-c-glow) 70%, transparent);
+  }
 }
 
 .ms-breadcrumb__ellipsis:focus-visible {

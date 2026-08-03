@@ -33,8 +33,10 @@
   color: var(--ms-color-fg-subtle);
 }
 
-.ms-mentions__textarea:hover:not(:disabled) {
-  border-color: var(--ms-color-border-strong);
+@media (hover: hover) {
+  .ms-mentions__textarea:hover:not(:disabled) {
+    border-color: var(--ms-color-border-strong);
+  }
 }
 
 .ms-mentions__textarea:focus-visible {

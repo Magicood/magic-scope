@@ -224,9 +224,12 @@
   border-color: transparent;
 }
 
-.ms-tour__btn--ghost:hover {
-  color: var(--ms-color-fg);
-  background-color: var(--ms-color-surface-sunken);
+/* 装饰性 hover 守卫:仅具备 hover 能力的指针生效,触屏(hover: none)不再粘滞 */
+@media (hover: hover) {
+  .ms-tour__btn--ghost:hover {
+    color: var(--ms-color-fg);
+    background-color: var(--ms-color-surface-sunken);
+  }
 }
 
 .ms-tour__btn--primary {
@@ -235,8 +238,10 @@
   border-color: transparent;
 }
 
-.ms-tour__btn--primary:hover {
-  filter: brightness(1.06);
+@media (hover: hover) {
+  .ms-tour__btn--primary:hover {
+    filter: brightness(1.06);
+  }
 }
 
 [data-ms-fx="off"] .ms-tour__btn--primary {
@@ -264,9 +269,11 @@
     background-color var(--ms-dur-base) var(--ms-ease-standard);
 }
 
-.ms-tour__skip-x:hover {
-  color: var(--ms-color-fg);
-  background-color: var(--ms-color-surface-sunken);
+@media (hover: hover) {
+  .ms-tour__skip-x:hover {
+    color: var(--ms-color-fg);
+    background-color: var(--ms-color-surface-sunken);
+  }
 }
 
 .ms-tour__skip-x:focus-visible {

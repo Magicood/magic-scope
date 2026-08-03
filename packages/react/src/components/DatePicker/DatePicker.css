@@ -38,8 +38,10 @@
   padding-block: calc(var(--ms-space-3) * var(--ms-density-scale, 1));
   font-size: 1.0625em;
 }
-.ms-datepicker__trigger:hover:not(:disabled) {
-  border-color: var(--ms-color-border-strong);
+@media (hover: hover) {
+  .ms-datepicker__trigger:hover:not(:disabled) {
+    border-color: var(--ms-color-border-strong);
+  }
 }
 .ms-datepicker__trigger:focus-visible {
   outline: none;
@@ -96,9 +98,11 @@
   color: var(--ms-color-fg);
   cursor: pointer;
 }
-.ms-datepicker__preset:hover {
-  border-color: var(--ms-c, var(--ms-color-primary));
-  color: var(--ms-c, var(--ms-color-primary));
+@media (hover: hover) {
+  .ms-datepicker__preset:hover {
+    border-color: var(--ms-c, var(--ms-color-primary));
+    color: var(--ms-c, var(--ms-color-primary));
+  }
 }
 .ms-datepicker__footer {
   display: flex;
@@ -124,9 +128,11 @@
 .ms-datepicker__clear-btn {
   color: var(--ms-color-fg-muted);
 }
-.ms-datepicker__today:hover,
-.ms-datepicker__clear-btn:hover {
-  background: var(--ms-color-surface-sunken);
+@media (hover: hover) {
+  .ms-datepicker__today:hover,
+  .ms-datepicker__clear-btn:hover {
+    background: var(--ms-color-surface-sunken);
+  }
 }
 
 /* ── Calendar ── */
@@ -156,9 +162,11 @@
   color: var(--ms-color-fg-muted);
   cursor: pointer;
 }
-.ms-calendar__nav:hover:not(:disabled) {
-  background: var(--ms-color-surface-sunken);
-  color: var(--ms-color-fg);
+@media (hover: hover) {
+  .ms-calendar__nav:hover:not(:disabled) {
+    background: var(--ms-color-surface-sunken);
+    color: var(--ms-color-fg);
+  }
 }
 .ms-calendar__nav:disabled {
   opacity: 0.4;
@@ -179,8 +187,10 @@
   cursor: default;
   text-align: center;
 }
-.ms-calendar__label:not(.ms-calendar__label--static):hover {
-  background: var(--ms-color-surface-sunken);
+@media (hover: hover) {
+  .ms-calendar__label:not(.ms-calendar__label--static):hover {
+    background: var(--ms-color-surface-sunken);
+  }
 }
 
 .ms-calendar__grid {
@@ -214,8 +224,10 @@
   position: relative;
   transition: background var(--ms-dur-fast, 0.12s) var(--ms-ease-standard, ease);
 }
-.ms-calendar__cell:hover:not(:disabled):not(.ms-calendar__cell--selected) {
-  background: var(--ms-color-surface-sunken);
+@media (hover: hover) {
+  .ms-calendar__cell:hover:not(:disabled):not(.ms-calendar__cell--selected) {
+    background: var(--ms-color-surface-sunken);
+  }
 }
 .ms-calendar__cell--outside {
   color: var(--ms-color-fg-subtle);
@@ -266,8 +278,10 @@
   color: var(--ms-color-fg);
   cursor: pointer;
 }
-.ms-calendar__panel-cell:hover:not(:disabled):not(.ms-calendar__cell--selected) {
-  background: var(--ms-color-surface-sunken);
+@media (hover: hover) {
+  .ms-calendar__panel-cell:hover:not(:disabled):not(.ms-calendar__cell--selected) {
+    background: var(--ms-color-surface-sunken);
+  }
 }
 .ms-calendar__panel-cell:disabled {
   opacity: 0.4;

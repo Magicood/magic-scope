@@ -205,9 +205,11 @@
   transition: box-shadow var(--ms-dur-base, 240ms) var(--ms-ease-standard, ease);
 }
 
-.ms-descriptions--bordered:hover .ms-descriptions__body {
-  box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 0)) -2px
-    color-mix(in oklch, var(--ms-c-glow) 40%, transparent);
+@media (hover: hover) {
+  .ms-descriptions--bordered:hover .ms-descriptions__body {
+    box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 0)) -2px
+      color-mix(in oklch, var(--ms-c-glow) 40%, transparent);
+  }
 }
 
 /* 减动 / 关动效:去掉过渡与发光 */
