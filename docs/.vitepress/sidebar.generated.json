@@ -1,0 +1,445 @@
+[
+  {
+    "text": "指南",
+    "items": [
+      {
+        "text": "组件总览",
+        "link": "/"
+      },
+      {
+        "text": "多端 / 设备适配",
+        "link": "/responsive"
+      }
+    ]
+  },
+  {
+    "text": "操作 Actions",
+    "collapsed": false,
+    "items": [
+      {
+        "text": "Button",
+        "link": "/components/button"
+      },
+      {
+        "text": "CopyButton",
+        "link": "/components/copy-button"
+      },
+      {
+        "text": "Toggle",
+        "link": "/components/toggle"
+      },
+      {
+        "text": "Toolbar",
+        "link": "/components/toolbar"
+      }
+    ]
+  },
+  {
+    "text": "文字排版 Typography",
+    "collapsed": false,
+    "items": [
+      {
+        "text": "Kbd",
+        "link": "/components/kbd"
+      },
+      {
+        "text": "Blockquote",
+        "link": "/components/blockquote"
+      },
+      {
+        "text": "Code",
+        "link": "/components/code"
+      },
+      {
+        "text": "Heading",
+        "link": "/components/heading"
+      },
+      {
+        "text": "Link",
+        "link": "/components/link"
+      },
+      {
+        "text": "List",
+        "link": "/components/list"
+      },
+      {
+        "text": "Mark",
+        "link": "/components/mark"
+      },
+      {
+        "text": "Paragraph",
+        "link": "/components/paragraph"
+      },
+      {
+        "text": "Prose",
+        "link": "/components/prose"
+      },
+      {
+        "text": "Text",
+        "link": "/components/text"
+      }
+    ]
+  },
+  {
+    "text": "布局 Layout",
+    "collapsed": false,
+    "items": [
+      {
+        "text": "Card",
+        "link": "/components/card"
+      },
+      {
+        "text": "Divider",
+        "link": "/components/divider"
+      },
+      {
+        "text": "AspectRatio",
+        "link": "/components/aspect-ratio"
+      },
+      {
+        "text": "Center",
+        "link": "/components/center"
+      },
+      {
+        "text": "Container",
+        "link": "/components/container"
+      },
+      {
+        "text": "Flex",
+        "link": "/components/flex"
+      },
+      {
+        "text": "Grid",
+        "link": "/components/grid"
+      },
+      {
+        "text": "ScrollArea",
+        "link": "/components/scroll-area"
+      },
+      {
+        "text": "Splitter",
+        "link": "/components/splitter"
+      },
+      {
+        "text": "Stack",
+        "link": "/components/stack"
+      },
+      {
+        "text": "VisuallyHidden",
+        "link": "/components/visually-hidden"
+      },
+      {
+        "text": "Watermark",
+        "link": "/components/watermark"
+      }
+    ]
+  },
+  {
+    "text": "表单 Forms",
+    "collapsed": false,
+    "items": [
+      {
+        "text": "Input",
+        "link": "/components/input"
+      },
+      {
+        "text": "Textarea",
+        "link": "/components/textarea"
+      },
+      {
+        "text": "Label",
+        "link": "/components/label"
+      },
+      {
+        "text": "Checkbox",
+        "link": "/components/checkbox"
+      },
+      {
+        "text": "Switch",
+        "link": "/components/switch"
+      },
+      {
+        "text": "Radio",
+        "link": "/components/radio"
+      },
+      {
+        "text": "Select",
+        "link": "/components/select"
+      },
+      {
+        "text": "Slider",
+        "link": "/components/slider"
+      },
+      {
+        "text": "NumberInput",
+        "link": "/components/number-input"
+      },
+      {
+        "text": "AutoComplete",
+        "link": "/components/auto-complete"
+      },
+      {
+        "text": "Cascader",
+        "link": "/components/cascader"
+      },
+      {
+        "text": "ColorPicker",
+        "link": "/components/color-picker"
+      },
+      {
+        "text": "DatePicker",
+        "link": "/components/date-picker"
+      },
+      {
+        "text": "Editable",
+        "link": "/components/editable"
+      },
+      {
+        "text": "Form",
+        "link": "/components/form"
+      },
+      {
+        "text": "Mentions",
+        "link": "/components/mentions"
+      },
+      {
+        "text": "PinInput",
+        "link": "/components/pin-input"
+      },
+      {
+        "text": "Rate",
+        "link": "/components/rate"
+      },
+      {
+        "text": "Segmented",
+        "link": "/components/segmented"
+      },
+      {
+        "text": "TagInput",
+        "link": "/components/tag-input"
+      },
+      {
+        "text": "TimePicker",
+        "link": "/components/time-picker"
+      },
+      {
+        "text": "Upload",
+        "link": "/components/upload"
+      }
+    ]
+  },
+  {
+    "text": "数据展示 Data Display",
+    "collapsed": false,
+    "items": [
+      {
+        "text": "Badge",
+        "link": "/components/badge"
+      },
+      {
+        "text": "Tag",
+        "link": "/components/tag"
+      },
+      {
+        "text": "Avatar",
+        "link": "/components/avatar"
+      },
+      {
+        "text": "Table",
+        "link": "/components/table"
+      },
+      {
+        "text": "Timeline",
+        "link": "/components/timeline"
+      },
+      {
+        "text": "Calendar",
+        "link": "/components/calendar"
+      },
+      {
+        "text": "Carousel",
+        "link": "/components/carousel"
+      },
+      {
+        "text": "Collapsible",
+        "link": "/components/collapsible"
+      },
+      {
+        "text": "Descriptions",
+        "link": "/components/descriptions"
+      },
+      {
+        "text": "Image",
+        "link": "/components/image"
+      },
+      {
+        "text": "Marquee",
+        "link": "/components/marquee"
+      },
+      {
+        "text": "Statistic",
+        "link": "/components/statistic"
+      },
+      {
+        "text": "Transfer",
+        "link": "/components/transfer"
+      },
+      {
+        "text": "Tree",
+        "link": "/components/tree"
+      }
+    ]
+  },
+  {
+    "text": "反馈 Feedback",
+    "collapsed": false,
+    "items": [
+      {
+        "text": "Alert",
+        "link": "/components/alert"
+      },
+      {
+        "text": "Progress",
+        "link": "/components/progress"
+      },
+      {
+        "text": "Spinner",
+        "link": "/components/spinner"
+      },
+      {
+        "text": "Skeleton",
+        "link": "/components/skeleton"
+      },
+      {
+        "text": "Toast",
+        "link": "/components/toast"
+      },
+      {
+        "text": "Empty",
+        "link": "/components/empty"
+      },
+      {
+        "text": "Result",
+        "link": "/components/result"
+      },
+      {
+        "text": "Spin",
+        "link": "/components/spin"
+      },
+      {
+        "text": "Tour",
+        "link": "/components/tour"
+      }
+    ]
+  },
+  {
+    "text": "导航 Navigation",
+    "collapsed": false,
+    "items": [
+      {
+        "text": "Breadcrumb",
+        "link": "/components/breadcrumb"
+      },
+      {
+        "text": "Pagination",
+        "link": "/components/pagination"
+      },
+      {
+        "text": "Tabs",
+        "link": "/components/tabs"
+      },
+      {
+        "text": "Accordion",
+        "link": "/components/accordion"
+      },
+      {
+        "text": "Affix",
+        "link": "/components/affix"
+      },
+      {
+        "text": "Anchor",
+        "link": "/components/anchor"
+      },
+      {
+        "text": "BackTop",
+        "link": "/components/back-top"
+      },
+      {
+        "text": "Command",
+        "link": "/components/command"
+      },
+      {
+        "text": "Dropdown",
+        "link": "/components/dropdown"
+      },
+      {
+        "text": "FloatButton",
+        "link": "/components/float-button"
+      },
+      {
+        "text": "Menubar",
+        "link": "/components/menubar"
+      },
+      {
+        "text": "NavigationMenu",
+        "link": "/components/navigation-menu"
+      },
+      {
+        "text": "Steps",
+        "link": "/components/steps"
+      }
+    ]
+  },
+  {
+    "text": "浮层 Overlay",
+    "collapsed": false,
+    "items": [
+      {
+        "text": "Dialog",
+        "link": "/components/dialog"
+      },
+      {
+        "text": "Drawer",
+        "link": "/components/drawer"
+      },
+      {
+        "text": "Popover",
+        "link": "/components/popover"
+      },
+      {
+        "text": "Tooltip",
+        "link": "/components/tooltip"
+      },
+      {
+        "text": "Menu",
+        "link": "/components/menu"
+      },
+      {
+        "text": "ContextMenu",
+        "link": "/components/context-menu"
+      },
+      {
+        "text": "AlertDialog",
+        "link": "/components/alert-dialog"
+      },
+      {
+        "text": "HoverCard",
+        "link": "/components/hover-card"
+      }
+    ]
+  },
+  {
+    "text": "复合 Composite",
+    "collapsed": false,
+    "items": [
+      {
+        "text": "Popconfirm",
+        "link": "/components/popconfirm"
+      },
+      {
+        "text": "ConfigProvider",
+        "link": "/components/config-provider"
+      }
+    ]
+  }
+]
