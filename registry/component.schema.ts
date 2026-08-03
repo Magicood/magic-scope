@@ -2,7 +2,8 @@ import { z } from 'zod';
 
 /** 溯源元数据:component.json 的核心,「有迹可循 + 可落库」的关键。 */
 export const sourceSchema = z
-  .object({
+  // strictObject:未知键直接报错而非静默剥离 —— 曾有 4 个组件把 notes 写进 source 被 zod 悄悄丢掉。
+  .strictObject({
     /** original=自研原创;inspired=受外部启发重做;captured=按截图 / 页面复刻。 */
     type: z.enum(['original', 'inspired', 'captured']),
     /** 来源链接(在线 URL / 设计稿);inspired·captured 至少给一项证据。 */
@@ -15,6 +16,8 @@ export const sourceSchema = z
     capturedAt: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'capturedAt 需为 YYYY-MM-DD'),
     /** 当时的需求原文 / 设计意图 —— 溯源的「为什么」。 */
     requirements: z.string().min(10, 'requirements 太短,应写真实需求原文 / 设计意图'),
+    /** 兼容性 / 坑位的透明备注(诚实边界、已知契约),随组件落库对外可见。 */
+    notes: z.string().optional(),
   })
   // 受启发 / 复刻的组件必须至少留一项外部证据,否则「可追溯」名存实亡;original 自研免证据。
   .refine((s) => s.type === 'original' || Boolean(s.url || s.app || s.screenshot), {
@@ -24,7 +27,7 @@ export const sourceSchema = z
   });
 
 /** 每个组件一份 component.json,经此 schema 校验后写入 registry/manifest.json。 */
-export const componentSchema = z.object({
+export const componentSchema = z.strictObject({
   id: z.string(),
   name: z.string(),
   description: z.string(),

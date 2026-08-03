@@ -44,6 +44,19 @@ describe('sourceSchema 溯源校验', () => {
     const r = sourceSchema.safeParse({ ...base, type: 'inspired', url: 'not-a-url' });
     expect(r.success).toBe(false);
   });
+
+  it('source.notes 透明备注:可选,且解析后保留(曾被 zod strip 静默剥离)', () => {
+    const r = sourceSchema.safeParse({ ...base, notes: '兼容性边界:X 场景需用户自行接 ref。' });
+    expect(r.success).toBe(true);
+    if (r.success) {
+      expect(r.data.notes).toBe('兼容性边界:X 场景需用户自行接 ref。');
+    }
+  });
+
+  it('source 内未知键:拒绝而非静默剥离', () => {
+    const r = sourceSchema.safeParse({ ...base, remark: '写错字段名' });
+    expect(r.success).toBe(false);
+  });
 });
 
 const comp = {
@@ -72,5 +85,9 @@ describe('componentSchema tier / frameworks', () => {
 
   it('frameworks 接受 angular(多框架地基已就位)', () => {
     expect(componentSchema.safeParse({ ...comp, frameworks: ['angular'] }).success).toBe(true);
+  });
+
+  it('顶层未知键(如 notes 写错位置):拒绝而非静默剥离,备注应写进 source.notes', () => {
+    expect(componentSchema.safeParse({ ...comp, notes: '写错位置的备注' }).success).toBe(false);
   });
 });
