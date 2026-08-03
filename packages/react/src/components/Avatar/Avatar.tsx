@@ -6,7 +6,7 @@ import type {
   SyntheticEvent,
 } from 'react';
 import { cloneElement, forwardRef, isValidElement, useState } from 'react';
-import { type MessageKey, useMessages } from '../../i18n';
+import { useMessages } from '../../i18n';
 import { type AvatarTone, getInitials, toneFromName } from './logic';
 
 export type AvatarSize = 'sm' | 'md' | 'lg';
@@ -211,21 +211,14 @@ export const Avatar = forwardRef<HTMLSpanElement, AvatarProps>(
 );
 Avatar.displayName = 'Avatar';
 
-/** 状态点的无障碍标签兜底中文(字典暂无 avatar.status.* key,见 notes)。 */
-const STATUS_LABEL: Record<AvatarStatus, string> = {
-  online: '在线',
-  offline: '离线',
-  busy: '忙碌',
-  away: '离开',
-};
-
 /**
- * 状态点的无障碍标签:优先走字典 avatar.status.*(尚未登记,见 notes),缺失回退兜底中文。
- * key 暂不在 MessageKey 联合内,以 MessageKey 断言过渡;登记后 t 自动命中。
+ * 状态点的无障碍标签,走字典 avatar.status.*(模板串由 AvatarStatus 收窄,天然落在 MessageKey 内)。
+ *
+ * 必须写成 const 箭头函数:react-docgen-typescript 若在 Avatar 与 AvatarGroup 之间读到
+ * `function` 声明,会把 Avatar 的 props 解析成空,props.json / 文档站的 Avatar 参数表会整张消失。
  */
-function statusLabel(t: ReturnType<typeof useMessages>, status: AvatarStatus): string {
-  return t(`avatar.status.${status}` as MessageKey, undefined, STATUS_LABEL[status]);
-}
+const statusLabel = (t: ReturnType<typeof useMessages>, status: AvatarStatus): string =>
+  t(`avatar.status.${status}`);
 
 export type AvatarGroupSpacing = 'tight' | 'normal' | 'loose';
 
