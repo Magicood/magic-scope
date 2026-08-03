@@ -44,9 +44,7 @@ export type MessageKey =
   | 'select.empty'
   | 'select.loading'
   | 'select.search'
-  | 'select.create'
   | 'select.removeTag'
-  | 'select.selected'
   | 'table.empty'
   | 'table.selectAll'
   | 'table.selectRow'
@@ -88,7 +86,6 @@ export type MessageKey =
   | 'form.email'
   | 'form.url'
   | 'form.validating'
-  | 'form.submitError'
   | 'form.errorSummary'
   | 'datePicker.placeholder'
   | 'datePicker.rangeStart'
@@ -175,9 +172,7 @@ export const defaultMessages: Messages = {
   'select.empty': '无匹配项',
   'select.loading': '加载中…',
   'select.search': '搜索…',
-  'select.create': '创建 “{query}”',
   'select.removeTag': '移除 {label}',
-  'select.selected': '已选 {count} 项',
   'table.empty': '暂无数据',
   'table.selectAll': '全选',
   'table.selectRow': '选择第 {index} 行',
@@ -219,7 +214,6 @@ export const defaultMessages: Messages = {
   'form.email': '请输入有效的邮箱地址',
   'form.url': '请输入有效的网址',
   'form.validating': '校验中…',
-  'form.submitError': '提交失败,请检查表单',
   'form.errorSummary': '表单有 {count} 处错误',
   'datePicker.placeholder': '请选择日期',
   'datePicker.rangeStart': '开始日期',

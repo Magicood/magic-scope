@@ -45532,7 +45532,7 @@
       "name": "multiple",
       "type": "boolean",
       "default": "—",
-      "description": "多选模式:trigger 显示 tag,select.removeTag/selected 文案。",
+      "description": "多选模式:trigger 逐条显示 tag,每个 tag 的移除按钮走 select.removeTag 文案。",
       "required": false,
       "native": false
     },

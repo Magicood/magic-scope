@@ -110,10 +110,14 @@
   transition: box-shadow var(--ms-dur-fast, 0.15s) var(--ms-ease-standard, ease);
 }
 
-/* ── validating 旋转图标(校验中微动效) ── */
-.ms-form__item--validating .ms-form__control::after {
-  content: "";
-  position: absolute;
+/* ── validating 状态行(role=status)+ 旋转图标(校验中微动效) ── */
+.ms-form__validating {
+  display: flex;
+  align-items: center;
+  gap: var(--ms-space-1);
+  font-size: 0.85em;
+  line-height: 1.4;
+  color: var(--ms-color-fg-muted);
 }
 .ms-form__validating-rune {
   display: inline-block;

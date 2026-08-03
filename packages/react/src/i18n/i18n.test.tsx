@@ -55,7 +55,7 @@ describe('i18n / React 绑定', () => {
   it('MessagesProvider 覆盖文案,且支持插值', () => {
     render(
       <MessagesProvider
-        messages={{ 'select.placeholder': 'Pick one', 'select.selected': '选了 {count} 个' }}
+        messages={{ 'select.placeholder': 'Pick one', 'table.selectRow': '选第 {index} 行' }}
       >
         <Probe k="select.placeholder" />
       </MessagesProvider>,

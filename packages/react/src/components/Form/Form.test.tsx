@@ -2,6 +2,7 @@
 import '@testing-library/jest-dom/vitest';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
+import { MessagesProvider } from '../../i18n';
 import { Checkbox } from '../Checkbox';
 import { Input } from '../Input';
 import { Field, Form, useForm, useWatch } from './index';
@@ -104,6 +105,67 @@ describe('Form 集成', () => {
     const input = screen.getByRole('textbox', { name: /姓名/ });
     expect(input).toHaveAttribute('aria-invalid', 'true');
     expect(input.getAttribute('aria-describedby')).toContain(alert.id);
+  });
+
+  it('异步校验进行中渲染 role=status 的 form.validating 状态行,完成后消失', async () => {
+    let release: (() => void) | undefined;
+    function AsyncHarness() {
+      const form = useForm<{ nick: string }>({
+        defaultValues: { nick: '' },
+        mode: 'onChange',
+      });
+      return (
+        <Form form={form} onSubmit={() => {}}>
+          <Form.Field
+            name="nick"
+            label="昵称"
+            rule={{
+              validate: () =>
+                new Promise<true>((resolve) => {
+                  release = () => resolve(true);
+                }),
+            }}
+          >
+            <Input />
+          </Form.Field>
+        </Form>
+      );
+    }
+    render(<AsyncHarness />);
+    fireEvent.change(screen.getByRole('textbox', { name: /昵称/ }), { target: { value: 'ada' } });
+
+    const status = await screen.findByRole('status');
+    expect(status).toHaveTextContent('校验中…');
+
+    release?.();
+    await waitFor(() => expect(screen.queryByRole('status')).not.toBeInTheDocument());
+  });
+
+  it('校验中文案走字典 form.validating,可被 MessagesProvider 覆盖', async () => {
+    function AsyncHarness() {
+      const form = useForm<{ nick: string }>({
+        defaultValues: { nick: '' },
+        mode: 'onChange',
+      });
+      return (
+        <Form form={form} onSubmit={() => {}}>
+          <Form.Field
+            name="nick"
+            label="昵称"
+            rule={{ validate: () => new Promise<true>(() => {}) }}
+          >
+            <Input />
+          </Form.Field>
+        </Form>
+      );
+    }
+    render(
+      <MessagesProvider messages={{ 'form.validating': 'Checking…' }}>
+        <AsyncHarness />
+      </MessagesProvider>,
+    );
+    fireEvent.change(screen.getByRole('textbox', { name: /昵称/ }), { target: { value: 'ada' } });
+    expect(await screen.findByRole('status')).toHaveTextContent('Checking…');
   });
 
   it('提交失败聚焦首个错误字段', async () => {
