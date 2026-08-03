@@ -23,6 +23,13 @@
 
 > **git 历史 + Changesets changelog = 「有迹可循」;`component.json` = 「可落库」。**
 
+当前规模:
+
+- **94 个无障碍 React 组件**(9 大分类),全部带溯源元数据与测试(2100+ 用例)
+- **主题引擎:6 家族 × 明暗 = 12 套预设**,由 seed 派生零硬编码;主题 / 明暗 / 密度 / 动效 / 光影五维运行时一键切换
+- **进场 / 滚动特效系统**(Reveal,29 种变体 × 3 种触发),自研零依赖,自动尊重 `prefers-reduced-motion`
+- 实时展示站(94 组件全覆盖 + 主题画廊)与两个实战样板站(SaaS 营销 / 电商)
+
 完整的设计背景、技术选型理由与路线图见 [`FOUNDATION.md`](./FOUNDATION.md);
 Claude Code 的操作约定见 [`CLAUDE.md`](./CLAUDE.md)。
 
@@ -60,10 +67,15 @@ pnpm monorepo · TypeScript (strict) · [tsup](https://tsup.egoist.dev/) · [Bio
 ```
 magic-scope/
 ├── packages/
-│   ├── tokens/     # 设计 token(多框架共享标准;@magic-scope/tokens)
-│   └── react/      # React 组件包(@magic-scope/react,依赖 tokens)
+│   ├── tokens/     # 设计 token + 主题引擎(多框架共享标准;@magic-scope/tokens)
+│   ├── react/      # React 组件包(@magic-scope/react,依赖 tokens)
+│   └── core/       # 框架无关 headless 内核(Phase 2,private 未发布)
+├── playground/     # 组件快速试验场 + showcase/ 实时展示站(94 组件全覆盖)
+├── apps/
+│   ├── demo/       # Vela:SaaS 营销样板站(深色,特效编排示范)
+│   └── shop/       # Daybreak:电商样板站(浅色)
 ├── registry/       # component.json 的 zod schema + 索引脚本(扫描 → manifest.json)
-├── scripts/        # new-component.ts 组件生成器
+├── scripts/        # new-component.ts 组件生成器等
 ├── docs/           # VitePress 文档站
 ├── CLAUDE.md       # Claude Code 操作手册
 └── FOUNDATION.md   # 设计存档 + 落地规范 + 路线图
@@ -126,13 +138,13 @@ pnpm run version  # 2. 升 semver + 生成 CHANGELOG(用 run,pnpm version 是内
 pnpm release      # 3. 构建 + changeset publish 到 npm
 ```
 
-发布包以 `@magic-scope/*` 命名,走 `exports` map 导出并标注 `sideEffects` 以保证 tree-shaking。`@magic-scope` scope 已注册,`@magic-scope/tokens`、`@magic-scope/react` 已首发 `0.1.0`(public);后续发新版本按上面三步走。
+发布包以 `@magic-scope/*` 命名,走 `exports` map 导出并标注 `sideEffects` 以保证 tree-shaking。`@magic-scope/tokens`、`@magic-scope/react` 已发布 npm(当前版本见上方 badge);日常发版由 CI 完成:merge 进 `main` 后 changesets 自动开 Version PR,合并即发布(OIDC Trusted Publishing,见 `.github/RELEASING.md`)。
 
 ## 路线图
 
-- **Phase 0(已完成):** 仓库 + monorepo + `tokens` + `react`(26 组件)+ registry + 生成器 + VitePress + 发布链路;`build / registry / docs` 跑通,`0.1.0` 已首发 npm。
-- **Phase 1(现在):** 把「脚手架 → 实现 → 元数据 → test → changeset → commit → push → 建索引」包成一条 Claude Code 命令 / skill。
-- **Phase 2:** Web Component 内核(`packages/core`)+ Vue 封装(`packages/vue`);docs 自动生成;SQLite 索引 + 前台浏览;GitHub Actions CI。
+- **Phase 0(已完成):** 仓库 + monorepo + `tokens` + `react` + registry + 生成器 + VitePress + 发布链路 + GitHub Actions CI(lint / typecheck / test / 展示站红线 / publint / 体积守卫)。
+- **Phase 1(现在):** 组件规模化(已至 94)+ 展示站 / 文档站 / 样板站上线;把「脚手架 → 实现 → 元数据 → test → changeset → commit → push → 建索引」包成一条 Claude Code 命令 / skill。
+- **Phase 2:** 框架无关内核(`packages/core`,已起步)+ Vue / Web Component 封装;docs 从展示站真相源自动生成;SQLite 索引 + 前台浏览。
 
 ## License
 
