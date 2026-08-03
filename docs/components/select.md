@@ -30,7 +30,7 @@
 | `tone` | `"primary" \| "accent" \| "success" \| "warning" \| "danger" \| "info"` | — | 语义色调,派生高亮/打勾/发光。默认 primary。 |
 | `disabled` | `boolean` | — | 是否禁用整个选择器。 |
 | `loading` | `boolean` | — | 加载态:listbox 显示加载文案、trigger 不可展开内容。 |
-| `multiple` | `boolean` | — | 多选模式:trigger 显示 tag,select.removeTag/selected 文案。 |
+| `multiple` | `boolean` | — | 多选模式:trigger 逐条显示 tag,每个 tag 的移除按钮走 select.removeTag 文案。 |
 | `searchable` | `boolean` | — | 可搜索:listbox 顶部内联搜索框,按 query 过滤。 |
 | `clearable` | `boolean` | — | 有值时显示清除按钮(走 input.clear)。 |
 | `prefix` | `ReactNode` | — | trigger 前置内容(图标 / 文字)。 |

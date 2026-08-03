@@ -24,7 +24,7 @@
 | `bounds` | `number` | `5` | 命中边界(像素容差),越大越「提前」命中下一节。默认 5。 |
 | `size` | `"sm" \| "md" \| "lg"` | `md` | 尺寸(字号 / 行距 / 缩进随 data-ms-density 缩放)。默认 md。 |
 | `showInk` | `boolean` | `true` | 墨条指示器开关。默认 true。 |
-| `ariaLabel` | `string` | `页内导航` | nav 的可访问名(landmark 标签)。默认「页内导航」。 |
+| `ariaLabel` | `string` | — | nav 的可访问名(landmark 标签)。不传则走字典 anchor.nav(默认「页内导航」)。 |
 | `classNames` | `AnchorClassNames` | — | 子部件类名留口(细粒度槽位)。 |
 | `...props` | `ComponentPropsWithoutRef<'nav'>` | — | 透传原生 nav 属性(className / style / aria-* / 事件等)。 |
 

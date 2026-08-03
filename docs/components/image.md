@@ -29,7 +29,7 @@
 | `previewOpen` | `boolean` | — | 受控:预览灯箱是否打开(配合 onPreviewOpenChange)。 |
 | `placeholder` | `ReactNode` | — | 加载中占位(自定义 skeleton / 内容);不传则用内建脉冲骨架。 |
 | `fallback` | `ReactNode` | — | 错误态自定义内容;不传则显示内建图标 + i18n image.error 文案。 |
-| `toolbarLabels` | `{ zoomIn?: string; zoomOut?: string; rotate?: string \| undefined; reset?: string \| undefined; close?: string \| undefined; } \| undefined` | — | 灯箱工具按钮的 aria-label 覆盖(本组件 i18n 字典仅预置 image.error/image.preview,<br>这些更细的工具标签作为可覆盖 prop 给出中文默认值,便于按需本地化)。 |
+| `toolbarLabels` | `{ zoomIn?: string; zoomOut?: string; rotate?: string \| undefined; reset?: string \| undefined; close?: string \| undefined; } \| undefined` | — | 灯箱工具按钮的 aria-label 覆盖;不传则走字典<br>image.zoomIn / zoomOut / rotate / reset / close。 |
 | `className` | `string` | — | 组件根 className(&lt;figure&gt; 包裹层)。 |
 | `classNames` | `{ root?: string; img?: string; skeleton?: string \| undefined; error?: string \| undefined; preview?: string \| undefined; previewImg?: string \| undefined; toolbar?: string \| undefined; } \| undefined` | — | 分槽 className:根 / img / 骨架 / 错误态 / 灯箱遮罩 / 灯箱大图 / 工具栏。 |
 | `...props` | `ComponentPropsWithoutRef<'img'>` | — | 透传原生 img 属性(className / style / aria-* / 事件等)。 |
