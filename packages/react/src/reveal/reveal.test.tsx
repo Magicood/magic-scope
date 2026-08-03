@@ -113,4 +113,17 @@ describe('reveal.css 契约', () => {
     expect(revealCss).toContain('animation-timeline');
     expect(revealCss).toContain('prefers-reduced-motion');
   });
+
+  it('scrub 族(parallax/progress)排除出隐藏初态 —— 不写 data-ms-inview 也可见(回归:恒 opacity:0 隐身)', () => {
+    // 格式化可能折行长选择器,先压掉空白再断言
+    const hiddenRules = revealCss
+      .split('}')
+      .map((rule) => rule.replace(/\s+/g, ''))
+      .filter((rule) => rule.includes('opacity:0;'));
+    expect(hiddenRules.length).toBeGreaterThan(0);
+    for (const rule of hiddenRules) {
+      expect(rule).toContain(':not([data-ms-reveal="parallax"])');
+      expect(rule).toContain(':not([data-ms-reveal="progress"])');
+    }
+  });
 });
