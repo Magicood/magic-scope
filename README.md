@@ -28,7 +28,15 @@
 - **94 个无障碍 React 组件**(9 大分类),全部带溯源元数据与测试(2100+ 用例)
 - **主题引擎:6 家族 × 明暗 = 12 套预设**,由 seed 派生零硬编码;主题 / 明暗 / 密度 / 动效 / 光影五维运行时一键切换
 - **进场 / 滚动特效系统**(Reveal,29 种变体 × 3 种触发),自研零依赖,自动尊重 `prefers-reduced-motion`
-- 实时展示站(94 组件全覆盖 + 主题画廊)与两个实战样板站(SaaS 营销 / 电商)
+- 实时展示站(94 组件全覆盖 + 主题画廊)与实战样板站
+
+## 在线体验
+
+| 站点 | 地址 |
+| --- | --- |
+| **组件展示站**(94 组件 + 参数旋钮 + 主题画廊) | <https://magicood.github.io/magic-scope/> |
+| 文档站 | <https://magicood.github.io/magic-scope/docs/> |
+| Vela · SaaS 营销样板站 | <https://magicood.github.io/magic-scope/vela/> |
 
 完整的设计背景、技术选型理由与路线图见 [`FOUNDATION.md`](./FOUNDATION.md);
 Claude Code 的操作约定见 [`CLAUDE.md`](./CLAUDE.md)。
