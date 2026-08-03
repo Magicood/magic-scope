@@ -55,6 +55,9 @@ export type MessageKey =
   | 'pagination.prev'
   | 'pagination.next'
   | 'pagination.page'
+  | 'pagination.sizeLabel'
+  | 'pagination.pageSize'
+  | 'pagination.jump'
   | 'breadcrumb.nav'
   | 'breadcrumb.expand'
   | 'anchor.nav'
@@ -183,6 +186,9 @@ export const defaultMessages: Messages = {
   'pagination.prev': '上一页',
   'pagination.next': '下一页',
   'pagination.page': '第 {page} 页',
+  'pagination.sizeLabel': '每页条数',
+  'pagination.pageSize': '{size} / 页',
+  'pagination.jump': '跳至',
   'breadcrumb.nav': '面包屑',
   'breadcrumb.expand': '展开省略的 {count} 项',
   'anchor.nav': '页内导航',
