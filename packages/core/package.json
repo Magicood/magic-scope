@@ -1,6 +1,7 @@
 {
   "name": "@magic-scope/core",
   "version": "0.0.0",
+  "private": true,
   "description": "magic-scope 框架无关 headless 逻辑内核(状态机 / 键盘 / 焦点 / 受控,纯 TS,零框架依赖)",
   "type": "module",
   "license": "MIT",
