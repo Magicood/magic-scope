@@ -1,0 +1,78 @@
+name: Deploy Pages
+
+# 三站一体部署到 GitHub Pages:
+#   /            展示站(playground/showcase,94 组件 + 主题画廊)
+#   /docs/       VitePress 文档站
+#   /vela/       Vela SaaS 营销样板站(apps/demo)
+#   /shop/       Daybreak 电商样板站(apps/shop)
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Build packages
+        run: pnpm build
+
+      - name: Build showcase
+        run: pnpm exec vite build playground/showcase --base=/magic-scope/
+
+      - name: Build docs
+        run: pnpm docs:build
+        env:
+          DOCS_BASE: /magic-scope/docs/
+
+      - name: Build Vela (apps/demo)
+        run: pnpm -C apps/demo exec vite build --base=/magic-scope/vela/
+
+      - name: Build Daybreak (apps/shop)
+        run: pnpm -C apps/shop exec vite build --base=/magic-scope/shop/
+
+      - name: Assemble site
+        run: |
+          mkdir -p _site
+          cp -r playground/showcase/dist/* _site/
+          mkdir -p _site/docs _site/vela _site/shop
+          cp -r docs/.vitepress/dist/* _site/docs/
+          cp -r apps/demo/dist/* _site/vela/
+          cp -r apps/shop/dist/* _site/shop/
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
