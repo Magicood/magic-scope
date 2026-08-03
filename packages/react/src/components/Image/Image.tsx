@@ -235,7 +235,9 @@ export const Image = forwardRef<HTMLImageElement, ImageProps>(function Image(
   // 内容稳定 key:内联数组 fallbackSrc 每次父渲染都是新引用,直接以 fallbacks 引用为依赖
   // 会导致每次无关父重渲染都复位 loaded/failedCount(已加载图被打回 shimmer 卡死)。
   // 改用 join 出的稳定字符串,仅当来源链「内容」真变化才触发复位。
-  const fallbackKey = useMemo(() => fallbacks.join(' '), [fallbacks]);
+  // 分隔符取 URL 不可能出现的 NUL,且只能用转义写法 —— 源码里放裸 NUL 字节
+  // 会让 grep / ripgrep 判定整个文件是二进制并静默跳过。
+  const fallbackKey = useMemo(() => fallbacks.join('\u0000'), [fallbacks]);
 
   // src / fallback 内容变化时复位加载与失败状态(换图重新走加载流程)
   // biome-ignore lint/correctness/useExhaustiveDependencies: 故意以 src/fallbackKey 为触发,复位计数与 loaded

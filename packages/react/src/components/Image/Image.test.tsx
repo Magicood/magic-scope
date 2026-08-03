@@ -1,4 +1,6 @@
 // @vitest-environment jsdom
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import '@testing-library/jest-dom/vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { createRef } from 'react';
@@ -9,6 +11,16 @@ import { Image } from './Image';
 const SRC = 'https://example.com/a.png';
 
 describe('Image', () => {
+  // 回归:fallbackKey 的分隔符曾以裸 NUL 字节写在源码里,导致 grep / ripgrep
+  // 把整个文件判为二进制静默跳过(全仓搜索搜不到本文件)。只能用转义写法。
+  it('源码不含裸 NUL 字节(否则整个文件对 grep 不可见)', () => {
+    const source = readFileSync(
+      join(process.cwd(), 'packages/react/src/components/Image/Image.tsx'),
+      'utf8',
+    );
+    expect(source).not.toContain(String.fromCharCode(0));
+  });
+
   it('渲染 <img> 并带 alt / loading=lazy / decoding', () => {
     render(<Image src={SRC} alt="封面" />);
     const img = screen.getByAltText('封面');
