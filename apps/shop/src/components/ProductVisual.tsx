@@ -1,47 +1,63 @@
 import type { CSSProperties } from 'react';
-import { CATEGORY_LABEL, type Product, products, ROAST_LABEL } from '../data/catalog';
+import type { Product } from '../data/types';
 
-interface ProductVisualProps {
+/* ============================================================================
+ * ProductVisual —— 艺术化商品视觉(art-directed,无位图、无 clip-art)。
+ * 每款商品 = 一组低饱和色场 + 一个有体积感的抽象形体(渐变塑形 + 接触阴影)
+ * + 细颗粒纹理。所有配方在 shop.css 的 .pv-* 规则里,颜色经 CSS 变量注入,
+ * 用 color-mix(in oklab) 派生高光/暗部,保证任何色板下体积关系都成立。
+ * ========================================================================== */
+
+export type VisualAspect = 'portrait' | 'square' | 'wide';
+
+export function ProductVisual({
+  product,
+  aspect = 'portrait',
+  className,
+}: {
   product: Product;
+  aspect?: VisualAspect;
   className?: string;
-  style?: CSSProperties;
-}
+}) {
+  const { visual } = product;
+  const style = {
+    '--pv-field': visual.field,
+    '--pv-tint': visual.tint,
+    '--pv-body': visual.body,
+    '--pv-shade': visual.shade,
+  } as CSSProperties;
 
-/**
- * 商品主视觉:莫兰迪抽象色卡(Aesop 式)。
- * 不画物件 —— 低饱和莫兰迪色场 + 颗粒材质 + 双层柔光景深 + 巨大编号水印(杂志式
- * 视觉锚点)+ 展览级大衬线产品名 + 极致留白。10 个商品是「同款不同色」的一组高级色卡。
- */
-export function ProductVisual({ product, className, style }: ProductVisualProps) {
-  const index = products.findIndex((p) => p.id === product.id);
-  const no = String(index + 1).padStart(2, '0');
-  const tag = product.roast ? ROAST_LABEL[product.roast] : CATEGORY_LABEL[product.category];
-  const origin = product.type === 'bean' ? (product.origin ?? product.subtitle) : product.subtitle;
+  const luminous = product.category === 'lighting';
 
   return (
     <div
-      className={['pv', className].filter(Boolean).join(' ')}
-      style={{ ['--pv-accent' as string]: product.accent, ...style }}
-      aria-hidden="true"
+      className={['pv', `pv-${aspect}`, className].filter(Boolean).join(' ')}
+      style={style}
+      role="img"
+      aria-label={`${product.name} — ${product.tagline}`}
     >
-      <span className="pv__grain" />
-      <span className="pv__watermark">{no}</span>
-
-      <div className="pv__card">
-        <div className="pv__top">
-          <span className="pv__index">N° {no}</span>
-          <span className="pv__tag">{tag}</span>
-        </div>
-
-        <div className="pv__mid">
-          <span className="pv__origin">{origin}</span>
-          <p className="pv__name">{product.name}</p>
-        </div>
-
-        <div className="pv__bottom">
-          <span className="pv__flavors">{product.flavors.join(' · ')}</span>
-        </div>
+      <div className="pv-floor" aria-hidden="true" />
+      <div
+        className={`pv-form pv-form-${visual.shape}`}
+        data-luminous={luminous || undefined}
+        aria-hidden="true"
+      >
+        {visual.shape === 'stack' && (
+          <>
+            <i />
+            <i />
+            <i />
+          </>
+        )}
+        {visual.shape === 'cylinder' && <i className="pv-cap" />}
+        {visual.shape === 'roll' && (
+          <>
+            <i className="pv-fold" />
+            <i className="pv-fold" />
+          </>
+        )}
       </div>
+      <div className="pv-grain" aria-hidden="true" />
     </div>
   );
 }

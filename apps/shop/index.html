@@ -1,13 +1,28 @@
-<!doctype html>
-<html lang="zh-CN">
+<!DOCTYPE html>
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>Daybreak · 精品咖啡烘焙</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Arden — Considered objects for everyday life</title>
     <meta
       name="description"
-      content="Daybreak 精品咖啡烘焙 —— 当日新鲜烘焙的单品与拼配豆、手冲器具与每月订阅,为每一个清晨认真烘一炉好豆。"
+      content="Arden is a home objects studio. Ceramics, lighting, textiles and objects — made slowly, kept for years."
     />
+    <script>
+      // 首帧防闪:按持久化的外观偏好先给根元素一个正确的底色(主题引擎随 JS 启动后接管)。
+      (() => {
+        try {
+          const raw = localStorage.getItem('arden.appearance');
+          const pref = raw ? JSON.parse(raw).scheme : 'light';
+          const dark =
+            pref === 'dark' ||
+            (pref === 'system' && matchMedia('(prefers-color-scheme: dark)').matches);
+          document.documentElement.style.background = dark ? '#161311' : '#F6F2EB';
+        } catch {
+          document.documentElement.style.background = '#F6F2EB';
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
