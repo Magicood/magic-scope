@@ -255,6 +255,43 @@
   }
 }
 
+/* —— P1 窄触屏(≤sm 30rem 且 coarse 指针):菜单转底部抽屉(action sheet)——
+   覆盖锚定 / 降级定位为贴底满宽 sheet、仅上圆角、自底滑入;长菜单限高内滚。
+   置于 @supports 定位块之后:同层同特异性,窄触屏时后者胜出。
+   仅触屏生效:桌面窄窗口(精确指针)与宽屏维持锚定下拉,逐像素不变。 */
+@media (max-width: 30rem) and (pointer: coarse) {
+  .ms-menu {
+    position: fixed;
+    position-area: none;
+    position-try-fallbacks: none;
+    inset: auto 0 0 0;
+    margin: 0;
+    inline-size: 100%;
+    min-inline-size: 0;
+    max-inline-size: 100%;
+    max-block-size: min(60svh, calc(var(--ms-viewport-h) - var(--ms-space-10)));
+    /* 末项避让底部安全区(手势条 / 圆角) */
+    padding-block-end: calc(var(--ms-space-1) + var(--ms-safe-bottom));
+    border-block-end: none;
+    border-radius: var(--ms-radius-lg) var(--ms-radius-lg) 0 0;
+    /* 收起态落于屏下,入场自底上滑 */
+    transform: translateY(100%);
+    transform-origin: bottom center;
+  }
+  /* 锚定态的方位间距在 sheet 形态一律归零(placement margin 特异性更高,需显式覆盖) */
+  .ms-menu[data-placement] {
+    margin: 0;
+  }
+  .ms-menu:popover-open {
+    transform: translateY(0);
+  }
+  @starting-style {
+    .ms-menu:popover-open {
+      transform: translateY(100%);
+    }
+  }
+}
+
 /* —— 动效降级:尊重系统偏好与库级总闸 —— */
 @media (prefers-reduced-motion: reduce) {
   .ms-menu {

@@ -203,6 +203,35 @@
   outline-offset: 2px;
 }
 
+/* —— P1 窄触屏(≤sm 30rem 且 coarse 指针):对话框转底部抽屉(bottom sheet)——
+   贴底、满宽、仅上圆角、自底滑入,根治窄屏居中卡片的局促;full 变体照旧铺满。
+   仅触屏生效:桌面窄窗口(精确指针)与宽屏维持居中卡片,逐像素不变。 */
+@media (max-width: 30rem) and (pointer: coarse) {
+  .ms-dialog:not(.ms-dialog--full) {
+    margin-block: auto 0;
+    margin-inline: 0;
+    inline-size: 100%;
+    max-inline-size: 100%;
+    /* 收起态落于屏下,入场自底上滑(覆盖居中卡片的浮起缩放) */
+    transform: translateY(100%);
+  }
+  .ms-dialog:not(.ms-dialog--full)[open] {
+    transform: translateY(0);
+  }
+  @starting-style {
+    .ms-dialog:not(.ms-dialog--full)[open] {
+      transform: translateY(100%);
+    }
+  }
+  .ms-dialog:not(.ms-dialog--full) .ms-dialog__panel {
+    /* 仅上圆角,贴底抽屉观感;底部安全区已并入 padding-block 末端 */
+    border-radius: var(--ms-radius-lg) var(--ms-radius-lg) 0 0;
+    border-block-end: none;
+    /* 抽屉限高:顶部留一段露出遮罩,示意下层内容仍在 */
+    max-block-size: calc(var(--ms-viewport-h) - var(--ms-space-10));
+  }
+}
+
 /* —— 降级:reduced-motion 与 motion 总闸,与 Drawer / AlertDialog 对齐 —— */
 @media (prefers-reduced-motion: reduce) {
   .ms-dialog,
