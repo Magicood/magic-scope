@@ -1,0 +1,231 @@
+/* ============================================================================
+ * CartDrawer —— 购物车抽屉样式。
+ * 只消费 --ms-* / --sf-* 语义变量与 .pv- 原语;分隔一律发丝线或留白。
+ * 覆盖库内同权重默认值时用「双写类名」抬 specificity,不深挖 .ms-* 内部。
+ * ========================================================================== */
+
+/* 面板宽度:覆盖 Drawer md 档的宽度变量,约 420px */
+.cart-drawer.cart-drawer {
+  --ms-drawer-inline: min(420px, 100vw);
+}
+
+/* 头部:标题走衬线展示字,内建分隔线降为发丝线 */
+.cart-drawer-header.cart-drawer-header {
+  border-block-end-color: var(--sf-hairline);
+}
+
+.cart-drawer-title.cart-drawer-title {
+  font-family: var(--sf-display);
+  font-size: 22px;
+  font-weight: 480;
+  letter-spacing: -0.01em;
+}
+
+/* 底栏:纵向堆叠(汇总块自成体系),分隔线同样降为发丝线 */
+.cart-drawer-footer.cart-drawer-footer {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+  border-block-start-color: var(--sf-hairline);
+}
+
+/* ------------------------------- 行项列表 ------------------------------- */
+
+.cart-lines {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.cart-line {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: start;
+  padding-block: 18px;
+}
+
+.cart-line:first-child {
+  padding-block-start: 2px;
+}
+
+.cart-line:last-child {
+  padding-block-end: 4px;
+}
+
+/* 行间分隔:发丝线,不用硬边框 */
+.cart-line + .cart-line {
+  border-block-start: 1px solid var(--sf-hairline);
+}
+
+/* 56px 小视觉:圆角收小、地面影收紧,小尺寸下体积关系依然成立 */
+.cart-line-media {
+  display: block;
+  inline-size: 56px;
+}
+
+.cart-line-media .pv {
+  border-radius: 10px;
+}
+
+.cart-line-media .pv-floor {
+  filter: blur(4px);
+}
+
+/* 兜底色块(理论上 detailed 已保证商品存在,防御性保留) */
+.cart-line-fallback {
+  display: block;
+  inline-size: 56px;
+  aspect-ratio: 1;
+  border-radius: 10px;
+  background: var(--ms-color-surface-sunken);
+}
+
+.cart-line-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-inline-size: 0;
+  padding-block-start: 2px;
+}
+
+/* 名称链接:配合 .sf-link 的下划线划入动效 */
+.cart-line-name {
+  align-self: flex-start;
+  font-size: 14px;
+  font-weight: 550;
+  letter-spacing: -0.01em;
+  line-height: 1.35;
+}
+
+.cart-line-colorway {
+  font-size: 12px;
+  color: var(--ms-color-fg-muted);
+}
+
+.cart-line-price {
+  margin-block-start: 2px;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ms-color-fg-subtle);
+}
+
+/* 操作列:数量步进 + 移除,右对齐纵向排布 */
+.cart-line-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+/* 数量最多两位数,输入位收窄让整组更轻 */
+.cart-line-qty-field.cart-line-qty-field {
+  inline-size: 2.5rem;
+}
+
+/* Remove:压成安静的文字钮,hover 才回到正文色。
+ * 库的 ghost 变体未重置 <button> 的 UA 默认底(ButtonFace 灰),这里显式置透明。 */
+.cart-line-remove.cart-line-remove {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ms-color-fg-muted);
+  background: transparent;
+}
+
+.cart-line-remove.cart-line-remove:hover {
+  color: var(--ms-color-fg);
+  background: transparent;
+}
+
+/* -------------------------------- 空车态 -------------------------------- */
+
+.cart-empty {
+  display: grid;
+  place-items: center;
+  min-block-size: 100%;
+}
+
+/* 去逛逛 CTA:同样压掉 ghost 变体漏掉的 UA 默认底,hover 回到主题的柔和面色 */
+.cart-empty-cta.cart-empty-cta {
+  background: transparent;
+  font-weight: 550;
+}
+
+.cart-empty-cta.cart-empty-cta:hover {
+  background: var(--ms-color-surface-sunken);
+}
+
+/* ------------------------------- 底部汇总 ------------------------------- */
+
+.cart-summary {
+  display: flex;
+  flex-direction: column;
+  inline-size: 100%;
+  padding-block: 2px;
+}
+
+.cart-summary-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.cart-summary-label {
+  font-size: 14px;
+  color: var(--ms-color-fg-muted);
+}
+
+.cart-summary-value {
+  font-size: 17px;
+  font-weight: 560;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+.cart-summary-shipping {
+  margin: 6px 0 0;
+  font-size: 12px;
+  color: var(--ms-color-fg-subtle);
+}
+
+.cart-checkout.cart-checkout {
+  margin-block-start: 16px;
+}
+
+.cart-checkout-amount {
+  display: inline-block;
+  font-variant-numeric: tabular-nums;
+}
+
+.cart-summary-note {
+  margin: 10px 0 0;
+  font-size: 11.5px;
+  text-align: center;
+  color: var(--ms-color-fg-subtle);
+}
+
+/* 金额变化的呼吸感:key 重挂触发轻微上浮进场 */
+.cart-summary-value,
+.cart-checkout-amount {
+  animation: cart-value-in var(--ms-duration-base) var(--ms-ease-standard) both;
+}
+
+@keyframes cart-value-in {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+}
+
+/* 减动效偏好 / 动效总闸:金额直接落位 */
+@media (prefers-reduced-motion: reduce) {
+  .cart-summary-value,
+  .cart-checkout-amount {
+    animation: none;
+  }
+}
+
+:root[data-ms-motion="off"] .cart-summary-value,
+:root[data-ms-motion="off"] .cart-checkout-amount {
+  animation: none;
+}
