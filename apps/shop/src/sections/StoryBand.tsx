@@ -50,7 +50,10 @@ function StatsPanel() {
                   justifyContent: 'space-between',
                   gap: '1rem',
                   paddingBlockStart: index === 0 ? 0 : '1.5rem',
-                  borderBlockStart: index === 0 ? 'none' : '1px solid var(--ms-color-border)',
+                  borderBlockStart:
+                    index === 0
+                      ? 'none'
+                      : '1px solid color-mix(in oklab, var(--ms-color-fg) 8%, transparent)',
                 }}
               >
                 {/* 进视口(inView)才挂 count-up 版,借 key 触发一次滚动;未进视口先静态占位不跳数 */}

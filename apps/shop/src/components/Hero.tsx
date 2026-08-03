@@ -53,7 +53,7 @@ export function Hero() {
         <Reveal variant="blur" trigger="mount" delay={150} className="db-hero__art">
           <div ref={artRef}>{featured && <ProductVisual product={featured} />}</div>
           <div className="db-hero__chip" style={{ insetBlockStart: '8%', insetInlineStart: '-4%' }}>
-            <Rate value={4.9} readOnly allowHalf size="sm" tone="warning" />
+            <Rate value={4.9} readOnly allowHalf size="sm" tone="accent" />
             <strong style={{ fontFamily: 'var(--ms-font-display)' }}>4.9</strong>
           </div>
           <div className="db-hero__chip" style={{ insetBlockEnd: '9%', insetInlineEnd: '-3%' }}>

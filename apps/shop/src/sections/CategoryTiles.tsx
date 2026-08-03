@@ -101,9 +101,9 @@ export function CategoryTiles() {
                   blockSize: '2.9rem',
                   flexShrink: 0,
                   borderRadius: '9999px',
-                  color: tile.accent,
-                  background: `color-mix(in oklab, ${tile.accent} 16%, var(--ms-color-surface))`,
-                  border: `1px solid color-mix(in oklab, ${tile.accent} 30%, var(--ms-color-border))`,
+                  // 去硬边框:图标统一深 ink(克制),底色仅用 accent 极淡染色分隔,不描边
+                  color: 'var(--ms-color-primary)',
+                  background: `color-mix(in oklab, ${tile.accent} 12%, var(--ms-color-surface-sunken))`,
                 }}
               >
                 <span style={{ inlineSize: '1.45rem', blockSize: '1.45rem' }}>

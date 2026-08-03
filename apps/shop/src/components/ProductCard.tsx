@@ -45,7 +45,7 @@ export function ProductCard({ product }: ProductCardProps) {
         </span>
         <span className="db-pcard__name">{product.name}</span>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-          <Rate value={product.rating} readOnly allowHalf size="sm" tone="warning" />
+          <Rate value={product.rating} readOnly allowHalf size="sm" tone="accent" />
           <span style={{ fontSize: '0.78rem', color: 'var(--ms-color-fg-subtle)' }}>
             {product.rating} · {product.reviewCount}
           </span>
