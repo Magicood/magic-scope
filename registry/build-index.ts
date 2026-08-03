@@ -2,6 +2,7 @@
  * 建索引:递归扫描 packages 下所有 component.json → 用 componentSchema 校验 → 写 registry/manifest.json。
  * files 为唯一真相源,manifest.json 为生成物(供文档站 / 前台查询)。
  */
+import { execFileSync } from 'node:child_process';
 import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { componentSchema } from './component.schema';
@@ -41,6 +42,8 @@ const manifest = files
 
 const out = join(import.meta.dirname, 'manifest.json');
 writeFileSync(out, `${JSON.stringify(manifest, null, 2)}\n`);
+// manifest 已提交进仓库并被 biome 检查(CI 用 git diff 守新鲜度),生成即格式化,保证字节级稳定。
+execFileSync('pnpm', ['exec', 'biome', 'format', '--write', out], { cwd: ROOT, stdio: 'ignore' });
 
 // —— 溯源质量画像(可见性,不阻断构建)——
 const byType = { original: 0, inspired: 0, captured: 0 };
