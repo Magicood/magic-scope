@@ -1,11 +1,19 @@
 .ms-breadcrumb {
-  /* 容器查询锚:窄容器折叠(见文件末尾 @container)对父容器而非视口自适应 */
-  container-type: inline-size;
   font-family: var(--ms-font-sans);
   font-size: 0.875rem;
   line-height: 1.25;
   /* 内容边界:整体不撑破父容器 */
   max-inline-size: 100%;
+}
+
+/* 容器查询锚:仅折叠可用时(层级 >3,见 Breadcrumb.tsx)建立容器,
+   窄容器折叠对父容器而非视口自适应(对齐 Timeline/Grid 的变体级容器先例)。
+   inline-size containment 后宽度不能再由内容决定,须显式占满父宽;
+   已知约束:置于 fit-content 包装(如 flex 内容定宽子项)中时容器无外部宽度可依,
+   折叠不生效且宽度塌陷——容器查询组件需要来自上下文的确定宽度。 */
+.ms-breadcrumb--collapsible {
+  container-type: inline-size;
+  inline-size: 100%;
 }
 
 /* 横向排布,允许换行,各项之间留出与分隔符匹配的呼吸感 */
