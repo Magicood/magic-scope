@@ -473,6 +473,9 @@ function TableImpl<T>(props: TableProps<T>, ref: ForwardedRef<HTMLTableElement>)
             return (
               <td
                 key={col.key}
+                // 窄容器卡片模式用 data-label(列名)作单元格就地前缀,见 Table.css @container。
+                // 仅表头为字符串时可取;ReactNode 表头的列在卡片模式不渲染前缀。
+                data-label={typeof col.header === 'string' ? col.header : undefined}
                 className={tdClass(
                   [
                     col.align && col.align !== 'start' && `ms-table__td--${col.align}`,

@@ -1,4 +1,6 @@
 .ms-breadcrumb {
+  /* 容器查询锚:窄容器折叠(见文件末尾 @container)对父容器而非视口自适应 */
+  container-type: inline-size;
   font-family: var(--ms-font-sans);
   font-size: 0.875rem;
   line-height: 1.25;
@@ -181,4 +183,25 @@
   box-shadow:
     0 0 0 2px var(--ms-color-bg),
     0 0 0 4px var(--ms-color-focus-ring);
+}
+
+/* —— P1 窄容器折叠 ——
+   层级 >3 且未展开时(nav 带 --collapsible,见 Breadcrumb.tsx),窄容器(≤rune 28rem)
+   把中间层级折叠为可展开的省略号,只留首项 + … + 当前项;宽容器渲染逐像素不变。 */
+
+/* 窄容器折叠占位:默认(宽容器)隐藏,仅窄容器显形 */
+.ms-breadcrumb__item--collapse {
+  display: none;
+}
+
+@container (max-inline-size: 28rem) {
+  /* 隐藏全部中间层级(含 maxItems 的 JS 省略项,由折叠占位统一接替),只留首项与当前项 */
+  .ms-breadcrumb--collapsible
+  .ms-breadcrumb__item:not(:first-child):not(:last-child):not(.ms-breadcrumb__item--collapse) {
+    display: none;
+  }
+
+  .ms-breadcrumb--collapsible .ms-breadcrumb__item--collapse {
+    display: inline-flex;
+  }
 }

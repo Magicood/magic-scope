@@ -308,4 +308,29 @@ describe('Table', () => {
     render(<Table columns={columns} data={[]} />);
     expect(screen.getByText('暂无数据')).toBeInTheDocument();
   });
+
+  it('数据单元格带 data-label(字符串表头),供窄容器卡片模式就地前缀列名', () => {
+    const cols = [
+      { key: 'name', header: '姓名' },
+      { key: 'age', header: <em>年龄</em> }, // ReactNode 表头取不到纯文本,不渲染 data-label
+    ];
+    const { container } = render(<Table columns={cols} data={[{ name: 'Alice', age: 30 }]} />);
+
+    const tds = container.querySelectorAll('.ms-table__body .ms-table__td');
+    expect(tds[0]).toHaveAttribute('data-label', '姓名');
+    expect(tds[1]).not.toHaveAttribute('data-label');
+  });
+
+  it('选择列 / 展开列单元格不带 data-label(卡片模式不渲染空前缀)', () => {
+    const { container } = render(
+      <Table
+        columns={columns}
+        data={data}
+        rowSelection={{ selectedKeys: [], onChange: () => {} }}
+        expandable={{ rowRender: () => '详情' }}
+      />,
+    );
+    expect(container.querySelector('.ms-table__td--selection')).not.toHaveAttribute('data-label');
+    expect(container.querySelector('.ms-table__td--expand')).not.toHaveAttribute('data-label');
+  });
 });
