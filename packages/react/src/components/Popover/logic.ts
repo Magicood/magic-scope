@@ -46,7 +46,7 @@ export const POPOVER_PLACEMENTS: readonly PopoverPlacement[] = [
  * placement → CSS `position-area` 关键字。
  *
  * position-area 用 3×3 网格的两个轴关键字描述。块轴方位(top/bottom)时:
- * - 居中:`block-* span-inline`(横向跨满,居中对齐 trigger)
+ * - 居中:`block-* span-all`(横向跨满,居中对齐 trigger)
  * - -start:`block-* inline-start`(浮层起始边对齐 trigger 起始边 → 用 span-* 让其向 end 展开)
  * - -end:`block-* inline-end`
  * 行内轴方位(left/right)对称处理(交换块/行内角色)。
@@ -57,31 +57,31 @@ export const POPOVER_PLACEMENTS: readonly PopoverPlacement[] = [
 export function placementToArea(placement: PopoverPlacement): string {
   switch (placement) {
     case 'top':
-      return 'block-start span-inline';
+      return 'block-start span-all';
     case 'top-start':
       return 'block-start span-inline-end';
     case 'top-end':
       return 'block-start span-inline-start';
     case 'bottom':
-      return 'block-end span-inline';
+      return 'block-end span-all';
     case 'bottom-start':
       return 'block-end span-inline-end';
     case 'bottom-end':
       return 'block-end span-inline-start';
     case 'left':
-      return 'inline-start span-block';
+      return 'inline-start span-all';
     case 'left-start':
       return 'inline-start span-block-end';
     case 'left-end':
       return 'inline-start span-block-start';
     case 'right':
-      return 'inline-end span-block';
+      return 'inline-end span-all';
     case 'right-start':
       return 'inline-end span-block-end';
     case 'right-end':
       return 'inline-end span-block-start';
     default:
-      return 'block-end span-inline';
+      return 'block-end span-all';
   }
 }
 

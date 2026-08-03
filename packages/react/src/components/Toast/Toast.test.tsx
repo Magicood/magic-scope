@@ -34,6 +34,31 @@ describe('toast + Toaster', () => {
     expect(screen.getByRole('list', { name: '通知' })).toBeInTheDocument();
   });
 
+  it('多个 Toaster 并存只有最后挂载者渲染 —— 每条 toast 不重复弹出(回归:双容器双弹)', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const first = render(<Toaster position="bottom-end" />);
+    const second = render(<Toaster position="top-center" />);
+
+    act(() => {
+      toast('只弹一次');
+    });
+    // 全 document 计数:同一条 toast 只出现在一个容器里
+    expect(document.querySelectorAll('.ms-toaster').length).toBe(1);
+    expect(document.querySelectorAll('.ms-toast').length).toBe(1);
+    // 生效的是后挂载的 top-center 容器
+    expect(document.querySelector('.ms-toaster--top-center')).not.toBeNull();
+    expect(warn).toHaveBeenCalled();
+
+    // 后挂载者卸载 → 先挂载者自动接回
+    second.unmount();
+    expect(document.querySelectorAll('.ms-toaster').length).toBe(1);
+    expect(document.querySelector('.ms-toaster--bottom-end')).not.toBeNull();
+    expect(document.querySelectorAll('.ms-toast').length).toBe(1);
+
+    first.unmount();
+    warn.mockRestore();
+  });
+
   it('持久 live region 解耦播报:danger→assertive、默认→polite', () => {
     render(<Toaster />);
     act(() => {

@@ -18,7 +18,7 @@
 
   /* —— 锚定定位(现代):贴到 trigger 的 anchor,position-area 由 JS 按 12 向写入 —— */
   position: absolute;
-  position-area: var(--ms-popover-area, block-end span-inline);
+  position-area: var(--ms-popover-area, block-end span-all);
 
   /* —— 入场动画:opacity + 轻微位移(方向随主轴),允许从 display:none 过渡 —— */
   opacity: 0;

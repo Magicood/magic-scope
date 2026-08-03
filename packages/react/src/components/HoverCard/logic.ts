@@ -51,31 +51,31 @@ export const HOVER_CARD_PLACEMENTS: readonly HoverCardPlacement[] = [
 export function placementToArea(placement: HoverCardPlacement): string {
   switch (placement) {
     case 'top':
-      return 'block-start span-inline';
+      return 'block-start span-all';
     case 'top-start':
       return 'block-start span-inline-end';
     case 'top-end':
       return 'block-start span-inline-start';
     case 'bottom':
-      return 'block-end span-inline';
+      return 'block-end span-all';
     case 'bottom-start':
       return 'block-end span-inline-end';
     case 'bottom-end':
       return 'block-end span-inline-start';
     case 'left':
-      return 'inline-start span-block';
+      return 'inline-start span-all';
     case 'left-start':
       return 'inline-start span-block-end';
     case 'left-end':
       return 'inline-start span-block-start';
     case 'right':
-      return 'inline-end span-block';
+      return 'inline-end span-all';
     case 'right-start':
       return 'inline-end span-block-end';
     case 'right-end':
       return 'inline-end span-block-start';
     default:
-      return 'block-end span-inline';
+      return 'block-end span-all';
   }
 }
 
