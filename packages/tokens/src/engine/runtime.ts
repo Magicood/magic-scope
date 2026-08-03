@@ -87,5 +87,5 @@ export interface NoFlashOptions {
 export function getNoFlashScript(options: NoFlashOptions = {}): string {
   const key = JSON.stringify(options.storageKey ?? 'ms-theme');
   const def = JSON.stringify(options.defaultTheme ?? 'arcane');
-  return `(function(){try{var d=document.documentElement,raw=localStorage.getItem(${key}),o=raw?JSON.parse(raw):{};var t=o.theme||${def};var p=o.scheme||"system";var m=p==="system"?(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"):p;d.dataset.msTheme=t;d.dataset.msScheme=m;if(o.density)d.dataset.msDensity=o.density;if(o.motion)d.dataset.msMotion=o.motion;}catch(e){}})();`;
+  return `(function(){try{var d=document.documentElement,raw=localStorage.getItem(${key}),o=raw?JSON.parse(raw):{};var t=o.theme||${def};var p=o.scheme||"system";var m=p==="system"?(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"):p;d.dataset.msTheme=t;d.dataset.msScheme=m;if(o.density)d.dataset.msDensity=o.density;if(o.motion)d.dataset.msMotion=o.motion;if(o.fx)d.dataset.msFx=o.fx;}catch(e){}})();`;
 }

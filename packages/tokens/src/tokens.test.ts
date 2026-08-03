@@ -75,6 +75,13 @@ describe('engine / runtime', () => {
     expect(script).toContain('dataset.msTheme');
     expect(script).toContain('"arcane"');
   });
+
+  it('getNoFlashScript 完整回写四轴(theme/scheme/density/motion)+ fx —— 缺一轴刷新即闪', () => {
+    const script = getNoFlashScript();
+    for (const axis of ['msTheme', 'msScheme', 'msDensity', 'msMotion', 'msFx']) {
+      expect(script).toContain(`dataset.${axis}`);
+    }
+  });
 });
 
 describe('engine / property', () => {
