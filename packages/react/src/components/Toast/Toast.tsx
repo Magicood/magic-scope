@@ -134,6 +134,45 @@ function setToasterConfig(config: { max?: number | undefined; exitMs?: number | 
   EXIT_MS = config.exitMs != null && config.exitMs >= 0 ? config.exitMs : DEFAULT_EXIT_MS;
 }
 
+/* —— 多 Toaster 互斥:store 是广播,同屏挂多个容器会把每条 toast 渲染多份。
+ *    约定「最后挂载者生效」:后挂载视为更近的意图(如局部配置容器),先挂载者静默让位,
+ *    后者卸载则自动接回。dev 下对并存告警一次,提醒这是兜底而非推荐用法。—— */
+let toasterSeq = 0;
+const toasterStack: number[] = [];
+const toasterListeners = new Set<() => void>();
+const emitToasterChange = () => {
+  for (const listener of toasterListeners) listener();
+};
+const subscribeToasters = (listener: () => void) => {
+  toasterListeners.add(listener);
+  return () => {
+    toasterListeners.delete(listener);
+  };
+};
+const getActiveToasterId = () => toasterStack[toasterStack.length - 1] ?? -1;
+const getServerToasterId = () => -1;
+
+const isDev = (): boolean => {
+  // 经 globalThis 取,避免裸 `process` 名依赖 @types/node;浏览器无 process 时安全回退 false
+  const env = (globalThis as { process?: { env?: { NODE_ENV?: string } } }).process?.env;
+  return env ? env.NODE_ENV !== 'production' : false;
+};
+
+function registerToaster(id: number): () => void {
+  toasterStack.push(id);
+  if (toasterStack.length > 1 && isDev()) {
+    console.warn(
+      '[magic-scope] 检测到多个 <Toaster> 同时挂载:仅最后挂载的容器会渲染 toast,其余静默让位。',
+    );
+  }
+  emitToasterChange();
+  return () => {
+    const index = toasterStack.indexOf(id);
+    if (index >= 0) toasterStack.splice(index, 1);
+    emitToasterChange();
+  };
+}
+
 function buildAnnouncement(
   message: ReactNode,
   description: ReactNode,
@@ -314,18 +353,25 @@ export function Toaster({
   const items = useSyncExternalStore(subscribe, getRecords, getEmptyRecords);
   const live = useSyncExternalStore(subscribe, getAnnouncement, getNullAnnouncement);
   const [mounted, setMounted] = useState(false);
+  const [instanceId] = useState(() => ++toasterSeq);
+  const activeId = useSyncExternalStore(subscribeToasters, getActiveToasterId, getServerToasterId);
+  const isActive = activeId === instanceId;
 
-  // 软上限 / 退场时长注入 store(命令式路径 addToast/dismissToast 据此运作)
+  useEffect(() => registerToaster(instanceId), [instanceId]);
+
+  // 软上限 / 退场时长注入 store(命令式路径 addToast/dismissToast 据此运作);
+  // 仅生效容器注入,避免让位中的容器把配置抢写回默认值
   useEffect(() => {
+    if (!isActive) return;
     setToasterConfig({ max, exitMs: undefined });
     return () => setToasterConfig({});
-  }, [max]);
+  }, [max, isActive]);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  if (!mounted || typeof document === 'undefined') return null;
+  if (!mounted || typeof document === 'undefined' || !isActive) return null;
 
   const regionLabel = label ?? t('toaster.region', undefined, '通知');
   const mergedStyle: CSSProperties = {

@@ -18,7 +18,7 @@
   );
 
   /* —— 锚定定位:position-area 由 JS 按 12 向写入(--ms-hover-card-area) —— */
-  position-area: var(--ms-hover-card-area, block-end span-inline);
+  position-area: var(--ms-hover-card-area, block-end span-all);
 
   /* 入场前的终态归零,真正的入场态见各主轴位移与 @starting-style */
   opacity: 0;

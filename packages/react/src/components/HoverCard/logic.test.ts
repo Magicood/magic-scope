@@ -41,10 +41,10 @@ describe('placementToArea', () => {
   });
 
   it('居中向横向 / 纵向跨满', () => {
-    expect(placementToArea('top')).toBe('block-start span-inline');
-    expect(placementToArea('bottom')).toBe('block-end span-inline');
-    expect(placementToArea('left')).toBe('inline-start span-block');
-    expect(placementToArea('right')).toBe('inline-end span-block');
+    expect(placementToArea('top')).toBe('block-start span-all');
+    expect(placementToArea('bottom')).toBe('block-end span-all');
+    expect(placementToArea('left')).toBe('inline-start span-all');
+    expect(placementToArea('right')).toBe('inline-end span-all');
   });
 });
 

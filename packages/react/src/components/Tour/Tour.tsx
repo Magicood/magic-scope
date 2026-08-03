@@ -207,6 +207,9 @@ export const Tour = forwardRef<TourHandle, TourProps>(
 
     // —— 目标 rect 跟随:rAF 轮询 + resize/scroll 监听,实时重算 spotlight ——
     const [rect, setRect] = useState<RectLike | null>(null);
+    // 卡片自身尺寸(--ms-tour-card-w/h):CSS 的 inset clamp 里 100% 解析为「容器(视口)尺寸」
+    // 而非卡片尺寸,无法用纯 CSS 表达「视口 - 卡片宽」,故由 JS 实测注入。
+    const [cardSize, setCardSize] = useState<{ width: number; height: number } | null>(null);
     const [viewport, setViewport] = useState<{ width: number; height: number }>({
       width: 0,
       height: 0,
@@ -269,6 +272,16 @@ export const Tour = forwardRef<TourHandle, TourProps>(
           ? prev
           : { width: nextWidth, height: nextHeight },
       );
+      const card = cardRef.current;
+      if (card) {
+        const cardW = card.offsetWidth;
+        const cardH = card.offsetHeight;
+        setCardSize((prev) =>
+          prev && prev.width === cardW && prev.height === cardH
+            ? prev
+            : { width: cardW, height: cardH },
+        );
+      }
       const el = step ? resolveStep(step.target) : null;
       const next = el ? toRectLike(el.getBoundingClientRect()) : null;
       setRect((prev) => {
@@ -390,6 +403,12 @@ export const Tour = forwardRef<TourHandle, TourProps>(
           '--ms-tour-y': `${spot.top}px`,
           '--ms-tour-w': `${spot.width}px`,
           '--ms-tour-h': `${spot.height}px`,
+          ...(cardSize
+            ? {
+                '--ms-tour-card-w': `${cardSize.width}px`,
+                '--ms-tour-card-h': `${cardSize.height}px`,
+              }
+            : {}),
         } as CSSProperties)
       : undefined;
 

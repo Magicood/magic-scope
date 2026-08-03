@@ -28,7 +28,7 @@
   overflow-wrap: anywhere;
 
   /* —— 锚定定位:position-area 由 JS 按 12 向写入(--ms-tooltip-area) —— */
-  position-area: var(--ms-tooltip-area, block-start span-inline);
+  position-area: var(--ms-tooltip-area, block-start span-all);
 
   /* 柔和立体投影(静息不发光,克制优雅) */
   box-shadow: 0 8px 24px -12px rgb(0 0 0 / 0.28);
