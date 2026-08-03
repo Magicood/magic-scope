@@ -1,0 +1,2534 @@
+[
+  {
+    "id": "accordion",
+    "name": "Accordion",
+    "description": "手风琴:可折叠面板组。受控(value+onValueChange)/非受控双模式,single(可配 collapsible 全收)/multiple;tone 色调系统(读 6 槽位发光配色);grid 0fr→1fr 平滑展开 + 内容淡入、指示符旋转(可替换 icon),收起项 inert + 延迟 visibility 保双向动画与可达性;全量语义回调(onValueChange/onExpandedChange/onTriggerClick/onKeyDown,皆 compose 不丢用户处理器),根透传原生事件/data-*,classNames 细粒度插槽;键盘 ↑↓/Home/End 导航;fx/motion/density 一键降级。",
+    "category": "layout",
+    "tags": [
+      "accordion",
+      "collapse",
+      "disclosure",
+      "layout",
+      "arcane",
+      "react",
+      "zero-dependency",
+      "accessible",
+      "keyboard",
+      "controlled",
+      "tone",
+      "collapsible",
+      "inert",
+      "compose-events"
+    ],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-25",
+      "requirements": "手风琴:可折叠面板组,grid-template-rows 0fr→1fr 平滑展开、▸ 图标旋转、深色发光,支持 single/multiple 与键盘 ↑↓ 导航。工程要求(magic-scope 结构/导航组件):自研、消费 tokens,完整状态、键盘可达、fx/motion 开关、逻辑属性。补强到旗舰深度:受控/非受控双模式、collapsible 全收、tone 色调、全量语义事件回调与原生事件透传、classNames 插槽、可替换指示符、inert+延迟 visibility 修复 hidden 与 grid 过渡冲突。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Accordion.tsx", "Accordion.css", "logic.ts", "index.ts"]
+  },
+  {
+    "id": "affix",
+    "name": "Affix",
+    "description": "滚动吸附容器:内容随页面滚动到达阈值时吸顶(或吸底)固定,并以等尺寸占位防止布局跳动;支持自定义滚动容器、吸附态回调与命令式重测。",
+    "category": "navigation",
+    "tags": ["affix", "sticky", "scroll", "navigation", "pin", "fixed"],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-26",
+      "requirements": "把「吸附与否、吸成什么样」做成框架无关的纯函数 computeAffix(给几何 + 偏移即出 affixed/mode/style),DOM 读 rect 的副作用留在薄壳,便于单测与平移 vue/core。壳层监听 getTarget(默认 window)滚动/resize、rAF 节流,超 offsetTop 吸顶或超 offsetBottom 吸底,渲染等尺寸 placeholder 杜绝布局抖动,onChange(affixed) 通知跨态。坚持透明包裹不破坏内部语义;宽度跟随用 ResizeObserver(特性检测)且把降级行为如实备注。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Affix.tsx", "Affix.css", "logic.ts", "index.ts"]
+  },
+  {
+    "id": "alert",
+    "name": "Alert",
+    "description": "语义化提示框(旗舰深度):variant(info/success/warning/danger)经统一 tone 槽位驱动配色;子部件 icon(默认图标/自定义/可关)、title、description、action、可关闭钮;classNames 细粒度定制;role 按语义自动分流(danger/warning→alert、info/success→status)且可覆盖;关闭按钮 aria-label 走 i18n;asChild 多态;进场动画 + tone 发光,尊重 prefers-reduced-motion 与 data-ms-fx/data-ms-motion 总闸。",
+    "category": "feedback",
+    "tags": [
+      "alert",
+      "feedback",
+      "notification",
+      "banner",
+      "message",
+      "status",
+      "dismissible",
+      "tone",
+      "icon",
+      "a11y"
+    ],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-24",
+      "requirements": "语义化提示框,按 info/success/warning/danger 渲染柔和底色与起始边强调条,role=\"alert\" 向辅助技术播报。工程要求(magic-scope 通用基础组件):自研、消费 tokens 的 --ms-* 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Alert.tsx", "Alert.css", "index.ts"]
+  },
+  {
+    "id": "alert-dialog",
+    "name": "AlertDialog",
+    "description": "命令式确认/提示/输入弹窗:confirm(message) 返回 Promise<boolean>、alert(message) 返回 Promise<void>、prompt(message) 返回 Promise<string|null>;+ <AlertDialogHost /> 渲染容器(模块级队列订阅、基于原生 <dialog> showModal 的焦点陷阱/Esc/top-layer、portal、锁背景滚动)。role=alertdialog + aria-labelledby/describedby;默认确认/取消文案走 i18n 字典单例(translate)。完整语义色调 variant(default/danger/warning/success/info):面板挂 ms-tone-*,确认按钮与强调条/发光只读 tone 槽位(零硬编码),配 icon 警示图标槽。prompt 内建输入框默认聚焦、Enter 提交,支持 inputType(text/password/number)与 validate 实时校验(无效拦截确认并展示提示、禁用按钮),onValueChange 实时回值。异步 onConfirm 返回 Promise 时确认按钮 loading+禁用、resolve 才关闭、reject 保持打开重试(亦可受控 confirmLoading)。回调与 Promise 双轨:onConfirm/onCancel(主动取消),onEscapeKeyDown/onPointerDownOutside 可 preventDefault 拦截关闭(危险操作禁 Esc/点外关)。danger 变体默认焦点落在取消防误触;进出场动画、安全区、窄屏动作纵向排布、尊重 reduced-motion 与 data-ms-motion/fx 总闸。",
+    "category": "feedback",
+    "tags": [
+      "alert-dialog",
+      "confirm",
+      "alert",
+      "prompt",
+      "dialog",
+      "imperative",
+      "feedback",
+      "tone",
+      "i18n",
+      "async-confirm",
+      "validate",
+      "loading"
+    ],
+    "status": "stable",
+    "version": "0.0.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-25",
+      "requirements": "补齐弹窗提示:命令式确认/提示框。原创实现,与 Toast 同构(模块级队列 + useSyncExternalStore + host),但叠加 Promise 解析(await confirm())。基于原生 <dialog> showModal 白嫖焦点陷阱/Esc/top-layer;复用 ms-button 类保证按钮一致。涵盖 role=alertdialog 语义、danger 默认焦点防误触、安全区/窄屏纵向动作/reduced-motion。区别于已有的通用模态 Dialog(声明式容器)。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["AlertDialog.tsx", "AlertDialog.css", "index.ts"]
+  },
+  {
+    "id": "anchor",
+    "name": "Anchor",
+    "description": "滚动锚点导航(scroll-spy):监听容器滚动高亮当前小节、墨条指示并平滑跳转,支持嵌套缩进。",
+    "category": "navigation",
+    "tags": ["navigation", "scroll-spy", "anchor", "toc", "scrollspy", "in-page-nav"],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-26",
+      "requirements": "页内长文/文档需要一个跟随滚动自动高亮当前小节的目录导航。核心硬约束:把『算哪个高亮』做成零 React 的纯函数 resolveActiveLink(入参为壳层已读好的各锚点 offsetTop 数组 + scrollTop + bounds + offsetTop),DOM 读 offset 与滚动副作用全部留在 React 壳层,保证逻辑可单测、可平移到其它框架。判定线 = scrollTop + offsetTop + bounds,取判定线之上最靠下的锚点为 active,页面顶部时回退首项。点击锚点必须 preventDefault 改走平滑 scrollTo(尊重 prefers-reduced-motion 与 data-ms-motion=off 时瞬时跳转),并支持 targetOffset 顶部留白。滚动容器可由 getContainer 指定(默认 window),滚动监听走 requestAnimationFrame 节流。受控/非受控双模式(activeKey 受控时高亮由外部决定但仍发 onChange)。a11y:nav landmark + 链接列表,active 链接 aria-current=location。墨条用 CSS 变量驱动平移、接 tone 槽位染色发光。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Anchor.tsx", "Anchor.css", "logic.ts", "index.ts"]
+  },
+  {
+    "id": "aspect-ratio",
+    "name": "AspectRatio",
+    "description": "宽高比盒:用 CSS aspect-ratio 维持任意宽高比,子媒体(img/video/iframe)绝对铺满、object-fit 可选裁剪;ratio 支持断点对象响应式,旧引擎 padding-top 百分比自动兜底。多态 as + asChild。",
+    "category": "layout",
+    "tags": [
+      "layout",
+      "aspect-ratio",
+      "media",
+      "responsive",
+      "image",
+      "video",
+      "iframe",
+      "object-fit",
+      "polymorphic",
+      "as-child"
+    ],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-26",
+      "requirements": "新布局组件 AspectRatio:宽高比盒。ratio(number 如 16/9、1、4/3)用 CSS aspect-ratio 维持比例,子内容(img/video/iframe)绝对填满(object-fit:cover 可选)。@supports 兜底用 padding-top 百分比技巧。ratio 支持响应式对象。多态 as + asChild。布局组件为结构性:多态、响应式、间距 token 化、RTL 友好,不需要 tone/发光。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["AspectRatio.tsx", "AspectRatio.css", "logic.ts", "index.ts", "AspectRatio.test.tsx"]
+  },
+  {
+    "id": "auto-complete",
+    "name": "AutoComplete",
+    "description": "自动完成(自由文本 + 补全建议):input role=combobox(aria-autocomplete=list)+ Popover API 补全浮层进 top-layer、CSS Anchor Positioning 定位并优雅降级。与 Select 区别是「值就是输入串」,候选项只是补全提示不强制选取。options 平铺/分组、filterOption(false 关内置过滤配 onSearch 做受控远程搜索,或传谓词自定义命中)、loading 加载态、空态、allowClear、disabled、size、invalid(供 Form)。接全库 tone 槽位(高亮/发光只读 --ms-c*,invalid 强制 danger)、i18n 文案;键盘 ↑↓ 高亮 / Enter 选中填入 / Esc 关、选中后输入框填该候选 value;留口 prefix、renderOption、classNames 部件定制、原生属性透传、composeEventHandlers 合并用户处理器;受控/非受控(value+onChange / open+onOpenChange)双通道;密度缩放、motion/fx 一键降级。可抽取纯逻辑(filterOptions/defaultFilter/findEnabledIndex/optionText)落 logic.ts 零 React 依赖。",
+    "category": "forms",
+    "tags": [
+      "autocomplete",
+      "combobox",
+      "typeahead",
+      "input",
+      "suggestion",
+      "forms",
+      "filter",
+      "async",
+      "clearable",
+      "tone",
+      "i18n",
+      "controlled"
+    ],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-26",
+      "requirements": "需要一个「自由文本 + 补全建议」的自动完成控件,补 Select(强制从选项选取)之外的空缺:值即输入串、候选项只作补全提示不强制选取,典型用于搜索框联想、远程异步搜索(filterOption=false + onSearch + loading)。要达到与旗舰 Input/Select 对齐的生产级深度:options 平铺/分组、内置/自定义/关闭三档过滤、loading/空态/allowClear/disabled/size/invalid(供 Form)、tone 槽位与 i18n、完整键盘(↑↓/Enter/Esc)与 combobox a11y(aria-autocomplete=list / aria-expanded / aria-activedescendant / option aria-selected)、受控+非受控双通道、prefix/renderOption/classNames 留口、motion/fx 一键降级。overlay 用满平台原生能力(Popover API + CSS Anchor Positioning)自研并带降级。纯过滤/导航逻辑抽进 logic.ts(零 React)以便平移到 vue/core。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["AutoComplete.tsx", "AutoComplete.css", "logic.ts", "index.ts"]
+  },
+  {
+    "id": "avatar",
+    "name": "Avatar",
+    "description": "头像组件(旗舰深度):图片/姓名首字母占位,接全库 tone 槽位配色,name 哈希确定性配色(colorful),img 加载失败自动回退占位;支持状态点(online/offline/busy/away,可脉冲)、光环 ring、边框、三形状(circle/rounded/square)、尺寸预设+number 像素尺寸(随密度缩放)、实例级 glow、fallback 槽位、imgProps 透传、asChild 多态。配套 AvatarGroup(重叠堆叠+max 余量 +N+spacing)。",
+    "category": "data-display",
+    "tags": [
+      "avatar",
+      "data-display",
+      "user",
+      "image",
+      "initials",
+      "profile",
+      "status",
+      "presence",
+      "group",
+      "stacked",
+      "tone",
+      "fallback"
+    ],
+    "status": "stable",
+    "version": "0.2.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-24",
+      "requirements": "头像组件,展示用户图片或姓名首字母占位。补强到生产级深度:接全库 tone 槽位(只读 6 槽位,零硬编码配色)、name 哈希确定性配色、img 加载失败回退、状态点(presence,可脉冲)、光环/边框、circle/rounded/square 三形状、尺寸预设与 number 像素尺寸(随密度缩放)、实例级 glow、fallback 槽位、imgProps 透传、asChild 多态、AvatarGroup 重叠堆叠+余量占位。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-* 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion 与 data-ms-motion/fx 总闸。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Avatar.tsx", "Avatar.css", "logic.ts", "Avatar.test.tsx", "index.ts"]
+  },
+  {
+    "id": "back-top",
+    "name": "BackTop",
+    "description": "固定定位的回到顶部浮钮:滚过阈值淡入、点击缓动滚回顶部,接 tone 色调与密度缩放。",
+    "category": "navigation",
+    "tags": ["navigation", "scroll", "back-to-top", "fab", "floating", "affix"],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-26",
+      "requirements": "长页面的「回到顶部」浮钮,定位 fixed 右下、距离可调(right/bottom)并叠加安全区。监听滚动容器(默认 window,可传 ()=>HTMLElement|Window 指向内部滚动容器),scrollTop 超过 visibilityHeight(默认 400)才淡入,否则淡出并移出 tab 序 + aria-hidden,避免不可见时被键盘/读屏命中。点击用 requestAnimationFrame + easeInOutCubic 缓动滚回顶部(可调 duration);prefers-reduced-motion 或 data-ms-motion=off 时降级为瞬时 scrollTo(0)。回顶动画与用户 onClick 解耦合并(composeEventHandlers,用户可 preventDefault 阻断回顶)。tone 7 色只读全库槽位、circle/square 形状、尺寸随 data-ms-density 缩放、focus-visible 发光环。缓动/滚动插值/可见性判定抽到零依赖 logic.ts 以便平移其它框架。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["BackTop.tsx", "BackTop.css", "logic.ts", "index.ts"]
+  },
+  {
+    "id": "badge",
+    "name": "Badge",
+    "description": "状态 / 计数 / 角标徽标。solid·soft·outline·glow 四变体 × 七语义色调(经全库 tone resolver,只读 6 槽位、零硬编码配色);圆点 dot(可 pulse 呼吸)、数字徽标(count·max·showZero、tabular-nums)、角标 overlap(standalone=false 包裹宿主、四角定位)、size(sm/md 随密度缩放)、icon 槽位、asChild 多态。动效尊重 prefers-reduced-motion 与 data-ms-motion,发光受 data-ms-fx 总闸门控。",
+    "category": "data-display",
+    "tags": [
+      "badge",
+      "tag",
+      "label",
+      "chip",
+      "status",
+      "count",
+      "dot",
+      "notification",
+      "indicator",
+      "data-display",
+      "pill"
+    ],
+    "status": "stable",
+    "version": "0.2.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-24",
+      "requirements": "状态 / 计数 / 角标徽标(旗舰深度):四变体(solid/soft/outline/glow)× 七语义色调,接全库 tone resolver(只读 6 槽位 --ms-c / --ms-c-hover / --ms-c-active / --ms-on-c / --ms-c-soft / --ms-c-glow,零硬编码配色)。圆点 dot(可 pulse)、数字徽标(count + max 默认 99 + showZero,圆角 full)、角标 overlap(standalone=false 用 children 包裹宿主、top/bottom × start/end 四角定位)、size(sm/md 随 --ms-density-scale 缩放)、icon ReactNode 槽位、asChild 多态。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-* 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion 与 data-ms-motion/data-ms-fx 总闸。数字推导逻辑抽离为框架无关纯函数(logic.ts)便于平移 core。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Badge.tsx", "Badge.css", "logic.ts", "index.ts"]
+  },
+  {
+    "id": "blockquote",
+    "name": "Blockquote",
+    "description": "块级引用 <blockquote>:左强调条/柔底块/卡片/纯文字四变体,读全库 tone 槽位上色;出处槽(footer+cite)、机器可读 citeUrl、图标/装饰大引号槽,尺寸走流式字阶;魔法渐变强调条与发光,受全局 motion·fx 双降级;多态 as/asChild、forwardRef、classNames 子部件定制与全原生属性透传。",
+    "category": "typography",
+    "tags": [
+      "blockquote",
+      "quote",
+      "引用",
+      "出处",
+      "cite",
+      "typography",
+      "tone",
+      "magic",
+      "accent"
+    ],
+    "status": "draft",
+    "version": "0.0.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-26",
+      "requirements": "块级引用 typography 组件:语义 <blockquote>,出处(footer/cite 或 cite 属性)、引号/自定义图标槽、tone(左强调条读 --ms-c、柔底 --ms-c-soft)、variant、size,复用 typography.css 行高/字号。对标旗舰 Text/Button:多态 as/asChild、tone resolver 6 槽位、魔法渐变/发光 + prefers-reduced-motion 与 data-ms-motion=off 双降级、forwardRef + 全 rest 透传 + classNames 子部件映射、内容边界不撑破、strict TS。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Blockquote.tsx", "Blockquote.css", "logic.ts", "index.ts"]
+  },
+  {
+    "id": "breadcrumb",
+    "name": "Breadcrumb",
+    "description": "面包屑导航(生产级):nav>ol>li 结构,链接项读 tone 槽位加可降级 hover 微光,当前项 aria-current=\"page\" 不可点。支持 tone 色调、maxItems 折叠省略(可展开)、itemRender/item.render/linkAs 自定义渲染(接路由库)、onItemClick/item.onClick 路由拦截(preventDefault)、item.icon、classNames 子部件类名钩子、...rest 透传 nav 原生事件、i18n aria-label。",
+    "category": "navigation",
+    "tags": [
+      "navigation",
+      "breadcrumb",
+      "nav",
+      "link",
+      "dark",
+      "arcane",
+      "tone",
+      "collapse",
+      "router",
+      "i18n",
+      "a11y"
+    ],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-25",
+      "requirements": "面包屑导航:nav>ol>li 结构,链接项用 link 色加 hover 微光,当前项 aria-current=\"page\" 用 fg 色不可点,项间插装饰性分隔符。工程要求(magic-scope 结构/导航组件):自研、消费 tokens,完整状态、键盘可达、fx/motion 开关、逻辑属性。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Breadcrumb.tsx", "Breadcrumb.css", "logic.ts", "index.ts"]
+  },
+  {
+    "id": "button",
+    "name": "Button",
+    "description": "主操作按钮(旗舰深度组件)。tone(6 语义色,经全库统一 resolver 派生)× variant(solid/soft/outline/ghost/link)× size(随 data-ms-density 缩放)+ loading(aria-busy/保宽/旋转环)、leftIcon/rightIcon/iconOnly、fullWidth、shape、实例级 glow、asChild 多态渲染。配套 ButtonGroup(吸附相邻按钮)。完整状态与过渡、tone 发光环、设备适配。",
+    "category": "actions",
+    "tags": ["button", "button-group", "action", "form", "tone", "loading", "icon", "as-child"],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-24",
+      "requirements": "magic-scope 首个示例组件:验证 @magic-scope/tokens(--ms-* 变量与主题引擎)与收录流水线端到端打通。自研、零依赖,完整覆盖 hover/active/focus-visible/disabled 状态与平滑过渡,solid 变体带发光,尊重 prefers-reduced-motion。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Button.tsx", "Button.css", "index.ts"]
+  },
+  {
+    "id": "calendar",
+    "name": "Calendar",
+    "description": "独立月历:整月铺展的日期网格,支持单选 / 范围 / 多选、今天高亮、禁用规则、周起始切换、单元格自定义渲染与完整键盘网格导航。",
+    "category": "data-display",
+    "tags": [
+      "calendar",
+      "date",
+      "month-view",
+      "date-grid",
+      "range",
+      "multiple",
+      "keyboard-navigation",
+      "i18n",
+      "a11y"
+    ],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "inspired",
+      "url": "https://ant.design/components/calendar",
+      "capturedAt": "2026-06-26",
+      "requirements": "需要一个区别于 DatePicker(输入框 + 弹层)的『独立月历』:直接平铺在页面中展示一整月,顶部可逐月 / 逐年翻页并显示年月标题,主体是周几表头 + 6×7 固定日格(含上 / 下月补位并弱化样式),用于排期 / 日程 / 数据看板等场景。选择需同时覆盖单选(value)、范围(mode=range)、多选(mode=multiple);today 高亮、disabledDate 与 minDate/maxDate 禁用、weekStartsOn 周起始可配;关键是 renderCell / dateCellRender 留口,以便在日格上挂事件圆点 / 徽标(对标 Ant Design Calendar 的 dateCellRender)。交互上要做成无障碍网格(role=grid),提供完整键盘导航(方向键逐日 / 逐周、PageUp/Down 逐月、Shift+PageUp/Down 逐年、Home/End 本周首尾、Enter/Space 选中),焦点日 roving 且跨月自动翻页。两种尺寸:fullscreen 占满与 compact 紧凑。月名 / 周名 / 日期文案经 Intl 按 locale 本地化,不硬编码语言;日期数学独立成纯函数内核(零外部库)以便正确性可测与跨框架平移。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Calendar.tsx", "Calendar.css", "logic.ts", "index.ts"]
+  },
+  {
+    "id": "card",
+    "name": "Card",
+    "description": "内容卡片容器(旗舰深度):elevated(柔和阴影)/ outline(描边)两变体,tone 语义色调经全库 tone resolver 派生配色,padding 档位随密度缩放(none 供满血媒体)。interactive 时 hover 上浮发光、键盘聚焦环并支持 Enter/Space 激活;asChild 多态渲染为 a/article/路由 Link。配套 CardHeader/CardTitle/CardBody/CardFooter/CardMedia 子部件自由组合。",
+    "category": "layout",
+    "tags": [
+      "card",
+      "layout",
+      "container",
+      "surface",
+      "elevated",
+      "outline",
+      "interactive",
+      "tone",
+      "padding",
+      "media",
+      "header",
+      "footer",
+      "composable",
+      "as-child",
+      "keyboard"
+    ],
+    "status": "stable",
+    "version": "0.2.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-24",
+      "requirements": "内容卡片容器,支持 elevated(柔和阴影)与 outline(描边)两种变体,可设为 interactive 时 hover 上浮并发光。补强到生产级深度:tone 语义色调(读 tone 6 槽位,不写死语义色)、padding 档位(随密度缩放,none 供满血媒体)、interactive 键盘激活(Enter/Space → onClick,composeEventHandlers 合并不替换用户 handler)、asChild 多态(Radix Slot 风格,渲染为 a/article/路由 Link)、可组合子部件 CardHeader/CardTitle/CardBody/CardFooter/CardMedia。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-* 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion 与 data-ms-fx/motion 总闸。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Card.tsx", "Card.css", "index.ts"]
+  },
+  {
+    "id": "carousel",
+    "name": "Carousel",
+    "description": "轮播组件:slide(横/纵)与 fade 双切换效果、loop 环绕、autoplay(间隔 + 悬停暂停)、可点指示点、prev/next 箭头、指针拖拽切换,受控 activeIndex/onChange 与命令式 goTo 双通道,完整 a11y 与动效降级。",
+    "category": "data-display",
+    "tags": ["carousel", "slider", "slideshow", "gallery", "autoplay", "data-display", "magic"],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-26",
+      "requirements": "需要一个内容轮播:用 children 即一屏的直觉 API,支持横/纵滑动与淡入淡出两种切换、循环、自动播放(可悬停暂停)、指示点跳转、箭头翻页与指针拖拽。把索引推进/环绕/夹取/是否自动播放抽成零 React 纯函数(logic.ts)以便平移其它框架。无障碍要做到位:role=region + aria-roledescription=carousel、非活动 slide 隐藏且不可聚焦、指示点与箭头有清晰 aria-label 并接 i18n。诚实备注:v1 用 index 取模环绕 + 单条 track transform 位移,不做首尾克隆的无缝无限滚动(留待 v2)。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Carousel.tsx", "Carousel.css", "logic.ts", "index.ts"]
+  },
+  {
+    "id": "cascader",
+    "name": "Cascader",
+    "description": "级联选择器:从层级数据中逐级选出一条路径。trigger 显示选中路径,Popover 浮层承载多列级联菜单(hover/点击展开下一列,点叶子提交),支持 changeOnSelect、受控/非受控、完整键盘导航与 menu/menuitem 无障碍。",
+    "category": "forms",
+    "tags": ["cascader", "级联", "多级选择", "树形", "路径选择", "select", "forms"],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-26",
+      "requirements": "省/市/区、商品多级分类这类层级数据,需要让用户沿一条路径逐级收窄、最终落到一个叶子(或允许 changeOnSelect 半路落点)。要点:多列同屏展开而非逐级弹窗,鼠标 hover 即预览下一级、键盘四向(↑↓ 列内、← → 跨列)可达,禁用节点既不可选也不可作为中转;选中结果以 string[] 路径表达,沿途 optionPath 一并回传供业务取每级数据;路径查找/列展开等纯算法抽到 logic.ts 以便平移到其它框架内核。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Cascader.tsx", "Cascader.css", "logic.ts", "index.ts"]
+  },
+  {
+    "id": "center",
+    "name": "Center",
+    "description": "居中盒:用 flex + place-items 把子内容在水平/垂直/双轴上居中。支持 axis(both/horizontal/vertical)、inline(inline-flex)、gap/padding(间距 token 档)、minBlockSize(撑高度,常用于整屏垂直居中);多态 as 与 asChild(Slot)。axis/gap/padding/minBlockSize 均支持单值或断点对象(如 { base, md, lg })响应式形式。",
+    "category": "layout",
+    "tags": [
+      "layout",
+      "center",
+      "centering",
+      "flexbox",
+      "place-items",
+      "vertical-center",
+      "responsive",
+      "polymorphic",
+      "rtl"
+    ],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-26",
+      "requirements": "需要一个纯结构性的居中盒:把子内容水平+垂直居中(display flex/grid place-items center),可选 inline(inline-flex)、axis(both/horizontal/vertical)切换居中轴、minBlockSize 撑高度。多态 as + asChild + ...rest 透传。对齐 magic-scope layout 标准:间距 token 化、CSS 逻辑属性 RTL 友好、axis/gap/padding/minBlockSize 支持断点对象响应式(断点对象解析在 logic.ts 零 React)。对标 Chakra/Mantine 的 Center,叠加响应式断点对象与多态留口的优势。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Center.tsx", "Center.css", "logic.ts", "index.ts"]
+  },
+  {
+    "id": "checkbox",
+    "name": "Checkbox",
+    "description": "基于原生 input[type=checkbox] 的深度复选框:7 色调(tone resolver 槽位化)、sm/md/lg 尺寸随密度缩放、indeterminate 半选、次级说明 description、onCheckedChange 语义回调,根 label 全事件透传、onChange compose 不覆盖;配套 CheckboxGroup(受控/非受控多选,自动判定 checked)。选中时方块染 tone 色画对勾、带发光聚焦环,尊重 reduced-motion。",
+    "category": "forms",
+    "tags": [
+      "checkbox",
+      "checkbox-group",
+      "form",
+      "input",
+      "toggle",
+      "selection",
+      "multi-select",
+      "indeterminate",
+      "tone",
+      "accessible"
+    ],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-24",
+      "requirements": "基于原生 input[type=checkbox] 的复选框,选中时方块染主色并以对勾呈现,带发光聚焦环。工程要求(magic-scope 通用基础组件):自研、消费 tokens 的 --ms-* 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Checkbox.tsx", "Checkbox.css", "index.ts"]
+  },
+  {
+    "id": "code",
+    "name": "Code",
+    "description": "代码原语。行内默认 <code>,block 切到 <pre><code>(保留空白 white-space:pre + 横向滚动 overflow-x:auto + tabSize)。变体 solid/soft/outline/ghost × tone 走全库 tone resolver(只读 6 槽位,零硬编码配色);mono 等宽字体(--ms-font-mono)、size 走流式字阶随密度缩放。块级支持 copyable(剪贴板复制 + 已复制反馈,文案走 i18n typography.copy/copied,onCopy 语义回调)、lineNumbers(CSS counter,不污染复制内容);glow 发光点缀尊重 data-ms-fx / prefers-reduced-motion。留口:...rest 透传 / forwardRef 到根 / asChild 多态(行内) / classNames 定制内层 code 与复制按钮 / className·style 合并。复制与抽文本纯逻辑在 logic.ts(零 React,可平移 core)。",
+    "category": "typography",
+    "tags": [
+      "code",
+      "typography",
+      "inline-code",
+      "code-block",
+      "pre",
+      "monospace",
+      "copy",
+      "clipboard",
+      "syntax",
+      "tone",
+      "magic-glow"
+    ],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-26",
+      "requirements": "代码组件:默认行内 <code>;block 切块级 <pre><code>(white-space:pre + overflow-x:auto + tabSize)。variant solid/soft/outline/ghost(Radix 式读 tone 槽位)+ tone;块级支持 copyable(走 typography.copy/copied);mono 字体(--ms-font-mono)、size。对标旗舰 Button/Text:tone resolver、发光双降级、forwardRef/...rest/as·asChild/classNames 留口、i18n、strict TS、内容边界。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Code.tsx", "Code.css", "logic.ts", "index.ts"]
+  },
+  {
+    "id": "collapsible",
+    "name": "Collapsible",
+    "description": "单项折叠原语:Trigger 切换按钮 + Content 可折叠区,受控/非受控,高度过渡平滑展开收起,Content 常驻挂载保活子树。",
+    "category": "data-display",
+    "tags": ["collapsible", "disclosure", "expandable", "toggle", "primitive", "show-hide"],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-26",
+      "requirements": "需要一个比 Accordion 更底层的单个开合原语:没有 single/multiple 互斥分组,只管「一段内容的展开与收起」,供使用方自由拼装(FAQ 行、设置项、详情展开块、侧栏分区等)。对标 Radix Collapsible 的复合 API(Root + Trigger + Content),提供受控/非受控双通道、disabled 整体禁用。高度过渡用 grid-template-rows 0fr↔1fr 平滑撑高,并随 reduced-motion / data-ms-motion=off 降级为瞬时。a11y:Trigger 原生 button + aria-expanded/aria-controls,Content role=region + aria-labelledby。兼容性取舍(透明备注):Content 始终常驻挂载(对齐 Accordion),靠 data-state 切换网格行高 + visibility 延迟过渡播双向动画、inert={!open} 隐藏交互/读屏。此设计取代了早期「收起即卸载 + 退场暂留 + 硬编码 400ms 兜底定时器」实现——后者有三个真实 bug:收起那拍渲染守卫先于 effect 卸载又重挂(收起动画不播 + Content 子树及其 state/输入值/滚动/焦点被销毁)、首次展开带 open 态直接插入 DOM 无样式变化(展开动画被跳过)、兜底定时器硬编码 400ms(覆盖 --ms-dur-base≥400ms 时收起动画被提前卸载截断)。常驻挂载一并根治三者且无需任何兜底定时器。代价:forceMount 属性(根 + Content 实例级)因 Content 已恒挂载而成为 no-op,标 @deprecated 仅为不破坏既有 API;不再有「收起后从 DOM 卸载」行为,依赖收起卸载省渲染开销者需自行条件渲染整个 Collapsible。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": [
+      "Collapsible.tsx",
+      "Collapsible.css",
+      "logic.ts",
+      "logic.test.ts",
+      "Collapsible.test.tsx",
+      "index.ts"
+    ]
+  },
+  {
+    "id": "color-picker",
+    "name": "ColorPicker",
+    "description": "颜色选择器:饱和度-明度 2D 面板 + hue / alpha 滑条 + 格式文本输入(hex/rgb/hsl 互转)+ 预设色板 + EyeDropper 屏幕取色 + 预览,色块按钮触发并复用 Popover 浮层。",
+    "category": "forms",
+    "tags": [
+      "color",
+      "color-picker",
+      "hsv",
+      "rgb",
+      "hsl",
+      "hex",
+      "eyedropper",
+      "alpha",
+      "swatch",
+      "popover",
+      "forms"
+    ],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-26",
+      "requirements": "需要一个能覆盖完整取色工作流的颜色选择器:用户既要能在二维面板上拖拽直觉地调饱和度/明度,又要能精确粘贴 hex/rgb/hsl 任意格式的色值并在三种表示间自由切换;支持透明度(alpha)与预设色板复用品牌色;在 Chromium 上还能用系统级 EyeDropper 从屏幕任意位置吸色。设计上把全部色彩数学(HSV/RGB/HSL/HEX 互转、parseColor/formatColor)抽成零依赖纯函数沉到 logic.ts,组件做薄壳,以便后续平移到 vue / web-component 时共用同一套色彩语义;内部状态统一以 HSVA 为真相源(2D 面板天然映射 s/v、hue 滑条给 h、alpha 滑条给 a)。交互全键盘可达(面板与各滑条均 role=slider、方向键微调),诚实暴露 EyeDropper 的浏览器兼容边界(不支持即不渲染该按钮)。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": [
+      "ColorPicker.tsx",
+      "ColorPicker.css",
+      "logic.ts",
+      "logic.test.ts",
+      "ColorPicker.test.tsx",
+      "index.ts"
+    ]
+  },
+  {
+    "id": "command",
+    "name": "Command",
+    "description": "命令面板(⌘K):带模糊 / 子串过滤、命中高亮、键盘导航与分组的可组合命令搜索框,可独立内嵌或包成 Command.Dialog 模态(可监听 mod+k 唤起)。",
+    "category": "navigation",
+    "tags": [
+      "command",
+      "command-palette",
+      "cmdk",
+      "search",
+      "spotlight",
+      "navigation",
+      "keyboard",
+      "combobox",
+      "fuzzy"
+    ],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "inspired",
+      "url": "https://cmdk.paco.me/",
+      "capturedAt": "2026-06-26",
+      "requirements": "需要一个对标 cmdk / raycast / macOS Spotlight 的命令面板:用户按 ⌘K 唤起,输入即时过滤命令(支持连续子串与允许跳字符的模糊匹配),命中字符要高亮;↑↓ 在结果间移动且跳过禁用项与分组标题,Enter 执行,Home/End 跳首尾;命令可分组(组头不可选)、可加关键词别名参与匹配、可挂图标与快捷键提示;既能作为页内内嵌控件,也能一键包进模态对话框(复用 Dialog 的焦点陷阱 / Esc / top-layer)。过滤 / 分组拍平 / 键盘落点等算法必须抽成框架无关纯逻辑以便平移 core。a11y 走 combobox + listbox + option 组合角色(aria-expanded / aria-controls / aria-activedescendant / aria-selected)。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Command.tsx", "Command.css", "logic.ts", "index.ts"]
+  },
+  {
+    "id": "config-provider",
+    "name": "ConfigProvider",
+    "description": "全局配置上下文(utility):在一处统一设置全库设计开关——density(密度档)/ motion(动效总闸)/ fx(装饰发光总闸)/ tone(默认色调),经 data-ms-* 属性沿 CSS 级联下发(CSS-first,组件读祖先属性,不靠 JS prop 钻透)。可嵌套就近覆盖、可只设部分开关。同时 createContext 暴露 density/size/tone 默认值,经 useConfig() 供少数需 JS 默认值的组件兜底。给 messages 时内部用 i18n MessagesProvider 包裹下发/合并文案;locale 写到根 lang。as 多态根 / asChild Slot 把开关挂到已有节点,透明包裹不破坏文档语义。",
+    "category": "utility",
+    "tags": [
+      "config",
+      "provider",
+      "context",
+      "global",
+      "theme",
+      "density",
+      "motion",
+      "fx",
+      "tone",
+      "locale",
+      "i18n",
+      "css-cascade",
+      "data-attribute",
+      "as-child",
+      "polymorphic",
+      "utility"
+    ],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-26",
+      "requirements": "需要一个全库级的配置入口:把分散的设计开关(密度、动效强度、装饰发光、默认色调、默认尺寸、文案/语种)收到一处统一设置,避免每个组件各传一遍。架构定为 CSS-first——视觉开关经 data-ms-density/data-ms-motion/data-ms-fx/data-ms-tone 属性沿 CSS 级联下发,组件读祖先属性即可生效(消费 device.css/effects.css 已定义的 token),不再靠 JS prop 逐层钻透;这与项目「多框架对等、适配契约框架无关」的硬性约定一致(同一套 data 属性可平移到 vue/web component)。需支持嵌套就近覆盖与只设部分开关。少数组件需在渲染逻辑里读默认值(如 size 缺省兜底全局默认),故额外 createContext + useConfig() 暴露 density/size/tone——诚实定位:这是 JS 默认值通道,不是视觉开关的下发通道,绝大多数视觉开关靠 CSS data 属性。messages 经内部 MessagesProvider 合并下发(import 复用,不改共享 i18n)。留口:as 多态 / asChild Slot(把开关直接挂到布局根/html 镜像,免多包一层 div)、forwardRef、原生属性透传、className/style 合并;a11y 上默认透明包裹(div + display:contents)不引入额外盒子、不强加 role。把可抽取的「props→data 属性」纯映射放 logic.ts 便于平移其它框架。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["ConfigProvider.tsx", "ConfigProvider.css", "logic.ts", "logic.test.ts", "index.ts"]
+  },
+  {
+    "id": "container",
+    "name": "Container",
+    "description": "居中定宽容器:限宽(sm/md/lg/xl/full 或自定义)+ 水平居中 + 响应式内边距(token 档/断点对象/流式 clamp),支持垂直居中、满宽、多态 as 与 asChild。RTL 友好的 CSS 逻辑属性实现。",
+    "category": "layout",
+    "tags": [
+      "layout",
+      "container",
+      "wrapper",
+      "responsive",
+      "centered",
+      "max-width",
+      "spacing",
+      "rtl",
+      "polymorphic"
+    ],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-26",
+      "requirements": "新增布局组件 Container：居中定宽容器。size(sm/md/lg/xl/full 或自定义 max-inline-size，映射断点 token 宽度)、自动水平居中(margin-inline:auto)、响应式内边距(padding-inline 随断点、clamp)、centered?(整屏垂直居中)、fluid?(满宽)。多态 as(默认 div，语义场景 section/main)。布局组件为结构性：多态 + asChild、间距 token 化、断点对象响应式、CSS 逻辑属性 RTL 友好；无 tone/发光、无 i18n 文案。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Container.tsx", "Container.css", "logic.ts", "index.ts"]
+  },
+  {
+    "id": "context-menu",
+    "name": "ContextMenu",
+    "description": "右键菜单(旗舰深度)。右键(contextmenu)在包裹区域弹出,定位光标处(越界自动夹回视口,纯函数 logic.ts),portal 到 body;点选/点外/Esc/滚动关闭;↑↓/Home/End/Enter/typeahead 键盘可达,role=menu/menuitem/menuitemcheckbox/menuitemradio。复用 Menu 的 MenuItem 与 logic(item/separator/group + icon/shortcut/checked/href),tone 7 色调只读 6 槽位 + 发光。事件全留口:包裹区 onContextMenu(可 preventDefault 拦截打开)+ onOpen(带坐标)、受控 open/onOpenChange 双通道、菜单级 onSelect、可拦截 onEscapeKeyDown/onPointerDownOutside;包裹根与浮层根透传原生属性(...rest / overlayProps),classNames / renderItem 定制。区别于点击锚定展开的 Menu。",
+    "category": "overlay",
+    "tags": [
+      "context-menu",
+      "right-click",
+      "menu",
+      "overlay",
+      "cursor",
+      "tone",
+      "typeahead",
+      "controllable",
+      "portal",
+      "keyboard"
+    ],
+    "status": "stable",
+    "version": "0.0.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-25",
+      "requirements": "补齐弹窗体系:右键菜单。原创实现,与点击锚定的 Menu 不重复——由 contextmenu 事件触发、定位在鼠标光标处(夹回视口),复用 Menu 的项结构与 .ms-menu__item 样式;点外/Esc/滚动关闭,键盘方向键可达。旗舰补强:复用 Menu MenuItem/logic(separator/group/icon/shortcut/checked/href + typeahead)、接 tone、事件全留口(onContextMenu 可拦截 / onOpen 带坐标 / onOpenChange 受控双通道 / onSelect / onEscapeKeyDown / onPointerDownOutside)、包裹根与浮层透传原生属性、classNames/renderItem。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["ContextMenu.tsx", "ContextMenu.css", "logic.ts", "index.ts"]
+  },
+  {
+    "id": "copy-button",
+    "name": "CopyButton",
+    "description": "复制按钮:点击把文本写入剪贴板并进入「已复制」反馈态(图标切对勾 + 可选 Tooltip),超时自动还原。复用 Button/Tooltip,带读屏播报与降级兜底。",
+    "category": "actions",
+    "tags": ["copy", "clipboard", "button", "action", "feedback", "tooltip"],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-26",
+      "requirements": "高频「一键复制」场景(token / 命令 / 分享链接)需要一个开箱即用的复制按钮:点击即写剪贴板,并给出明确的即时反馈,避免用户不确定是否复制成功。设计意图——复制成功后图标从复制图标切到对勾、可选 Tooltip 提示「已复制」,timeout(默认 1500ms)后自动还原成「复制」;复用 Button 的 tone/size/variant 与 Tooltip,不另起一套样式。剪贴板写入做特性检测降级:优先 navigator.clipboard.writeText(需安全上下文),回退 document.execCommand('copy')。a11y 要求 aria-label 随状态切换,并经 aria-live=polite 视隐区播报「已复制」让读屏用户感知。留口:render-prop children (copied)=>ReactNode、icon/copiedIcon 覆盖图标、onClick 经 composeEventHandlers 合并(可 preventDefault 阻断复制)。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": [
+      "CopyButton.tsx",
+      "CopyButton.css",
+      "logic.ts",
+      "logic.test.ts",
+      "CopyButton.test.tsx",
+      "index.ts"
+    ]
+  },
+  {
+    "id": "date-picker",
+    "name": "DatePicker",
+    "description": "日期选择器:single/range 双模、date/month/year 三视图日历、min/max/disabledDate、范围预设、可清除、键盘导航、Intl 本地化、tone 发光与 invalid 态(供 Form 集成)。",
+    "category": "forms",
+    "tags": ["date", "calendar", "range", "picker", "form-control", "i18n", "a11y"],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-26",
+      "requirements": "做一个生产级日期选择器。硬约束:① 所有日期数学(月历矩阵、加减月/年、范围判定、夹取、ISO 解析)纯 TS 进 logic.ts,零 React/零 locale 硬编码,可平移 @magic-scope/core;② 月名/周名/显示格式经 Intl.DateTimeFormat 按 locale 取(不硬编码中文),UI 文案(今天/清除/上下月)走全库 i18n 字典;③ 日期一律按本地时区年月日处理(toISO 用本地 Y-M-D 非 UTC),避免跨时区偏一天;④ 复用全库 Popover 做浮层(点外/Esc/12 向 placement 复用,不重造);⑤ single + range 双模,range 带悬停预览 + 预设;⑥ date/month/year 三视图导航 + 完整键盘操作(方向键/PageUp-Down/Home-End/Enter);⑦ 日历用 ARIA grid 模式(role=grid/gridcell、aria-selected、aria-current);⑧ tone 聚焦发光 + invalid→danger,trigger 仿 Input,便于嵌进 Form(经 render-prop 或显式 control)。诚实取舍:v1 trigger 为只读式(点开日历选择),自由文本输入解析延后;时间选择(时分秒)延后。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["DatePicker.tsx", "Calendar.tsx", "logic.ts", "DatePicker.css", "index.ts"]
+  },
+  {
+    "id": "descriptions",
+    "name": "Descriptions",
+    "description": "描述列表(键值展示)。CSS Grid 排布,items 数据或 Descriptions.Item 复合子组件双入口;span 跨列、行末 filler 补齐由纯逻辑层计算;columns 支持响应式断点对象随屏收窄(每断点一个 CSS 变量 + 静态 @media 级联);bordered 表格态、size 三档随密度缩放、horizontal/vertical 排布、colon、tone 语义色(标签软底/强调描边/发光);title/extra/emptyText ReactNode 槽、classNames 部件定制、多态 as;空态走 i18n。",
+    "category": "data-display",
+    "tags": [
+      "descriptions",
+      "description-list",
+      "key-value",
+      "data-display",
+      "grid",
+      "responsive",
+      "bordered",
+      "definition-list",
+      "detail"
+    ],
+    "status": "stable",
+    "version": "0.0.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-26",
+      "requirements": "描述列表(键值展示,对标 AntD Descriptions):items {label,value/children,span?}[] 或复合 Descriptions.Item 子组件;columns(number 默认 3,或响应式断点对象,随屏收窄)、bordered(带边框表格态)、size(sm/md/lg)、layout(horizontal 默认 / vertical)、title?/extra? 槽、colon。用 CSS grid 排布,span 跨列。多态 as。logic.ts 放 columns 响应式 + span 布局解析。遵循 magic-scope 旗舰标准(tone 6 槽位 / 密度缩放 / 减动降级 / strict TS / i18n 空态 / 留口)。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Descriptions.tsx", "Descriptions.css", "logic.ts", "index.ts"]
+  },
+  {
+    "id": "dialog",
+    "name": "Dialog",
+    "description": "模态对话框,基于原生 <dialog> + showModal:焦点陷阱 / Esc / 遮罩 / top-layer。Header/Title/Description/Body/Footer 子部件自动关联 aria;size(sm/md/lg/full)× placement(center/top)变体;tone 语义色 + 槽位发光;onOpenChange 双通道、onEscapeKeyDown/onPointerDownOutside/onInteractOutside 可拦截关闭;classNames / panelProps / asChild / renderPanel 留口;closeIcon / hideCloseButton;尊重 reduced-motion 与 motion/fx 总闸",
+    "category": "overlay",
+    "tags": ["dialog", "modal", "overlay", "tone", "compound", "a11y", "controlled", "asChild"],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-24",
+      "requirements": "magic-scope overlay 首个组件:模态对话框。用满平台原生能力——原生 <dialog> + showModal() 自带焦点陷阱 / Esc / ::backdrop / top-layer;自研封装受控 open、点遮罩关闭、@starting-style + allow-discrete 入场动画(光影/动效受 fx/motion 开关控制)。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Dialog.tsx", "Dialog.css", "index.ts"]
+  },
+  {
+    "id": "divider",
+    "name": "Divider",
+    "description": "分隔线(深度组件):水平/垂直朝向,solid/dashed/dotted 线型,thickness/spacing(随密度缩放),tone 语义色调(线色与微光读 6 槽位),children/label 文字分隔(role=separator + 两侧画线 + textAlign 偏置)。无内容用语义 <hr>,有内容升级为 separator;...rest 全量透传原生属性与事件。",
+    "category": "layout",
+    "tags": [
+      "divider",
+      "separator",
+      "layout",
+      "horizontal",
+      "vertical",
+      "rule",
+      "dashed",
+      "dotted",
+      "tone",
+      "label",
+      "text-divider",
+      "thickness",
+      "spacing"
+    ],
+    "status": "stable",
+    "version": "0.2.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-24",
+      "requirements": "分隔线,支持水平/垂直朝向,带 separator 语义与 aria-orientation。补强到生产级深度:children/label 文字分隔槽位(两侧伪线 + textAlign)、tone 语义色调(读 tone 6 槽位 --ms-c/--ms-c-glow,默认 neutral=border 色)、variant(solid/dashed/dotted)、thickness/spacing(spacing 随 --ms-density-scale 缩放)。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-* 变量,完整状态与过渡、发光(受 --ms-fx-glow 调制、data-ms-fx=off 总闸),尊重 prefers-reduced-motion 与 data-ms-motion。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Divider.tsx", "Divider.css", "Divider.test.tsx", "index.ts"]
+  },
+  {
+    "id": "drawer",
+    "name": "Drawer",
+    "description": "侧边抽屉(旗舰深度)。基于原生 <dialog> + showModal()(焦点陷阱、Esc、::backdrop、top-layer)。受控 open + onOpenChange 双通道,四方向滑入(start/end/top/bottom),size 档位(sm/md/lg)控横/纵向尺寸,tone 语义色调读统一 6 槽位(focus 环 / 发光)。可拦截的 Esc(onEscapeKeyDown)与点遮罩(onPointerDownOutside/onInteractOutside,preventDefault 阻止关闭,适配未保存表单二次确认)。header 整块或 title 头部(aria-labelledby 关联)、Footer 固定底栏(安全区避让)、可换 closeIcon / 隐藏关闭钮、classNames 各部件细粒度定制、asChild 替换 panel。点遮罩关闭、锁背景滚动、安全区避让、进出场滑动动画,尊重 reduced-motion 与 fx/motion 总闸。原生事件经 compose 转发不丢用户处理器。",
+    "category": "overlay",
+    "tags": [
+      "drawer",
+      "sidebar",
+      "panel",
+      "overlay",
+      "sheet",
+      "dialog",
+      "tone",
+      "footer",
+      "controlled",
+      "dismissable",
+      "accessible"
+    ],
+    "status": "stable",
+    "version": "0.0.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-25",
+      "requirements": "补齐弹窗体系:侧边抽屉。原创实现,与 Dialog 同构(原生 <dialog> showModal 白嫖焦点陷阱/Esc/top-layer),贴边定位 + 四方向滑入,内建头部/关闭、锁滚动、安全区。常用于移动导航、设置、详情面板。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Drawer.tsx", "Drawer.css", "index.ts"]
+  },
+  {
+    "id": "dropdown",
+    "name": "Dropdown",
+    "description": "下拉菜单便捷封装:trigger 元素 + 数据驱动菜单项(或 children 复合用法),点击 / 悬停展开;复用 Popover 浮层定位与 Menu 渲染契约,支持选中关闭、键盘导航、一层子菜单与受控开合。",
+    "category": "navigation",
+    "tags": ["dropdown", "menu", "navigation", "popover", "overlay", "submenu", "keyboard", "a11y"],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-26",
+      "requirements": "需要一个比裸 Menu 更省事的下拉入口:业务多数场景就是『一个按钮 + 一组动作项』,不想每次手接 trigger 注入、浮层、roving 焦点。于是做一层便捷封装——trigger 注入 aria-haspopup=menu/aria-expanded/aria-controls,items 数据驱动(label/icon/onClick/disabled/danger/separator/group/checked/href)或 children 复合二选一;支持 click 与 hover 两种触发、12 向 placement、选中即关(closeOnSelect)、Enter/↓ 打开与菜单内 ↑↓/Home/End/typeahead/Esc 全键盘、受控与非受控开合。子菜单先支持一层(hover 或 → 展开,← 收起),深层嵌套留 TODO,诚实备注不藏坑。浮层定位与配色复用已落地的 Popover/Menu 语义,保证与全库一致。",
+      "notes": "选中态项口径:任意 `checked !== undefined` 的项(无论是否显式给 selectionRole)都按 menuitemcheckbox/menuitemradio 渲染,且选中后保持菜单打开便于连续切换——渲染推导与 keepOpen 判定同一口径,父项与子菜单项一致。disabled 行为:非受控用法下置 disabled 会同步把内部开合态归零,『禁用→再启用』不自动复现上次打开态。菜单内 Tab 关闭时 preventDefault 并把焦点显式交还 trigger,避免 top-layer 同步隐藏导致焦点落空。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Dropdown.tsx", "Dropdown.css", "logic.ts", "index.ts"]
+  },
+  {
+    "id": "editable",
+    "name": "Editable",
+    "description": "行内编辑:点击/聚焦文本切换为输入态,Enter 或失焦提交、Esc 取消还原;支持多行(textarea)、受控/非受控值与编辑态双通道、selectAllOnFocus、submitOnBlur/Enter 开关与 renderPreview/renderEdit 留口。",
+    "category": "forms",
+    "tags": ["editable", "inline-edit", "input", "textarea", "form", "controlled"],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-26",
+      "requirements": "需要一个把静态文本就地变成可编辑输入的轻控件:展示态看似纯文本(空值显示占位),点击或键盘进入编辑态,Enter/失焦提交、Esc 取消还原,值变化才回调。要能进 Form(invalid/maxLength),要给用户完全替换两态渲染的口子(renderPreview/renderEdit),并把提交/取消的键盘语义与值流转抽成零 React 的纯逻辑,便于平移多框架内核。",
+      "notes": "进入编辑态的 seed(快照 editStartValue + 草稿 draft)由 editing 的 false→true 上升沿统一驱动(useLayoutEffect),受控编辑(父级直接翻 editing,不点击)与非受控(点击/键盘 enterEdit)共用同一套填充逻辑——保证受控通道下值未改不误触发 onChange、且进入编辑展示最新 currentValue(含『一次性 setState 既给新值又开编辑』)。invalid 语义:展示态与编辑态在 invalid 时都带 aria-invalid,校验失败态对辅助技术连续可感知。renderPreview 自定义展示态的两点透明边界:① 焦点回收依赖你把 render props 的 `ref` 接到一个可聚焦元素上,不接则退出编辑(提交/取消/Esc)后焦点会丢到 <body>;② invalid 语义需你自行用 render props 的 `invalid` 打 aria-invalid(默认展示态已内建)。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Editable.tsx", "Editable.css", "logic.ts", "index.ts"]
+  },
+  {
+    "id": "empty",
+    "name": "Empty",
+    "description": "空状态(生产级深度,对标 AntD Empty):无数据 / 无结果时的占位与引导。image 不传走内置极简插画(预设 default 文档卡片 / simple 托盘,均 currentColor + tone 着色),可传自定义 ReactNode 或 false 关闭;description 默认走 i18n empty.description(暂无数据),可覆盖或 false 关闭;children 作底部操作区(如重试按钮);size(sm/md/lg)随 data-ms-density 缩放;tone 7 档语义色经统一 6 槽位驱动插画着色与发光;多态 as + asChild(Slot)、classNames 部件级定制、forwardRef、...rest 透传;发光与微动尊重 prefers-reduced-motion 与 data-ms-fx/data-ms-motion 总闸。",
+    "category": "feedback",
+    "tags": [
+      "empty",
+      "feedback",
+      "placeholder",
+      "empty-state",
+      "no-data",
+      "no-result",
+      "illustration",
+      "tone",
+      "polymorphic",
+      "a11y"
+    ],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-26",
+      "requirements": "空状态组件,对标 AntD Empty:数据为空 / 搜索无结果 / 列表无项时,展示极简插画 + 描述文案 + 可选操作区,引导用户下一步。magic-scope 生产级通用组件:自研、消费 tokens 的 --ms-* 变量,内置插画用 currentColor + tone 着色,完整尺寸与 tone 体系、留口(多态 as / asChild / classNames / forwardRef),尊重 prefers-reduced-motion 与发光/动效总闸。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Empty.tsx", "Empty.css", "logic.ts", "index.ts"]
+  },
+  {
+    "id": "flex",
+    "name": "Flex",
+    "description": "通用 flexbox 布局原语。direction/align/justify/wrap/gap(行列可分)全部支持「单值 或 断点对象」响应式(如 gap={{ base: 2, md: 4 }}),经 --ms-flex-* CSS 变量 + 预展开静态 @media 块驱动;间距走 --ms-space-* token、对齐用逻辑值故 RTL 友好。inline 切 inline-flex;多态 as(默认 div)+ asChild(Slot 风格,mergeAsChildProps + composeRefs);配套 Flex.Item(item 级 grow/shrink/basis/align-self/order)。纯响应式解析逻辑抽到 logic.ts(零 React,可单测、可平移其它框架内核)。",
+    "category": "layout",
+    "tags": [
+      "flex",
+      "flexbox",
+      "layout",
+      "responsive",
+      "gap",
+      "direction",
+      "align",
+      "justify",
+      "wrap",
+      "as-child",
+      "polymorphic",
+      "rtl"
+    ],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-26",
+      "requirements": "magic-scope layout 分类的 flexbox 原语。对标主流库的 Flex/HStack/VStack:全部布局属性支持断点对象响应式(本库「多端适配」体现),响应式靠 JS 解析为带断点后缀的 CSS 变量 + 构建期预展开的静态 @media 块逐级提升(因 @media 条件里 var() 不生效)。间距 token 化(--ms-space-*)、对齐走 flex-start/flex-end 逻辑值 RTL 友好、多态 as + asChild 留口。纯逻辑放 logic.ts 以便单测与跨框架平移。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Flex.tsx", "Flex.css", "logic.ts", "index.ts"]
+  },
+  {
+    "id": "float-button",
+    "name": "FloatButton",
+    "description": "悬浮操作钮(固定定位):单钮(circle/square × default/primary × 7 色调 tone 只读 6 槽位)+ FloatButton.Group 堆叠/可展开菜单。单钮支持 icon、方形内 description 文字(超长截断不撑破)、数字/点 badge(超 overflowCount 截为 N+);传 href 渲染 <a>(导航语义,_blank 自动补 rel)、否则 <button>;传 tooltip 自动 Tooltip 包裹。Group:click/hover 触发展开,子项沿 direction(up/down/left/right)错峰弹出,受控 open + onOpenChange / 非受控双通道,触发钮收/展图标切换、aria-expanded/aria-controls 关联、收起态 inert + 移出 tab 序、Esc 收起。固定 right/bottom(默认 24)叠加 safe-area;尺寸随 data-ms-density,focus-visible 发光环;事件 composeEventHandlers 合并不丢用户处理器;错峰入场在 reduced-motion / data-ms-motion=off 下降级。",
+    "category": "navigation",
+    "tags": [
+      "float-button",
+      "fab",
+      "fixed",
+      "speed-dial",
+      "expandable",
+      "badge",
+      "tooltip",
+      "tone",
+      "controlled",
+      "compound",
+      "anchor",
+      "a11y",
+      "reduced-motion"
+    ],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-26",
+      "requirements": "需要一个生产级悬浮操作钮(对标 Ant Design FloatButton / Material FAB 且做出 magic 差异化):单钮要覆盖 circle/square 形状、default/primary 类型、全库 tone 槽位配色与发光、方形内文字 description、数字/点 badge、href 多态(导航语义)与可选 tooltip 包裹;复合形态 FloatButton.Group 要支持点击/悬停展开的纵向(及横向)speed-dial 菜单,带受控/非受控双通道、子项错峰入场、收/展图标切换。a11y 必须到位:触发钮 aria-expanded/aria-controls、收起态子项 inert 且不可聚焦、Esc 收起、键盘可达。固定定位叠加安全区,尺寸随密度缩放,动效在 prefers-reduced-motion 与 data-ms-motion=off 下优雅降级。可抽取的纯逻辑(badge 规整、错峰延时、reduced-motion 判定)落 logic.ts 以便平移其它框架。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["FloatButton.tsx", "FloatButton.css", "logic.ts", "index.ts"]
+  },
+  {
+    "id": "form",
+    "name": "Form",
+    "description": "表单子系统 + 校验引擎:订阅式切片 store(打字只重渲单字段)、双轨校验(内建 rules + Standard Schema 通吃 zod/valibot/arktype)、10 个异形控件显式适配器注入、FieldPath 端到端类型安全、校验态魔法发光。",
+    "category": "forms",
+    "tags": ["form", "validation", "schema", "field", "headless", "standard-schema", "composite"],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-26",
+      "requirements": "做一套对标 react-hook-form DX + antd Form 声明式 + 类型安全三者之长的表单子系统。硬约束:① 校验引擎与字段 store 必须零 React、纯 TS(进 logic.ts),为将来抽 @magic-scope/core 留口;② 大表单打字时表单根与兄弟字段零 re-render(细粒度 path 切片订阅 + useSyncExternalStore);③ 校验双轨可叠加——内建 rules(零依赖、可 i18n)+ Standard Schema v1(不 import zod、零运行时依赖,zod/valibot/arktype 原生兼容);④ 必须优雅注入库内 10 个 value/onChange 形态不统一的现有控件(Checkbox 用 checked、Slider/Rate 用数值、Select ref→button…),用显式适配器表而非 cloneElement 反射;⑤ 异步校验自带 AbortController 竞态取消 + 防抖;⑥ a11y 连线(label↔control、aria-invalid/describedby/required、提交聚焦首错);⑦ 校验态复用全库 tone resolver 发光 + 错误文案 role=alert 滑入不抖布局,作为「魔法」差异化。诚实取舍:Standard Schema v1 无跨厂商字段级 optionality 内省,故必填以显式 required 为准、不假装从 schema 自动推断;JSX 上 Field name 暂为 string,FieldPath 类型安全落在命令式 api(setValue/watch/trigger)。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": [
+      "Form.tsx",
+      "Field.tsx",
+      "Form.parts.tsx",
+      "adapters.ts",
+      "logic.ts",
+      "Form.css",
+      "index.ts"
+    ]
+  },
+  {
+    "id": "grid",
+    "name": "Grid",
+    "description": "CSS Grid 原语(生产级 layout 组件):columns(数字→等宽 repeat(minmax(0,1fr)) / 模板字符串 / 响应式断点对象)、minChildWidth 自适应列(auto-fit+minmax 折行)、gap/rowGap/columnGap(间距 token,响应式)、align/justify(items)与 alignContent/justifyContent、autoFlow/autoRows/autoColumns、inline-grid、容器查询模式(@container 随父容器自适应)。子部件 Grid.Item(colSpan/rowSpan→span / colStart/rowStart / alignSelf/justifySelf,均响应式)。多态 as + asChild,forwardRef 到根,...rest 全量透传。响应式靠「每断点一个 CSS 变量 + 静态 @media/@container 级联」实现(条件里 var() 不生效),断点档对齐 tokens 视口断点;纯解析逻辑在 logic.ts(零 React,可单测、可平移其它框架)。",
+    "category": "layout",
+    "tags": [
+      "grid",
+      "layout",
+      "css-grid",
+      "columns",
+      "gap",
+      "responsive",
+      "container-query",
+      "auto-fit",
+      "min-child-width",
+      "polymorphic",
+      "as-child",
+      "grid-item",
+      "col-span",
+      "row-span",
+      "rtl"
+    ],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-26",
+      "requirements": "新增 layout 基础组件 Grid:CSS Grid 原语。需求:columns 支持 number(→repeat(n,minmax(0,1fr)))/模板字符串/响应式断点对象;gap/rowGap/columnGap 接间距 token 且响应式;align/justify(items 与 content);autoFlow;autoRows;minChildWidth(repeat(auto-fit,minmax(minChildWidth,1fr)) 做自适应列);子部件 Grid.Item(colSpan/rowSpan/colStart/rowStart,响应式);多态 as;响应式靠 CSS 变量 + 容器查询/媒体查询。对齐 magic-scope 布局组件标准:多态 + asChild(mergeAsChildProps + composeRefs)、间距 token 化(--ms-space-N)、CSS 逻辑属性 RTL 友好、断点对象响应式(对齐 @magic-scope/tokens 视口断点 sm/md/lg/xl/2xl)、strict TS(exactOptionalPropertyTypes/noUncheckedIndexedAccess,纯逻辑下沉 logic.ts)。自研、零依赖,消费 tokens 的 --ms-* 变量。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Grid.tsx", "Grid.css", "Grid.test.tsx", "logic.ts", "index.ts"]
+  },
+  {
+    "id": "heading",
+    "name": "Heading",
+    "description": "h1–h6 语义标题,视觉与语义解耦(level 定标签 / variant 定视觉档:display·title·subtitle·overline·caption)。复用 Text 的字族·tone·字重·对齐·截断·折行(默认 balance 均衡)·渐变与发光;支持 anchor 永久链接(hover 浮出 # permalink,自动派生可读 slug,CJK 友好)。",
+    "category": "typography",
+    "tags": [
+      "heading",
+      "title",
+      "typography",
+      "h1-h6",
+      "semantic",
+      "variant",
+      "anchor",
+      "permalink",
+      "prose",
+      "polymorphic",
+      "gradient",
+      "glow",
+      "balance",
+      "magic"
+    ],
+    "status": "draft",
+    "version": "0.0.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-26",
+      "requirements": "生产级 typography 标题组件。要求:level(1-6) 定语义 hN 标签;variant 视觉档(display/title/subtitle/overline/caption,MUI 式视觉与语义解耦);复用 Text 的 family(display=Cinzel 魔法标题)/tone/weight/align/truncate/lineClamp/wrap(默认 balance 标题均衡)/gradient/glow;新增 anchor(boolean|string)——hover 出现 # permalink 锚点(给文档/Prose 用,带 id + 可点 # 链接,a11y)。内部复用 typography.css token 与 ms-text 同款类。对标旗舰 Button/Input/Text 的留口范式(forwardRef/...rest 透传/as/asChild/classNames/composeEventHandlers)。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Heading.tsx", "Heading.css", "logic.ts", "index.ts"]
+  },
+  {
+    "id": "hover-card",
+    "name": "HoverCard",
+    "description": "悬停富预览卡(生产级深度):trigger(链接/头像)hover 或 focus 延时 openDelay(默认 700ms)弹出可交互富内容卡,移开延时 closeDelay(默认 300ms)关闭;指针可从 trigger 移入卡内而不关闭(桥接宽限,纯逻辑做去向命中判定)。原生 Popover API(top-layer)+ CSS Anchor Positioning 锚定,12 向 placement + offset + 可选箭头 + tone 色调驱动边框/发光。复合 HoverCard / HoverCard.Trigger(asChild 注入)/ HoverCard.Content。受控(open+onOpenChange)/非受控(defaultOpen)双通道。a11y:补充信息层而非 dialog —— 不抢焦不困焦,trigger aria-describedby 关联卡片,Esc 关闭,键盘 focus 可触发;触屏(无 hover)诚实降级为 inert(建议改用点击触发的 Popover)。尊重 prefers-reduced-motion / [data-ms-motion=off] / [data-ms-fx=off],不支持锚定时优雅降级居中。",
+    "category": "overlay",
+    "tags": [
+      "hover-card",
+      "overlay",
+      "preview",
+      "popover-api",
+      "top-layer",
+      "anchor",
+      "placement",
+      "arrow",
+      "hover",
+      "bridge",
+      "tone",
+      "controllable",
+      "a11y"
+    ],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "inspired",
+      "url": "https://www.radix-ui.com/primitives/docs/components/hover-card",
+      "capturedAt": "2026-06-26",
+      "requirements": "需要一个「鼠标悬停在链接/头像上预览富信息」的 overlay,区别于 Tooltip:Tooltip 只承载短文字、且不该放可交互内容;HoverCard 要能放图文、链接、按钮等可交互富内容,并允许指针从 trigger 平滑移入卡片内继续操作(中间空白不能一移开就关)。交互手感:进入延时约 700ms 再弹(避免扫过即弹的噪声),移开延时约 300ms 再关(给指针穿越 trigger 与卡片间隙留宽限)。可访问性上它是『补充信息』不是对话框——不能抢焦/困焦,键盘聚焦也要能触发(否则纯键盘用户拿不到),Esc 可关,trigger 用 aria-describedby 关联卡片。触屏没有 hover,要诚实降级(建议改点击触发的 Popover),不留一张无法关闭的悬空卡。定位复用与 Popover/Tooltip 同构的 placement→position-area 语义(多框架对等,不各写一套),进 top-layer 用原生 Popover API。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["HoverCard.tsx", "HoverCard.css", "logic.ts", "index.ts"]
+  },
+  {
+    "id": "image",
+    "name": "Image",
+    "description": "图片组件:原生懒加载、加载骨架、失败兜底链、object-fit/圆角,内建点击预览灯箱(缩放/旋转/还原)。",
+    "category": "data-display",
+    "tags": ["image", "img", "lazy", "fallback", "preview", "lightbox", "zoom", "media"],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-26",
+      "requirements": "需要一个生产级图片组件:用原生 loading=lazy 做懒加载、加载中给脉冲骨架避免布局跳动;主图加载失败时沿 fallbackSrc 链逐级降级,全部失败再落到错误占位态;支持 width/height/object-fit/圆角(含圆形)。点击进入全屏预览灯箱,带缩放/旋转/还原/关闭工具栏,支持键盘(Esc 关、+/- 缩放、r 旋转、0 还原)与受控开合。把预览的变换状态机(缩放/旋转步进与夹取)和来源回退解析抽成零依赖纯函数便于单测与跨框架平移。多图组预览(ImageGroup:一处打开、整组左右切换)留待后续作为复合组件,本组件先做单图。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Image.tsx", "Image.css", "logic.ts", "logic.test.ts", "Image.test.tsx", "index.ts"]
+  },
+  {
+    "id": "input",
+    "name": "Input",
+    "description": "文本输入框(深度组件):框内 prefix/suffix + 框外 addonBefore/addonAfter 拼接、clearable 一键清除、type=password 明文切换、showCount 字数(配 maxLength)。tone 聚焦发光环(invalid→danger),三档尺寸随 data-ms-density 缩放,受控/非受控皆可。完整 hover/focus-within/disabled 状态,逻辑属性 RTL 友好。",
+    "category": "forms",
+    "tags": [
+      "input",
+      "form",
+      "text-field",
+      "prefix",
+      "suffix",
+      "addon",
+      "clearable",
+      "password",
+      "count",
+      "tone"
+    ],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-24",
+      "requirements": "magic-scope 通用库第二个组件:文本输入。自研、消费 tokens,完整 hover/focus-visible(发光)/disabled/invalid 状态,逻辑属性(RTL 友好),尊重 prefers-reduced-motion;覆盖原生 size 为尺寸枚举。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Input.tsx", "Input.css", "index.ts"]
+  },
+  {
+    "id": "kbd",
+    "name": "Kbd",
+    "description": "键盘按键样式组件,surface-raised 底配加粗底边模拟键帽立体感。深度:keys 解析器把 'cmd+shift+k'/数组拆成多键帽并平台符号化(cmd→⌘ ctrl→⌃ alt→⌥ shift→⇧),platform=auto 经 navigator 探测;接全库 tone 色调(7 色,危险/确认键位可着语义色 + tone 发光);size sm/md/lg 随密度缩放;separator 可传 ReactNode;asChild 多态、classNames 定制子部件。发光/动效尊重 data-ms-fx / prefers-reduced-motion。",
+    "category": "data-display",
+    "tags": [
+      "kbd",
+      "keyboard",
+      "key",
+      "shortcut",
+      "hotkey",
+      "keycap",
+      "combo",
+      "platform",
+      "mac",
+      "tone",
+      "data-display"
+    ],
+    "status": "stable",
+    "version": "0.2.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-24",
+      "requirements": "键盘按键样式组件,surface-raised 底配加粗底边模拟键帽立体感,等宽字号展示快捷键。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-* 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion。深度补强:keys 多键帽解析(纯函数 logic.ts,可平移 core)+ 平台符号映射(cmd→⌘ ctrl→⌃ alt→⌥ shift→⇧ enter→⏎ esc→⎋ del→⌫)+ tone 色调 + lg 档 + 可定制 separator。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Kbd.tsx", "Kbd.css", "logic.ts", "index.ts"]
+  },
+  {
+    "id": "label",
+    "name": "Label",
+    "description": "表单标签(旗舰深度):基于原生 label,htmlFor 关联控件;size 三档随密度缩放、tone 语义色调(读 6 槽位,可做 success/danger 校验着色)、required / optional 互斥标记、requiredMark 可替换必填标记、disabled 态;必填标记装饰发光门控于 --ms-fx-glow,文案走 i18n,尊重 prefers-reduced-motion。",
+    "category": "forms",
+    "tags": [
+      "form",
+      "label",
+      "forms",
+      "field",
+      "required",
+      "optional",
+      "size",
+      "tone",
+      "validation",
+      "i18n",
+      "accessibility",
+      "react"
+    ],
+    "status": "stable",
+    "version": "0.2.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-24",
+      "requirements": "表单标签,基于原生 label,支持 htmlFor 关联控件。补强到旗舰深度:size(sm/md/lg)随 data-ms-density 缩放、tone 语义色调读 tone 6 槽位(可 success/danger 校验着色)、required 与 optional 互斥标记(可选文案走 i18n label.optional、必填读屏语义走 label.required)、requiredMark / requiredClassName 自定义必填标记、disabled 态;根 label 透传所有原生属性与事件(onClick compose 不丢用户处理器)。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-* 变量,完整状态与过渡、发光门控于 --ms-fx-glow,尊重 prefers-reduced-motion 与 data-ms-motion。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Label.tsx", "Label.css", "logic.ts", "index.ts"]
+  },
+  {
+    "id": "link",
+    "name": "Link",
+    "description": "内联超链接(typography 分类)。真正的 <a> 原语,把链接的交互/语义/装饰收成 props:下划线四态(auto 静止有/hover 去、hover 反向、always、none)、tone 着色(默认走专用链接角色色 --ms-color-link,有 tone 时切 tone 槽位 --ms-c)、字号档(--ms-type-step-*,默认 inherit)、外链一键安全化(target=_blank + rel=noopener noreferrer 安全合并去重 + 尾随外链图标 + sr-only「在新窗口打开」提示,走 i18n link.newWindow)、disabled(<a> 无原生 disabled,用去 href + aria-disabled + tabIndex=-1 + 拦截点击综合模拟,读屏仍报为被禁用链接)、muted 次级前景色、visited 已访问态、前置图标、魔法微光(text-shadow 受 --ms-fx-glow 调制,off/hover/always)。多态 asChild 把样式/props 合并到路由库 <Link>(事件 compose + ref 合并)。留口充分:...rest 透传所有原生 <a> 属性与事件,自挂 onClick(禁用拦截)用 composeEventHandlers 合并用户处理器(用户 preventDefault 可阻断),className/style 与计算值合并(用户优先),classNames 映射定制图标子部件。所有过渡/图标位移受 prefers-reduced-motion 与 data-ms-motion=off 双降级。纯逻辑(rel 合并、外链/禁用属性派生)抽在 logic.ts 零 React。",
+    "category": "typography",
+    "tags": [
+      "link",
+      "anchor",
+      "typography",
+      "external-link",
+      "underline",
+      "tone",
+      "as-child",
+      "polymorphic",
+      "disabled",
+      "a11y",
+      "magic-glow",
+      "i18n"
+    ],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-26",
+      "requirements": "用户 2026-06-26 定:typography 分类补内联链接 Link。要求生产级深度对标旗舰 Button/Input/Text。核心契约:underline 四态走 Radix 式(auto/hover/always/none);tone 默认走链接角色色 --ms-color-link(读 tone 槽位差异化),不写死 primary;external → target=_blank + rel=noopener noreferrer + 外链图标 + sr-only link.newWindow 文案(i18n,已登记);asChild 走 mergeAsChildProps + composeRefs 接路由 Link;disabled 用 aria-disabled + 去交互模拟(<a> 无原生 disabled);hover 微光受 motion 降级。严格遵循已立标准:留口(forwardRef/...rest/asChild/ReactNode 槽/classNames)、事件 composeEventHandlers 合并不覆盖、i18n 不写死中文、内容边界(长 URL 不撑破)、strict TS(exactOptionalPropertyTypes / noUncheckedIndexedAccess)、纯逻辑放 logic.ts。兼容性备注:link-active/visited token 缺失时三级回退,不强加颜色。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Link.tsx", "Link.css", "logic.ts", "index.ts"]
+  },
+  {
+    "id": "list",
+    "name": "List",
+    "description": "列表排版组件:无序(ul)/有序(ol)/描述(dl)三形态一参切换,标记支持原生 list-style-type 与自定义 ReactNode 图标,间距随密度缩放,tone 着色 ::marker 与发光;带命名空间子部件 List.Item / List.Term / List.Detail,嵌套友好。",
+    "category": "typography",
+    "tags": [
+      "list",
+      "typography",
+      "unordered",
+      "ordered",
+      "description-list",
+      "marker",
+      "ul",
+      "ol",
+      "dl",
+      "nested",
+      "tone",
+      "density",
+      "polymorphic",
+      "asChild"
+    ],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-26",
+      "requirements": "生产级 typography 列表组件。variant: unordered|ordered|description → 渲染 ul/ol/dl;marker?: list-style-type(disc/circle/decimal/lower-roman…)或 icon ReactNode 自定义标记;spacing 档(随密度 --ms-density-scale);tone(::marker 着色读 --ms-c);List.Item 子部件(命名空间 List.Item);description 变体支持 term/detail。嵌套友好。对标旗舰 Text/Button/Input:多态 as/asChild、...rest 透传、classNames 注入子部件、魔法 glow 双降级、内容边界不撑破、strict TS。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["List.tsx", "List.css", "logic.ts", "index.ts"]
+  },
+  {
+    "id": "mark",
+    "name": "Mark",
+    "description": "文本高亮:把纯文本里命中搜索词的片段包进语义化 <mark>,支持多词 / 大小写 / 整词 / 重叠合并,着色走 tone 槽位。",
+    "category": "typography",
+    "tags": ["mark", "highlight", "search", "keyword", "typography", "text"],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-26",
+      "requirements": "搜索结果 / 文档检索场景需要把命中关键词高亮出来。要求:命中规则(多词、是否区分大小写、是否整词)做成纯函数可独立测试与跨框架复用;搜索词里的正则元字符按字面量处理不报错;多词命中区间重叠时合并、不产生嵌套包裹;高亮用原生 <mark> 保证无障碍语义;着色复用全库 tone 槽位以随主题换肤联动;空搜索词与超长内容都要安全降级不撑破布局。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Mark.tsx", "Mark.css", "logic.ts", "index.ts"]
+  },
+  {
+    "id": "marquee",
+    "name": "Marquee",
+    "description": "无限跑马灯:children 沿主轴无缝无限滚动(内容克隆 N 份首尾相接,CSS transform 位移一份后回卷)。支持四方向 / 横纵双向、speed(px/s)或 duration(固定圈秒)、悬停或按下暂停、两端淡出遮罩、自动或固定克隆份数;reduced-motion / data-ms-motion=off 下停滚静态展示。",
+    "category": "data-display",
+    "tags": [
+      "marquee",
+      "scroll",
+      "ticker",
+      "infinite-scroll",
+      "animation",
+      "seamless",
+      "data-display"
+    ],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-26",
+      "requirements": "需要一个 logo 墙 / 公告 / 弹幕场景的无限滚动条:内容首尾相接视觉无缝、GPU 友好(只动 transform)、可控速度与方向、悬停可暂停、两端能渐隐暗示延续。核心是把无缝循环做对——整数份克隆 + 位移 -100/repeat% 取模动画,而非靠 JS 每帧改 left。布局算法(份数 / 一圈时长 / 位移百分比)抽进零依赖 logic.ts 以便平移到其它框架。无障碍上克隆份对 AT 隐藏、整体可命名、不抢焦点;尊重 reduced-motion 与全库动效总闸。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Marquee.tsx", "Marquee.css", "logic.ts", "index.ts"]
+  },
+  {
+    "id": "mentions",
+    "name": "Mentions",
+    "description": "基于 textarea 的 @提及输入:输入触发前缀(默认 @,可多前缀)即弹候选浮层,支持本地过滤与异步搜索、键盘上下移动 / Enter·Tab 选中 / Esc 关闭,选中后把触发段回填为候选并续接分隔符。",
+    "category": "forms",
+    "tags": [
+      "mentions",
+      "mention",
+      "textarea",
+      "autocomplete",
+      "combobox",
+      "tag-people",
+      "at-mention"
+    ],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-26",
+      "requirements": "聊天 / 评论 / 协作文档里高频的 @提及人(或 #话题)输入:用户在多行文本中敲 @ 即弹出可过滤的候选名单,键盘可全程操作并回填。把三块纯算法(检测光标前触发段、候选过滤、替换插入并定位光标)抽到零 React 的 logic.ts 便于平移其它框架与单测覆盖;前缀可配多组、候选可静态可异步(配 loading/空态),受控非受控双通道,a11y 走 combobox + listbox/option 模型。v1 候选浮层锚控件下方(近光标精确定位需镜像 textarea 算坐标,较复杂,留作后续增强)。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Mentions.tsx", "Mentions.css", "logic.ts", "index.ts"]
+  },
+  {
+    "id": "menu",
+    "name": "Menu",
+    "description": "下拉菜单(旗舰深度):Popover API 进 top-layer + CSS Anchor Positioning(placement/align/offset)锚定 trigger。项支持 item/separator/group(带标题)、icon、shortcut(Kbd)、checked(menuitemcheckbox/radio)、href 链接多态;7 色调 tone 只读 6 槽位;受控 open/defaultOpen + onOpenChange 双通道、菜单级 onSelect、可拦截 onEscapeKeyDown/onPointerDownOutside;trigger 全事件+ref compose、...rest 透传、组合式 Menu.Item/Separator/Group/Trigger + renderItem;↑↓/Home/End/Enter/Esc + typeahead 类型搜索;发光入场动画,fx/motion 一键降级,锚定位不支持时优雅降级。",
+    "category": "overlay",
+    "tags": [
+      "menu",
+      "dropdown",
+      "popover",
+      "overlay",
+      "anchor-positioning",
+      "tone",
+      "checkbox",
+      "radio",
+      "group",
+      "separator",
+      "shortcut",
+      "typeahead",
+      "controlled",
+      "composable",
+      "keyboard"
+    ],
+    "status": "stable",
+    "version": "0.2.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-25",
+      "requirements": "下拉菜单:Popover API 进 top-layer + CSS Anchor Positioning 锚定 trigger,支持 ↑↓/Enter/Esc 键盘操作、danger 项与禁用项,带发光入场动画,锚定位不支持时优雅降级。magic-scope overlay 组件:用满平台原生能力(Popover API + CSS Anchor Positioning)自研,带降级、键盘可达、fx/motion 开关、入场动画。补强到旗舰深度:对标 Button/Input/Text —— item/separator/group/icon/shortcut/checkbox/radio/href、tone 槽位、受控双通道、菜单级与项级回调、可拦截浮层关闭、trigger/根全事件 compose 与透传、组合式 API + renderItem、typeahead。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Menu.tsx", "Menu.css", "logic.ts", "index.ts"]
+  },
+  {
+    "id": "menubar",
+    "name": "Menubar",
+    "description": "应用菜单栏:横向一排顶级菜单触发器(文件 / 编辑 / 视图…),各自打开一个 Menu 面板,同一时刻至多一个打开;复合用法 Menubar + Menubar.Menu,items 数据驱动或 children 复合,复用 Menu 渲染契约与 Popover 浮层定位,带顶层 roving、相邻菜单切换、typeahead、一层子菜单与受控开合,完整 ARIA APG menubar 键盘交互。",
+    "category": "navigation",
+    "tags": [
+      "menubar",
+      "menu",
+      "navigation",
+      "application-menu",
+      "popover",
+      "overlay",
+      "submenu",
+      "roving",
+      "keyboard",
+      "a11y"
+    ],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "inspired",
+      "url": "https://www.radix-ui.com/primitives/docs/components/menubar",
+      "capturedAt": "2026-06-26",
+      "requirements": "桌面级应用(编辑器 / 设计工具 / IDE)需要顶部一条应用菜单栏:横向排布若干顶级菜单名(文件 / 编辑 / 视图…),点击或键盘打开各自的下拉菜单,且同一时刻至多一个展开、在相邻顶级菜单间能用 ←→ 直接平移切换打开态——这是 Dropdown 这种单触发器下拉给不了的『一排联动菜单』语义。要把 ARIA APG menubar 的键盘模型做全:顶层触发器之间 roving(←→ 回绕、Home/End 跳首尾)、↓/Enter/Space 打开并落焦首项、↑ 打开并落焦末项;菜单内 ↑↓ 移焦(跳 disabled、回绕)/Home/End/typeahead/Esc 关闭回焦触发器/Tab 关闭不抢焦/←→ 在子菜单与父级或相邻顶级菜单间穿梭。数据驱动(MenuItem:label/icon/onClick/disabled/danger/separator/group/checked/shortcut/href + 一层 submenu)或 children 复合二选一;受控(value=打开的菜单 id / onValueChange)与非受控双通道。复用全库既有契约不另起炉灶:菜单面板的拍平 / typeahead / 方向键直接 import Menu/logic 纯函数,浮层定位复用 Popover/logic 的 placement→position-area,浮层进 top-layer 用原生 popover=auto + CSS Anchor Positioning 自包含(刻意不套 Popover/Dropdown 组件,以免触发器的 aria-haspopup=menu 被覆盖)。",
+      "notes": "顶层注册:每个 Menubar.Menu 在渲染期同步向根注册(register 幂等),确保 roving tabIndex 与顶层键盘导航首帧即拿到正确索引;注册表变更经 commit 后 effect 统一 bump,避免渲染中 setState 告警。关闭的菜单不挂载面板内容——既不向 AT 暴露 phantom role=menu/menuitem,也保证一条菜单栏里多个 Menubar.Menu 不会同时出现多个 role=menu。选中态项口径与 Dropdown 一致:任意 checked!==undefined 的项按 menuitemcheckbox/menuitemradio 渲染且选中后保持菜单打开便于连续切换。诚实备注:子菜单仅一层(hover/→ 展开、← 收起),深层嵌套留 TODO;children 复合用法走原生 light-dismiss,不接管 roving/typeahead(自定义内容自负键盘可达)。根 role=menubar 为 a11y 契约固定标注 aria-orientation=horizontal。参考 Radix Menubar 的交互与 a11y 语义,实现与配色 / 动效 / 浮层栈均为本库自有。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Menubar.tsx", "Menubar.css", "logic.ts", "index.ts"]
+  },
+  {
+    "id": "navigation-menu",
+    "name": "NavigationMenu",
+    "description": "网站导航菜单:横向一排导航项,每项可是纯链接或带下拉 panel(mega-menu)的触发器;同一时刻至多一个 panel 打开,带平滑过渡;指针 hover(open/close 延迟 + 触发器↔panel 穿越宽限)与键盘(← → 横向 roving、↓/Enter 打开并进入、Esc 关闭回触发器)双可达。区别于 Menubar 命令菜单——这是站点导航,触发器/内容用 link/button 语义(非 menu role),面向页面跳转与信息架构。",
+    "category": "navigation",
+    "tags": [
+      "navigation-menu",
+      "navigation",
+      "mega-menu",
+      "menu",
+      "navbar",
+      "header",
+      "dropdown",
+      "hover-intent",
+      "keyboard",
+      "a11y"
+    ],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "inspired",
+      "url": "https://www.radix-ui.com/primitives/docs/components/navigation-menu",
+      "capturedAt": "2026-06-26",
+      "requirements": "需要一个『站点级导航』组件,而不是命令菜单(Menubar/Menu)。设计意图:页头横向一排导航项,有的就是纯跳转链接(可标当前页 aria-current=page),有的点开是 mega-menu——放富内容或链接网格做信息架构入口。核心约束:同一时刻至多一个 panel 打开,切换要平滑过渡(不能闪);鼠标用户靠 hover 操作时,指针从触发器移到下拉 panel 的途中会短暂离开触发器热区,绝不能因此误关(需要 open/close 延迟 + 穿越宽限的 hover-intent);键盘用户要能 Tab 在触发器/链接间走、← → 横向 roving、↓/Enter/Space 打开 panel 并把焦点送进去、panel 内自然 Tab 遍历、Esc 关闭并回焦触发器。语义上必须区别于 menu:外层是 nav 地标、触发器是 button(aria-expanded/aria-controls)、panel 用 id 关联并回指触发器、链接是真链接而非 menuitem——因为这是导航不是命令。受控/非受控(value/onValueChange)。共享 Viewport(单浮层容器,尺寸/位置随 active panel 过渡)是 Radix 的标志性体验,要对齐。",
+      "notes": "几处诚实备注:(1) Viewport 的尺寸/位置过渡用纯 CSS(transform + position-area),不测量 DOM,因此 SSR 安全、无首帧布局抖动;代价是极端超宽 panel 在窄视口靠 max-inline-size + 内部滚动兜底,而非 JS 动态测宽。(2) 定位用 CSS Anchor Positioning,@supports not (anchor-name) 降级为 fixed 居顶,保证不支持的浏览器仍可用。(3) hover-intent 状态机(active 单值不变式 + open/close 延迟 + switch 即切)是零 React 纯逻辑,放 logic.ts 可平移其它框架。(4) 数据驱动(items)与复合(children)二选一;复合自定义 panel 内容时,键盘移入 panel 后的遍历交给原生 Tab,组件只负责把焦点送进 panel 第一个可聚焦元素。(5) hover 仅对 pointerType=mouse/pen 生效,触屏(coarse)走点击避免误开。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["NavigationMenu.tsx", "NavigationMenu.css", "logic.ts", "index.ts"]
+  },
+  {
+    "id": "number-input",
+    "name": "NumberInput",
+    "description": "数字步进输入(深度组件):− / 原生 input[type=number](spinbutton 语义、方向键步进) / ＋ 合为一个描边控件,隐藏原生 spinner。内部以显示文本管理(避免受控数字框打不出小数点/中间态),步进与失焦/回车时夹取到 [min,max] 并修浮点误差。框内 prefix/suffix 单位;tone 聚焦发光环(读 6 槽位,invalid→danger,可总闸关断);长按连续步进(加速);onStep/onStepUp/onStepDown 区分步进来源、onPressEnter 回车提交、onValueChange 统一值通道。支持受控与非受控、min/max/step、sm/md/lg;尺寸随密度缩放、触控热区达标、尊重 reduced-motion。留口:...rest 透传根、fieldClassName/stepClassName 定制、onChange/onBlur/onFocus/onKeyDown 走 compose 不覆盖内部夹取逻辑。",
+    "category": "forms",
+    "tags": [
+      "number-input",
+      "number",
+      "stepper",
+      "spinbutton",
+      "form",
+      "input",
+      "prefix",
+      "suffix",
+      "long-press",
+      "tone",
+      "invalid"
+    ],
+    "status": "stable",
+    "version": "0.0.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-25",
+      "requirements": "补齐表单控件:带步进按钮的数字输入。原创实现,原生优先(input[type=number] 提供 spinbutton 语义与方向键),自绘 − / ＋ 步进与皮肤;内部文本态管理解决受控数字框中间态丢失的经典问题,步进/失焦夹取边界。延续设备适配契约(触控热区、focus-within 发光、hover 守卫、iOS 字号防缩放、reduced-motion)。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["NumberInput.tsx", "NumberInput.css", "logic.ts", "index.ts"]
+  },
+  {
+    "id": "pagination",
+    "name": "Pagination",
+    "description": "分页导航(旗舰深度):tone 色调 × size(随密度缩放),当前页主色实底发光(读 tone 6 槽位,fx/motion 可一键降级);过多页省略号折叠、simple 精简变体;每页条数选择器 + 快速跳页 + showTotal 区间文案;renderItem / itemRender(包成 <a>)/ onItemClick / prevIcon·nextIcon 留口;onPageChange + onPageSizeChange + onChange 聚合 + onQuickJump 全事件,内部点击 composeEventHandlers 合并用户处理器、根 nav 透传原生属性;键盘可达且 focus-visible 显示发光环。",
+    "category": "navigation",
+    "tags": [
+      "navigation",
+      "pagination",
+      "pager",
+      "page",
+      "nav",
+      "page-size",
+      "quick-jumper",
+      "simple",
+      "tone",
+      "size",
+      "render-item",
+      "i18n",
+      "dark",
+      "arcane"
+    ],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-25",
+      "requirements": "分页导航:上一页/下一页 + 页码,当前页主色实底发光,过多页用省略号折叠,键盘可达且 focus-visible 显示发光环。工程要求(magic-scope 结构/导航组件):自研、消费 tokens,完整状态、键盘可达、fx/motion 开关、逻辑属性。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Pagination.tsx", "Pagination.css", "logic.ts", "index.ts"]
+  },
+  {
+    "id": "paragraph",
+    "name": "Paragraph",
+    "description": "块级正文段落:size/leading/tone/dimmed/align 排版档,多行省略(可带展开/收起),一键复制(复制成功触发魔法 glow 一闪)。",
+    "category": "typography",
+    "tags": [
+      "paragraph",
+      "text",
+      "typography",
+      "body",
+      "ellipsis",
+      "line-clamp",
+      "expandable",
+      "copyable",
+      "clipboard",
+      "polymorphic"
+    ],
+    "status": "draft",
+    "version": "0.0.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-26",
+      "requirements": "块级 <p> 正文 typography 组件。需求:size/leading/tone/dimmed/align 基础排版;ellipsis?: boolean | { rows, expandable, symbol } 多行省略 + 可选展开/收起(AntD 式,走 typography.expand/collapse 文案);copyable?: boolean | { text, onCopy } 复制按钮(navigator.clipboard,走 typography.copy/copied,复制成功瞬间触发魔法 glow 一闪)。展开/复制纯逻辑抽 logic.ts。对标旗舰 Text/Button/Input:多态 as/asChild、forwardRef 到根、...rest 透传、tone 走 --ms-c 槽位、动效双降级(prefers-reduced-motion + data-ms-motion=off)、i18n 走 useMessages、strict TS。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Paragraph.tsx", "Paragraph.css", "logic.ts", "index.ts"]
+  },
+  {
+    "id": "pin-input",
+    "name": "PinInput",
+    "description": "OTP/验证码分段输入,逐格单字符、自动跳格与整串粘贴分填,受控/非受控两用。",
+    "category": "forms",
+    "tags": ["pin", "otp", "verification-code", "segmented", "form", "a11y"],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-26",
+      "requirements": "验证码/一次性口令场景的分段输入:length 个单字符格,合法字符即时跳下一格、Backspace 在空格回退并清前一格、粘贴整串自动分填到各格、←→/Home/End 焦点导航;type 限定收字范围(numeric 仅数字 / alphanumeric),mask 掩码敏感口令,invalid 染 danger 发光环;填满触发 onComplete。硬约束:字符过滤/串↔格数组互转必须是零 React 纯函数(logic.ts,可平移 core)且各端复用同一语义;a11y 必达——外层 role=group + i18n aria-label,每格独立 aria-label(第 N 位)与 aria-invalid,键盘完全可达;尺寸随 data-ms-density 缩放、触控热区抬到 --ms-target-min,动效在 prefers-reduced-motion 与 data-ms-motion=off 下降级。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": [
+      "PinInput.tsx",
+      "PinInput.css",
+      "logic.ts",
+      "logic.test.ts",
+      "PinInput.test.tsx",
+      "index.ts"
+    ]
+  },
+  {
+    "id": "popconfirm",
+    "name": "Popconfirm",
+    "description": "锚定在元素旁的轻量确认气泡(非全屏模态)。复用 Popover(原生 Popover API + CSS Anchor Positioning,点外/Esc 关闭),内建确认/取消按钮流;tone 色调经全库 resolver 驱动确认按钮配色与浮层发光(variant=danger 向后兼容收敛为 tone);异步 onConfirm(返回 Promise 时确认按钮 loading+禁用,resolve 才关、reject 保持打开)、confirmLoading;受控 open/defaultOpen + onOpenChange 双通道;onEscapeKeyDown/onPointerDownOutside 可拦截关闭;icon 警示槽、title/description、confirmText/cancelText(默认走 i18n)、confirmButtonProps/cancelButtonProps 透传内部按钮、classNames 细粒度槽位、placement。常用于列表内联删除确认。",
+    "category": "overlay",
+    "tags": [
+      "popconfirm",
+      "confirm",
+      "popover",
+      "overlay",
+      "inline",
+      "tone",
+      "async",
+      "controlled",
+      "i18n"
+    ],
+    "status": "stable",
+    "version": "0.0.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-25",
+      "requirements": "补齐弹窗体系:气泡确认。原创实现,不另造定位——直接包一层已有的 Popover(锚定 + 点外/Esc 关闭),只叠加确认/取消 UI 与回调;区别于全屏的 AlertDialog confirm() 与装任意内容的 Popover。常见于内联删除确认。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Popconfirm.tsx", "Popconfirm.css", "index.ts"]
+  },
+  {
+    "id": "popover",
+    "name": "Popover",
+    "description": "浮层(生产级深度):原生 Popover API(top-layer)+ CSS Anchor Positioning 锚定 trigger。12 向定位(主轴×居中/start/end)、offset 间距、可选指向箭头(随 placement 翻面)、4 种触发方式(click/hover 带桥接区/focus/manual)+ openDelay/closeDelay、tone 色调驱动 panel 边框/发光。受控/非受控双通道;onEscapeKeyDown / onPointerDownOutside / onInteractOutside 可拦截关闭;trigger 全事件 compose 合并 + ref 合并,浮层根透传原生属性/事件;classNames 细粒度槽位;fx/motion/density 开关;不支持锚定时优雅降级为居中。",
+    "category": "overlay",
+    "tags": [
+      "popover",
+      "overlay",
+      "anchor",
+      "popover-api",
+      "top-layer",
+      "placement",
+      "arrow",
+      "hover",
+      "tone",
+      "controllable"
+    ],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-25",
+      "requirements": "浮层,基于原生 Popover API(top-layer)+ CSS Anchor Positioning 锚定 trigger。补强到生产级深度:12 向定位 + offset + 指向箭头 + click/hover/focus/manual 触发(带延时与 hover 桥接区)+ tone 色调。事件留口对齐旗舰规范:trigger 全事件 compose、浮层根透传 ...rest、onEscapeKeyDown/onPointerDownOutside/onInteractOutside 可拦截关闭、classNames 槽位。fx/motion/density 一键降级,键盘可达,不支持锚定时优雅降级。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Popover.tsx", "Popover.css", "logic.ts", "index.ts"]
+  },
+  {
+    "id": "progress",
+    "name": "Progress",
+    "description": "发光的进度组件,role=progressbar。两形态:linear 线性条 / circular 环形(SVG stroke-dashoffset)。tone 语义色(只读 6 槽位不写死配色)、size(sm/md/lg 随密度缩放)、striped+animated 条纹、buffer 缓冲段、showValue/label(百分比或自定义 ReactNode)、确定态与不确定态流动。classNames 精修子部件,实例级 glow=off;全部动效受 data-ms-motion 与 prefers-reduced-motion 一键降级。",
+    "category": "feedback",
+    "tags": [
+      "progress",
+      "progressbar",
+      "feedback",
+      "loading",
+      "indicator",
+      "indeterminate",
+      "status",
+      "circular",
+      "linear",
+      "striped",
+      "buffer",
+      "spinner",
+      "tone"
+    ],
+    "status": "stable",
+    "version": "0.2.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-24",
+      "requirements": "发光的进度组件,role=progressbar。补强到生产级深度:linear/circular 两形态、tone 语义色(6 槽位)、size 随密度缩放、striped+animated 条纹、buffer 缓冲段、showValue/label 槽位、确定态/不确定态流动、classNames 子部件精修、实例级 glow。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-* 变量,完整状态与过渡、发光,动效受 data-ms-motion / prefers-reduced-motion 一键降级。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Progress.tsx", "Progress.css", "Progress.test.tsx", "index.ts"]
+  },
+  {
+    "id": "prose",
+    "name": "Prose",
+    "description": "富文本 / HTML 内容容器排版:给一段已渲染的 HTML/JSX(markdown 输出、CMS 富文本、MDX)套上全库排版样式,通过后代选择器统一规范标题、段落、列表、引用、代码、表格、链接、媒体等元素。",
+    "category": "typography",
+    "tags": ["prose", "typography", "rich-text", "html", "markdown", "content", "article", "mdx"],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-26",
+      "requirements": "需要一个轻量容器把外部来源的成块 HTML/JSX(markdown 渲染结果、CMS 富文本、MDX 文档)一键套上整套排版规范,无需为每个元素手写类。组件本体只负责多态渲染与留口(as/asChild/className/classNames),排版规则全部沉到 Prose.css 的后代选择器并消费 --ms-* token、随 data-ms-density 缩放、用 tone 槽位着色链接/引用/列表标记。安全决策(是否 dangerouslySetInnerHTML)交还调用方,不内置注入。size 三档只调正文基准字号、其余元素以 em 相对推导,保证整体缩放时层级关系恒定。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Prose.tsx", "Prose.css", "Prose.test.tsx", "index.ts"]
+  },
+  {
+    "id": "radio",
+    "name": "Radio",
+    "description": "单选控件(旗舰深度):RadioGroup(role=radiogroup,context 管 name/选中值/尺寸/tone/外观,支持受控与非受控,options 数据驱动入口与 children 二选一)+ Radio(基于原生 input[type=radio],同名自动获得方向键导航与 roving tabindex)。tone 色调经全库 tone resolver 派生 checked 染色与 glow(只读 6 槽位);圆点/内点随密度 data-ms-density 缩放;appearance=card 把每项渲染成可点描边卡片(选中柔底+主色边+发光)。完整 hover/focus-visible(发光环)/disabled 状态,触控热区达标,尊重 reduced-motion 与 data-ms-motion=off,发光受 data-ms-fx=off 总闸。事件:onValueChange(value,event) 二参带原生事件、onChange 原生回调透传、input.onChange 经 composeEventHandlers 合并(用户 preventDefault 可拦截内部选中)、...rest 摊到根 label(原生事件/data-* 可挂)。留口:labelClassName/controlClassName。",
+    "category": "forms",
+    "tags": [
+      "radio",
+      "radio-group",
+      "form",
+      "selection",
+      "single-select",
+      "input",
+      "tone",
+      "card",
+      "options",
+      "density",
+      "controlled"
+    ],
+    "status": "stable",
+    "version": "0.0.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-25",
+      "requirements": "补齐表单控件缺口:库内已有 Checkbox/Switch 却无单选(Radio)。原创实现,与 Checkbox 视觉语言一致(圆点 vs 方块对勾),延续设备适配契约(--ms-target-min 触控热区、hover 守卫、focus-visible 发光环、reduced-motion)。RadioGroup + Radio 双导出,基于原生 input[type=radio] 以白嫖原生键盘单选语义。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Radio.tsx", "Radio.css", "index.ts"]
+  },
+  {
+    "id": "rate",
+    "name": "Rate",
+    "description": "评分组件:受控/非受控 value + onChange,半星、再点清零、自定义图标(共用或逐星 render-prop)、只读/禁用、hover 预览高亮、每星 tooltip、评分文案、键盘 ←/→/↑/↓ 加减(配半星 0.5 步进)。接全库 tone 槽位(默认 warning 金色)与密度缩放,role=slider 无障碍。",
+    "category": "forms",
+    "tags": [
+      "rate",
+      "rating",
+      "评分",
+      "star",
+      "review",
+      "feedback",
+      "form",
+      "slider",
+      "half-star",
+      "tone",
+      "a11y"
+    ],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-26",
+      "requirements": "评分组件,对标 AntD Rate / MUI Rating。要求:受控 value/defaultValue + onChange(value);count(默认 5)、allowHalf(半星)、allowClear(再点清零)、character 自定义图标(默认星)、readOnly、disabled、size、tone(默认 warning 金色,读 --ms-c)、hover 预览高亮、键盘 ArrowLeft/Right 加减(配 allowHalf 步进 0.5)、tooltips 每星提示、aria(role=slider,aria-valuenow/valuetext)、onHoverChange 回调;value/hover/键盘步进纯逻辑下沉 logic.ts。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Rate.tsx", "Rate.css", "logic.ts", "index.ts"]
+  },
+  {
+    "id": "result",
+    "name": "Result",
+    "description": "结果页:七态(success/error/info/warning/404/403/500)派生默认图标与 tone 配色,大号字符/SVG + 柔底发光圆,title/subtitle/extra/children 四槽位,size 随密度缩放,多态 as / asChild。",
+    "category": "feedback",
+    "tags": [
+      "result",
+      "结果页",
+      "feedback",
+      "反馈",
+      "status",
+      "状态",
+      "404",
+      "403",
+      "500",
+      "success",
+      "error",
+      "empty-state",
+      "tone",
+      "icon"
+    ],
+    "status": "stable",
+    "version": "0.0.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-26",
+      "requirements": "结果页组件,对标 AntD Result。status: success/error/info/warning/404/403/500;按 status 给默认图标(可自定义 icon)与配色(tone 联动,success→success 等);title?/subtitle?: ReactNode;extra?: ReactNode(操作区,如返回/重试按钮);children(补充内容)。图标用大号字符/SVG + tone 柔底圆。size。多态 as。需遵守 magic-scope 旗舰标准(tone 槽位、动效双降级、strict TS、留口、纯逻辑下沉 logic.ts)。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Result.tsx", "Result.css", "logic.ts", "index.ts"]
+  },
+  {
+    "id": "scroll-area",
+    "name": "ScrollArea",
+    "description": "自定义滚动区:原生 overflow 滚动 + 自绘 track/thumb 叠在内容上不占布局,thumb 几何与原生 scrollTop/scrollHeight 实时同步,可拖拽,按 type(auto/always/hover/scroll)显隐。",
+    "category": "layout",
+    "tags": ["scroll", "scrollbar", "overlay", "viewport", "overflow", "layout", "a11y"],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-26",
+      "requirements": "需要一块尺寸受限的滚动容器,原生滚动条在跨平台下样式不一致、且会挤占内容宽度造成布局抖动。目标:用原生 overflow:auto 承载滚动(保留键盘可达与惯性),隐藏系统滚动条后自绘一条与主题一致、叠在内容上不占布局的滚动条;滑块尺寸/位置随真实 scrollTop/scrollHeight 同步、可拖拽反向滚动;支持 auto/always/hover/scroll 四种显隐策略与纵/横/双向;几何换算抽成零依赖纯函数便于平移到其它框架壳;尊重 reduced-motion 与 data-ms-motion=off。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": [
+      "ScrollArea.tsx",
+      "ScrollArea.css",
+      "logic.ts",
+      "logic.test.ts",
+      "ScrollArea.test.tsx",
+      "index.ts"
+    ]
+  },
+  {
+    "id": "segmented",
+    "name": "Segmented",
+    "description": "分段控制器:紧凑的 tab/radio 替代。选中段由单个滑块 indicator 平滑跨段位移(测量段偏移写 CSS 变量,过渡受 motion 降级)。支持 options 数组(label 可 ReactNode/icon/disabled)或复合 Segmented.Item;受控 value/defaultValue + onChange/onValueChange;size 随密度、tone 语义色、block 等分、纵向、disabled;键盘 ArrowLeft/Right(纵向 Up/Down)/Home/End 导航 + Enter/Space,roving tabindex;role=radiogroup/radio 或 tablist/tab;classNames 部件定制。",
+    "category": "forms",
+    "tags": [
+      "segmented",
+      "segmented-control",
+      "tabs",
+      "radio-group",
+      "toggle",
+      "switch",
+      "selection",
+      "indicator",
+      "keyboard",
+      "accessible",
+      "controlled"
+    ],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-26",
+      "requirements": "对标 AntD Segmented 的生产级分段控制器:紧凑的 tab/radio 替代。需求:options({label,value,icon?,disabled?}[],label 可 ReactNode)或 children 复合用法;受控 value/defaultValue + onChange(value);单个滑块 indicator 平滑跨段位移(测选中段 offset 写 CSS 变量,过渡受 motion 降级);size(sm/md/lg 随密度)、tone(6 语义色)、block/fullWidth(等分)、纵向、disabled;键盘 ArrowLeft/Right/Home/End 导航 + Enter/Space;role=radiogroup/radio 或 tablist/tab;classNames 部件定制;选中解析 / 键盘 step 纯逻辑下沉 logic.ts。接全库 tone 槽位 + 密度 + 动效双降级 + i18n。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Segmented.tsx", "Segmented.css", "logic.ts", "index.ts"]
+  },
+  {
+    "id": "select",
+    "name": "Select",
+    "description": "下拉选择(旗舰深度):button trigger(combobox)+ Popover API listbox 进 top-layer、CSS Anchor Positioning 定位并优雅降级。接全库 tone 槽位(高亮/打勾/发光只读 --ms-c*)、i18n 文案;生产特性 clearable / loading / 空态 / searchable(combobox 过滤)/ multiple(tag 多选);留口 prefix、renderOption/renderValue、option icon/description、classNames 部件定制、原生属性透传;事件 onOpenChange 受控双通道、onClose(reason)、onEscapeKeyDown/onPointerDownOutside 可拦截、onHighlightChange/onSelect/onClear/onSearch/onFocus/onBlur;完整键盘导航(↑↓/Enter/Space/Esc/Home/End/Tab)、尺寸随密度缩放、aria-selected 与选中打勾高亮。",
+    "category": "forms",
+    "tags": [
+      "select",
+      "dropdown",
+      "listbox",
+      "combobox",
+      "forms",
+      "multiple",
+      "searchable",
+      "clearable",
+      "tone",
+      "i18n",
+      "controlled"
+    ],
+    "status": "stable",
+    "version": "0.2.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-26",
+      "requirements": "把最小版 Select 补强到生产级深度,对标旗舰 Button/Input/Text:接 tone 槽位系统、i18n 文案、clearable/loading/空态/searchable/multiple、render 槽位与 option icon/description、classNames 部件定制、密度缩放、motion/fx 一键降级、完整事件契约(onOpenChange 受控双通道 + onClose(reason) + 可拦截 Esc/点外 + onHighlightChange/onSelect/onClear/onSearch/onFocus/onBlur + 原生透传与 composeEventHandlers 合并)。magic-scope overlay 组件:用满平台原生能力(Popover API + CSS Anchor Positioning)自研,带降级、键盘可达、fx/motion 开关、入场动画。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Select.tsx", "Select.css", "logic.ts", "index.ts"]
+  },
+  {
+    "id": "skeleton",
+    "name": "Skeleton",
+    "description": "加载占位(旗舰深度):text/rect/circle 三形态 · 四档动画(shimmer/pulse/wave/none) · 便捷 width/height · 多行文本骨架(末行自动收窄) · 内容感知(loading+children 加载完显真实内容) · SkeletonText/SkeletonGroup 组合与预制模板 · asChild 多态。动效受 data-ms-motion 调档,发光受 data-ms-fx 门控,尊重 reduced-motion。",
+    "category": "feedback",
+    "tags": [
+      "skeleton",
+      "loading",
+      "placeholder",
+      "shimmer",
+      "pulse",
+      "wave",
+      "content-aware",
+      "feedback",
+      "react"
+    ],
+    "status": "stable",
+    "version": "0.2.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-24",
+      "requirements": "加载占位,surface-raised 底叠加渐变高亮。补强到生产级深度:四档动画受 motion 档调控(off 停静态 / subtle 放慢)、多行文本骨架末行收窄、便捷 width/height、内容感知 loading 切换真实内容、SkeletonText/SkeletonGroup 组合与头像+标题+正文预制模板、asChild 多态。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-* 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Skeleton.tsx", "Skeleton.css", "logic.ts", "index.ts"]
+  },
+  {
+    "id": "slider",
+    "name": "Slider",
+    "description": "滑块(旗舰深度),基于原生 input[type=range]:白嫖可访问的 slider 语义(role=slider + aria-valuenow/min/max、方向键/Home/End),appearance:none + 伪元素自绘轨道/填充/发光滑块。接全库 tone 槽位(primary/accent/success/warning/danger/info/neutral,只读 6 槽位不写死配色);支持受控与非受控、min/max/step、刻度 marks(命中高亮)、拖动跟随气泡(showTooltip)、水平/垂直双朝向、sm/md/lg(随密度缩放)与可选数值显示(output)。事件分层:高频 onValueChange、落定 onChangeEnd/onValueCommit(松手/键盘抬起/失焦以终值触发一次)、拖动边界 onDragStart/onDragEnd;原生事件经 composeEventHandlers 合并不丢用户处理器。触控热区达标、hover/focus-visible 发光、尊重 reduced-motion / motion=off / fx=off。",
+    "category": "forms",
+    "tags": ["slider", "range", "form", "input", "number", "marks", "tone", "vertical", "tooltip"],
+    "status": "stable",
+    "version": "0.0.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-25",
+      "requirements": "补齐表单控件:数值滑块。原创实现,遵循『原生优先 / 不 wrap 第三方』——以原生 input[type=range] 承载键盘与 ARIA slider 语义,仅用 appearance:none + ::-webkit-slider-* / ::-moz-range-* 自绘皮肤(填充用 WebKit 渐变 + Firefox 原生 progress)。延续设备适配契约(触控放大滑块 + --ms-target-min 行高、hover 守卫、focus-visible 发光环、reduced-motion)。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Slider.tsx", "Slider.css", "logic.ts", "index.ts"]
+  },
+  {
+    "id": "spin",
+    "name": "Spin",
+    "description": "加载遮罩:包裹内容,spinning 时在其上盖半透明遮罩 + 居中加载图标,内容不卸载(保留布局、降透明度/模糊、屏蔽交互)。支持 tip 文字、size、tone、delay 防闪烁、自定义指示器与 fullscreen 全屏遮罩;无 children 时退化为独立指示器。",
+    "category": "feedback",
+    "tags": ["spin", "loading", "overlay", "mask", "feedback", "spinner", "fullscreen", "delay"],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-26",
+      "requirements": "需要一个在异步加载期间「就地」遮盖任意区域的反馈层:不能卸载内容(否则布局抖动、滚动位置丢失),而是盖一层半透明遮罩 + 居中加载图标并屏蔽交互。要能防止短促请求让遮罩一闪而过(delay 防闪烁,判定抽成纯函数可单测),要能复用既有 Spinner 图标或换上自定义指示器,要能选语义色调,并提供整页 fullscreen 变体。无障碍上加载区需 aria-busy/aria-live 播报,被遮内容要 aria-hidden + inert 防止读屏与键盘穿透到不可见交互。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Spin.tsx", "Spin.css", "logic.ts", "logic.test.ts", "Spin.test.tsx", "index.ts"]
+  },
+  {
+    "id": "spinner",
+    "name": "Spinner",
+    "description": "加载旋转器(旗舰深度):role=status + i18n aria-label,三形态变体(ring 发光圆环 / dots 三点 / bars 波动),接全库 tone 槽位(不传则随 currentColor),sm/md/lg 三档随密度缩放,可选可见旁注 label(四向放置),动效与发光全局可一键降级。",
+    "category": "feedback",
+    "tags": [
+      "spinner",
+      "loader",
+      "loading",
+      "feedback",
+      "progress",
+      "status",
+      "indicator",
+      "ring",
+      "dots",
+      "bars",
+      "tone",
+      "i18n"
+    ],
+    "status": "stable",
+    "version": "0.2.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-24",
+      "requirements": "加载旋转器,role=status。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-* 变量。补强为旗舰深度:形态变体(ring/dots/bars)、tone 色调系统(读 6 槽位,不传随 currentColor)、可见旁注 label(showLabel/labelPlacement/labelContent)、i18n aria-label(spinner.label)、密度缩放、发光与动效全局一键降级、...rest 留口透传。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Spinner.tsx", "Spinner.css", "Spinner.test.tsx", "index.ts"]
+  },
+  {
+    "id": "splitter",
+    "name": "Splitter",
+    "description": "可拖拽分栏布局。复合 Splitter + Splitter.Panel,面板间自动生成可拖拽分隔条,支持水平/垂直、min/max(px 或 %)、defaultSize、双击折叠,受控 sizes 与 onResize/onResizeEnd 回调,键盘方向键步进,a11y separator 语义。",
+    "category": "layout",
+    "tags": [
+      "splitter",
+      "split-pane",
+      "resizable",
+      "panel",
+      "layout",
+      "drag",
+      "gutter",
+      "collapsible"
+    ],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-26",
+      "requirements": "需要一个可把容器分成多块、用户能拖拽中缝实时调整各块占比的布局原语,用于代码编辑器/文件管理器/仪表盘这类双栏或多栏界面。拖拽数值语义(delta 分摊两侧、夹 min/max、总和守恒)必须抽成框架无关纯函数 logic.ts 以便平移 core;尺寸约束允许像素或百分比混写;支持受控(外部托管 sizes)与非受控;面板可设折叠;分隔条要可键盘操作并带 separator 无障碍语义。拖拽跟手不卡顿(拖拽中关闭过渡),折叠这类离散跳变才走过渡且尊重 reduced-motion / motion=off。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Splitter.tsx", "Splitter.css", "logic.ts", "index.ts"]
+  },
+  {
+    "id": "stack",
+    "name": "Stack",
+    "description": "有主张的一维堆叠原语:flex 实现,纵/横向、间距 token、对齐、分布、换行、行内全部支持断点对象响应式;支持子项间插 divider、recursive 交替方向、多态 as 与 asChild Slot。",
+    "category": "layout",
+    "tags": [
+      "layout",
+      "stack",
+      "flex",
+      "vstack",
+      "hstack",
+      "spacing",
+      "responsive",
+      "divider",
+      "polymorphic",
+      "rtl"
+    ],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-26",
+      "requirements": "原创布局原语。定位:有主张的一维堆叠(对标 Radix Flex / Chakra Stack / MUI Stack 的纵横堆叠),作为本库 layout 分类首个落地组件,沉淀「断点对象 → CSS 变量 + 静态 @media 级联」的响应式范式供 Flex/Grid 平移。需求要点:direction(vertical 默认 | horizontal,响应式)、gap(token 档,响应式)、align(start/center/end/stretch/baseline)、justify、wrap、inline;divider 子项间插;recursive 子 Stack 自动反向;flex 实现;多态 as 默认 div + asChild。布局组件为结构性,无 tone/发光,但要多态、响应式、间距 token 化、RTL 友好(逻辑属性 + gap)。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Stack.tsx", "Stack.css", "logic.ts", "index.ts"]
+  },
+  {
+    "id": "statistic",
+    "name": "Statistic",
+    "description": "数值统计展示:千分位 + 精度格式化、前后缀、趋势染色与箭头、加载骨架、挂载滚动动画。",
+    "category": "data-display",
+    "tags": [
+      "statistic",
+      "metric",
+      "number",
+      "kpi",
+      "data-display",
+      "count-up",
+      "trend",
+      "skeleton"
+    ],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-26",
+      "requirements": "做仪表盘/概览卡里的单指标展示。硬约束:1) 数值格式化(千分位插入 + precision 小数位 + 拆 sign/integer/fraction 三段分字号)必须是零 React 的纯函数(logic.ts),便于平移 core 与单测;2) trend up/down 不写死颜色,统一走全库 tone resolver(up→success / down→danger 暴露 --ms-c)并配方向箭头;3) animateOnMount 用 requestAnimationFrame 从 0 缓出滚到终值,但必须尊重 prefers-reduced-motion 与 data-ms-motion=off —— 命中时直接落终值不滚动;4) 只读统计文本,数值容器给完整 aria-label(标题+趋势+前缀+数值+后缀)供屏幕阅读器一次读出;5) 超长 title/value 不撑破容器(min-inline-size:0 + 单行省略);6) prefix/suffix/trend/title 子部件留 classNames 槽位,as 多态根。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": [
+      "Statistic.tsx",
+      "Statistic.css",
+      "logic.ts",
+      "logic.test.ts",
+      "Statistic.test.tsx",
+      "index.ts"
+    ]
+  },
+  {
+    "id": "steps",
+    "name": "Steps",
+    "description": "步骤条 / 向导:沿水平或垂直轴展示多步流程的进度与状态。支持 items 数组或复合 Steps.Step 两种入口;current 受控/非受控 + onChange 可点击跳步(键盘可达);每步 wait/process/finish/error 状态自动派生或单步覆盖,圆点/图标按状态着 tone 色(finish/process 主色、error danger、wait 弱化),连线 finish 染色;尺寸 sm/default、点状 progressDot、标题位置 labelPlacement、当前步进度环 percent;接全库 tone 槽位与密度缩放,动效随 prefers-reduced-motion 降级。",
+    "category": "navigation",
+    "tags": [
+      "steps",
+      "stepper",
+      "wizard",
+      "progress",
+      "navigation",
+      "process",
+      "guide",
+      "vertical",
+      "horizontal"
+    ],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-26",
+      "requirements": "步骤条(向导,对标 AntD Steps)。items: {title,description?,icon?,status?,disabled?}[] 或复合 Steps.Step;current(受控)+ onChange(可点击跳步)、status(当前步 wait/process/finish/error)、direction(horizontal 默认 | vertical)、size(sm/default)、progressDot(点状)、labelPlacement(horizontal/vertical)、percent(当前步进度环)。每步圆点/图标按 status 着 tone 色(finish→primary、error→danger、process→primary 高亮),连线 finish 染色。键盘可达(可点击时)。logic.ts 放步态解析。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Steps.tsx", "Steps.css", "logic.ts", "index.ts"]
+  },
+  {
+    "id": "switch",
+    "name": "Switch",
+    "description": "开关:基于 input[type=checkbox] 的视觉隐藏切换控件。size(sm/md/lg,随密度缩放)× tone(7 色,经全库 tone resolver 染 checked 色与 glow);支持右侧文字、轨道内两端图标(checked/unchecked)、loading(滑块转旋转图标、aria-busy);滑块位移为固定值(关动效仍到位),完整 hover/focus-visible(发光环)/disabled 状态;留口 labelClassName/trackClassName/thumbClassName + 原生属性透传(逻辑属性,RTL 友好,尊重 reduced-motion 与 data-ms-motion/data-ms-fx)。",
+    "category": "forms",
+    "tags": ["switch", "toggle", "form", "checkbox", "tone", "size", "loading", "icon"],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-24",
+      "requirements": "开关:基于 input[type=checkbox] 的视觉隐藏切换控件,checked 时轨道染主色、滑块右移并发光,完整 hover/focus-visible(发光环)/disabled 状态(逻辑属性,RTL 友好,尊重 reduced-motion)。工程要求(magic-scope 通用基础组件):自研、消费 tokens 的 --ms-* 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Switch.tsx", "Switch.css", "index.ts"]
+  },
+  {
+    "id": "table",
+    "name": "Table",
+    "description": "数据表格(旗舰深度):列定义 + 行数据驱动(泛型 T)。排序(受控/非受控、三态 + aria-sort)、行选择(全选三态 indeterminate + onSelect/onSelectAll 细分回调)、可展开行(rowRender + expandedKeys 受控/非受控 + onExpandedChange)、列固定(fixed left/right sticky)、行高三档密度(size sm/md/lg × token 密度)、汇总/页脚行(summary + column.renderSummary / footer)、空态/加载态(Spinner 遮罩淡入+微模糊 + 骨架行 + aria-busy)、粘性表头、列对齐/自定义 render、斑马纹、行 hover 高亮。接全库 tone resolver(选中行/hover 强调条/排序箭头读 6 槽位);魔法动效:行 stagger 进场、排序箭头脉冲、选中行 inset glow(fx/motion 可一键降级)。行级事件 onRowClick/onRowDoubleClick/onRowContextMenu + Ant 式 onRow 工厂;根 wrap spread ...rest 透传所有原生属性/事件,classNames 注入关键子部件类名。新能力默认关闭,旧 columns/data 用法零改动。逻辑属性、设备适配。",
+    "category": "data-display",
+    "tags": [
+      "table",
+      "data-display",
+      "data-table",
+      "grid",
+      "sort",
+      "selection",
+      "expandable",
+      "fixed-column",
+      "summary",
+      "tone",
+      "density",
+      "sticky",
+      "loading",
+      "empty",
+      "stripe",
+      "row-events",
+      "react"
+    ],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-25",
+      "requirements": "数据表格:列定义 + 行数据驱动,支持排序/行选择/可展开行/列固定/行高密度/汇总行,斑马纹与行 hover 高亮,圆角描边外框与横向 overflow,采用逻辑属性。magic-scope 数据展示组件:自研、消费 tokens,接 tone resolver 6 槽位、魔法动效(行 stagger 进场/排序脉冲/选中 inset glow)、完整状态、键盘可达、fx/motion 开关、i18n 文案、行级事件留口与 ...rest 透传、逻辑属性、设备适配。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Table.tsx", "Table.css", "useTableSort.ts", "useTableExpand.ts", "index.ts"]
+  },
+  {
+    "id": "tabs",
+    "name": "Tabs",
+    "description": "标签页组件(旗舰深度):受控/非受控、tone 7 色调、underline 滑块下划线 / pill 实底两变体、横向与竖排、size sm/md/lg、魔法滑块 indicator 跨 tab 平滑位移、可编辑(closable / addable / onEdit)、icon / badge / renderTab 槽位、keepMounted 保留未选 panel、方向键 / Home / End 键盘可达、根透传全部原生事件且内部处理器走 composeEventHandlers 合并。",
+    "category": "navigation",
+    "tags": [
+      "tabs",
+      "navigation",
+      "tablist",
+      "tabpanel",
+      "controlled",
+      "uncontrolled",
+      "keyboard",
+      "aria",
+      "underline",
+      "pill",
+      "tone",
+      "vertical",
+      "orientation",
+      "size",
+      "indicator",
+      "editable",
+      "closable",
+      "addable",
+      "badge",
+      "icon",
+      "keep-mounted",
+      "render-prop",
+      "compose-events",
+      "arcane",
+      "dark"
+    ],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-25",
+      "requirements": "标签页组件,支持受控/非受控、方向键切换与 underline / pill 两种风格变体。补强到旗舰深度(对标 Button/Input/Text):tone 7 色调读 6 槽位、横向/竖排、size、魔法滑块 indicator、可编辑(closable/addable/onEdit)、icon/badge/renderTab、keepMounted、onTabClick、根透传原生事件 + composeEventHandlers。magic-scope 结构/导航组件:自研、消费 tokens,完整状态、键盘可达、fx/motion 开关、逻辑属性。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Tabs.tsx", "Tabs.css", "logic.ts", "index.ts"]
+  },
+  {
+    "id": "tag",
+    "name": "Tag",
+    "description": "语义色调标签 / chip。接全库统一 tone resolver(7 tone × soft/solid/outline 三变体,只读 6 槽位不写死配色);sm/md 尺寸随密度缩放;前缀图标/头像槽 + 可定制关闭图标;可关闭(onRemove 携带事件、与根 onClick 隔离、closeButtonProps 透传);checkable/selected 过滤标签(键盘可激活 + aria-pressed);asChild 多态。发光/动效可一键降级。",
+    "category": "data-display",
+    "tags": [
+      "tag",
+      "chip",
+      "label",
+      "data-display",
+      "tone",
+      "variant",
+      "soft",
+      "solid",
+      "outline",
+      "size",
+      "closable",
+      "removable",
+      "icon",
+      "avatar",
+      "checkable",
+      "selectable",
+      "filter-chip",
+      "aria-pressed",
+      "asChild",
+      "i18n"
+    ],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-24",
+      "requirements": "语义色调标签,soft 底配 tone 文字,可选末尾的可关闭移除按钮(hover 加深、focus 发光环)。工程要求(magic-scope 通用基础组件):自研、消费 tokens 的 --ms-* 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Tag.tsx", "Tag.css", "index.ts"]
+  },
+  {
+    "id": "tag-input",
+    "name": "TagInput",
+    "description": "标签 / 令牌输入:输入框内把已添加项渲染成可删除芯片,回车或分隔符把当前输入转成标签,空输入 Backspace 删尾。支持受控/非受控、maxTags 上限、去重、validate 校验、粘贴多标签切分、双击编辑、失焦提交、清空全部与 renderTag 自绘留口。",
+    "category": "forms",
+    "tags": ["tag", "token", "chips", "input", "multi-value", "form", "tagging", "keywords"],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-26",
+      "requirements": "表单里需要一个把自由文本切成多枚可删除标签的输入控件:回车 / 自定义分隔符(默认逗号)成 tag、空输入 Backspace 删尾、粘贴含分隔符的串一次性切多枚;约束侧要能限数量(maxTags)、默认去重(大小写不敏感可配)、接业务 validate 否决,被拒走 onReject 而非静默吞掉。要受控/非受控双通道接 Form(invalid + aria-invalid)。差异化深度:双击改写标签(editable)、失焦自动提交残留(addOnBlur)、清空全部(clearable 复用 input.clear)、renderTag 完全自绘留口。可达性:外层 role=group、输入 role=combobox、每枚移除按钮 aria-label 走 tag.remove、← 进入标签导航 + ←→/Backspace 在标签间操作;多标签换行不撑破。纯算法(规整/分隔/能否新增)抽进 logic.ts 便于平移其它框架内核。",
+      "notes": "复用全库 tone resolver 与 --ms-* token,观感对齐 Tag(soft)与 Input(聚焦发光环);i18n 复用既有 key(tag.remove / input.clear),本组件不新增文案 key。兼容性边界(透明备注):(1) 回车提交守卫 IME 组合态(nativeEvent.isComposing / keyCode===229),复用 Textarea 同范式,CJK 选词确认的 Enter 不误提交。(2) 键入触发分隔符:单字符走 keydown 即时命中;多字符分隔符(如 '::')keydown 命中不了(键盘事件 key 永远单字符),改由 onChange 检测 draft 末尾后缀切分,行为与单字符一致;粘贴路径对单/多字符一视同仁。(3) renderTag 自绘模式:列表项 key 由组件负责(用户无需自写);← / → / Backspace 标签键盘导航需用户把 RenderTagContext.ref 挂到自绘的可聚焦元素上才生效,未挂则该标签不参与键盘导航(已知契约)。(4) 粘贴被全部去重/超限拒掉(无净新增)时保留输入框已有草稿,不吞用户正在编辑的文本。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["TagInput.tsx", "TagInput.css", "logic.ts", "index.ts"]
+  },
+  {
+    "id": "text",
+    "name": "Text",
+    "description": "文字排版旗舰核心(typography 分类)。多态 as/asChild 的文字原语,把所有可控文字属性收成 props:字族(sans/serif/mono/display)、流式字号档、字重(语义档+数值)、斜体、tone 着色、对齐、行高、字距、transform、下划线/删除线、单行 truncate(头/尾)+多行 lineClamp、折行 text-wrap(balance/pretty)、空白处理、断词、连字符、方向 dir、数字变体(tabular 等宽)、小型大写、竖排 writingMode,以及魔法文字(渐变/发光/描边)与魔法动效(reveal/blur-in 入场 + shimmer/pulse/flow 持续,全部受 data-ms-motion 与 prefers-reduced-motion 调制、一键降级)。留口充分:...rest 透传所有原生属性与事件,className/style 与计算值合并(用户优先),逃生舱走 style/className。兼容性备注见各 prop TSDoc。",
+    "category": "typography",
+    "tags": [
+      "text",
+      "typography",
+      "polymorphic",
+      "as-child",
+      "truncate",
+      "line-clamp",
+      "gradient-text",
+      "magic-motion",
+      "vertical-text",
+      "tone",
+      "tabular-nums",
+      "rtl"
+    ],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-25",
+      "requirements": "用户 2026-06-25 定:文字排版单独成 typography 分类(与 layout 并列),尽量全覆盖所有可支持文字属性,并给足用户发挥空间(插槽/多态/全事件/可定制)、透明备注兼容性。Text 为该分类旗舰核心:多态文字原语承载全属性矩阵 + 魔法文字差异化(复用 tone/fx/动效档)。共享尺度走 typography.css 的 --ms-type-step-*/--ms-leading-*/--ms-tracking-*(组件内兜底,待架构线接入正式 type scale)。兼容性坑(text-wrap/line-clamp/background-clip:text/hyphens/text-stroke)逐条标注在 prop TSDoc,不藏着。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Text.tsx", "Text.css", "index.ts"]
+  },
+  {
+    "id": "textarea",
+    "name": "Textarea",
+    "description": "多行文本输入框(深度组件):sm/md/lg 尺寸(随密度缩放)、tone 聚焦发光环(invalid 强制 danger)、showCount 字数(超限染 danger)、autosize 随内容调高(true 自由 / {minRows,maxRows} 限幅)、footer 底部槽、onPressEnter/onSubmitShortcut 提交语义。样式与 Input 一致,仅垂直 resize,尊重 prefers-reduced-motion。",
+    "category": "forms",
+    "tags": [
+      "textarea",
+      "form",
+      "input",
+      "multiline",
+      "field",
+      "validation",
+      "autosize",
+      "char-count",
+      "tone",
+      "glow",
+      "submit-shortcut"
+    ],
+    "status": "stable",
+    "version": "0.2.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-24",
+      "requirements": "多行文本输入框,从最小版补强到生产级深度,对标旗舰 Button/Input/Text。支持 sm/md/lg 尺寸(随 --ms-density-scale 缩放)、tone 色调发光环(读 --ms-c/--ms-c-glow 槽位,invalid 强制 danger)、showCount 字数计数(配合 maxLength,超限染 danger)、autosize 自动调高(布尔或 {minRows,maxRows})、footer 底部槽、onPressEnter/onSubmitShortcut 提交快捷键(IME 安全)、classNames 细粒度留口。内部 onChange/onKeyDown 用 composeEventHandlers 合并用户处理器,...rest 透传所有原生属性与事件。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-* 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion 与 data-ms-motion/data-ms-fx 关断。autosize 与键盘判定逻辑抽成框架无关纯函数(logic.ts),便于平移 core。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Textarea.tsx", "Textarea.css", "logic.ts", "index.ts"]
+  },
+  {
+    "id": "time-picker",
+    "name": "TimePicker",
+    "description": "时间选择器:Input 式 trigger + 浮层内可滚动的时/分/秒列(每列 listbox,选中项高亮居中)。支持 12/24 小时制、步进、禁用时分秒、此刻/确定、清除、受控值与开合,接全库 tone 与密度。",
+    "category": "forms",
+    "tags": [
+      "time-picker",
+      "time",
+      "forms",
+      "input",
+      "popover",
+      "listbox",
+      "12-hour",
+      "24-hour",
+      "step",
+      "clearable",
+      "controlled",
+      "a11y"
+    ],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-26",
+      "requirements": "需要一个生产级时间选择器:trigger 是只读 Input 显示格式化时间或占位;点开浮层后用「时/分/秒」三条可滚动列让用户逐列选值(对标主流库的滚轮列体验),选中项高亮并滚到列中央。要能切 12/24 小时制(12 制额外加 AM/PM 列)、按 hourStep/minuteStep/secondStep 稀疏化选项、按 disabledHours/Minutes/Seconds 屏蔽不可选值,并提供「此刻」一键填当前时间与「确定」收起。值要同时吃 Date 与 'HH:mm:ss' 字符串、受控/非受控双通道,开合可受控。把纯逻辑(解析/格式化/12-24 互转/选项生成/clamp 对齐/禁用判定/列内导航)抽进零 React 的 logic.ts 以便平移到 vue/core。a11y 上每列是独立 listbox + option(aria-selected),键盘 ↑↓ 在列内选值;供 Form 用的 invalid 态。浮层复用与 Select 同款的原生 Popover API + CSS Anchor Positioning + 降级方案,保持全库适配语义一致。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["TimePicker.tsx", "TimePicker.css", "logic.ts", "index.ts"]
+  },
+  {
+    "id": "timeline",
+    "name": "Timeline",
+    "description": "时间线 / 信息流(旗舰深度):语义化 <ol> 的 Timeline + 若干 TimelineItem。竖向轴 + 节点圆点(可换图标)+ 连线;节点经全库 tone resolver 着色(variant default/primary/accent/success/warning/danger/info/neutral,只读 6 槽位不写死语义色)并带克制发光。mode left/right/alternate 控制左右轴与左右交替排布(alternate 经容器查询窄屏退化为单侧),reverse 视觉倒序;pending 末节点(虚线引导 + 呼吸圆点)表示进行中;Item 级 pulse 圆点呼吸发光(motion-scale 调强度、reduced-motion / 总闸停)。连线样式 lineStyle solid/dashed(Timeline 级与 Item 级可覆盖),连线为真实 .ms-timeline__line 元素供 className 钩子定制。交互式时间线:TimelineItem interactive/active 受控 + onSelect 语义回调 + 键盘 Enter/Space 触发 + tabindex/aria-current,onClick 与内部选择经 composeEventHandlers 合并(用户优先、可 preventDefault 拦截)。每条含标题、次级时间(<time>)、正文。密度缩放、逻辑属性 RTL 友好、overflow-wrap 防长串溢出。",
+    "category": "data-display",
+    "tags": [
+      "timeline",
+      "feed",
+      "activity",
+      "history",
+      "data-display",
+      "list",
+      "tone",
+      "alternate",
+      "pending",
+      "pulse",
+      "interactive",
+      "selectable"
+    ],
+    "status": "stable",
+    "version": "0.0.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-25",
+      "requirements": "补齐信息流 / 历史记录展示:时间线,并补强到生产级深度对标旗舰 Button/Input/Text。原创实现,声明式 Timeline + TimelineItem 组合(语义 <ol>/<li>);节点圆点接 tone resolver(8 色,只读 6 槽位)+ 真实 .ms-timeline__line 连线(末项不画);mode 左右轴 / 交替排布 + reverse;pending 进行中末节点 + pulse 呼吸发光;lineStyle 实/虚线;交互式选择(interactive/active/onSelect + 键盘)。复用 --ms-* token、tone 槽位、密度 / 动效 / 发光总闸,逻辑属性 RTL 友好,composeEventHandlers 留口不丢用户处理器。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Timeline.tsx", "Timeline.css", "index.ts"]
+  },
+  {
+    "id": "toast",
+    "name": "Toast",
+    "description": "命令式通知(旗舰深度):模块级 store + toast() 函数(可在组件外任意处调用,无需 Provider)+ <Toaster /> 渲染容器(useSyncExternalStore 订阅、portal 到 body、6 向定位、安全区避让,透传 ...rest / className / style / onMouseEnter|Leave 到 <ol>,可注入 max/duration/gap/expand)。变体 default/success/warning/danger/info/loading(快捷方法 toast.success/error/warning/info/loading),变体着色读统一 tone 6 槽位(随换肤联动、data-ms-fx 总闸可关发光);toast.promise 跟踪异步(loading→success/danger,文案支持函数派生)。每条可带图标(icon 可 false / 自定义,loading 显示旋转图标)、描述、行动按钮、自定义 closeIcon、细粒度 classNames(root/icon/message/description/action/close)。事件:onDismiss(携带来源 manual/auto/action/replace)、onAutoClose、整条 onClick(内部按钮 stopPropagation 不误触)。自动消失 + 悬停/聚焦暂停、可手动关闭;持久 live region 解耦播报(danger/warning→assertive、其余→polite);进出场动画(@starting-style + 退场标记),尊重 reduced-motion / data-ms-motion、触控热区达标;i18n 文案走字典(toast.close / toaster.region)。",
+    "category": "feedback",
+    "tags": [
+      "toast",
+      "notification",
+      "toaster",
+      "snackbar",
+      "feedback",
+      "aria-live",
+      "promise",
+      "tone",
+      "i18n"
+    ],
+    "status": "stable",
+    "version": "0.0.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-25",
+      "requirements": "补齐反馈体系:命令式通知。原创实现,对标 sonner/react-hot-toast 的架构但自研、不 wrap 第三方——模块级 store(useSyncExternalStore 订阅)让 toast() 脱离 React 树调用,<Toaster /> portal 渲染。涵盖自动消失 + 悬停/聚焦暂停、退场动画、aria-live(status/alert 分流)、行动按钮、6 向定位 + 安全区。延续设备适配契约(触控热区、hover 守卫、focus-visible、reduced-motion)。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Toast.tsx", "Toast.css", "index.ts"]
+  },
+  {
+    "id": "toggle",
+    "name": "Toggle",
+    "description": "双态切换按钮:单个 pressed / unpressed 两态按钮,用 aria-pressed 表达,典型用于工具栏里可保持「激活」的图标按钮(加粗 / 斜体 / 静音)。复用 Button 视觉语言,受控 / 非受控双模式。",
+    "category": "actions",
+    "tags": [
+      "toggle",
+      "button",
+      "pressed",
+      "two-state",
+      "icon-button",
+      "toolbar",
+      "controlled",
+      "a11y"
+    ],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "inspired",
+      "url": "https://www.radix-ui.com/primitives/docs/components/toggle",
+      "capturedAt": "2026-06-26",
+      "requirements": "需要一个区别于 Switch(开 / 关)与 Segmented(多选其一)的单按钮双态控件:按下 / 未按下两态,语义走 aria-pressed 而非 checkbox / radio,适配工具栏里加粗 B / 斜体 I / 静音这类要保持激活态的图标按钮。视觉沿用 Button 的 variant × tone × size × shape,使其与按钮族一致;未按下时静默(读 fg-muted),按下时点亮 tone 实底 / 柔底 / 描边并叠发光高亮。受控(pressed + onPressedChange)与非受控(defaultPressed)双通道,键盘 Enter/Space 由原生 button 接管,disabled 与 reduced-motion 降级齐备。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Toggle.tsx", "Toggle.css", "index.ts", "Toggle.test.tsx"]
+  },
+  {
+    "id": "toolbar",
+    "name": "Toolbar",
+    "description": "工具栏:role=toolbar + roving tabindex 的复合动作容器,聚合按钮 / 链接 / 分隔 / 分组 / 单多选切换组,一组只占一个 Tab 位、方向键在项间移焦。",
+    "category": "actions",
+    "tags": [
+      "toolbar",
+      "actions",
+      "roving-tabindex",
+      "toggle-group",
+      "keyboard",
+      "a11y",
+      "compound"
+    ],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-26",
+      "requirements": "需要一个把多个动作按钮聚成一条的工具栏:整组只占一个 Tab 序、方向键(横向 ←/→、纵向 ↑/↓、Home/End)在项间移焦(roving tabindex),作为编辑器 / 看板顶栏这类高频场景的承载。子件要覆盖动作按钮、链接、视觉分隔(role=separator)、逻辑分组(role=group),以及单选 / 多选切换组(single 走 radiogroup/radio 语义,multiple 走 aria-pressed),切换组值受控 / 非受控双模式。内容过多要么换行(wrap)要么横向滚动,绝不撑破容器。键盘 roving 范式对齐库内 Tabs/Segmented,导航纯算法抽进 logic.ts 以便平移其它框架。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": [
+      "Toolbar.tsx",
+      "Toolbar.css",
+      "logic.ts",
+      "logic.test.ts",
+      "Toolbar.test.tsx",
+      "index.ts"
+    ]
+  },
+  {
+    "id": "tooltip",
+    "name": "Tooltip",
+    "description": "提示气泡(旗舰深度):Popover API 进 top-layer + CSS Anchor Positioning 12 向定位(四主轴 × 居中/start/end)+ offset 间距 + 可选指向箭头;tone 色调经全库 tone resolver 驱动边框/发光/箭头(danger 即警示气泡);hover/focus 延时触发(openDelay/closeDelay 拆分)、Esc/点外部关闭可拦截、disabled 不弹;受控 open/defaultOpen + onOpenChange 双通道;触屏 tap-to-toggle;trigger 全事件 compose 合并、气泡根 spread ...rest 透传;aria-describedby 关联、键盘可达,fx/motion 开关与锚定降级。零第三方依赖。",
+    "category": "overlay",
+    "tags": [
+      "tooltip",
+      "popover",
+      "overlay",
+      "hint",
+      "anchor-positioning",
+      "tone",
+      "arrow",
+      "controlled",
+      "placement",
+      "accessible"
+    ],
+    "status": "stable",
+    "version": "0.2.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-25",
+      "requirements": "提示气泡:用 Popover API 进 top-layer + CSS Anchor Positioning 贴位,hover/focus 延时触发、aria-describedby 关联,深色微光入场,零第三方依赖并带锚定降级。工程要求(magic-scope overlay 组件):用满平台原生能力(Popover API + CSS Anchor Positioning)自研,带降级、键盘可达、fx/motion 开关、入场动画。补强到生产级深度:12 向 placement(四主轴)+ 箭头、tone 槽位配色、受控 open/onOpenChange/defaultOpen 双通道、disabled、openDelay/closeDelay 拆分、...rest 透传气泡根、trigger 事件 compose、onEscapeKeyDown/onPointerDownOutside 拦截关闭。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Tooltip.tsx", "Tooltip.css", "logic.ts", "index.ts"]
+  },
+  {
+    "id": "tour",
+    "name": "Tour",
+    "description": "引导漫游:遮罩覆盖全页并在目标处镂空高亮,逐步引导卡(标题/描述/上一步·下一步·跳过·完成)带步数指示,目标位置 rAF 跟随、切步自动滚入视口,支持键盘 Esc/方向键、受控与非受控双通道、tone 着色与命令式跳步。",
+    "category": "feedback",
+    "tags": [
+      "tour",
+      "onboarding",
+      "guide",
+      "walkthrough",
+      "spotlight",
+      "coachmark",
+      "overlay",
+      "feedback"
+    ],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-26",
+      "requirements": "需要一个新手引导/功能巡览组件:用半透明遮罩压暗全页,只在当前步目标处挖出高亮洞聚焦注意力,旁边浮一张引导卡说明这一步并提供上一步/下一步/跳过/完成。要求目标用选择器或取值器惰性解析、位置随页面滚动与窗口缩放实时跟随,切步把目标滚动进视口;键盘可达(Esc 关、左右方向键切步);受控/非受控双通道便于接入业务状态机;文案走 i18n;可抽取的纯算法(步索引夹取、目标解析、镂空区计算、卡片方位推断)落 logic.ts 以便平移多框架。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Tour.tsx", "Tour.css", "logic.ts", "logic.test.ts", "Tour.test.tsx", "index.ts"]
+  },
+  {
+    "id": "transfer",
+    "name": "Transfer",
+    "description": "双列穿梭框:左右两栏列表 + 中间方向按钮,把数据项在「源池」与「目标」之间移动。每栏带全选表头、已选计数、可选搜索框与空态,支持受控/非受控、单向模式与自定义渲染。",
+    "category": "data-display",
+    "tags": ["transfer", "shuttle", "dual-list", "selection", "data-display", "checkbox", "search"],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-26",
+      "requirements": "需要一个把候选集分配到目标集的双列控件:常见于权限分配、字段挑选、收件人选择等场景。核心诉求——(1) 真相源是单一 dataSource + targetKeys,移动逻辑必须是可单测的纯函数(切栏/过滤/移动算方向),便于平移到其它框架;(2) 两栏对称,各自带全选表头(显示已选 X/Y)、按项复选、可选搜索、空态;(3) 中间方向按钮按两侧选中态启用,支持单向模式;(4) 受控 targetKeys 与非受控 defaultTargetKeys 并存,onChange 回传 (targetKeys, direction, moveKeys) 以便外部审计移动;(5) a11y:list + checkbox + 带可访问名的方向按钮;长 title 截断不撑破。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": [
+      "Transfer.tsx",
+      "Transfer.css",
+      "logic.ts",
+      "logic.test.ts",
+      "Transfer.test.tsx",
+      "index.ts"
+    ]
+  },
+  {
+    "id": "tree",
+    "name": "Tree",
+    "description": "树形控件:展开/折叠、单选/多选、级联勾选(含半选态)、节点图标与引导线;完整 ARIA tree 键盘导航(方向键进出层级与展开折叠、Home/End、Enter 选中、Space 勾选)、受控/非受控三态。",
+    "category": "data-display",
+    "tags": ["tree", "hierarchy", "checkbox", "cascade", "a11y", "keyboard"],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-26",
+      "requirements": "做一个生产级树形控件。硬约束:① 所有树操作(可见节点扁平化、后代/祖先收集、勾选级联上下传播、半选派生)纯 TS 进 logic.ts,零 React,可平移 @magic-scope/core;② 勾选用级联模型(非 checkStrictly):checkedKeys 仅存『完全勾选』,半选由 deriveHalfChecked 从中派生,toggle 向下传后代、向上重算祖先(全部非禁用子勾选才勾选),disabled 子树不参与级联;③ 扁平 ARIA tree:li 经 aria-level/posinset/setsize 表达层级(而非 DOM 嵌套),role=tree/treeitem、aria-expanded/selected/checked(mixed 半选)/disabled;④ 完整键盘:↑↓ 移焦、→ 展开或进子、← 折叠或回父、Home/End、Enter 选中、Space 勾选,roving tabindex + 焦点落格;⑤ 受控/非受控三套(expanded/selected/checked)独立;⑥ 单选/多选、节点图标、引导线、blockNode 整行可点、密度缩放、tone 选中高亮。诚实取舍:虚拟滚动(大数据量)与拖拽排序延后;勾选框为自绘轻量元素(非复用 Checkbox)以承载半选态。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["Tree.tsx", "logic.ts", "Tree.css", "index.ts"]
+  },
+  {
+    "id": "upload",
+    "name": "Upload",
+    "description": "文件上传:虚线拖拽区(dragover 高亮 / drop 收文件)+ 点击触发隐藏 input;受控/非受控文件列表,支持 multiple/accept/maxCount/disabled、beforeUpload 准入改写、可插拔 customRequest 接管真实传输;每条文件含名/体积/进度条/状态图标/删除/重试/预览,listType 文本或图片。",
+    "category": "forms",
+    "tags": [
+      "upload",
+      "file",
+      "drag-and-drop",
+      "dropzone",
+      "progress",
+      "form",
+      "controlled",
+      "customRequest"
+    ],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-26",
+      "requirements": "需要一个把「上传编排」与「真实网络传输」彻底解耦的上传组件:组件只负责选文件、客户端准入(accept/maxCount/beforeUpload)、以及维护每条文件 status/percent/list 的 UI 编排,绝不内置 XHR/fetch;真正的传输由用户的 customRequest 提供并通过 onProgress/onSuccess/onError 回灌。可抽取的纯算法(File 规范化 wrapFile、accept 匹配 isAccepted、体积格式化 formatFileSize、状态机 nextStatus、maxCount 截断、列表增删 patch)下沉到零 React 的 logic.ts 以便平移多框架;交互上要同时满足拖拽(dragover 高亮/dragleave 还原/drop)与点击两条入口,a11y 上触发区用 role=button + 键盘可达、每条操作按钮带 aria-label。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": [
+      "Upload.tsx",
+      "Upload.css",
+      "logic.ts",
+      "logic.test.ts",
+      "Upload.test.tsx",
+      "index.ts"
+    ]
+  },
+  {
+    "id": "visually-hidden",
+    "name": "VisuallyHidden",
+    "description": "无障碍隐藏工具:把内容视觉隐藏但保留给屏幕阅读器(sr-only),支持 as 多态、asChild 合并、focusable 的 skip-link 聚焦还原。",
+    "category": "utility",
+    "tags": [
+      "accessibility",
+      "a11y",
+      "sr-only",
+      "screen-reader",
+      "skip-link",
+      "utility",
+      "polymorphic",
+      "as-child"
+    ],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-26",
+      "requirements": "需要一个把内容对视觉隐藏、却仍保留在无障碍树里供屏幕阅读器朗读的原语(给纯图标按钮补可读标签、给区块补朗读标题、给表单控件补隐藏说明)。必须走标准 sr-only 技法(absolute + 1px + clip + overflow:hidden),禁止 display:none / visibility:hidden,否则元素被摘出可达性树、SR 也读不到。同时要 focusable 的 skip-link 模式:平时隐身、键盘 Tab 聚焦时浮现还原可见。与全库一致提供 as 多态根、asChild 合并(事件 compose + ref 合并)、className 透传。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": ["VisuallyHidden.tsx", "VisuallyHidden.css", "VisuallyHidden.test.tsx", "index.ts"]
+  },
+  {
+    "id": "watermark",
+    "name": "Watermark",
+    "description": "在内容上平铺旋转的文字 / 图片水印覆盖层,不挡交互。",
+    "category": "layout",
+    "tags": ["watermark", "overlay", "layout", "canvas", "branding", "traceability"],
+    "status": "stable",
+    "version": "0.1.0",
+    "frameworks": ["react"],
+    "source": {
+      "type": "original",
+      "capturedAt": "2026-06-26",
+      "requirements": "需求:给任意内容区叠加可平铺水印用于溯源/品牌标注。硬约束:(1) 覆盖层 pointer-events:none 绝不挡下层点击/选择/滚动;(2) 高 DPI 必须清晰——离屏 canvas 按 devicePixelRatio 放大后 toDataURL 作为 repeating background 平铺,而非 DOM 文本堆叠;(3) 文字(多行)与图片二选一,旋转/间距/偏移/不透明度/字号字色字体/zIndex 全可配;(4) 降级安全:SSR / 无 2d 上下文 / 图片加载失败时不渲染背景但仍正常包裹 children、不抛错;(5) 覆盖层 aria-hidden 纯装饰不进可访问性树。单元画布的尺寸/中心布局抽为零依赖纯函数 logic.ts 以便单测与跨框架平移。已知取舍:未做 MutationObserver 防删除/防篡改加固(留 TODO),当前面向视觉水印而非对抗恶意 DOM 篡改。"
+    },
+    "dependencies": ["@magic-scope/tokens"],
+    "files": [
+      "Watermark.tsx",
+      "Watermark.css",
+      "logic.ts",
+      "logic.test.ts",
+      "Watermark.test.tsx",
+      "index.ts"
+    ]
+  }
+]

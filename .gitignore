@@ -11,8 +11,7 @@ coverage/
 docs/.vitepress/cache/
 docs/.vitepress/dist/
 
-# 生成物(由 pnpm registry 重建)
-registry/manifest.json
+# registry/manifest.json 是生成物但**必须提交**:CI 用「pnpm registry + git diff --exit-code」守新鲜度
 
 # 浏览器验证临时产物
 .playwright-mcp/
