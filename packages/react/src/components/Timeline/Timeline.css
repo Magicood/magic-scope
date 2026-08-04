@@ -18,7 +18,7 @@
 
 /* —— 一条:[节点列] [内容] ——
  * 条目间距**必须**做在内容列(.ms-timeline__content)的 padding 上,不能做在 li 上:
- * 节点列是连线的定位上下文,作为 flex 子项只 stretch 到 li 的「内容盒」,穿不过 li 的 padding。
+ * 连线的高度来自节点列,而节点列作为 flex 子项只 stretch 到 li 的「内容盒」,穿不过 li 的 padding。
  * 间距一旦写在 li 上,连线就只画到内容盒底 —— 条目矮时高度直接为 0(整条时间线看不见连线)。 */
 .ms-timeline__item {
   display: flex;
@@ -212,15 +212,19 @@
   font-style: italic;
 }
 /* 通往 pending 的那段连线转虚线(进行中的视觉暗示)。
- * 正序:pending 在最下,虚线是它前一条画的;reverse:pending 在最上,虚线是它自己画的。 */
+ * 正序:pending 在最下,虚线是它前一条画的;reverse:pending 在最上,虚线是它自己画的。
+ * 单条 lineStyle="solid" 是显式逃生舱,压过这条自动暗示(与 --dashed 的处理一致)。 */
 .ms-timeline__item--pending {
   --ms-tl-accent: var(--ms-color-fg-subtle);
 }
 .ms-timeline:not(.ms-timeline--reverse)
-  > .ms-timeline__item:has(+ .ms-timeline__item--pending)
+  > .ms-timeline__item:has(+ .ms-timeline__item--pending):not(.ms-timeline__item--solid)
   > .ms-timeline__node
   > .ms-timeline__line,
-.ms-timeline--reverse > .ms-timeline__item--pending > .ms-timeline__node > .ms-timeline__line {
+.ms-timeline--reverse
+  > .ms-timeline__item--pending:not(.ms-timeline__item--solid)
+  > .ms-timeline__node
+  > .ms-timeline__line {
   background:
     linear-gradient(
       to bottom,
