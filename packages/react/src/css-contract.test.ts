@@ -96,8 +96,8 @@ for (const file of cssFiles) {
   const text = readFileSync(file, 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
   // 本库 CSS 不用原生嵌套,最内层 `{}` 即一条规则;@media/@layer 头以 @ 开头,跳过。
   for (const m of text.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
-    const sel = m[1].trim();
-    if (!sel.startsWith('@')) cssRules.push({ sel, decls: m[2] });
+    const sel = (m[1] ?? '').trim();
+    if (!sel.startsWith('@')) cssRules.push({ sel, decls: m[2] ?? '' });
   }
 }
 
@@ -133,7 +133,7 @@ function attrRegion(src: string, start: number): string {
 
 const msTokens = (str: string): string[] => [
   ...[...str.matchAll(/["'`]([^"'`]*)["'`]/g)]
-    .flatMap((m) => m[1].split(/\s+/))
+    .flatMap((m) => (m[1] ?? '').split(/\s+/))
     .filter((t) => /^ms-[\w-]+$/.test(t)),
   ...[...str.matchAll(/`ms-[\w-]*/g)].map((m) => m[0].slice(1)),
 ];
@@ -165,27 +165,31 @@ for (const file of collectTsx(componentsDir)) {
   const rel = file.split('/components/')[1] ?? file;
   NATIVE_CONTROL.lastIndex = 0;
   for (let m = NATIVE_CONTROL.exec(src); m; m = NATIVE_CONTROL.exec(src)) {
+    const tag = m[1] ?? '';
     const region = attrRegion(src, m.index);
     const where = `${rel}:${src.slice(0, m.index).split('\n').length}`;
     const attr = region.match(/className\s*=\s*(\{[\s\S]*?\}|"[^"]*"|'[^']*')/);
-    if (!attr) {
+    const expr = attr?.[1];
+    if (expr === undefined) {
       // 没写 className:只有整体透传 props 时才可能在外部带类,静态守不住 → 记为待办。
-      if (/\{\s*\.\.\.\s*\w+\s*\}/.test(region)) unresolved.push(`${where} <${m[1]}> 无 className`);
+      if (/\{\s*\.\.\.\s*\w+\s*\}/.test(region)) unresolved.push(`${where} <${tag}> 无 className`);
       continue;
     }
-    let classes = msTokens(attr[1]);
+    let classes = msTokens(expr);
     if (classes.length === 0) {
-      const idents = [...attr[1].matchAll(/\b([A-Za-z_$][\w$]*)\b/g)]
-        .map((x) => x[1])
-        .filter((x) => !['cx', 'clsx', 'classNames', 'undefined', 'null', 'className'].includes(x));
+      const idents = [...expr.matchAll(/\b([A-Za-z_$][\w$]*)\b/g)]
+        .map((x) => x[1] ?? '')
+        .filter(
+          (x) => !['cx', 'clsx', 'classNames', 'undefined', 'null', 'className', ''].includes(x),
+        );
       for (const id of idents) classes.push(...resolveIdent(src, id, m.index));
     }
     classes = [...new Set(classes)];
     if (classes.length === 0) {
-      unresolved.push(`${where} <${m[1]}> className 解析不出 ms-* 类名`);
+      unresolved.push(`${where} <${tag}> className 解析不出 ms-* 类名`);
       continue;
     }
-    controlSites.push({ where, tag: m[1], classes });
+    controlSites.push({ where, tag, classes });
   }
 }
 
