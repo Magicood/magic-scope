@@ -53,6 +53,18 @@ magic-scope 的设备适配是**一套代码 + 流式 token + 容器查询自适
 
 组件入 `ms.components`,响应式覆盖(`@media` / `@container`)天然高于基础值;**使用方应用层未分层样式天然胜过库样式**,避免 specificity 战争。
 
+> **这把刀是双刃的(已实测)。** 「未分层胜过分层」对使用方的 **CSS reset** 同样成立:Tailwind v3 的 preflight(`button { background-color: transparent }`,没包在 `@layer` 里)会连 `ms.components` 里 `Button` solid 变体的底色和描边一起抹掉。三种组合实测结果:
+>
+> | 宿主 reset 写法 | 结果 |
+> |---|---|
+> | 未分层(Tailwind v3 preflight / 多数 normalize) | 宿主 reset 赢,组件底色被抹 |
+> | 在 `@layer` 里,且声明**早于**本库样式 | 库赢,组件正常 |
+> | 在 `@layer` 里,但声明**晚于**本库样式 | 宿主 reset 赢(层序按首次声明先后,后声明者优先级更高) |
+>
+> 规避:把宿主 reset 也放进一个 layer 并让它先于 `@magic-scope/react/styles.css` 声明(Tailwind v4 的 preflight 本身就在 `@layer base`,只要库样式在其之后引入即可;v3 可写 `@import "tailwindcss/base" layer(base);`)。
+
+反过来,**本库不假设宿主页有 reset**:每个直接渲染的原生控件(`<button>` / `<input>` / …)都在自己的组件规则里显式重置了 UA 默认 `background` / `border` / `font` / `color` —— 否则裸宿主页里 `Button` 的 ghost / outline / link 会渲染成 Chrome 的 ButtonFace 灰药丸。`@layer ms.reset` 因此**故意留空**给使用方(组件库不该替宿主页 reset 别人的 `button`),这条由 `packages/react/src/css-contract.test.ts` 的 CI 红线守着。
+
 ## 各组件的设备适配行为
 
 | 组件 | 适配 |

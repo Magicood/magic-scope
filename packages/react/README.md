@@ -31,6 +31,8 @@ export function App() {
 
 > 两件事缺一不可:引入 `@magic-scope/react/styles.css`,并用 `@magic-scope/tokens` 注入主题变量 —— 否则组件拿不到配色。
 
+> **和宿主页样式的关系**:组件自带原生控件的 UA 默认值重置(`<button>` 的灰底 / 系统字体等),**不要求**你的页面有全局 CSS reset;本库也不会反过来 reset 你自己的 `button` / `input`。需要注意的是库样式都在 `@layer ms.components` 里,而 CSS 中**未分层样式优先级高于任何 layer** —— 宿主页里用元素选择器写的 reset(如 Tailwind v3 的 preflight)会覆盖组件样式,把这类 reset 也放进 layer、并让它先于 `styles.css` 声明即可。详见[多端适配文档的 Cascade layers 一节](https://github.com/Magicood/magic-scope/blob/main/docs/responsive.md#cascade-layers)。
+
 ## 特效系统(Reveal)
 
 进场 / 滚动特效随包内建,零第三方依赖,全部只动 `transform` / `opacity` / `filter` / `clip-path`(合成层友好):

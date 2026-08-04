@@ -234,8 +234,12 @@
   margin-inline-start: calc(-1 * var(--ms-space-1));
   inline-size: 1.15em;
   block-size: 1.15em;
+  padding: 0;
+  border: none;
   border-radius: var(--ms-radius-full);
+  background: transparent;
   color: inherit;
+  font: inherit;
   opacity: 0.6;
   cursor: pointer;
   transition:
@@ -259,6 +263,7 @@
   border: none;
   background: transparent;
   color: var(--ms-color-fg-muted);
+  font: inherit;
   border-radius: var(--ms-radius-sm);
   cursor: pointer;
   transition:

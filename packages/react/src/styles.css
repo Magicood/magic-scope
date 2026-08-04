@@ -2,7 +2,12 @@
 
 /* cascade layers 层序(DESIGN.md §7.2):靠后者优先级更高。
  * 组件入 ms.components → 响应式覆盖(@media/@container)天然高于基础值;
- * 使用方应用层未分层样式天然胜过库样式,避免 specificity 战争。 */
+ * 使用方应用层未分层样式天然胜过库样式,避免 specificity 战争。
+ *
+ * ms.reset 只占层序、库自身**不往里写任何裸元素规则**:组件库给宿主页做全局 reset 会连累
+ * 使用方自己的 button/input。库内每个原生控件改为在**自己的组件规则**里显式重置 UA 默认值
+ * (background / border / font / color),故不依赖宿主页有没有 reset;红线见 css-contract.test.ts。
+ * 该层留给使用方:自己的 reset 写进 @layer ms.reset 即可保证优先级低于本库全部样式。 */
 @layer ms.reset,
   ms.tokens,
   ms.theme,
