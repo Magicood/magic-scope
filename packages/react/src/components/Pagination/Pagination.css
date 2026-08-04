@@ -67,9 +67,11 @@
     transform var(--ms-dur-fast) var(--ms-ease-emphasized);
 }
 
-.ms-pagination__btn:hover:not(:disabled):not(.ms-pagination__btn--current) {
-  background-color: var(--ms-color-surface-raised);
-  color: var(--ms-color-fg);
+@media (hover: hover) {
+  .ms-pagination__btn:hover:not(:disabled):not(.ms-pagination__btn--current) {
+    background-color: var(--ms-color-surface-raised);
+    color: var(--ms-color-fg);
+  }
 }
 
 .ms-pagination__btn:focus-visible {
@@ -97,8 +99,10 @@
   cursor: default;
 }
 
-.ms-pagination__btn--current:hover {
-  background-color: var(--ms-c-hover, var(--ms-color-primary-hover));
+@media (hover: hover) {
+  .ms-pagination__btn--current:hover {
+    background-color: var(--ms-c-hover, var(--ms-color-primary-hover));
+  }
 }
 
 /* —— 发光总闸关断 —— */
@@ -212,8 +216,10 @@
     border-color var(--ms-dur-fast) var(--ms-ease-standard),
     box-shadow var(--ms-dur-base) var(--ms-ease-standard);
 }
-.ms-pagination__size-select:hover {
-  border-color: var(--ms-color-border-strong, var(--ms-color-border));
+@media (hover: hover) {
+  .ms-pagination__size-select:hover {
+    border-color: var(--ms-color-border-strong, var(--ms-color-border));
+  }
 }
 .ms-pagination__size-select:focus-visible {
   outline: none;

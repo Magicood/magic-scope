@@ -144,8 +144,19 @@
   font-size: 0.85em;
 }
 
-/* hover / focus 高亮:浮起表面 + 主色字 + 内侧微光导轨 */
-.ms-menu__item:hover:not(:disabled, [aria-disabled="true"]),
+/* hover 高亮:浮起表面 + 主色字 + 内侧微光导轨(hover 守卫:触屏不再粘滞) */
+@media (hover: hover) {
+  .ms-menu__item:hover:not(:disabled, [aria-disabled="true"]) {
+    outline: none;
+    background-color: var(--ms-c-soft);
+    color: var(--ms-c-hover);
+    box-shadow:
+      inset 2px 0 0 var(--ms-c),
+      0 0 calc(8px * var(--ms-fx-glow, 1)) -10px var(--ms-c-glow);
+  }
+}
+
+/* focus 高亮:与 hover 同观感,键盘聚焦全设备生效(不进 hover 守卫) */
 .ms-menu__item:focus-visible {
   outline: none;
   background-color: var(--ms-c-soft);
@@ -162,8 +173,13 @@
     0 0 0 2px var(--ms-color-focus-ring);
 }
 
-/* 发光总闸关断:项保留导轨,去掉外发光 */
-[data-ms-fx="off"] .ms-menu__item:hover:not(:disabled, [aria-disabled="true"]),
+/* 发光总闸关断:项保留导轨,去掉外发光。
+   导轨仍是可见绘制:hover 半边进守卫消触屏粘滞,focus 半边全设备生效 */
+@media (hover: hover) {
+  [data-ms-fx="off"] .ms-menu__item:hover:not(:disabled, [aria-disabled="true"]) {
+    box-shadow: inset 2px 0 0 var(--ms-c);
+  }
+}
 [data-ms-fx="off"] .ms-menu__item:focus-visible {
   box-shadow: inset 2px 0 0 var(--ms-c);
 }
@@ -185,7 +201,15 @@
 .ms-menu__item--danger .ms-menu__check {
   color: var(--ms-color-danger);
 }
-.ms-menu__item--danger:hover:not(:disabled, [aria-disabled="true"]),
+@media (hover: hover) {
+  .ms-menu__item--danger:hover:not(:disabled, [aria-disabled="true"]) {
+    background-color: color-mix(in oklab, var(--ms-color-danger) 14%, transparent);
+    color: var(--ms-color-danger);
+    box-shadow:
+      inset 2px 0 0 var(--ms-color-danger),
+      0 0 calc(8px * var(--ms-fx-glow, 1)) -10px var(--ms-color-danger);
+  }
+}
 .ms-menu__item--danger:focus-visible {
   background-color: color-mix(in oklab, var(--ms-color-danger) 14%, transparent);
   color: var(--ms-color-danger);
@@ -233,6 +257,43 @@
   .ms-menu__item {
     min-block-size: max(var(--ms-target-min), calc(2.5rem * var(--ms-density-scale, 1)));
     padding-block: var(--ms-space-3);
+  }
+}
+
+/* —— P1 窄触屏(≤sm 30rem 且 coarse 指针):菜单转底部抽屉(action sheet)——
+   覆盖锚定 / 降级定位为贴底满宽 sheet、仅上圆角、自底滑入;长菜单限高内滚。
+   置于 @supports 定位块之后:同层同特异性,窄触屏时后者胜出。
+   仅触屏生效:桌面窄窗口(精确指针)与宽屏维持锚定下拉,逐像素不变。 */
+@media (max-width: 30rem) and (pointer: coarse) {
+  .ms-menu {
+    position: fixed;
+    position-area: none;
+    position-try-fallbacks: none;
+    inset: auto 0 0 0;
+    margin: 0;
+    inline-size: 100%;
+    min-inline-size: 0;
+    max-inline-size: 100%;
+    max-block-size: min(60svh, calc(var(--ms-viewport-h) - var(--ms-space-10)));
+    /* 末项避让底部安全区(手势条 / 圆角) */
+    padding-block-end: calc(var(--ms-space-1) + var(--ms-safe-bottom));
+    border-block-end: none;
+    border-radius: var(--ms-radius-lg) var(--ms-radius-lg) 0 0;
+    /* 收起态落于屏下,入场自底上滑 */
+    transform: translateY(100%);
+    transform-origin: bottom center;
+  }
+  /* 锚定态的方位间距在 sheet 形态一律归零(placement margin 特异性更高,需显式覆盖) */
+  .ms-menu[data-placement] {
+    margin: 0;
+  }
+  .ms-menu:popover-open {
+    transform: translateY(0);
+  }
+  @starting-style {
+    .ms-menu:popover-open {
+      transform: translateY(100%);
+    }
   }
 }
 

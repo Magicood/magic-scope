@@ -37,8 +37,10 @@
   outline: 2px solid var(--ms-color-focus-ring);
   outline-offset: -2px;
 }
-.ms-tree--block .ms-tree__node:hover:not(.ms-tree__node--disabled) {
-  background: var(--ms-color-surface-sunken);
+@media (hover: hover) {
+  .ms-tree--block .ms-tree__node:hover:not(.ms-tree__node--disabled) {
+    background: var(--ms-color-surface-sunken);
+  }
 }
 .ms-tree__node--selected {
   background: color-mix(in oklab, var(--ms-color-primary) 16%, transparent);
@@ -71,6 +73,7 @@
   background: none;
   border: none;
   color: var(--ms-color-fg-muted);
+  font: inherit;
   cursor: pointer;
 }
 .ms-tree__toggle--leaf {

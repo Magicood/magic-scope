@@ -1,7 +1,7 @@
 import type { CSSProperties, ElementType, ReactNode } from 'react';
 import { forwardRef, useLayoutEffect, useRef, useState } from 'react';
 import { useMessages } from '../../i18n';
-import { easeOutCubic, formatStatistic, interpolate } from './logic';
+import { decimalPlacesOf, easeOutCubic, formatStatistic, interpolate } from './logic';
 
 export type StatisticSize = 'sm' | 'md' | 'lg';
 export type StatisticTrend = 'up' | 'down';
@@ -194,7 +194,16 @@ export const Statistic = forwardRef<HTMLElement, StatisticProps>(
     }, []);
 
     const displayedValue = animatedValue !== null ? animatedValue : value;
-    const formatted = formatStatistic(displayedValue, { precision, groupSeparator });
+    // 动画帧的插值是原始 float:未显式给 precision 时,显示精度对齐「终值自身的小数位数」,
+    // 否则整数终值在滚动途中会拖出一串乱跳的小数尾巴。
+    const framePrecision =
+      animatedValue !== null && precision === undefined && typeof value === 'number'
+        ? decimalPlacesOf(value)
+        : precision;
+    const formatted = formatStatistic(displayedValue, {
+      precision: framePrecision,
+      groupSeparator,
+    });
 
     // —— 无障碍名:优先用方覆盖,否则由 title + 趋势 + prefix + 数值 + suffix 拼可读串 ——
     const prefixText =

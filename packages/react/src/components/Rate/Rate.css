@@ -86,8 +86,10 @@
 }
 
 /* —— 交互反馈:可交互时悬停 / 点击的微动效(位移随 motion-scale 门控) —— */
-.ms-rate:not(.ms-rate--static) .ms-rate__item:hover {
-  transform: scale(calc(1 + 0.12 * var(--ms-motion-scale, 1)));
+@media (hover: hover) {
+  .ms-rate:not(.ms-rate--static) .ms-rate__item:hover {
+    transform: scale(calc(1 + 0.12 * var(--ms-motion-scale, 1)));
+  }
 }
 .ms-rate:not(.ms-rate--static) .ms-rate__item:active {
   transform: scale(calc(1 - 0.06 * var(--ms-motion-scale, 1)));

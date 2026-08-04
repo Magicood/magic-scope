@@ -122,6 +122,20 @@ export function interpolate(from: number, to: number, progress: number): number 
   return from + (to - from) * t;
 }
 
+/**
+ * 数值的小数位数(按定点串取小数段长度;非有限数归 0)。
+ * 动画帧的显示精度必须对齐**终值**:插值出的原始 float(如 1039475.2847…)若按自身位数
+ * 格式化,小数尾巴会整段乱跳 —— 终值是整数就逐帧取整,终值一位小数就逐帧一位。
+ */
+export function decimalPlacesOf(value: number): number {
+  if (!Number.isFinite(value)) {
+    return 0;
+  }
+  const fixed = roundToPrecision(value, undefined);
+  const dot = fixed.indexOf('.');
+  return dot < 0 ? 0 : fixed.length - dot - 1;
+}
+
 /** 缓出曲线(easeOutCubic),让滚动数字尾段自然减速。 */
 export function easeOutCubic(t: number): number {
   const c = t <= 0 ? 0 : t >= 1 ? 1 : t;

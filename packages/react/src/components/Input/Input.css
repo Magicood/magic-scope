@@ -34,8 +34,10 @@
   color: var(--ms-color-fg-subtle);
 }
 
-.ms-input:hover:not(.ms-input--disabled):not(.ms-input--invalid) {
-  border-color: var(--ms-color-border-strong);
+@media (hover: hover) {
+  .ms-input:hover:not(.ms-input--disabled):not(.ms-input--invalid) {
+    border-color: var(--ms-color-border-strong);
+  }
 }
 
 /* 聚焦:焦点在内层 field,干净细环由容器 :focus-within 承接(Linear/Stripe 风);
@@ -92,6 +94,7 @@
   border-radius: var(--ms-radius-sm);
   background: transparent;
   color: var(--ms-color-fg-subtle);
+  font: inherit;
   font-size: 0.95rem;
   line-height: 1;
   cursor: pointer;

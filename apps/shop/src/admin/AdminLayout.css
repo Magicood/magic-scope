@@ -1,0 +1,91 @@
+/* ============================================================================
+ * AdminLayout 私有样式 —— 补齐 admin.css 骨架之外的布局细节:
+ * 主列页面容器 / 侧栏底部(回店面链接 + 用户行)/ 顶栏搜索触发器。
+ * 只消费 --ms- 语义变量与 --sf- 原语;分隔一律发丝线或留白,无硬边框。
+ * ========================================================================== */
+
+/* 主列页面容器:让各页面的 .ad-content 在剩余高度里自然铺开 */
+.ad-page {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ------------------------------ 侧栏底部 ---------------------------------- */
+
+/* 回买家店面的静默链接 */
+.ad-view-store {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 9px;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--ms-color-fg-muted);
+  text-decoration: none;
+  transition:
+    background var(--ms-duration-fast) var(--ms-ease-standard),
+    color var(--ms-duration-fast) var(--ms-ease-standard);
+}
+
+.ad-view-store:hover {
+  color: var(--ms-color-fg);
+  background: color-mix(in oklab, var(--ms-color-fg), transparent 94%);
+}
+
+.ad-view-store svg {
+  opacity: 0.72;
+}
+
+/* 用户行(Dropdown 触发器):整行可点,悬停轻浮起 */
+.ad-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 6px 8px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  color: var(--ms-color-fg);
+  cursor: pointer;
+  transition: background var(--ms-duration-fast) var(--ms-ease-standard);
+}
+
+.ad-user:hover {
+  background: color-mix(in oklab, var(--ms-color-fg), transparent 94%);
+}
+
+.ad-user-name {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.ad-user-caret {
+  margin-left: auto;
+  display: inline-flex;
+  color: var(--ms-color-fg-subtle);
+}
+
+/* -------------------------------- 顶栏 ------------------------------------ */
+
+/* 搜索触发器:静默文字 + 键帽提示 */
+.ad-search-trigger {
+  color: var(--ms-color-fg-muted);
+}
+
+.ad-search-inner {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* AppearanceControl 的引导定位外壳(Tour 高亮目标) */
+.ad-appearance-slot {
+  display: inline-flex;
+}

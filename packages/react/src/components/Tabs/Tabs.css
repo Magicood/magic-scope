@@ -179,11 +179,13 @@
 }
 
 /* hover:字色提亮,pill 未选项预热背景(div role=tab 用 --disabled 修饰类排除) */
-.ms-tabs__tab:hover:not(.ms-tabs__tab--disabled):not(.ms-tabs__tab--selected) {
-  color: var(--ms-color-fg);
-}
-.ms-tabs--pill .ms-tabs__tab:hover:not(.ms-tabs__tab--disabled):not(.ms-tabs__tab--selected) {
-  background-color: var(--ms-color-surface);
+@media (hover: hover) {
+  .ms-tabs__tab:hover:not(.ms-tabs__tab--disabled):not(.ms-tabs__tab--selected) {
+    color: var(--ms-color-fg);
+  }
+  .ms-tabs--pill .ms-tabs__tab:hover:not(.ms-tabs__tab--disabled):not(.ms-tabs__tab--selected) {
+    background-color: var(--ms-color-surface);
+  }
 }
 
 /* 选中态字色 */
@@ -234,17 +236,23 @@
   margin-inline-start: calc(-1 * var(--ms-space-1));
   inline-size: 1.15em;
   block-size: 1.15em;
+  padding: 0;
+  border: none;
   border-radius: var(--ms-radius-full);
+  background: transparent;
   color: inherit;
+  font: inherit;
   opacity: 0.6;
   cursor: pointer;
   transition:
     opacity var(--ms-dur-fast) var(--ms-ease-standard),
     background-color var(--ms-dur-fast) var(--ms-ease-standard);
 }
-.ms-tabs__close:hover {
-  opacity: 1;
-  background-color: var(--ms-c-soft);
+@media (hover: hover) {
+  .ms-tabs__close:hover {
+    opacity: 1;
+    background-color: var(--ms-c-soft);
+  }
 }
 
 /* —— 新增按钮(addable) —— */
@@ -259,15 +267,18 @@
   border: none;
   background: transparent;
   color: var(--ms-color-fg-muted);
+  font: inherit;
   border-radius: var(--ms-radius-sm);
   cursor: pointer;
   transition:
     color var(--ms-dur-fast) var(--ms-ease-standard),
     background-color var(--ms-dur-fast) var(--ms-ease-standard);
 }
-.ms-tabs__add:hover {
-  color: var(--ms-c);
-  background-color: var(--ms-c-soft);
+@media (hover: hover) {
+  .ms-tabs__add:hover {
+    color: var(--ms-c);
+    background-color: var(--ms-c-soft);
+  }
 }
 .ms-tabs__add:focus-visible {
   outline: none;

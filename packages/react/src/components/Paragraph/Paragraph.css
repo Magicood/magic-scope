@@ -111,10 +111,12 @@
   cursor: pointer;
   transition: color var(--ms-dur-fast) var(--ms-ease-standard);
 }
-.ms-paragraph__toggle:hover {
-  color: var(--ms-c-hover, var(--ms-color-primary-hover));
-  text-decoration: underline;
-  text-underline-offset: 0.15em;
+@media (hover: hover) {
+  .ms-paragraph__toggle:hover {
+    color: var(--ms-c-hover, var(--ms-color-primary-hover));
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
 }
 .ms-paragraph__toggle:focus-visible {
   outline: none;
@@ -137,6 +139,7 @@
   border-radius: var(--ms-radius-sm);
   background: transparent;
   color: var(--ms-color-fg-muted);
+  font: inherit;
   font-size: 0.9em;
   line-height: 1;
   vertical-align: baseline;
@@ -146,9 +149,11 @@
     background-color var(--ms-dur-fast) var(--ms-ease-standard),
     box-shadow var(--ms-dur-base) var(--ms-ease-standard);
 }
-.ms-paragraph__copy:hover {
-  color: var(--ms-c, var(--ms-color-fg));
-  background: var(--ms-c-soft);
+@media (hover: hover) {
+  .ms-paragraph__copy:hover {
+    color: var(--ms-c, var(--ms-color-fg));
+    background: var(--ms-c-soft);
+  }
 }
 .ms-paragraph__copy:focus-visible {
   outline: none;

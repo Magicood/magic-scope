@@ -8,6 +8,9 @@
   min-block-size: calc(2.5rem * var(--ms-density-scale, 1));
   max-inline-size: 100%;
   padding-inline: calc(var(--ms-space-4) * var(--ms-density-scale, 1));
+  /* 自带 UA 默认值重置:宿主页可能没有全局 reset,<button> 的 ButtonFace 灰底 / 系统字体
+   * 会漏进 ghost / outline / link 三个无底变体(solid / soft 各自覆盖 background)。 */
+  background-color: transparent;
   border: 1px solid transparent;
   border-radius: var(--ms-radius-md);
   font-family: var(--ms-font-sans);
@@ -233,7 +236,11 @@
   border-end-end-radius: 0;
 }
 /* 吸附时 hover 项提到上层,发光不被相邻盖住 */
-.ms-button-group--attached .ms-button:hover:not(:disabled),
+@media (hover: hover) {
+  .ms-button-group--attached .ms-button:hover:not(:disabled) {
+    z-index: 1;
+  }
+}
 .ms-button-group--attached .ms-button:focus-visible {
   z-index: 1;
 }

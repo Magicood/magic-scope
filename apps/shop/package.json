@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "Daybreak — 用 @magic-scope 组件库搭的精品咖啡电商店铺(浅色暖色零售风),用于检验组件库在电商场景的实战效果",
+  "description": "Arden — 双面电商实战样板:买家端精品店面(/)+ 商家控制台(/admin),用一个真实产品把 @magic-scope/react 的组件真刀真枪用起来",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

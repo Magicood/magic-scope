@@ -1,23 +1,19 @@
-import { applyTheme, registerProperties, registerThemes } from '@magic-scope/tokens';
-import { presetThemes, solarLight } from '@magic-scope/tokens/themes';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import '@magic-scope/react/styles.css';
+import './styles/shop.css';
+import './styles/admin.css';
 import { App } from './App';
-import { applyBrandPalette } from './lib/palette';
-import './styles/app.css';
+import { bootstrapAppearance } from './lib/appearance';
 
-// 主题引导:以「曦光浅色」打底,再覆盖一层 Daybreak 自定义的高级编辑式调色板。
-registerThemes(presetThemes);
-registerProperties();
-applyTheme(solarLight);
-applyBrandPalette();
+// 渲染前应用持久化的外观偏好(主题/明暗/密度/动效),避免首帧错样
+const initialAppearance = bootstrapAppearance();
 
 const root = document.getElementById('root');
 if (root) {
   createRoot(root).render(
     <StrictMode>
-      <App />
+      <App initialAppearance={initialAppearance} />
     </StrictMode>,
   );
 }

@@ -1,7 +1,9 @@
-/* —— 外框:圆角 + 描边 + 横向滚动容器,裁掉表头圆角溢出;position 为加载遮罩定位锚 —— */
+/* —— 外框:圆角 + 描边 + 横向滚动容器,裁掉表头圆角溢出;position 为加载遮罩定位锚 ——
+   container-type 让内部按容器宽度(而非视口)决定是否卡片化重排(见文件末尾 @container)。 */
 .ms-table-wrap {
   position: relative;
   display: block;
+  container-type: inline-size;
   inline-size: 100%;
   max-inline-size: 100%;
   overflow-x: auto;
@@ -233,6 +235,7 @@
   border-radius: var(--ms-radius-sm);
   background: transparent;
   color: var(--ms-color-fg-muted);
+  font: inherit;
   cursor: pointer;
   transition: color var(--ms-dur-fast) var(--ms-ease-standard);
 }
@@ -404,4 +407,120 @@
 [data-ms-motion="off"] .ms-table__sort-btn[data-ms-sort="asc"] .ms-table__sort-arrow,
 [data-ms-motion="off"] .ms-table__sort-btn[data-ms-sort="desc"] .ms-table__sort-arrow {
   animation: none;
+}
+
+/* —— P1 窄容器(≤rune 28rem):卡片式重排 ——
+   每行一张卡,单元格以列名(data-label,来自字符串表头)就地前缀;
+   对父容器(而非视口)自适应,桌面 / 宽容器渲染逐像素不变。
+   置于 P0 coarse 横滚兜底之后:同层同特异性,窄容器时卡片化胜出。 */
+@container (max-inline-size: 28rem) {
+  /* 表头视觉隐藏(列名改由 td 的 data-label 就地呈现),保留无障碍语义 */
+  .ms-table__head {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* 键盘焦点进入表头(排序钮 / 全选框)时临时揭示:
+     sr-only 容器内遗留可聚焦控件会产生不可见焦点(WCAG 2.4.7),Tab 穿行时必须可见 */
+  .ms-table__head:focus-within {
+    position: static;
+    inline-size: auto;
+    block-size: auto;
+    margin: 0;
+    overflow: visible;
+    clip-path: none;
+    white-space: normal;
+  }
+  .ms-table__head:focus-within .ms-table__row {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .ms-table,
+  .ms-table__caption,
+  .ms-table__body,
+  .ms-table__foot,
+  .ms-table__row,
+  .ms-table__td,
+  .ms-table__empty,
+  .ms-table__expansion {
+    display: block;
+    inline-size: 100%;
+  }
+
+  /* 覆盖 coarse 兜底的 min-inline-size: max-content:卡片模式不再撑宽横滚 */
+  .ms-table {
+    min-inline-size: 0;
+  }
+
+  /* 每行一张卡 */
+  .ms-table__body .ms-table__row {
+    margin: var(--ms-space-3);
+    inline-size: auto;
+    border: 1px solid var(--ms-color-border);
+    border-radius: var(--ms-radius-md);
+    background-color: var(--ms-color-surface);
+    overflow: hidden;
+  }
+
+  /* 单元格:列名(data-label)在左、值在右,行内细分隔 */
+  .ms-table__td {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--ms-space-4);
+    border-block-start: none;
+    border-block-end: var(--ms-hairline, 1px) solid var(--ms-color-border);
+    text-align: end;
+  }
+  .ms-table__td:last-child {
+    border-block-end: none;
+  }
+  .ms-table__td[data-label]::before {
+    content: attr(data-label);
+    flex: 0 0 auto;
+    color: var(--ms-color-fg);
+    font-weight: 650;
+    text-align: start;
+  }
+
+  /* 选择列 / 展开列:去掉 1% 收窄,按普通条目排,命中区仍由 coarse 规则保证 */
+  .ms-table__td--selection,
+  .ms-table__td--expand {
+    inline-size: auto;
+    justify-content: flex-start;
+    text-align: start;
+  }
+
+  /* 固定列在卡片模式无意义:sticky 复位,去边界投影 */
+  .ms-table__td--fixed {
+    position: static;
+    box-shadow: none;
+  }
+
+  /* 斑马纹 td 背景复位,避免割裂卡片观感(卡片间距已承担行分隔) */
+  .ms-table-wrap--stripe .ms-table__body .ms-table__row--data:nth-of-type(even) .ms-table__td {
+    background-color: transparent;
+  }
+
+  /* 展开内容行:同样以卡片呈现,上移贴附到所属数据行卡片之下 */
+  .ms-table__body .ms-table__row--expansion {
+    margin-block-start: calc(-1 * var(--ms-space-3) + var(--ms-space-1));
+  }
+
+  /* 汇总 / 页脚:整块置底,沿用强调底色;
+     未提供 renderSummary 的空汇总格在卡片模式只会渲染成空条,直接隐藏 */
+  .ms-table__foot .ms-table__td--summary {
+    border-block-start: none;
+  }
+  .ms-table__foot .ms-table__td--summary:empty {
+    display: none;
+  }
 }

@@ -31,9 +31,11 @@
   color: var(--ms-color-fg-subtle);
 }
 
-.ms-textarea:hover:not(:disabled):not(.ms-textarea--invalid) {
-  border-color: var(--ms-color-border-strong);
-  box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow, var(--ms-color-glow));
+@media (hover: hover) {
+  .ms-textarea:hover:not(:disabled):not(.ms-textarea--invalid) {
+    border-color: var(--ms-color-border-strong);
+    box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow, var(--ms-color-glow));
+  }
 }
 
 /* 聚焦:干净细环(色调读 tone 槽位,invalid 时根挂 ms-tone-danger,--ms-c/--ms-c-glow 自动变 danger) */

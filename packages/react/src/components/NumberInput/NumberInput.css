@@ -86,6 +86,7 @@
   border: none;
   background: transparent;
   color: var(--ms-color-fg-muted);
+  font: inherit;
   font-size: 1.125rem;
   line-height: 1;
   cursor: pointer;

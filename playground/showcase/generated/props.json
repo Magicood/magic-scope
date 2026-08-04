@@ -41349,22 +41349,6 @@
       "native": true
     },
     {
-      "name": "onPointerEnter",
-      "type": "PointerEventHandler<HTMLDivElement>",
-      "default": "—",
-      "description": "",
-      "required": false,
-      "native": true
-    },
-    {
-      "name": "onPointerLeave",
-      "type": "PointerEventHandler<HTMLDivElement>",
-      "default": "—",
-      "description": "",
-      "required": false,
-      "native": true
-    },
-    {
       "name": "onPointerOver",
       "type": "PointerEventHandler<HTMLDivElement>",
       "default": "—",

@@ -1,0 +1,370 @@
+/* ============================================================================
+ * Checkout —— 三步结算页私有样式(.ck-*)。
+ * 只消费 --ms-* 语义变量、.sf- 原语与 color-mix 派生;线条一律发丝线。
+ * ========================================================================== */
+
+/* ------------------------------- 页头与步骤 ------------------------------- */
+
+.ck-head {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: clamp(28px, 4vw, 44px);
+}
+
+.ck-head-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px 48px;
+}
+
+.ck-steps {
+  flex: 1;
+  min-width: 280px;
+  max-width: 440px;
+}
+
+/* ------------------------------- 双栏骨架 -------------------------------- */
+
+.ck-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: clamp(32px, 5vw, 72px);
+  align-items: start;
+}
+
+/* 步骤切换:key 重挂触发的内容区淡入(克制:10px / 560ms) */
+.ck-main {
+  animation: ck-step-in 560ms var(--ms-ease-standard) both;
+}
+
+@keyframes ck-step-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ck-main {
+    animation: none;
+  }
+}
+
+:root[data-ms-motion="off"] .ck-main {
+  animation: none;
+}
+
+.ck-panel-title {
+  margin: 0 0 22px;
+  font-family: var(--sf-display);
+  font-size: clamp(19px, 2vw, 23px);
+  font-weight: 460;
+  letter-spacing: -0.01em;
+}
+
+/* --------------------------------- 表单 ---------------------------------- */
+
+.ck-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.ck-form-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+/* 配送方式分区:fieldset 语义化但视觉零边框,靠留白分段 */
+.ck-fieldset {
+  margin: 8px 0 0;
+  padding: 0;
+  border: 0;
+}
+
+.ck-legend {
+  padding: 0;
+  margin-bottom: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ms-color-fg-subtle);
+}
+
+/* Radio 卡片两列;卡片内自定义排版铺满 */
+.ck-form .ck-option-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.ck-option-grid .ms-radio__label {
+  flex: 1;
+  min-width: 0;
+}
+
+.ck-option {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 3px 12px;
+  align-items: baseline;
+}
+
+.ck-option-name {
+  font-size: 14px;
+  font-weight: 560;
+  letter-spacing: -0.01em;
+}
+
+.ck-option-price {
+  grid-column: 2;
+  grid-row: 1;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ms-color-fg-muted);
+}
+
+.ck-option-meta {
+  grid-column: 1 / -1;
+  font-size: 12.5px;
+  color: var(--ms-color-fg-muted);
+}
+
+.ck-card-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* 步骤底部操作行 */
+.ck-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+/* --------------------------------- 复核 ---------------------------------- */
+
+.ck-review {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+
+.ck-review-cell {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.ck-review-text {
+  line-height: 1.55;
+  min-width: 0;
+}
+
+.ck-review-edit {
+  flex-shrink: 0;
+}
+
+.ck-review-lines {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* ------------------------ 行项(复核列表 / 摘要共用) ---------------------- */
+
+.ck-line {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  padding-block: 12px;
+}
+
+.ck-line + .ck-line {
+  border-top: 1px solid var(--sf-hairline);
+}
+
+.ck-line-sm {
+  grid-template-columns: 44px minmax(0, 1fr) auto;
+  gap: 12px;
+  padding-block: 10px;
+}
+
+.ck-line-media {
+  display: block;
+  border-radius: var(--sf-radius-sm);
+  overflow: hidden;
+}
+
+/* 小尺寸下商品视觉的接触阴影/颗粒太重,收敛圆角即可 */
+.ck-line-media .pv {
+  border-radius: var(--sf-radius-sm);
+}
+
+.ck-line-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.ck-line-name {
+  font-size: 14px;
+  font-weight: 550;
+  letter-spacing: -0.01em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ck-line-variant {
+  font-size: 12.5px;
+  color: var(--ms-color-fg-muted);
+}
+
+.ck-line-price {
+  font-size: 13.5px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* ------------------------------ 粘性订单摘要 ------------------------------ */
+
+.ck-aside {
+  position: sticky;
+  top: 88px;
+}
+
+.ck-summary {
+  background: var(--ms-color-surface);
+  border-radius: var(--sf-radius);
+  padding: clamp(20px, 2.4vw, 28px);
+  /* 发丝环 + 远距柔影:代替硬边框的卡面层次 */
+  box-shadow:
+    inset 0 0 0 1px var(--sf-hairline),
+    0 24px 60px -48px color-mix(in oklab, var(--ms-color-fg), transparent 55%);
+}
+
+.ck-summary-title {
+  margin: 0 0 8px;
+  font-family: var(--sf-display);
+  font-size: 18px;
+  font-weight: 460;
+  letter-spacing: -0.01em;
+}
+
+.ck-summary-lines {
+  list-style: none;
+  margin: 0 0 14px;
+  padding: 0;
+}
+
+.ck-totals {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin: 16px 0 0;
+}
+
+.ck-totals-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.ck-totals-row dt {
+  font-size: 13.5px;
+  color: var(--ms-color-fg-muted);
+}
+
+.ck-totals-row dd {
+  margin: 0;
+  font-size: 13.5px;
+  font-variant-numeric: tabular-nums;
+}
+
+.ck-totals-total {
+  margin-top: 6px;
+  padding-top: 14px;
+  border-top: 1px solid var(--sf-hairline);
+}
+
+.ck-totals-total dt {
+  color: var(--ms-color-fg);
+  font-weight: 600;
+}
+
+.ck-totals-total dd {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.ck-summary-note {
+  margin: 12px 0 0;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--ms-color-fg-subtle);
+}
+
+/* ------------------------------ 验证弹窗 / 空态 --------------------------- */
+
+.ck-verify {
+  display: flex;
+  justify-content: center;
+  padding-block: 10px 6px;
+}
+
+.ck-empty {
+  display: flex;
+  justify-content: center;
+}
+
+.ck-done-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+/* -------------------------------- 响应式 --------------------------------- */
+
+@media (max-width: 960px) {
+  .ck-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ck-aside {
+    position: static;
+  }
+
+  .ck-steps {
+    max-width: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .ck-form-row,
+  .ck-form .ck-option-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ck-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+}

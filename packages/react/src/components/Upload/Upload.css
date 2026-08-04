@@ -44,8 +44,10 @@
     box-shadow var(--ms-dur-base, 200ms) var(--ms-ease-standard);
 }
 
-.ms-upload__trigger:hover {
-  border-color: var(--ms-c-soft, var(--ms-c));
+@media (hover: hover) {
+  .ms-upload__trigger:hover {
+    border-color: var(--ms-c-soft, var(--ms-c));
+  }
 }
 
 .ms-upload__trigger:focus-visible {
@@ -262,6 +264,7 @@
   border-radius: var(--ms-radius-sm);
   background: none;
   color: var(--ms-color-fg-muted, color-mix(in srgb, currentColor 60%, transparent));
+  font: inherit;
   font-size: 0.95rem;
   line-height: 1;
   cursor: pointer;
@@ -271,17 +274,19 @@
     background-color var(--ms-dur-fast, 120ms) var(--ms-ease-standard);
 }
 
-.ms-upload__action:hover {
-  background: color-mix(in srgb, currentColor 8%, transparent);
-  color: var(--ms-color-fg, currentColor);
-}
+@media (hover: hover) {
+  .ms-upload__action:hover {
+    background: color-mix(in srgb, currentColor 8%, transparent);
+    color: var(--ms-color-fg, currentColor);
+  }
 
-.ms-upload__action--retry:hover {
-  color: var(--ms-c);
-}
+  .ms-upload__action--retry:hover {
+    color: var(--ms-c);
+  }
 
-.ms-upload__action--remove:hover {
-  color: var(--ms-color-danger, crimson);
+  .ms-upload__action--remove:hover {
+    color: var(--ms-color-danger, crimson);
+  }
 }
 
 .ms-upload__action:focus-visible {

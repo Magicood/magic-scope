@@ -145,7 +145,165 @@ export const Breadcrumb = forwardRef<HTMLElement, BreadcrumbProps>(
       expanded,
     );
 
-    const navClassName = [`ms-breadcrumb`, `ms-tone-${tone}`, className].filter(Boolean).join(' ');
+    // 窄容器折叠(P1):层级 >3 且未展开时,注入仅窄容器显形的折叠占位(见 Breadcrumb.css @container)。
+    // 头尾须是真实条目(极端 itemsBeforeCollapse=0 等配置下首/末为省略项时不启用,避免双省略号)。
+    const narrowCollapsible =
+      !expanded &&
+      entries.length > 3 &&
+      !entries[0]?.ellipsis &&
+      !entries[entries.length - 1]?.ellipsis;
+
+    const navClassName = [
+      `ms-breadcrumb`,
+      `ms-tone-${tone}`,
+      narrowCollapsible && 'ms-breadcrumb--collapsible',
+      className,
+    ]
+      .filter(Boolean)
+      .join(' ');
+
+    const renderedEntries = entries.map((entry, renderIndex) => {
+      const showSeparator = renderIndex < entries.length - 1;
+
+      // 省略占位:可点击展开被折叠的中间项
+      if (entry.ellipsis) {
+        const collapsedCount = entry.collapsed?.length ?? 0;
+        return (
+          <li
+            // biome-ignore lint/suspicious/noArrayIndexKey: 折叠结构稳定,renderIndex 即标识
+            key={`ellipsis-${renderIndex}`}
+            className={['ms-breadcrumb__item', classNames?.item].filter(Boolean).join(' ')}
+          >
+            <button
+              type="button"
+              className={['ms-breadcrumb__ellipsis', classNames?.ellipsis]
+                .filter(Boolean)
+                .join(' ')}
+              aria-label={t('breadcrumb.expand', { count: collapsedCount })}
+              aria-expanded={false}
+              onClick={() => setExpanded(true)}
+            >
+              …
+            </button>
+            {showSeparator && (
+              <span
+                aria-hidden="true"
+                className={['ms-breadcrumb__separator', classNames?.separator]
+                  .filter(Boolean)
+                  .join(' ')}
+              >
+                {separator}
+              </span>
+            )}
+          </li>
+        );
+      }
+
+      const item = entry.item as BreadcrumbItem;
+      const index = entry.index as number;
+      // 显式 current,或未指定时把末项视为当前页
+      const isCurrent = item.current ?? index === lastIndex;
+      const isLink = !isCurrent && typeof item.href === 'string';
+      const state: BreadcrumbItemState = { isCurrent, index };
+
+      // 自定义渲染优先级:item.render > itemRender(全局)> 默认
+      const customRender = item.render ?? itemRender;
+      const customNode = customRender?.(item, state);
+
+      let content: ReactNode;
+      if (customNode != null) {
+        content = customNode;
+      } else if (isLink) {
+        const handleClick = composeEventHandlers<MouseEvent>(
+          item.onClick ? (e) => item.onClick?.(item, index, e) : undefined,
+          onItemClick ? (e) => onItemClick(item, index, e) : undefined,
+        );
+        content = (
+          <LinkComponent
+            href={item.href}
+            className={['ms-breadcrumb__link', classNames?.link].filter(Boolean).join(' ')}
+            onClick={handleClick}
+          >
+            {item.icon != null && (
+              <span className="ms-breadcrumb__icon" aria-hidden="true">
+                {item.icon}
+              </span>
+            )}
+            {item.label}
+          </LinkComponent>
+        );
+      } else if (isCurrent) {
+        content = (
+          <span
+            aria-current="page"
+            className={['ms-breadcrumb__current', classNames?.current].filter(Boolean).join(' ')}
+          >
+            {item.icon != null && (
+              <span className="ms-breadcrumb__icon" aria-hidden="true">
+                {item.icon}
+              </span>
+            )}
+            {item.label}
+          </span>
+        );
+      } else {
+        content = (
+          <span className="ms-breadcrumb__text">
+            {item.icon != null && (
+              <span className="ms-breadcrumb__icon" aria-hidden="true">
+                {item.icon}
+              </span>
+            )}
+            {item.label}
+          </span>
+        );
+      }
+
+      return (
+        <li
+          key={index}
+          className={['ms-breadcrumb__item', classNames?.item].filter(Boolean).join(' ')}
+        >
+          {content}
+          {showSeparator && (
+            <span
+              aria-hidden="true"
+              className={['ms-breadcrumb__separator', classNames?.separator]
+                .filter(Boolean)
+                .join(' ')}
+            >
+              {separator}
+            </span>
+          )}
+        </li>
+      );
+    });
+
+    // 窄容器折叠占位:插在首项之后,默认隐藏、仅窄容器显形(CSS @container 驱动);点击展开全部层级
+    const collapseEntry = narrowCollapsible ? (
+      <li
+        key="narrow-collapse"
+        className={['ms-breadcrumb__item', 'ms-breadcrumb__item--collapse', classNames?.item]
+          .filter(Boolean)
+          .join(' ')}
+      >
+        <button
+          type="button"
+          className={['ms-breadcrumb__ellipsis', classNames?.ellipsis].filter(Boolean).join(' ')}
+          aria-label={t('breadcrumb.expand', { count: items.length - 2 })}
+          aria-expanded={false}
+          onClick={() => setExpanded(true)}
+        >
+          …
+        </button>
+        <span
+          aria-hidden="true"
+          className={['ms-breadcrumb__separator', classNames?.separator].filter(Boolean).join(' ')}
+        >
+          {separator}
+        </span>
+      </li>
+    ) : null;
 
     return (
       <nav
@@ -155,124 +313,9 @@ export const Breadcrumb = forwardRef<HTMLElement, BreadcrumbProps>(
         {...rest}
       >
         <ol className={['ms-breadcrumb__list', classNames?.list].filter(Boolean).join(' ')}>
-          {entries.map((entry, renderIndex) => {
-            const showSeparator = renderIndex < entries.length - 1;
-
-            // 省略占位:可点击展开被折叠的中间项
-            if (entry.ellipsis) {
-              const collapsedCount = entry.collapsed?.length ?? 0;
-              return (
-                <li
-                  // biome-ignore lint/suspicious/noArrayIndexKey: 折叠结构稳定,renderIndex 即标识
-                  key={`ellipsis-${renderIndex}`}
-                  className={['ms-breadcrumb__item', classNames?.item].filter(Boolean).join(' ')}
-                >
-                  <button
-                    type="button"
-                    className={['ms-breadcrumb__ellipsis', classNames?.ellipsis]
-                      .filter(Boolean)
-                      .join(' ')}
-                    aria-label={t('breadcrumb.expand', { count: collapsedCount })}
-                    aria-expanded={false}
-                    onClick={() => setExpanded(true)}
-                  >
-                    …
-                  </button>
-                  {showSeparator && (
-                    <span
-                      aria-hidden="true"
-                      className={['ms-breadcrumb__separator', classNames?.separator]
-                        .filter(Boolean)
-                        .join(' ')}
-                    >
-                      {separator}
-                    </span>
-                  )}
-                </li>
-              );
-            }
-
-            const item = entry.item as BreadcrumbItem;
-            const index = entry.index as number;
-            // 显式 current,或未指定时把末项视为当前页
-            const isCurrent = item.current ?? index === lastIndex;
-            const isLink = !isCurrent && typeof item.href === 'string';
-            const state: BreadcrumbItemState = { isCurrent, index };
-
-            // 自定义渲染优先级:item.render > itemRender(全局)> 默认
-            const customRender = item.render ?? itemRender;
-            const customNode = customRender?.(item, state);
-
-            let content: ReactNode;
-            if (customNode != null) {
-              content = customNode;
-            } else if (isLink) {
-              const handleClick = composeEventHandlers<MouseEvent>(
-                item.onClick ? (e) => item.onClick?.(item, index, e) : undefined,
-                onItemClick ? (e) => onItemClick(item, index, e) : undefined,
-              );
-              content = (
-                <LinkComponent
-                  href={item.href}
-                  className={['ms-breadcrumb__link', classNames?.link].filter(Boolean).join(' ')}
-                  onClick={handleClick}
-                >
-                  {item.icon != null && (
-                    <span className="ms-breadcrumb__icon" aria-hidden="true">
-                      {item.icon}
-                    </span>
-                  )}
-                  {item.label}
-                </LinkComponent>
-              );
-            } else if (isCurrent) {
-              content = (
-                <span
-                  aria-current="page"
-                  className={['ms-breadcrumb__current', classNames?.current]
-                    .filter(Boolean)
-                    .join(' ')}
-                >
-                  {item.icon != null && (
-                    <span className="ms-breadcrumb__icon" aria-hidden="true">
-                      {item.icon}
-                    </span>
-                  )}
-                  {item.label}
-                </span>
-              );
-            } else {
-              content = (
-                <span className="ms-breadcrumb__text">
-                  {item.icon != null && (
-                    <span className="ms-breadcrumb__icon" aria-hidden="true">
-                      {item.icon}
-                    </span>
-                  )}
-                  {item.label}
-                </span>
-              );
-            }
-
-            return (
-              <li
-                key={index}
-                className={['ms-breadcrumb__item', classNames?.item].filter(Boolean).join(' ')}
-              >
-                {content}
-                {showSeparator && (
-                  <span
-                    aria-hidden="true"
-                    className={['ms-breadcrumb__separator', classNames?.separator]
-                      .filter(Boolean)
-                      .join(' ')}
-                  >
-                    {separator}
-                  </span>
-                )}
-              </li>
-            );
-          })}
+          {renderedEntries[0]}
+          {collapseEntry}
+          {renderedEntries.slice(1)}
         </ol>
       </nav>
     );
