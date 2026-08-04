@@ -1,6 +1,6 @@
 {
   "name": "@magic-scope/demo-vela",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": true,
   "type": "module",
   "description": "Vela — 用 @magic-scope 组件库搭的真实产品站(营销落地页 + 应用 dashboard),用于检验组件库实战效果",
