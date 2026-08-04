@@ -30,7 +30,7 @@
 | `checkedKeys` | `string[]` | — | 受控勾选 key(完全勾选)。 |
 | `defaultCheckedKeys` | `string[]` | — | 非受控初始勾选。 |
 | `showIcon` | `boolean` | `false` | 显示节点图标。 |
-| `showLine` | `boolean` | `false` | 显示缩进引导线。 |
+| `showLine` | `boolean` | `false` | 显示层级引导线:每个祖先层级一条竖导轨,对齐该层展开箭头;线色可用 --ms-tree-line 覆写。 |
 | `blockNode` | `boolean` | `true` | 节点整行可点(整行高亮),否则仅标题区。默认 true。 |
 | `size` | `"sm" \| "md" \| "lg"` | `md` | 尺寸(随 data-ms-density 缩放)。默认 md。 |
 | `classNames` | `TreeClassNames` | — | 各部件 className。 |

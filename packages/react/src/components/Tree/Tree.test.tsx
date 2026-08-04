@@ -114,6 +114,17 @@ describe('Tree 级联勾选', () => {
   });
 });
 
+describe('Tree 引导线', () => {
+  /* 导轨本体是 CSS(jsdom 不解析),这里只守「prop → 样式挂载点」这一环:
+   * ms-tree--line 是 .ms-tree--line .ms-tree__indent 那条导轨规则的唯一入口,类丢了整个 prop 就哑火。 */
+  it('showLine 给根节点挂 ms-tree--line', () => {
+    const { rerender } = render(<Tree data={data} />);
+    expect(screen.getByRole('tree')).not.toHaveClass('ms-tree--line');
+    rerender(<Tree data={data} showLine />);
+    expect(screen.getByRole('tree')).toHaveClass('ms-tree--line');
+  });
+});
+
 describe('Tree 键盘导航', () => {
   it('→ 展开,← 折叠', () => {
     render(<Tree data={data} />);
