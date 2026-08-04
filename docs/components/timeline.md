@@ -8,7 +8,7 @@
 
 compose 了 Timeline(语义化 &lt;ol&gt;)+ TimelineItem(单条节点)两件。
 
-自研、零依赖,消费 @magic-scope/tokens 的 --ms-* 变量。每条 = 节点(圆点或自定义图标)+ 连线(非末项)+ 内容(标题 / 时间 / 正文);节点按 variant(default / primary / success / warning / danger / info)语义着色。
+自研、零依赖,消费 @magic-scope/tokens 的 --ms-&#42; 变量。每条 = 节点(圆点或自定义图标)+ 连线(非末项)+ 内容(标题 / 时间 / 正文);节点按 variant(default / primary / success / warning / danger / info)语义着色。
 
 适合历史记录、进度推进与动态流;长内容在节点右侧自然换行,不撑破轴线。
 
@@ -36,7 +36,7 @@ compose 了 Timeline(语义化 &lt;ol&gt;)+ TimelineItem(单条节点)两件。
 | `pulse` | `boolean` | `false` | 圆点呼吸发光(进行中 / 强调当前节点)。默认 false。 |
 | `interactive` | `boolean` | — | 标记为可交互(可聚焦、hover/active 态、Enter/Space 触发 onSelect)。<br>传了 onSelect 时自动视为可交互。 |
 | `active` | `boolean` | — | 选中态(受控)。交互式时间线高亮当前条目。 |
-| `...props` | `ComponentPropsWithoutRef<'ol'>` | — | 透传原生 ol 属性(className / style / aria-* / 事件等)。 |
+| `...props` | `ComponentPropsWithoutRef<'ol'>` | — | 透传原生 ol 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
 
@@ -51,5 +51,5 @@ compose 了 Timeline(语义化 &lt;ol&gt;)+ TimelineItem(单条节点)两件。
 | 标签 | `timeline` `feed` `activity` `history` `data-display` `list` `tone` `alternate` `pending` `pulse` `interactive` `selectable` |
 
 ::: details 需求原文 / 设计意图
-补齐信息流 / 历史记录展示:时间线,并补强到生产级深度对标旗舰 Button/Input/Text。原创实现,声明式 Timeline + TimelineItem 组合(语义 &lt;ol&gt;/&lt;li&gt;);节点圆点接 tone resolver(8 色,只读 6 槽位)+ 真实 .ms-timeline__line 连线(末项不画);mode 左右轴 / 交替排布 + reverse;pending 进行中末节点 + pulse 呼吸发光;lineStyle 实/虚线;交互式选择(interactive/active/onSelect + 键盘)。复用 --ms-* token、tone 槽位、密度 / 动效 / 发光总闸,逻辑属性 RTL 友好,composeEventHandlers 留口不丢用户处理器。
+补齐信息流 / 历史记录展示:时间线,并补强到生产级深度对标旗舰 Button/Input/Text。原创实现,声明式 Timeline + TimelineItem 组合(语义 &lt;ol&gt;/&lt;li&gt;);节点圆点接 tone resolver(8 色,只读 6 槽位)+ 真实 .ms-timeline&#95;&#95;line 连线(末项不画);mode 左右轴 / 交替排布 + reverse;pending 进行中末节点 + pulse 呼吸发光;lineStyle 实/虚线;交互式选择(interactive/active/onSelect + 键盘)。复用 --ms-&#42; token、tone 槽位、密度 / 动效 / 发光总闸,逻辑属性 RTL 友好,composeEventHandlers 留口不丢用户处理器。
 :::

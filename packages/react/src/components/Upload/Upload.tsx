@@ -243,7 +243,7 @@ export const Upload = forwardRef<HTMLDivElement, UploadProps>(
             onProgress: (percent) => {
               const cur = listRef.current.find((f) => f.uid === item.uid);
               // 只在 uploading 态接受进度:迟到的 onProgress 不得篡改已终态(done/error)条目。
-              if (!cur || cur.status !== 'uploading') {
+              if (cur?.status !== 'uploading') {
                 return;
               }
               patchByUid(item.uid, { percent: clampPercent(percent) });

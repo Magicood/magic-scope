@@ -31,11 +31,13 @@
     transform var(--ms-dur-fast) var(--ms-ease-emphasized);
 }
 
-.ms-alert:hover {
-  transform: translateY(calc(-1px * var(--ms-motion-scale, 1)));
-  box-shadow:
-    inset 1px 0 0 0 color-mix(in oklch, var(--ms-c) 45%, transparent),
-    0 0 calc(8px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow);
+@media (hover: hover) {
+  .ms-alert:hover {
+    transform: translateY(calc(-1px * var(--ms-motion-scale, 1)));
+    box-shadow:
+      inset 1px 0 0 0 color-mix(in oklch, var(--ms-c) 45%, transparent),
+      0 0 calc(8px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow);
+  }
 }
 
 /* —— 进场:首帧淡入 + 轻微上移(@starting-style),不支持的浏览器直接以终态出现 —— */
@@ -153,8 +155,11 @@
 [data-ms-fx="off"] .ms-alert {
   box-shadow: inset 1px 0 0 0 color-mix(in oklch, var(--ms-c) 30%, transparent);
 }
-[data-ms-fx="off"] .ms-alert:hover {
-  box-shadow: inset 1px 0 0 0 color-mix(in oklch, var(--ms-c) 45%, transparent);
+/* fx 关断时 hover 仍加深起始色条(可见绘制):进守卫,触屏不粘滞 */
+@media (hover: hover) {
+  [data-ms-fx="off"] .ms-alert:hover {
+    box-shadow: inset 1px 0 0 0 color-mix(in oklch, var(--ms-c) 45%, transparent);
+  }
 }
 
 /* —— 动效降级:位移归零,只保留无害的过渡 —— */

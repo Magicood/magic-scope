@@ -33,8 +33,10 @@
   gap: 0.2em;
 }
 
-.ms-link:hover {
-  color: var(--ms-link-c-hover);
+@media (hover: hover) {
+  .ms-link:hover {
+    color: var(--ms-link-c-hover);
+  }
 }
 .ms-link:active {
   color: var(--ms-color-link-active, var(--ms-color-primary-active, var(--ms-link-c-hover)));
@@ -66,8 +68,10 @@
 .ms-link--muted {
   color: var(--ms-color-fg-muted);
 }
-.ms-link--muted:hover {
-  color: var(--ms-link-c-hover);
+@media (hover: hover) {
+  .ms-link--muted:hover {
+    color: var(--ms-link-c-hover);
+  }
 }
 
 /* —— 下划线四态(Radix 式) —— */
@@ -75,15 +79,19 @@
 .ms-link--underline-auto {
   text-decoration-line: underline;
 }
-.ms-link--underline-auto:hover {
-  text-decoration-line: none;
+@media (hover: hover) {
+  .ms-link--underline-auto:hover {
+    text-decoration-line: none;
+  }
 }
 /* hover:静止无、hover 出 */
 .ms-link--underline-hover {
   text-decoration-line: none;
 }
-.ms-link--underline-hover:hover {
-  text-decoration-line: underline;
+@media (hover: hover) {
+  .ms-link--underline-hover:hover {
+    text-decoration-line: underline;
+  }
 }
 /* always:始终有 */
 .ms-link--underline-always {
@@ -125,8 +133,10 @@
   transform: translateY(-0.04em);
 }
 /* hover 时外链图标微微外移(motion 降级时静止) */
-.ms-link--external:hover .ms-link__external-icon {
-  transform: translate(0.08em, -0.1em);
+@media (hover: hover) {
+  .ms-link--external:hover .ms-link__external-icon {
+    transform: translate(0.08em, -0.1em);
+  }
 }
 .ms-link__label {
   /* 标签段不破坏链接的折行;下划线由根承载 */
@@ -138,9 +148,11 @@
   text-shadow: 0 0 calc(0.35em * var(--ms-fx-glow, 1))
     var(--ms-c-glow, var(--ms-color-glow, currentcolor));
 }
-.ms-link--glow-hover:hover {
-  text-shadow: 0 0 calc(0.4em * var(--ms-fx-glow, 1))
-    var(--ms-c-glow, var(--ms-color-glow, currentcolor));
+@media (hover: hover) {
+  .ms-link--glow-hover:hover {
+    text-shadow: 0 0 calc(0.4em * var(--ms-fx-glow, 1))
+      var(--ms-c-glow, var(--ms-color-glow, currentcolor));
+  }
 }
 /* fx 总闸关闭时彻底去微光 */
 [data-ms-fx="off"] .ms-link--glow-always,
@@ -171,18 +183,23 @@
   border: 0;
 }
 
-/* —— 动效降级:reduced-motion 或 data-ms-motion=off 去过渡与图标位移 —— */
+/* —— 动效降级:reduced-motion 或 data-ms-motion=off 去过渡,图标位移改为静态微移 ——
+   静态微移仍是可见绘制,hover 部分进守卫,触屏不粘滞 */
 @media (prefers-reduced-motion: reduce) {
   .ms-link {
     transition: none;
   }
-  .ms-link--external:hover .ms-link__external-icon {
-    transform: translateY(-0.04em);
+  @media (hover: hover) {
+    .ms-link--external:hover .ms-link__external-icon {
+      transform: translateY(-0.04em);
+    }
   }
 }
 [data-ms-motion="off"] .ms-link {
   transition: none;
 }
-[data-ms-motion="off"] .ms-link--external:hover .ms-link__external-icon {
-  transform: translateY(-0.04em);
+@media (hover: hover) {
+  [data-ms-motion="off"] .ms-link--external:hover .ms-link__external-icon {
+    transform: translateY(-0.04em);
+  }
 }

@@ -21,7 +21,7 @@
 | `as` | `ElementType` | — | 多态渲染标签(默认 span)。语义场景按需 p/strong/em/label 等。 |
 | `asChild` | `boolean` | `false` | 渲染为唯一子元素并把样式/props 合并上去(Slot 模式;如包裹路由 Link)。 |
 | `family` | `"serif" \| "mono" \| "display" \| "sans"` | — | 字族(语义 token,不暴露字体栈)。display=Cinzel 装饰衬线(展示型标题)。 |
-| `size` | `"base" \| "sm" \| "lg" \| "xl" \| "2xl" \| "xs" \| "3xl" \| "4xl" \| "5xl"` | — | 字号档(走 --ms-type-step-* 流式字阶)。 |
+| `size` | `"base" \| "sm" \| "lg" \| "xl" \| "2xl" \| "xs" \| "3xl" \| "4xl" \| "5xl"` | — | 字号档(走 --ms-type-step-&#42; 流式字阶)。 |
 | `weight` | `number \| TextWeight` | — | 字重:语义档或任意数值(可变字体)。 |
 | `italic` | `boolean` | — | 斜体。 |
 | `color` | `string` | — | 任意 CSS 颜色(直透 color;优先级低于 tone)。 |
@@ -48,7 +48,7 @@
 | `stroke` | `boolean` | — | 描边/镂空文字(-webkit-text-stroke)。<br>兼容:-webkit-text-stroke 非标准但全主流浏览器(含 FF)支持;镂空态注意对比度。 |
 | `animate` | `"flow" \| "pulse" \| "shimmer" \| "reveal" \| "blur-in"` | — | 动效:reveal 上浮淡入 / blur-in 模糊聚焦入场;shimmer 渐变扫过 / pulse 发光呼吸 /<br>flow 渐变流动(持续)。全部受全局 data-ms-motion 与 prefers-reduced-motion 调制,<br>关闭时自动降级为静态(入场态直接呈现、不卡在隐藏)。shimmer/pulse/flow 复用 tone 槽位。 |
 | `writingMode` | `"horizontal" \| "vertical"` | — | 书写方向:vertical=竖排(CJK 古籍 / 侧栏标签)。<br>兼容:writing-mode 全主流浏览器支持;竖排下西文与标点会旋转,按需配 text-orientation(逃生舱)。 |
-| `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-* / 事件等)。 |
+| `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
 
@@ -63,5 +63,5 @@
 | 标签 | `text` `typography` `polymorphic` `as-child` `truncate` `line-clamp` `gradient-text` `magic-motion` `vertical-text` `tone` `tabular-nums` `rtl` |
 
 ::: details 需求原文 / 设计意图
-用户 2026-06-25 定:文字排版单独成 typography 分类(与 layout 并列),尽量全覆盖所有可支持文字属性,并给足用户发挥空间(插槽/多态/全事件/可定制)、透明备注兼容性。Text 为该分类旗舰核心:多态文字原语承载全属性矩阵 + 魔法文字差异化(复用 tone/fx/动效档)。共享尺度走 typography.css 的 --ms-type-step-*/--ms-leading-*/--ms-tracking-*(组件内兜底,待架构线接入正式 type scale)。兼容性坑(text-wrap/line-clamp/background-clip:text/hyphens/text-stroke)逐条标注在 prop TSDoc,不藏着。
+用户 2026-06-25 定:文字排版单独成 typography 分类(与 layout 并列),尽量全覆盖所有可支持文字属性,并给足用户发挥空间(插槽/多态/全事件/可定制)、透明备注兼容性。Text 为该分类旗舰核心:多态文字原语承载全属性矩阵 + 魔法文字差异化(复用 tone/fx/动效档)。共享尺度走 typography.css 的 --ms-type-step-&#42;/--ms-leading-&#42;/--ms-tracking-&#42;(组件内兜底,待架构线接入正式 type scale)。兼容性坑(text-wrap/line-clamp/background-clip:text/hyphens/text-stroke)逐条标注在 prop TSDoc,不藏着。
 :::

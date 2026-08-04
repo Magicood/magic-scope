@@ -32,7 +32,7 @@
 | `showTooltip` | `boolean` | `false` | 拖动时在滑块上方显示跟随气泡(showValue 同款格式)。默认 false。 |
 | `showValue` | `boolean` | `false` | 是否在末尾渲染当前值(role=status 的 output)。默认 false。 |
 | `formatValue` | `((value: number) => ReactNode)` | — | 自定义值的展示(如加单位 / 百分号);用于 showValue 与 showTooltip。 |
-| `...props` | `ComponentPropsWithoutRef<'input'>` | — | 透传原生 input 属性(className / style / aria-* / 事件等)。 |
+| `...props` | `ComponentPropsWithoutRef<'input'>` | — | 透传原生 input 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
 
@@ -55,5 +55,5 @@
 | 标签 | `slider` `range` `form` `input` `number` `marks` `tone` `vertical` `tooltip` |
 
 ::: details 需求原文 / 设计意图
-补齐表单控件:数值滑块。原创实现,遵循『原生优先 / 不 wrap 第三方』——以原生 input&#91;type=range] 承载键盘与 ARIA slider 语义,仅用 appearance:none + ::-webkit-slider-* / ::-moz-range-* 自绘皮肤(填充用 WebKit 渐变 + Firefox 原生 progress)。延续设备适配契约(触控放大滑块 + --ms-target-min 行高、hover 守卫、focus-visible 发光环、reduced-motion)。
+补齐表单控件:数值滑块。原创实现,遵循『原生优先 / 不 wrap 第三方』——以原生 input&#91;type=range] 承载键盘与 ARIA slider 语义,仅用 appearance:none + ::-webkit-slider-&#42; / ::-moz-range-&#42; 自绘皮肤(填充用 WebKit 渐变 + Firefox 原生 progress)。延续设备适配契约(触控放大滑块 + --ms-target-min 行高、hover 守卫、focus-visible 发光环、reduced-motion)。
 :::

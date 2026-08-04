@@ -38,12 +38,18 @@ const manifest = files
     }
     return parsed.data;
   })
-  .sort((a, b) => a.id.localeCompare(b.id));
+  // 码点序而非 localeCompare:manifest 已提交 + CI 逐字节比对,排序不能依赖宿主 ICU/locale。
+  .sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
 
 const out = join(import.meta.dirname, 'manifest.json');
 writeFileSync(out, `${JSON.stringify(manifest, null, 2)}\n`);
 // manifest 已提交进仓库并被 biome 检查(CI 用 git diff 守新鲜度),生成即格式化,保证字节级稳定。
-execFileSync('pnpm', ['exec', 'biome', 'format', '--write', out], { cwd: ROOT, stdio: 'ignore' });
+// stderr 直通:biome 失败时必须能看到诊断;Windows 下 execFile 不解析 pnpm 的 .cmd shim,需带扩展名。
+execFileSync(
+  process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm',
+  ['exec', 'biome', 'format', '--write', out],
+  { cwd: ROOT, stdio: ['ignore', 'ignore', 'inherit'] },
+);
 
 // —— 溯源质量画像(可见性,不阻断构建)——
 const byType = { original: 0, inspired: 0, captured: 0 };

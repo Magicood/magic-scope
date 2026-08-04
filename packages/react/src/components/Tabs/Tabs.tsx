@@ -452,7 +452,7 @@ export const Tabs = forwardRef<HTMLDivElement, TabsProps>(
             <button
               type="button"
               className="ms-tabs__add"
-              aria-label="新增标签"
+              aria-label={t('tabs.add')}
               onClick={handleAdd}
             >
               {addLabel ?? (

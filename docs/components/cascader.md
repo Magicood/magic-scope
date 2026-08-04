@@ -6,7 +6,7 @@
 
 ## 说明
 
-自研、零依赖,从省/市/区、商品多级分类这类层级数据里逐级选出一条路径。trigger 显示选中路径(`浙江 / 杭州 / 西湖`)或占位,复用 Popover 浮层承载多列级联菜单:hover / 点击非叶子即展开下一列(多列同屏而非逐级弹窗),点叶子提交 `value: string&#91;]` 并关闭,沿途 optionPath 一并回传供业务取每级数据。
+自研、零依赖,从省/市/区、商品多级分类这类层级数据里逐级选出一条路径。trigger 显示选中路径(`浙江 / 杭州 / 西湖`)或占位,复用 Popover 浮层承载多列级联菜单:hover / 点击非叶子即展开下一列(多列同屏而非逐级弹窗),点叶子提交 `value: string[]` 并关闭,沿途 optionPath 一并回传供业务取每级数据。
 
 changeOnSelect 允许选中非叶子边选边走;value / open 双通道受控;键盘 ↑↓ 列内移动、→ 进下一列、← 回上一列、Enter 选中 / 展开、Esc 关闭,采用 WAI-ARIA menu / menuitem + aria-expanded 模型;tone × size(随 data-ms-density 缩放),留口 classNames / displayRender,尊重 prefers-reduced-motion。纯路径算法抽到 logic.ts 以便平移到其它框架内核。
 
@@ -31,7 +31,7 @@ changeOnSelect 允许选中非叶子边选边走;value / open 双通道受控;�
 | `displayRender` | `((labels: string[], optionPath: CascaderOption[]) => ReactNode)` | — | 自定义路径显示(覆盖默认的 label 拼接)。 |
 | `classNames` | `CascaderClassNames` | — | 各部件细粒度 className 槽位。 |
 | `className` | `string` | — | trigger 附加 className(等价于原生 className)。 |
-| `...props` | `ComponentPropsWithoutRef<'button'>` | — | 透传原生 button 属性(className / style / aria-* / 事件等)。 |
+| `...props` | `ComponentPropsWithoutRef<'button'>` | — | 透传原生 button 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
 

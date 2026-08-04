@@ -2,6 +2,7 @@
 import '@testing-library/jest-dom/vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
+import { MessagesProvider } from '../../i18n';
 import { Breadcrumb } from './Breadcrumb';
 
 describe('Breadcrumb', () => {
@@ -175,6 +176,24 @@ describe('Breadcrumb', () => {
     expect(screen.queryByRole('button', { name: /展开省略/ })).not.toBeInTheDocument();
   });
 
+  it('省略展开按钮标签走字典 breadcrumb.expand,可被 MessagesProvider 覆盖(含 count 插值)', () => {
+    render(
+      <MessagesProvider messages={{ 'breadcrumb.expand': 'Show {count} more' }}>
+        <Breadcrumb
+          maxItems={3}
+          items={[
+            { label: 'A', href: '/a' },
+            { label: 'B', href: '/b' },
+            { label: 'C', href: '/c' },
+            { label: 'D', href: '/d' },
+            { label: 'E' },
+          ]}
+        />
+      </MessagesProvider>,
+    );
+    expect(screen.getByRole('button', { name: 'Show 3 more' })).toBeInTheDocument();
+  });
+
   it('linkAs 替换链接元素,itemRender / item.render 完全自定义渲染', () => {
     const itemRender = vi.fn((item) => <span data-custom>{`渲染-${item.label}`}</span>);
 
@@ -214,5 +233,70 @@ describe('Breadcrumb', () => {
     expect(container.querySelector('.ms-breadcrumb__list')).toHaveClass('my-list');
     expect(screen.getByRole('link', { name: '首页' })).toHaveClass('my-link');
     expect(screen.getByText('设置')).toHaveClass('my-current');
+  });
+
+  describe('窄容器折叠(P1,CSS @container 驱动显隐)', () => {
+    const fourLevels = [
+      { label: '首页', href: '/' },
+      { label: '组件', href: '/components' },
+      { label: '导航', href: '/components/nav' },
+      { label: '详情' },
+    ];
+
+    it('层级 >3 时注入折叠占位(插在首项之后),nav 带 --collapsible,触发器可达', () => {
+      const { container } = render(<Breadcrumb items={fourLevels} />);
+
+      const nav = screen.getByRole('navigation', { name: '面包屑' });
+      expect(nav).toHaveClass('ms-breadcrumb--collapsible');
+
+      const collapse = container.querySelector('.ms-breadcrumb__item--collapse');
+      expect(collapse).toBeInTheDocument();
+      const lis = container.querySelectorAll('.ms-breadcrumb__list > li');
+      expect(lis[1]).toBe(collapse);
+
+      // 触发器是真按钮:aria-label 报被省略的层级数,aria-expanded 表意可展开
+      const btn = screen.getByRole('button', { name: '展开省略的 2 项' });
+      expect(btn).toHaveAttribute('aria-expanded', 'false');
+      // 占位内分隔符是装饰性的
+      expect(collapse?.querySelector('.ms-breadcrumb__separator')).toHaveAttribute(
+        'aria-hidden',
+        'true',
+      );
+    });
+
+    it('点击折叠占位展开全部层级:占位移除、--collapsible 撤下、中间项仍可达', () => {
+      const { container } = render(<Breadcrumb items={fourLevels} />);
+
+      fireEvent.click(screen.getByRole('button', { name: '展开省略的 2 项' }));
+
+      expect(container.querySelector('.ms-breadcrumb__item--collapse')).not.toBeInTheDocument();
+      expect(screen.getByRole('navigation', { name: '面包屑' })).not.toHaveClass(
+        'ms-breadcrumb--collapsible',
+      );
+      expect(screen.getByRole('link', { name: '组件' })).toBeInTheDocument();
+    });
+
+    it('层级 ≤3 不注入占位也不带 --collapsible(窄容器整条可见)', () => {
+      const { container } = render(
+        <Breadcrumb
+          items={[{ label: 'A', href: '/' }, { label: 'B', href: '/b' }, { label: 'C' }]}
+        />,
+      );
+      expect(container.querySelector('.ms-breadcrumb__item--collapse')).not.toBeInTheDocument();
+      expect(screen.getByRole('navigation', { name: '面包屑' })).not.toHaveClass(
+        'ms-breadcrumb--collapsible',
+      );
+    });
+
+    it('与 maxItems 协同:JS 已折叠到 3 条渲染项时不再注入占位(避免双省略号)', () => {
+      const six = ['A', 'B', 'C', 'D', 'E', 'F'].map((label, i) =>
+        i < 5 ? { label, href: `/${label}` } : { label },
+      );
+      const { container } = render(<Breadcrumb items={six} maxItems={3} />);
+
+      // JS 折叠:1 头 + … + 1 尾 = 3 条
+      expect(container.querySelectorAll('.ms-breadcrumb__list > li')).toHaveLength(3);
+      expect(container.querySelector('.ms-breadcrumb__item--collapse')).not.toBeInTheDocument();
+    });
   });
 });

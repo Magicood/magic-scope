@@ -28,7 +28,7 @@
 | `disabled` | `boolean` | `false` | 禁用整个控件。 |
 | `className` | `string` | — | 根容器 className。 |
 | `classNames` | `MentionsClassNames` | — | 各关键子部件 className(细粒度留口)。 |
-| `...props` | `ComponentPropsWithoutRef<'textarea'>` | — | 透传原生 textarea 属性(className / style / aria-* / 事件等)。 |
+| `...props` | `ComponentPropsWithoutRef<'textarea'>` | — | 透传原生 textarea 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
 

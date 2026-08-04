@@ -35,9 +35,11 @@
 }
 
 /* —— hover:键帽边框点亮(用 tone 主色),收敛微光 —— */
-.ms-kbd:hover {
-  border-color: var(--ms-c);
-  box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) -5px var(--ms-c-glow);
+@media (hover: hover) {
+  .ms-kbd:hover {
+    border-color: var(--ms-c);
+    box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) -5px var(--ms-c-glow);
+  }
 }
 
 /* —— active:模拟按键下压的触感反馈;必要位移用固定值,motion-scale 仅调装饰强度 —— */
@@ -56,8 +58,10 @@
   );
   color: var(--ms-c);
 }
-.ms-kbd:not(.ms-tone-neutral):hover {
-  box-shadow: 0 0 calc(9px * var(--ms-fx-glow, 1)) -5px var(--ms-c-glow);
+@media (hover: hover) {
+  .ms-kbd:not(.ms-tone-neutral):hover {
+    box-shadow: 0 0 calc(9px * var(--ms-fx-glow, 1)) -5px var(--ms-c-glow);
+  }
 }
 
 /* —— 多键帽(combo):每键帽是独立 .ms-kbd__key,外壳收口为容纳容器 —— */
@@ -72,8 +76,10 @@
 .ms-kbd--combo:active {
   transform: none;
 }
-.ms-kbd--combo:hover {
-  box-shadow: none;
+@media (hover: hover) {
+  .ms-kbd--combo:hover {
+    box-shadow: none;
+  }
 }
 
 /* combo 下,样式落到每个键帽,继承外壳的尺寸/色调上下文 */
@@ -116,9 +122,11 @@
   color: var(--ms-c);
 }
 
-.ms-kbd--combo:hover .ms-kbd__key {
-  border-color: var(--ms-c);
-  box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) -5px var(--ms-c-glow);
+@media (hover: hover) {
+  .ms-kbd--combo:hover .ms-kbd__key {
+    border-color: var(--ms-c);
+    box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) -5px var(--ms-c-glow);
+  }
 }
 .ms-kbd--combo:active .ms-kbd__key {
   transform: translateY(1px) scale(calc(1 - 0.015 * var(--ms-motion-scale, 1)));

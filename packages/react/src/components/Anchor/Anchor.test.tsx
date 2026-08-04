@@ -3,6 +3,7 @@ import '@testing-library/jest-dom/vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { StrictMode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { MessagesProvider } from '../../i18n';
 import { Anchor, type AnchorItem } from './Anchor';
 
 const items: AnchorItem[] = [
@@ -47,6 +48,24 @@ describe('Anchor', () => {
     expect(nav).toHaveClass('ms-anchor');
     expect(nav).toHaveClass('ms-anchor--md');
     expect(nav).toHaveClass('ms-tone-primary');
+  });
+
+  it('nav 可访问名走字典 anchor.nav,可被 MessagesProvider 覆盖', () => {
+    render(
+      <MessagesProvider messages={{ 'anchor.nav': 'On this page' }}>
+        <Anchor items={items} />
+      </MessagesProvider>,
+    );
+    expect(screen.getByRole('navigation', { name: 'On this page' })).toBeInTheDocument();
+  });
+
+  it('显式 ariaLabel 优先于字典', () => {
+    render(
+      <MessagesProvider messages={{ 'anchor.nav': 'On this page' }}>
+        <Anchor items={items} ariaLabel="目录" />
+      </MessagesProvider>,
+    );
+    expect(screen.getByRole('navigation', { name: '目录' })).toBeInTheDocument();
   });
 
   it('渲染全部锚点链接,含嵌套子项', () => {

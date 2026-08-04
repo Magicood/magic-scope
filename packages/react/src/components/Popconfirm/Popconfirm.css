@@ -55,9 +55,11 @@
 .ms-popconfirm__cancel.ms-button {
   color: var(--ms-color-fg-muted);
 }
-.ms-popconfirm__cancel.ms-button:hover:not(:disabled) {
-  color: var(--ms-color-fg);
-  background-color: color-mix(in oklch, var(--ms-color-fg) 8%, transparent);
+@media (hover: hover) {
+  .ms-popconfirm__cancel.ms-button:hover:not(:disabled) {
+    color: var(--ms-color-fg);
+    background-color: color-mix(in oklch, var(--ms-color-fg) 8%, transparent);
+  }
 }
 
 /* 触屏(粗指针):气泡内按钮抬到触控目标基线(与 Popover 面板一致,此处兜底确认/取消两键) */

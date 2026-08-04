@@ -7,6 +7,7 @@ import {
   useRef,
   useSyncExternalStore,
 } from 'react';
+import { useMessages } from '../../i18n';
 import { composeEventHandlers, composeRefs } from '../../utils/compose';
 import { Label } from '../Label';
 import {
@@ -173,6 +174,7 @@ export function Field({
   children,
 }: FieldProps): ReactElement {
   const ctx = useFormContext();
+  const t = useMessages();
   const { store, disabled: formDisabled, classNames: formCns } = ctx;
   const field = useField(name);
   const { error, fieldId, errorId, helpId } = field;
@@ -282,6 +284,12 @@ export function Field({
             className={['ms-form__help', formCns?.help, classNames?.help].filter(Boolean).join(' ')}
           >
             {help}
+          </div>
+        )}
+        {field.isValidating && !error && (
+          <div role="status" className="ms-form__validating">
+            <span className="ms-form__validating-rune" aria-hidden="true" />
+            {t('form.validating')}
           </div>
         )}
         {error && (

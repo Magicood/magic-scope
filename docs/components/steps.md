@@ -6,7 +6,7 @@
 
 ## 说明
 
-自研、零依赖,消费 @magic-scope/tokens 的 --ms-* 变量。
+自研、零依赖,消费 @magic-scope/tokens 的 --ms-&#42; 变量。
 
 current 受控/非受控双通道 + onChange(提供后各可用步可点击、键盘 ←→/↑↓/Home/End/Enter/Space 可达);支持 horizontal/vertical 方向、sm/default 尺寸、progressDot 点状、labelPlacement 标题位、percent 当前步进度环。
 
@@ -36,7 +36,7 @@ current 受控/非受控双通道 + onChange(提供后各可用步可点击、�
 | `icon` | `ReactNode` | — | 自定义圆点 / 图标内容(覆盖默认序号 / 状态图标)。 |
 | `key` | `string \| number` | — | 该步的无障碍 key(列表渲染优化用,默认用 index)。 |
 | `disabled` | `boolean` | — | 是否禁用(不可点击跳步)。 |
-| `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-* / 事件等)。 |
+| `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
 
@@ -55,5 +55,5 @@ current 受控/非受控双通道 + onChange(提供后各可用步可点击、�
 | 标签 | `steps` `stepper` `wizard` `progress` `navigation` `process` `guide` `vertical` `horizontal` |
 
 ::: details 需求原文 / 设计意图
-步骤条(向导,对标 AntD Steps)。items: {title,description?,icon?,status?,disabled?}&#91;] 或复合 Steps.Step;current(受控)+ onChange(可点击跳步)、status(当前步 wait/process/finish/error)、direction(horizontal 默认 \| vertical)、size(sm/default)、progressDot(点状)、labelPlacement(horizontal/vertical)、percent(当前步进度环)。每步圆点/图标按 status 着 tone 色(finish→primary、error→danger、process→primary 高亮),连线 finish 染色。键盘可达(可点击时)。logic.ts 放步态解析。
+步骤条(向导,对标 AntD Steps)。items: {title,description?,icon?,status?,disabled?}&#91;] 或复合 Steps.Step;current(受控)+ onChange(可点击跳步)、status(当前步 wait/process/finish/error)、direction(horizontal 默认 | vertical)、size(sm/default)、progressDot(点状)、labelPlacement(horizontal/vertical)、percent(当前步进度环)。每步圆点/图标按 status 着 tone 色(finish→primary、error→danger、process→primary 高亮),连线 finish 染色。键盘可达(可点击时)。logic.ts 放步态解析。
 :::

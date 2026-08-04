@@ -92,6 +92,7 @@
 }
 
 /* —— 悬停暂停(纯 CSS,无 JS 状态)—— */
+/* 功能性 hover(悬停承载"暂停滚动"功能),故意不包 @media (hover: hover):触屏 tap 触发粘滞暂停是可接受的替代交互 */
 .ms-marquee--pause-hover:hover .ms-marquee__track {
   animation-play-state: paused;
 }

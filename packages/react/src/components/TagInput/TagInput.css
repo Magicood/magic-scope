@@ -101,10 +101,12 @@
     box-shadow var(--ms-dur-base) var(--ms-ease-standard),
     transform var(--ms-dur-fast) var(--ms-ease-emphasized);
 }
-.ms-tag-input__remove:hover {
-  background-color: color-mix(in oklch, currentcolor 24%, transparent);
-  box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) -4px
-    color-mix(in oklch, var(--ms-c-glow) 70%, transparent);
+@media (hover: hover) {
+  .ms-tag-input__remove:hover {
+    background-color: color-mix(in oklch, currentcolor 24%, transparent);
+    box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) -4px
+      color-mix(in oklch, var(--ms-c-glow) 70%, transparent);
+  }
 }
 .ms-tag-input__remove:active {
   transform: scale(calc(1 - 0.08 * var(--ms-motion-scale, 1)));
@@ -172,9 +174,11 @@
 }
 
 /* —— hover / focus-within / invalid / disabled(对齐 Input 状态语义) —— */
-.ms-tag-input:hover:not(.ms-tag-input--disabled):not(.ms-tag-input--invalid) {
-  border-color: var(--ms-color-border-strong);
-  box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow, var(--ms-color-glow));
+@media (hover: hover) {
+  .ms-tag-input:hover:not(.ms-tag-input--disabled):not(.ms-tag-input--invalid) {
+    border-color: var(--ms-color-border-strong);
+    box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow, var(--ms-color-glow));
+  }
 }
 
 .ms-tag-input:focus-within {

@@ -6,7 +6,7 @@
 
 ## 说明
 
-自研、零依赖的可拖拽分栏原语,消费 @magic-scope/tokens 的 --ms-* 变量。复合 Splitter + Splitter.Panel:容器负责测量主轴(ResizeObserver 跟随)并以 inline flex-basis 统一注入各面板像素尺寸,面板只承载 min/max/defaultSize/collapsible 元数据。
+自研、零依赖的可拖拽分栏原语,消费 @magic-scope/tokens 的 --ms-&#42; 变量。复合 Splitter + Splitter.Panel:容器负责测量主轴(ResizeObserver 跟随)并以 inline flex-basis 统一注入各面板像素尺寸,面板只承载 min/max/defaultSize/collapsible 元数据。
 
 面板间自动渲染可拖拽 gutter——pointer 拖拽把 delta 分摊两侧、夹 min/max 且总和守恒(纯算法抽进 logic.ts 以便平移多框架);支持水平/垂直朝向,min/max 可像素或百分比混写。
 
@@ -20,7 +20,7 @@
 
 | 参数 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
-| `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-* / 事件等)。 |
+| `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
 

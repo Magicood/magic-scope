@@ -1,0 +1,209 @@
+/* ============================================================================
+ * 后台客户页私有样式(.cst-*)—— 版面骨架走 admin.css 的 .ad-*,这里只补:
+ * 搜索框宽度 / 表格单元 / HoverCard 档案卡 / 420px 抽屉档案版式。
+ * 颜色一律派生自 --ms-* 语义变量,发丝线用 --sf-hairline,不写死颜色。
+ * ========================================================================== */
+
+.cst-search {
+  width: min(280px, 100%);
+}
+
+/* ------------------------------- 表格单元 --------------------------------- */
+
+.cst-customer {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.cst-customer-name {
+  font-weight: 500;
+  color: var(--ms-color-fg);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cst-num {
+  font-variant-numeric: tabular-nums;
+}
+
+.cst-switch-cell {
+  display: inline-flex;
+}
+
+.cst-table-card {
+  padding: 8px 12px 12px;
+}
+
+.cst-table-foot {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+  padding: 12px 6px 2px;
+  border-top: 1px solid var(--sf-hairline);
+}
+
+/* --------------------------- HoverCard 档案卡 ----------------------------- */
+
+.cst-peek {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 248px;
+}
+
+.cst-peek-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.cst-peek-id {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.cst-peek-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ms-color-fg);
+}
+
+.cst-peek-email {
+  font-size: 12px;
+  color: var(--ms-color-fg-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cst-peek-meta {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 10px;
+  border-top: 1px solid var(--sf-hairline);
+}
+
+.cst-peek-meta > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.cst-peek-meta dt {
+  font-size: 12px;
+  color: var(--ms-color-fg-subtle);
+}
+
+.cst-peek-meta dd {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--ms-color-fg);
+}
+
+/* ------------------------------ 档案抽屉 ---------------------------------- */
+
+/* 420px 宽度:覆盖 Drawer 的尺寸变量(小屏由 min() 自动收窄) */
+.cst-drawer {
+  --ms-drawer-inline: min(420px, 100vw);
+}
+
+.cst-drawer-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.cst-drawer-name {
+  flex: 1;
+  min-width: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ms-color-fg);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cst-profile {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.cst-block {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cst-block-label {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ms-color-fg-subtle);
+}
+
+.cst-block-empty {
+  margin: 0;
+  font-size: 13px;
+  color: var(--ms-color-fg-muted);
+}
+
+/* 紧凑订单列表:整行可点(跳后台订单页),悬停底延伸出栏距对齐文字 */
+.cst-order-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cst-order-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  margin-inline: -10px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  font: inherit;
+  text-align: start;
+  color: var(--ms-color-fg);
+  cursor: pointer;
+  transition: background var(--ms-duration-fast) var(--ms-ease-standard);
+}
+
+.cst-order-row:hover {
+  background: color-mix(in oklab, var(--ms-color-fg), transparent 95%);
+}
+
+.cst-order-row:focus-visible {
+  outline: 2px solid color-mix(in oklab, var(--ms-color-primary), transparent 30%);
+  outline-offset: 1px;
+}
+
+.cst-order-number {
+  font-size: 13px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.cst-order-total {
+  min-width: 56px;
+  font-size: 13px;
+  color: var(--ms-color-fg-muted);
+  font-variant-numeric: tabular-nums;
+  text-align: end;
+}

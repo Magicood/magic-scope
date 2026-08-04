@@ -20,6 +20,7 @@ import {
   useRef,
   useState,
 } from 'react';
+import { useMessages } from '../../i18n';
 import { composeEventHandlers, composeRefs, mergeAsChildProps } from '../../utils/compose';
 import {
   edgeEnabledIndex,
@@ -159,7 +160,7 @@ export interface NavigationMenuProps
   viewportAlign?: NavigationMenuViewportAlign;
   /** panel 与触发器行的间距(px)。默认 8。 */
   offset?: number;
-  /** 外层 <nav> 的可访问名(屏读「导航地标」标签)。默认 '主导航'。 */
+  /** 外层 <nav> 的可访问名(屏读「导航地标」标签)。不传则走字典 navigationMenu.nav(默认「主导航」)。 */
   'aria-label'?: string | undefined;
   /**
    * Esc 关闭 panel 前回调,可 `preventDefault()` 拦截阻止关闭。
@@ -322,7 +323,7 @@ const NavigationMenuBase = forwardRef<HTMLElement, NavigationMenuProps>(
       viewport = true,
       viewportAlign = 'start',
       offset = 8,
-      'aria-label': ariaLabel = '主导航',
+      'aria-label': ariaLabel,
       onEscapeKeyDown,
       className,
       classNames,
@@ -330,6 +331,7 @@ const NavigationMenuBase = forwardRef<HTMLElement, NavigationMenuProps>(
     },
     ref,
   ) => {
+    const t = useMessages();
     const reactId = useId();
     const idBase = `ms-navmenu-${reactId.replace(/[^a-zA-Z0-9_-]/g, '')}`;
 
@@ -723,7 +725,7 @@ const NavigationMenuBase = forwardRef<HTMLElement, NavigationMenuProps>(
       <NavMenuContext.Provider value={ctx}>
         <nav
           ref={setRootRef}
-          aria-label={ariaLabel}
+          aria-label={ariaLabel ?? t('navigationMenu.nav')}
           data-ms-viewport-align={viewport ? viewportAlign : undefined}
           className={rootClass}
           style={rootStyle}
@@ -1060,7 +1062,8 @@ NavigationMenuContent.displayName = 'NavigationMenu.Content';
 
 /* ——————————————————— 子组件:Viewport(共享浮层容器) ——————————————————— */
 
-export interface NavigationMenuViewportProps extends ComponentPropsWithoutRef<'div'> {
+export interface NavigationMenuViewportProps
+  extends Omit<ComponentPropsWithoutRef<'div'>, 'onPointerEnter' | 'onPointerLeave'> {
   /** 对齐方式。 */
   align?: NavigationMenuViewportAlign;
 }
@@ -1080,6 +1083,18 @@ const NavigationMenuViewport = forwardRef<HTMLDivElement, NavigationMenuViewport
         className={['ms-navmenu__viewport', ctx.classNames?.viewport, className]
           .filter(Boolean)
           .join(' ')}
+        // 浮层同为 hover 热区:指针从触发器移进 panel(途经间隙)会先触发 Item 的
+        // pointerleave 起 closeDelay 计时,进入这里必须取消,否则悬停 panel 超过宽限期即误关。
+        onPointerEnter={(e: ReactPointerEvent<HTMLDivElement>) => {
+          if (e.pointerType === 'mouse' || e.pointerType === 'pen') {
+            ctx.cancelHover();
+          }
+        }}
+        onPointerLeave={(e: ReactPointerEvent<HTMLDivElement>) => {
+          if (e.pointerType === 'mouse' || e.pointerType === 'pen') {
+            ctx.hoverClose();
+          }
+        }}
         {...props}
       >
         <div className="ms-navmenu__viewport-inner">{children}</div>

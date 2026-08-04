@@ -32,7 +32,7 @@ a11y 到位:root role=region + aria-roledescription=carousel,非活动 slide 隐
 | `defaultIndex` | `number` | `0` | 非受控初始索引。默认 0。 |
 | `className` | `string` | — | 根容器 className。 |
 | `classNames` | `CarouselClassNames` | — | 各部件细粒度 className 槽位。 |
-| `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-* / 事件等)。 |
+| `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
 

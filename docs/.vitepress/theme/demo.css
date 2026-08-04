@@ -12,3 +12,39 @@
   color: var(--ms-color-fg);
   font-family: var(--ms-font-sans);
 }
+
+/* VitePress 的 .vp-doc 正文样式(h2 的 48px 上边距/上边框、ol 缩进、p 边距等)是未分层规则,
+   会反压库组件在 @layer 里的类选择器(实测 alert-dialog 预览的 __title 被打成 24px + 上边框)。
+   revert-layer 恰好只回滚「未分层的作者样式」到最高声明层 —— 即库自己的 @layer 样式 + UA 默认,
+   外科手术式去掉文档主题干扰而不伤库样式;行内 style 与 --ms-* 变量继承均不受影响。 */
+.vp-doc .ms-demo
+  :is(
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    p,
+    a,
+    ol,
+    ul,
+    li,
+    table,
+    thead,
+    tbody,
+    tr,
+    td,
+    th,
+    blockquote,
+    hr,
+    code,
+    kbd,
+    strong,
+    em,
+    summary,
+    details,
+    figure
+  ) {
+  all: revert-layer;
+}

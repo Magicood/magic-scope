@@ -1,0 +1,268 @@
+/* ============================================================================
+ * Overview 页私有样式(.ov-*)—— 指标行 / 收入面积图 / 最近订单 / 侧卡。
+ * 只消费 --ms-* / --sf-* 变量与 .ad-* 原语;发丝线 + 留白,无硬边框。
+ * ========================================================================== */
+
+/* ------------------------------- 指标行 ---------------------------------- */
+
+.ov-stat-note {
+  margin: 10px 0 0;
+  font-size: 12px;
+  color: var(--ms-color-fg-muted);
+}
+
+.ov-stat-note[data-delta="up"] {
+  color: var(--ms-color-success);
+}
+
+.ov-stat-note[data-delta="down"] {
+  color: var(--ms-color-danger);
+}
+
+/* ------------------------------- 卡头通用 -------------------------------- */
+
+.ov-card-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.ov-legend {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  color: var(--ms-color-fg-muted);
+}
+
+.ov-legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ms-color-primary);
+}
+
+.ov-legend-muted {
+  color: var(--ms-color-fg-subtle);
+}
+
+/* ------------------------------ 收入面积图 -------------------------------- */
+
+.ov-chart {
+  position: relative;
+}
+
+.ov-chart-svg {
+  display: block;
+  width: 100%;
+}
+
+.ov-chart-grid {
+  stroke: var(--sf-hairline);
+}
+
+.ov-chart-axis {
+  fill: var(--ms-color-fg-subtle);
+  font-family: var(--sf-sans);
+  font-size: 10.5px;
+}
+
+.ov-chart-line {
+  fill: none;
+  stroke: var(--ms-color-primary);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.ov-chart-end {
+  fill: var(--ms-color-primary);
+}
+
+.ov-chart-cursor {
+  stroke: color-mix(in oklab, var(--ms-color-fg), transparent 72%);
+  stroke-dasharray: 3 3;
+}
+
+.ov-chart-dot {
+  fill: var(--ms-color-surface-raised);
+  stroke: var(--ms-color-primary);
+  stroke-width: 1.6;
+}
+
+.ov-chart-tip {
+  position: absolute;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 108px;
+  padding: 8px 11px;
+  border-radius: 10px;
+  background: var(--ms-color-surface-raised);
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--ms-color-border), transparent 55%),
+    0 8px 24px color-mix(in oklab, var(--ms-color-fg), transparent 88%);
+  transform: translate(-50%, calc(-100% - 14px));
+  pointer-events: none;
+  transition:
+    left 90ms linear,
+    top 90ms linear;
+}
+
+.ov-chart-tip-date {
+  font-size: 11px;
+  color: var(--ms-color-fg-subtle);
+}
+
+.ov-chart-tip-value {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.ov-chart-tip-orders {
+  font-size: 11.5px;
+  color: var(--ms-color-fg-muted);
+}
+
+/* ------------------------------- 最近订单 -------------------------------- */
+
+.ov-order-number {
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.ov-orders-card tbody tr {
+  cursor: pointer;
+}
+
+.ov-card-foot {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--sf-hairline);
+}
+
+.ov-card-link {
+  font-size: 13px;
+  color: var(--ms-color-fg-muted);
+  text-decoration: none;
+  transition: color var(--ms-duration-fast) var(--ms-ease-standard);
+}
+
+.ov-card-link:hover {
+  color: var(--ms-color-fg);
+}
+
+/* ------------------------------- 右侧两卡 -------------------------------- */
+
+.ov-side {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* 待处理清单:List 关掉原生标记,行自己排 icon + 文案 + 尾注 */
+.ad-card .ov-attn-list {
+  margin-top: 6px;
+  padding-inline-start: 0;
+}
+
+.ov-attn-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 8px;
+  margin-inline: -8px;
+  border-radius: 9px;
+  font-size: 13px;
+  color: var(--ms-color-fg);
+  text-decoration: none;
+  transition: background var(--ms-duration-fast) var(--ms-ease-standard);
+}
+
+.ov-attn-row:hover {
+  background: color-mix(in oklab, var(--ms-color-fg), transparent 95%);
+}
+
+.ov-attn-icon {
+  display: inline-flex;
+  flex: none;
+  color: var(--ms-color-fg-subtle);
+}
+
+.ov-attn-label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ov-attn-go {
+  color: var(--ms-color-fg-subtle);
+  opacity: 0;
+  transition: opacity var(--ms-duration-fast) var(--ms-ease-standard);
+}
+
+.ov-attn-row:hover .ov-attn-go {
+  opacity: 1;
+}
+
+/* 热销榜:24px 色块 + 名称 + 细 Progress + 占比 */
+.ov-top-list {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ov-top-row {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) 76px 32px;
+  align-items: center;
+  gap: 10px;
+}
+
+.ov-top-swatch {
+  width: 24px;
+  height: 24px;
+  border-radius: 7px;
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--ms-color-fg), transparent 86%);
+}
+
+.ov-top-name {
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ov-top-share {
+  font-size: 12px;
+  color: var(--ms-color-fg-muted);
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------- 页头控件 -------------------------------- */
+
+.ov-range-select {
+  min-width: 138px;
+}
+
+/* 减弱动效:去掉本页自绘过渡(库组件自行响应 reduced-motion) */
+@media (prefers-reduced-motion: reduce) {
+  .ov-chart-tip,
+  .ov-card-link,
+  .ov-attn-row,
+  .ov-attn-go {
+    transition: none;
+  }
+}

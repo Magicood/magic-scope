@@ -52,8 +52,10 @@
 }
 
 /* —— hover / focus / open:贴 Select 的发光逻辑(读 tone 槽位) —— */
-.ms-autocomplete:not(.ms-autocomplete--disabled) .ms-autocomplete__control:hover {
-  border-color: var(--ms-color-border-strong);
+@media (hover: hover) {
+  .ms-autocomplete:not(.ms-autocomplete--disabled) .ms-autocomplete__control:hover {
+    border-color: var(--ms-color-border-strong);
+  }
 }
 
 .ms-autocomplete__control:focus-within {

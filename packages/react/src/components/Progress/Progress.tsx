@@ -1,5 +1,6 @@
 import type { ComponentPropsWithoutRef, CSSProperties, ReactNode } from 'react';
 import { forwardRef } from 'react';
+import { useMessages } from '../../i18n';
 
 export type ProgressTone =
   | 'primary'
@@ -99,6 +100,7 @@ export const Progress = forwardRef<HTMLDivElement, ProgressProps>(function Progr
   },
   ref,
 ) {
+  const t = useMessages();
   const isIndeterminate = indeterminate || value === undefined;
   const clamped = isIndeterminate ? undefined : clampProgress(value as number);
   const clampedBuffer = buffer != null ? clampProgress(buffer) : undefined;
@@ -109,8 +111,7 @@ export const Progress = forwardRef<HTMLDivElement, ProgressProps>(function Progr
     label != null ? label : showValue && valueText != null ? valueText : undefined;
 
   // 未显式给 aria-label 时给一个可读兜底(进度条无可见文字时的可达性)。
-  // 待 i18n 字典补 'progress.label' key 后切到 useMessages();现用中文兜底(见 notes)。
-  const resolvedAriaLabel = ariaLabel ?? (labelNode == null ? '进度' : undefined);
+  const resolvedAriaLabel = ariaLabel ?? (labelNode == null ? t('progress.label') : undefined);
 
   const rootClasses = cx(
     'ms-progress',

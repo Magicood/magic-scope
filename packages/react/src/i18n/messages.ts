@@ -44,9 +44,7 @@ export type MessageKey =
   | 'select.empty'
   | 'select.loading'
   | 'select.search'
-  | 'select.create'
   | 'select.removeTag'
-  | 'select.selected'
   | 'table.empty'
   | 'table.selectAll'
   | 'table.selectRow'
@@ -57,7 +55,13 @@ export type MessageKey =
   | 'pagination.prev'
   | 'pagination.next'
   | 'pagination.page'
+  | 'pagination.sizeLabel'
+  | 'pagination.pageSize'
+  | 'pagination.jump'
   | 'breadcrumb.nav'
+  | 'breadcrumb.expand'
+  | 'anchor.nav'
+  | 'navigationMenu.nav'
   | 'dialog.close'
   | 'drawer.close'
   | 'alertDialog.confirm'
@@ -67,11 +71,15 @@ export type MessageKey =
   | 'table.expandRow'
   | 'table.collapseRow'
   | 'table.expandColumn'
+  | 'tabs.add'
   | 'tag.remove'
   | 'timeline.pending'
   | 'toast.close'
   | 'toaster.region'
   | 'spinner.label'
+  | 'progress.label'
+  | 'statistic.trendUp'
+  | 'statistic.trendDown'
   | 'form.required'
   | 'form.min'
   | 'form.max'
@@ -81,7 +89,6 @@ export type MessageKey =
   | 'form.email'
   | 'form.url'
   | 'form.validating'
-  | 'form.submitError'
   | 'form.errorSummary'
   | 'datePicker.placeholder'
   | 'datePicker.rangeStart'
@@ -94,6 +101,7 @@ export type MessageKey =
   | 'datePicker.nextYear'
   | 'datePicker.selectMonthYear'
   | 'pinInput.label'
+  | 'pinInput.cell'
   | 'backTop.label'
   | 'upload.trigger'
   | 'upload.hint'
@@ -107,6 +115,10 @@ export type MessageKey =
   | 'timePicker.now'
   | 'timePicker.confirm'
   | 'timePicker.placeholder'
+  | 'timePicker.hour'
+  | 'timePicker.minute'
+  | 'timePicker.second'
+  | 'timePicker.meridiem'
   | 'carousel.previous'
   | 'carousel.next'
   | 'carousel.goToSlide'
@@ -118,7 +130,12 @@ export type MessageKey =
   | 'tour.finish'
   | 'tour.stepOf'
   | 'image.error'
-  | 'image.preview';
+  | 'image.preview'
+  | 'image.zoomIn'
+  | 'image.zoomOut'
+  | 'image.rotate'
+  | 'image.reset'
+  | 'image.close';
 
 /** 完整字典:每个 key 都有值。 */
 export type Messages = Record<MessageKey, Message>;
@@ -158,9 +175,7 @@ export const defaultMessages: Messages = {
   'select.empty': '无匹配项',
   'select.loading': '加载中…',
   'select.search': '搜索…',
-  'select.create': '创建 “{query}”',
   'select.removeTag': '移除 {label}',
-  'select.selected': '已选 {count} 项',
   'table.empty': '暂无数据',
   'table.selectAll': '全选',
   'table.selectRow': '选择第 {index} 行',
@@ -171,7 +186,13 @@ export const defaultMessages: Messages = {
   'pagination.prev': '上一页',
   'pagination.next': '下一页',
   'pagination.page': '第 {page} 页',
+  'pagination.sizeLabel': '每页条数',
+  'pagination.pageSize': '{size} / 页',
+  'pagination.jump': '跳至',
   'breadcrumb.nav': '面包屑',
+  'breadcrumb.expand': '展开省略的 {count} 项',
+  'anchor.nav': '页内导航',
+  'navigationMenu.nav': '主导航',
   'dialog.close': '关闭',
   'drawer.close': '关闭',
   'alertDialog.confirm': '确定',
@@ -181,11 +202,15 @@ export const defaultMessages: Messages = {
   'table.expandRow': '展开第 {index} 行',
   'table.collapseRow': '收起第 {index} 行',
   'table.expandColumn': '展开',
+  'tabs.add': '新增标签',
   'tag.remove': '移除',
   'timeline.pending': '进行中…',
   'toast.close': '关闭',
   'toaster.region': '通知',
   'spinner.label': '加载中',
+  'progress.label': '进度',
+  'statistic.trendUp': '上升',
+  'statistic.trendDown': '下降',
   'form.required': '此项为必填项',
   'form.min': '不能小于 {min}',
   'form.max': '不能大于 {max}',
@@ -195,7 +220,6 @@ export const defaultMessages: Messages = {
   'form.email': '请输入有效的邮箱地址',
   'form.url': '请输入有效的网址',
   'form.validating': '校验中…',
-  'form.submitError': '提交失败,请检查表单',
   'form.errorSummary': '表单有 {count} 处错误',
   'datePicker.placeholder': '请选择日期',
   'datePicker.rangeStart': '开始日期',
@@ -208,6 +232,7 @@ export const defaultMessages: Messages = {
   'datePicker.nextYear': '下一年',
   'datePicker.selectMonthYear': '选择年月',
   'pinInput.label': '验证码输入',
+  'pinInput.cell': '{label} 第 {index} 位',
   'backTop.label': '回到顶部',
   'upload.trigger': '点击或拖拽文件到此区域上传',
   'upload.hint': '支持单个或批量上传',
@@ -221,6 +246,10 @@ export const defaultMessages: Messages = {
   'timePicker.now': '此刻',
   'timePicker.confirm': '确定',
   'timePicker.placeholder': '请选择时间',
+  'timePicker.hour': '时',
+  'timePicker.minute': '分',
+  'timePicker.second': '秒',
+  'timePicker.meridiem': '上午/下午',
   'carousel.previous': '上一张',
   'carousel.next': '下一张',
   'carousel.goToSlide': '跳到第 {index} 张',
@@ -233,6 +262,11 @@ export const defaultMessages: Messages = {
   'tour.stepOf': '第 {current} / {total} 步',
   'image.error': '图片加载失败',
   'image.preview': '预览',
+  'image.zoomIn': '放大',
+  'image.zoomOut': '缩小',
+  'image.rotate': '旋转',
+  'image.reset': '还原',
+  'image.close': '关闭',
 };
 
 const TEMPLATE = /\{(\w+)\}/g;

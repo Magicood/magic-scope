@@ -1,12 +1,12 @@
 # ConfigProvider <Badge type="tip" text="stable" /> <Badge type="info" text="v0.1.0" />
 
-全局配置上下文:一处统一设置全库设计开关(密度 / 动效 / 发光 / 色调),经 data-ms-* 沿 CSS 级联下发。
+全局配置上下文:一处统一设置全库设计开关(密度 / 动效 / 发光 / 色调),经 data-ms-&#42; 沿 CSS 级联下发。
 
 > **[在展示站中打开 ConfigProvider](https://magicood.github.io/magic-scope/#/config-provider)** —— 交互 demo + 参数旋钮 + 真实源码,主题 / 密度 / 动效一键切换。
 
 ## 说明
 
-基础设施组件,本身无视觉形态。把分散的设计开关收到一处:density(密度档)/ motion(动效总闸)/ fx(装饰发光总闸)/ tone(默认色调),架构为 CSS-first——经根元素的 data-ms-* 属性沿 CSS 级联下发,后代组件读祖先属性即生效,不靠 JS prop 逐层钻透;同一套 data 属性可平移 vue / web component。
+基础设施组件,本身无视觉形态。把分散的设计开关收到一处:density(密度档)/ motion(动效总闸)/ fx(装饰发光总闸)/ tone(默认色调),架构为 CSS-first——经根元素的 data-ms-&#42; 属性沿 CSS 级联下发,后代组件读祖先属性即生效,不靠 JS prop 逐层钻透;同一套 data 属性可平移 vue / web component。
 
 可嵌套就近覆盖,可只设部分开关(未设的继承祖先 / 用根基线);额外 createContext + useConfig() 暴露 density/size/tone 默认值供少数需 JS 默认值的组件兜底。messages 经内部 MessagesProvider 合并下发文案、locale 写到根 lang;留口 as 多态根 / asChild Slot 把开关挂到已有节点,forwardRef 与原生属性透传,透明包裹不破坏文档语义。
 
@@ -24,8 +24,8 @@
 | `messages` | `PartialMessages` | — | 文案覆盖。给出时内部用 i18n 的 MessagesProvider 包裹 children 下发(可与父级文案合并)。<br>不传则不额外套 Provider(透传父级文案)。 |
 | `locale` | `string` | — | 语言标记,写到根元素 lang(便于 hyphens / 字体回退 / 读屏语种)。不做内置文案切换。 |
 | `as` | `ElementType` | — | 多态根标签(默认 div)。语义场景可换 section / main 等。 |
-| `asChild` | `boolean` | `false` | 渲染为唯一子元素并把 data-ms-* 与 props 合并上去(Slot 模式)。<br>用于「不想多包一层 div、直接把全局开关挂到已有根节点(如布局容器 / &lt;html&gt; 镜像)」的场景。 |
-| `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-* / 事件等)。 |
+| `asChild` | `boolean` | `false` | 渲染为唯一子元素并把 data-ms-&#42; 与 props 合并上去(Slot 模式)。<br>用于「不想多包一层 div、直接把全局开关挂到已有根节点(如布局容器 / &lt;html&gt; 镜像)」的场景。 |
+| `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
 

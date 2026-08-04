@@ -1,504 +1,441 @@
 /* ============================================================================
- * Daybreak 标杆样式 v2:Header / Footer / Hero / 商品视觉 / 商品详情。
- * 去硬边框、留白驱动、精致质感与动效。
+ * Arden 买家端设计系统 —— 建在 @magic-scope/tokens 的 --ms-* 语义变量之上。
+ * 取向:编辑式精品零售(Aesop / Everlane / Toast 一路)——
+ *   暖纸白底、深 ink 文字与 CTA、serif 展示标题、去硬边框、留白做分隔。
+ * 约定:买家端前缀 .sf-,商品视觉 .pv-,后台前缀 .ad-(见 admin.css)。
+ * 页面私有样式放各页面同名 .css,只允许消费这里的原语与 --ms- / --sf- 变量。
  * ========================================================================== */
 
+:root {
+  /* 展示衬线:macOS 上是 New York,其余平台优雅回退 —— 编辑式标题的关键 */
+  --sf-display: ui-serif, "New York", "Iowan Old Style", Palatino, Georgia, serif;
+  --sf-sans: var(--ms-font-sans);
+  /* 发丝线:比 --ms-color-border 更轻,分隔靠它 + 留白,不靠硬边框 */
+  --sf-hairline: color-mix(in oklab, var(--ms-color-border), transparent 40%);
+  --sf-radius: 20px;
+  --sf-radius-sm: 12px;
+  /* 版心与节奏 */
+  --sf-container: 1180px;
+  --sf-gutter: clamp(20px, 4vw, 48px);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--ms-color-bg);
+  color: var(--ms-color-fg);
+  font-family: var(--sf-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--ms-color-selection);
+  color: var(--ms-color-on-selection);
+}
+
+/* ------------------------------- 版面原语 -------------------------------- */
+
+.sf-container {
+  max-width: var(--sf-container);
+  margin-inline: auto;
+  padding-inline: var(--sf-gutter);
+}
+
+.sf-section {
+  padding-block: clamp(72px, 10vw, 136px);
+}
+
+.sf-section-tight {
+  padding-block: clamp(48px, 6vw, 88px);
+}
+
+/* 章节眉标:小号大写 + 陶土圆点 —— 全站统一的章节起手式 */
+.sf-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ms-color-fg-subtle);
+}
+
+.sf-eyebrow::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--ms-color-accent);
+}
+
+/* 展示标题:衬线、常规字重、收紧字距 —— 大而轻,不靠加粗压人 */
+.sf-display {
+  font-family: var(--sf-display);
+  font-weight: 460;
+  letter-spacing: -0.015em;
+  line-height: 1.06;
+  text-wrap: balance;
+  margin: 0;
+}
+
+.sf-display-xl {
+  font-size: clamp(44px, 6.4vw, 84px);
+}
+
+.sf-display-lg {
+  font-size: clamp(32px, 4.2vw, 56px);
+}
+
+.sf-display-md {
+  font-size: clamp(24px, 3vw, 36px);
+}
+
+.sf-lede {
+  font-size: clamp(16px, 1.6vw, 19px);
+  line-height: 1.65;
+  color: var(--ms-color-fg-muted);
+  max-width: 56ch;
+  text-wrap: pretty;
+}
+
+/* 发丝分隔:代替边框的唯一线条用法 */
+.sf-hairline {
+  border: 0;
+  height: 1px;
+  background: var(--sf-hairline);
+  margin: 0;
+}
+
+/* 下划线动效链接(hover 从左划入) */
+.sf-link {
+  color: inherit;
+  text-decoration: none;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  transition: background-size var(--ms-duration-base) var(--ms-ease-standard);
+  padding-bottom: 2px;
+}
+
+.sf-link:hover,
+.sf-link:focus-visible {
+  background-size: 100% 1px;
+}
+
 /* ============================================================================
- * 商品主视觉(.pv)—— 莫兰迪抽象色卡(Aesop 式)。
- * 不画物件:低饱和莫兰迪色场 + 颗粒材质 + 双层柔光景深 + 巨大编号水印 +
- * 展览级大衬线排版 + 极致留白。靠比例、留白、字体质感取胜,
- * 10 个商品是「同款不同色」的一组高级色卡,天然协调、绝不 clip-art。
+ * ProductVisual —— 艺术化商品视觉配方(.pv-*)
+ * 分层:色场底 → 长投影 → 形体(渐变塑形)→ 颗粒。颜色全部由行内变量
+ * --pv-field/tint/body/shade 注入,高光暗部用 color-mix(in oklab) 派生。
  * ========================================================================== */
+
 .pv {
-  --pv-ink: color-mix(in oklab, #241a10 82%, var(--pv-accent));
   position: relative;
-  aspect-ratio: 4 / 5;
-  inline-size: 100%;
   overflow: hidden;
   isolation: isolate;
-  /* 建立容器上下文:内部 cqi 字号相对卡片自身缩放(小屏卡片也不会字太小) */
-  container-type: inline-size;
-  /* 莫兰迪色场:accent 大量揉进暖纸白 → 极低饱和(高明度、低彩度) */
-  background-color: color-mix(in oklab, var(--pv-accent) 15%, #ece4d4);
-  background-image:
-    radial-gradient(92% 70% at 26% 10%, color-mix(in oklab, #fff 58%, transparent), transparent 58%),
+  border-radius: var(--sf-radius);
+  background:
     radial-gradient(
-      104% 82% at 82% 110%,
-      color-mix(in oklab, var(--pv-accent) 32%, #cbbca2),
-      transparent 62%
+      120% 85% at 18% -4%,
+      color-mix(in oklab, white, transparent 52%) 0%,
+      transparent 56%
+    ),
+    linear-gradient(168deg, var(--pv-tint) 0%, var(--pv-field) 64%);
+}
+
+.pv-portrait {
+  aspect-ratio: 4 / 5;
+}
+
+.pv-square {
+  aspect-ratio: 1;
+}
+
+.pv-wide {
+  aspect-ratio: 8 / 5;
+}
+
+/* 细颗粒:SVG 湍流噪点,soft-light 叠底,杀平面感 */
+.pv-grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.4;
+  mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+}
+
+/* 地面接触阴影:形体"落"在色场上的关键 */
+.pv-floor {
+  position: absolute;
+  left: 50%;
+  bottom: 12.5%;
+  width: 56%;
+  height: 6.5%;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    color-mix(in oklab, var(--pv-shade), transparent 40%) 0%,
+    transparent 72%
+  );
+  filter: blur(7px);
+}
+
+.pv-form {
+  position: absolute;
+  left: 50%;
+  bottom: 16%;
+  transform: translateX(-50%);
+}
+
+/* 球体(灯 / 烛台):三段径向渐变塑体积 + 内侧收边 */
+.pv-form-sphere {
+  width: 46%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 33% 27%,
+    color-mix(in oklab, var(--pv-body), white 45%) 0%,
+    var(--pv-body) 52%,
+    var(--pv-shade) 104%
+  );
+  box-shadow: inset -10px -16px 30px color-mix(in oklab, var(--pv-shade), transparent 55%);
+}
+
+/* 灯具:体外一圈暖光晕(装饰性光效,尊重 data-ms-fx 总闸) */
+.pv-form[data-luminous] {
+  box-shadow:
+    inset -10px -16px 30px color-mix(in oklab, var(--pv-shade), transparent 62%),
+    0 0 64px 10px color-mix(in oklab, var(--pv-body), transparent 38%);
+}
+
+:root[data-ms-fx="off"] .pv-form[data-luminous] {
+  box-shadow: inset -10px -16px 30px color-mix(in oklab, var(--pv-shade), transparent 62%);
+}
+
+/* 拱形(花瓶 / 书立):顶部全圆角,纵向明暗 + 侧向核心影 */
+.pv-form-arch {
+  width: 40%;
+  height: 54%;
+  border-radius: 999px 999px 10px 10px;
+  background:
+    linear-gradient(
+      92deg,
+      color-mix(in oklab, var(--pv-shade), transparent 55%) 0%,
+      transparent 26%,
+      color-mix(in oklab, white, transparent 74%) 44%,
+      transparent 62%,
+      color-mix(in oklab, var(--pv-shade), transparent 42%) 100%
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--pv-body), white 24%) 0%,
+      var(--pv-body) 48%,
+      var(--pv-shade) 118%
     );
 }
 
-/* 双层柔光景深:摄影棚式体积光,消除平涂塑料感 */
-.pv::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background: radial-gradient(
-    58% 42% at 30% 16%,
-    color-mix(in oklab, #fff 42%, transparent),
-    transparent 60%
+/* 圆柱(水瓶 / 落地灯):横向五段渐变 + 顶盖椭圆 */
+.pv-form-cylinder {
+  width: 28%;
+  height: 56%;
+  border-radius: 14px 14px 10px 10px;
+  background: linear-gradient(
+    90deg,
+    var(--pv-shade) 0%,
+    var(--pv-body) 30%,
+    color-mix(in oklab, var(--pv-body), white 40%) 47%,
+    var(--pv-body) 72%,
+    var(--pv-shade) 100%
   );
 }
 
-/* 颗粒材质叠层(soft-light),让色场有纸感而非纯色块 */
-.pv__grain {
+.pv-form-cylinder .pv-cap {
   position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  opacity: 0.45;
-  mix-blend-mode: soft-light;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+  top: -2.5%;
+  left: 0;
+  width: 100%;
+  height: 6%;
+  border-radius: 50%;
+  background: color-mix(in oklab, var(--pv-body), white 28%);
 }
 
-/* 巨大编号水印:杂志式视觉锚点(极淡),让色卡有大尺度肌理而非纯小字排布 */
-.pv__watermark {
-  position: absolute;
-  z-index: 0;
-  inset-block-start: -8%;
-  inset-inline-end: -2%;
-  font-family: var(--ms-font-display);
-  font-size: 52cqi;
-  font-weight: 500;
-  line-height: 1;
-  font-variant-numeric: tabular-nums;
-  color: color-mix(in oklab, var(--pv-ink) 9%, transparent);
-  pointer-events: none;
-  user-select: none;
-}
-
-/* 排版卡:三段式,内容压到下部,上方大量留白(约 60%) */
-.pv__card {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
+/* 叠盘(碗组):三只递减的椭圆盘,自下而上渐亮 */
+.pv-form-stack {
+  width: 50%;
+  height: 40%;
   display: flex;
-  flex-direction: column;
-  padding: clamp(1.1rem, 6.5cqi, 2.3rem);
-  color: var(--pv-ink);
-}
-
-.pv__top {
-  display: flex;
+  flex-direction: column-reverse;
   align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
+  gap: 4%;
 }
 
-.pv__index {
-  font-family: var(--ms-font-display);
-  font-size: clamp(0.72rem, 3.4cqi, 0.92rem);
-  letter-spacing: 0.02em;
-  font-variant-numeric: tabular-nums;
-  color: color-mix(in oklab, var(--pv-ink) 55%, transparent);
-}
-
-.pv__tag {
-  font-size: clamp(0.5rem, 2.4cqi, 0.62rem);
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: color-mix(in oklab, var(--pv-ink) 60%, transparent);
-  white-space: nowrap;
-}
-
-/* 中部焦点:产地小字 + 展览级大衬线名,margin-top:auto 把它压到下部 */
-.pv__mid {
-  margin-block-start: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5em;
-}
-
-.pv__origin {
-  font-size: clamp(0.52rem, 2.5cqi, 0.66rem);
-  font-weight: 600;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  color: color-mix(in oklab, var(--pv-ink) 58%, transparent);
-}
-
-.pv__name {
-  margin: 0;
-  font-family: var(--ms-font-display);
-  font-weight: 500;
-  /* 展览级大字:与元数据形成强烈字号对比,这是脱离「档案卡」的灵魂 */
-  font-size: clamp(1.5rem, 13cqi, 3rem);
-  line-height: 0.98;
-  letter-spacing: -0.02em;
-  color: var(--pv-ink);
-  text-wrap: balance;
-}
-
-.pv__bottom {
-  margin-block-start: 1.15em;
-}
-
-.pv__flavors {
-  font-size: clamp(0.54rem, 2.7cqi, 0.68rem);
-  letter-spacing: 0.03em;
-  color: color-mix(in oklab, var(--pv-ink) 70%, transparent);
-}
-
-/* ================= 商品卡 ===================== */
-.db-pcard {
-  display: flex;
-  flex-direction: column;
-  block-size: 100%;
-}
-
-.db-pcard__media {
-  position: relative;
-  border-radius: clamp(0.85rem, 1.6vw, 1.2rem);
-  overflow: hidden;
-  box-shadow: 0 20px 44px -30px rgba(40, 28, 16, 0.35);
-  transition: box-shadow 0.4s var(--db-ease);
-}
-
-.db-pcard:hover .db-pcard__media {
-  box-shadow: 0 30px 56px -28px rgba(40, 28, 16, 0.42);
-}
-
-.db-pcard__media .pv {
-  transition: transform 0.7s var(--db-ease);
-}
-
-.db-pcard:hover .pv {
-  transform: scale(1.045);
-}
-
-.db-pcard__badges {
-  position: absolute;
-  inset-block-start: 0.8rem;
-  inset-inline: 0.8rem;
-  z-index: 2;
-  display: flex;
-  justify-content: space-between;
-  pointer-events: none;
-}
-
-.db-pcard__tag {
-  font-size: 0.66rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  padding: 0.28em 0.6em;
-  border-radius: 999px;
-  background: var(--ms-color-surface-raised);
-  color: var(--ms-color-fg);
-  box-shadow: 0 6px 16px -8px rgba(26, 18, 8, 0.4);
-}
-
-.db-pcard__tag--sale {
-  background: var(--ms-color-primary);
-  color: var(--ms-color-on-primary);
-}
-
-.db-pcard__body {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-  padding-block-start: 1rem;
-  flex: 1;
-}
-
-.db-pcard__meta {
-  font-size: 0.74rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--ms-color-fg-subtle);
-}
-
-.db-pcard__name {
-  font-family: var(--ms-font-display);
-  font-size: 1.12rem;
-  font-weight: 600;
-  line-height: 1.25;
-  color: var(--ms-color-fg);
-  transition: color 0.2s ease;
-}
-
-.db-pcard:hover .db-pcard__name {
-  color: var(--ms-color-accent);
-}
-
-.db-pcard__foot {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  margin-block-start: 0.55rem;
-}
-
-.db-add {
-  display: inline-grid;
-  place-items: center;
-  inline-size: 2.4rem;
-  block-size: 2.4rem;
-  border: 0;
-  border-radius: 999px;
-  background: var(--ms-color-primary);
-  color: var(--ms-color-on-primary);
-  cursor: pointer;
-  flex: 0 0 auto;
-  transition:
-    transform 0.25s var(--db-ease),
-    background-color 0.2s ease;
-}
-
-.db-add:hover {
-  background: var(--ms-color-primary-hover);
-  transform: scale(1.08);
-}
-
-.db-add svg {
-  inline-size: 1.05rem;
-  block-size: 1.05rem;
-}
-
-/* ================= 顶部导航 ===================== */
-.db-header {
-  position: sticky;
-  inset-block-start: 0;
-  z-index: 50;
-  inline-size: 100%;
-  transition:
-    background-color 0.35s ease,
-    backdrop-filter 0.35s ease,
-    box-shadow 0.35s ease;
-}
-
-.db-header.is-scrolled {
-  background-color: color-mix(in oklab, var(--ms-color-bg) 82%, transparent);
-  backdrop-filter: blur(16px) saturate(1.4);
-  /* 去 1px 硬底线,改极柔下沉阴影分隔 */
-  box-shadow: 0 10px 30px -20px color-mix(in oklab, var(--ms-color-fg) 22%, transparent);
-}
-
-.db-header__inner {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  block-size: 4.5rem;
-}
-
-.db-header__nav {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  margin-inline: auto;
-}
-
-.db-header__link {
-  position: relative;
-  padding: 0.5rem 0.85rem;
-  font-size: 0.92rem;
-  color: var(--ms-color-fg-muted);
-  transition: color 0.2s ease;
-}
-
-.db-header__link::after {
-  content: "";
-  position: absolute;
-  inset-inline: 0.85rem;
-  inset-block-end: 0.35rem;
-  block-size: 1px;
-  background: currentColor;
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.3s var(--db-ease);
-}
-
-.db-header__link:hover {
-  color: var(--ms-color-fg);
-}
-
-.db-header__link:hover::after {
-  transform: scaleX(1);
-}
-
-.db-header__actions {
-  display: flex;
-  align-items: center;
-  gap: 0.15rem;
-}
-
-.db-icon-btn {
-  display: inline-grid;
-  place-items: center;
-  inline-size: 2.5rem;
-  block-size: 2.5rem;
-  border: 0;
-  border-radius: 999px;
-  background: transparent;
-  color: var(--ms-color-fg);
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.db-icon-btn:hover {
-  background-color: color-mix(in oklab, var(--ms-color-fg) 7%, transparent);
-}
-
-@media (max-width: 860px) {
-  .db-header__nav {
-    display: none;
-  }
-}
-
-/* ================= Hero ===================== */
-.db-hero {
-  position: relative;
-  padding-block: clamp(2.5rem, 6vw, 5.5rem) clamp(3rem, 7vw, 6rem);
-  overflow: hidden;
-}
-
-.db-hero__grid {
-  display: grid;
-  gap: clamp(2.5rem, 5vw, 4.5rem);
-  align-items: center;
-}
-
-@media (min-width: 920px) {
-  .db-hero__grid {
-    grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.98fr);
-  }
-}
-
-.db-hero__title {
-  font-family: var(--ms-font-display);
-  font-weight: 600;
-  font-size: clamp(2.7rem, 6.6vw, 5rem);
-  line-height: 1.02;
-  letter-spacing: -0.025em;
-  margin-block: 1.5rem 0;
-  text-wrap: balance;
-}
-
-.db-hero__title em {
-  font-style: italic;
-  color: var(--ms-color-accent);
-}
-
-.db-hero__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.85rem;
-  margin-block-start: 2.25rem;
-}
-
-.db-hero__meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.5rem 2.5rem;
-  margin-block-start: 2.75rem;
-}
-
-.db-hero__meta dt {
-  font-family: var(--ms-font-display);
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: var(--ms-color-fg);
-}
-
-.db-hero__meta dd {
-  margin: 0.15rem 0 0;
-  font-size: 0.82rem;
-  color: var(--ms-color-fg-subtle);
-}
-
-.db-hero__art {
-  position: relative;
-}
-
-.db-hero__art .pv {
-  border-radius: clamp(1rem, 2vw, 1.5rem);
-  box-shadow: 0 50px 80px -45px rgba(26, 18, 8, 0.5);
-}
-
-.db-hero__chip {
-  position: absolute;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  gap: 0.55rem;
-  padding: 0.6rem 0.95rem;
-  /* 毛玻璃:半透明 surface + 背景模糊,融进柔和 hero 而非硬白卡片 */
-  background-color: color-mix(in oklab, var(--ms-color-surface) 72%, transparent);
-  backdrop-filter: blur(12px) saturate(1.2);
-  border-radius: 999px;
-  box-shadow: 0 14px 32px -22px rgba(26, 18, 8, 0.32);
-  font-size: 0.85rem;
-  white-space: nowrap;
-}
-
-/* ================= 商品详情两栏 ===================== */
-.db-product__grid {
-  display: grid;
-  gap: clamp(1.75rem, 4vw, 3.5rem);
-  align-items: start;
-}
-
-@media (min-width: 900px) {
-  .db-product__grid {
-    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
-  }
-}
-
-.db-product__media .pv {
-  border-radius: clamp(0.85rem, 2vw, 1.35rem);
-}
-
-/* ================= Footer ===================== */
-.db-footer {
-  position: relative;
-  padding-block: clamp(3.5rem, 6vw, 5rem) 2.5rem;
-  background-color: color-mix(in oklab, var(--ms-color-surface) 55%, var(--ms-color-bg));
-}
-
-.db-footer__top {
-  display: grid;
-  gap: 2.75rem;
-}
-
-@media (min-width: 760px) {
-  .db-footer__top {
-    grid-template-columns: 1.6fr repeat(3, 1fr);
-  }
-}
-
-.db-footer__col-title {
-  margin-block-end: 1rem;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--ms-color-fg-subtle);
-}
-
-.db-footer__link {
+.pv-form-stack i {
   display: block;
-  padding-block: 0.36rem;
-  font-size: 0.9rem;
-  color: var(--ms-color-fg-muted);
-  transition: color 0.2s ease;
+  border-radius: 999px;
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--pv-body), white 26%),
+    var(--pv-shade) 135%
+  );
 }
 
-.db-footer__link:hover {
-  color: var(--ms-color-accent);
+.pv-form-stack i:nth-child(1) {
+  width: 100%;
+  height: 32%;
 }
 
-.db-footer__bottom {
+.pv-form-stack i:nth-child(2) {
+  width: 78%;
+  height: 30%;
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--pv-body), white 34%),
+    var(--pv-shade) 150%
+  );
+}
+
+.pv-form-stack i:nth-child(3) {
+  width: 56%;
+  height: 28%;
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--pv-body), white 42%),
+    var(--pv-shade) 165%
+  );
+}
+
+/* 织物卷(毯 / 靠垫):横置圆枕 + 两道柔和折痕 */
+.pv-form-roll {
+  width: 60%;
+  height: 27%;
+  border-radius: 999px;
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--pv-body), white 26%) 0%,
+    var(--pv-body) 52%,
+    var(--pv-shade) 130%
+  );
+}
+
+.pv-form-roll .pv-fold {
+  position: absolute;
+  top: 7%;
+  bottom: 7%;
+  width: 9%;
+  border-radius: 999px;
+  filter: blur(3px);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in oklab, var(--pv-shade), transparent 52%) 50%,
+    transparent 100%
+  );
+}
+
+.pv-form-roll .pv-fold:nth-child(1) {
+  left: 30%;
+}
+
+.pv-form-roll .pv-fold:nth-child(2) {
+  left: 58%;
+}
+
+/* 浅盘(托盘 / 壁灯 / 桌旗):宽扁椭圆 + 边缘高光 */
+.pv-form-disc {
+  width: 56%;
+  height: 15%;
+  border-radius: 50%;
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--pv-body), white 34%) 0%,
+    var(--pv-body) 55%,
+    var(--pv-shade) 125%
+  );
+  box-shadow: inset 0 2px 6px color-mix(in oklab, white, transparent 55%);
+}
+
+/* --------------------------- 商品卡(列表/精选) --------------------------- */
+
+.sf-product-card {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.sf-product-card .pv {
+  transition: transform calc(var(--ms-duration-base) * 2) var(--ms-ease-emphasized);
+}
+
+.sf-product-card:hover .pv,
+.sf-product-card:focus-visible .pv {
+  transform: translateY(-4px);
+}
+
+.sf-product-card .pv-form {
+  transition: transform calc(var(--ms-duration-base) * 2.4) var(--ms-ease-emphasized);
+}
+
+.sf-product-card:hover .pv-form {
+  transform: translateX(-50%) scale(1.035);
+}
+
+.sf-product-meta {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
+  align-items: baseline;
   justify-content: space-between;
-  gap: 1rem;
-  margin-block-start: 3rem;
-  padding-block-start: 1.75rem;
-  border-block-start: 1px solid color-mix(in oklab, var(--ms-color-fg) 9%, transparent);
-  font-size: 0.84rem;
+  gap: 16px;
+  padding-top: 14px;
+}
+
+.sf-product-name {
+  font-size: 15px;
+  font-weight: 550;
+  letter-spacing: -0.01em;
+}
+
+.sf-product-tagline {
+  margin-top: 3px;
+  font-size: 13px;
+  color: var(--ms-color-fg-muted);
+}
+
+.sf-product-price {
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ms-color-fg);
+  white-space: nowrap;
+}
+
+.sf-price-compare {
+  margin-right: 8px;
   color: var(--ms-color-fg-subtle);
+  text-decoration: line-through;
+}
+
+/* --------------------------- 通用微调(买家端) --------------------------- */
+
+/* 大屏外的容器节流 */
+@media (max-width: 720px) {
+  .sf-section {
+    padding-block: clamp(56px, 14vw, 88px);
+  }
+}
+
+/* 减动效偏好 / 动效总闸关闭时,卡片悬浮位移也一并取消 */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+:root[data-ms-motion="off"] .sf-product-card .pv,
+:root[data-ms-motion="off"] .sf-product-card .pv-form {
+  transition: none;
 }

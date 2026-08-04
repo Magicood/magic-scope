@@ -91,17 +91,24 @@
   user-select: none;
 }
 
-/* hover 标题 / 聚焦标题内任意 / 聚焦锚点本身 → 浮出 */
-.ms-heading--anchored:hover .ms-heading__anchor,
+/* hover 标题 / 聚焦标题内任意 / 聚焦锚点本身 → 浮出
+   (:hover 变体包进 hover 守卫防触屏粘滞;焦点变体留在守卫外,键盘可达性不依赖 hover 能力) */
+@media (hover: hover) {
+  .ms-heading--anchored:hover .ms-heading__anchor {
+    opacity: 1;
+  }
+}
 .ms-heading--anchored:focus-within .ms-heading__anchor,
 .ms-heading__anchor:focus-visible {
   opacity: 1;
 }
 
-.ms-heading__anchor:hover {
-  color: var(--ms-c-hover, var(--ms-color-primary-hover));
-  text-decoration: underline;
-  text-underline-offset: 0.2em;
+@media (hover: hover) {
+  .ms-heading__anchor:hover {
+    color: var(--ms-c-hover, var(--ms-color-primary-hover));
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
 }
 
 /* 键盘聚焦可见焦点环(无视觉 hover 也能定位) */

@@ -2,6 +2,7 @@
 import '@testing-library/jest-dom/vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
+import { MessagesProvider } from '../../i18n';
 import { buildRange, clampPage, pageRange } from './logic';
 import { Pagination } from './Pagination';
 
@@ -72,6 +73,31 @@ describe('Pagination', () => {
     fireEvent.change(select, { target: { value: '20' } });
     expect(onPageSizeChange).toHaveBeenCalledWith(20);
     expect(onChange).toHaveBeenCalledWith(1, 20);
+  });
+
+  it('sizeChanger / jumper 文案走字典,可被 MessagesProvider 覆盖(含 size 插值)', () => {
+    render(
+      <MessagesProvider
+        messages={{
+          'pagination.sizeLabel': 'Rows per page',
+          'pagination.pageSize': '{size} / page',
+          'pagination.jump': 'Go to',
+        }}
+      >
+        <Pagination
+          page={1}
+          totalItems={200}
+          pageSize={10}
+          pageSizeOptions={[10, 20]}
+          showQuickJumper
+          onPageChange={() => {}}
+        />
+      </MessagesProvider>,
+    );
+    const select = screen.getByLabelText('Rows per page') as HTMLSelectElement;
+    expect(select).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: '20 / page' })).toBeInTheDocument();
+    expect(screen.getByText('Go to')).toBeInTheDocument();
   });
 
   it('快速跳页:回车触发 onQuickJump 与 onPageChange', () => {

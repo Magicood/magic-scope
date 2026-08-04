@@ -6,7 +6,7 @@
 
 ## 说明
 
-自研、零依赖,消费 @magic-scope/tokens 的 --ms-* 变量。
+自研、零依赖,消费 @magic-scope/tokens 的 --ms-&#42; 变量。
 
 结构为「− 按钮 + input&#91;type=number] + ＋ 按钮」的整体描边控件,内部以显示文本管理,避免受控数字框打不出小数点 / 中间态的老问题。
 
@@ -37,7 +37,7 @@
 | `className` | `string` | — | 外层容器 className(组件根)。 |
 | `fieldClassName` | `string` | — | 原生 input 自身 className。 |
 | `stepClassName` | `string` | — | 两个步进按钮 className。 |
-| `...props` | `ComponentPropsWithoutRef<'input'>` | — | 透传原生 input 属性(className / style / aria-* / 事件等)。 |
+| `...props` | `ComponentPropsWithoutRef<'input'>` | — | 透传原生 input 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
 

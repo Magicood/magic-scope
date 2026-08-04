@@ -73,8 +73,10 @@
     transform var(--ms-dur-base, 200ms) var(--ms-ease-standard, ease);
 }
 
-.ms-image--previewable:hover .ms-image__img--loaded {
-  transform: scale(1.03);
+@media (hover: hover) {
+  .ms-image--previewable:hover .ms-image__img--loaded {
+    transform: scale(1.03);
+  }
 }
 
 .ms-image__img:focus-visible {
@@ -236,10 +238,12 @@
     border-color var(--ms-dur-base, 200ms) var(--ms-ease-standard, ease);
 }
 
-.ms-image__tool:hover:not(:disabled) {
-  color: var(--ms-color-fg);
-  background-color: var(--ms-color-surface-sunken);
-  border-color: var(--ms-color-border);
+@media (hover: hover) {
+  .ms-image__tool:hover:not(:disabled) {
+    color: var(--ms-color-fg);
+    background-color: var(--ms-color-surface-sunken);
+    border-color: var(--ms-color-border);
+  }
 }
 
 .ms-image__tool:focus-visible {

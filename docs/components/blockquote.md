@@ -20,7 +20,7 @@
 | `asChild` | `boolean` | `false` | 渲染为唯一子元素并把样式/props 合并上去(Slot 模式,如包裹自定义容器)。 |
 | `variant` | `"bordered" \| "filled" \| "card" \| "plain"` | `bordered` | 视觉变体:左强调条 / 柔底块 / 卡片 / 纯文字。默认 bordered。 |
 | `tone` | `"primary" \| "accent" \| "success" \| "warning" \| "danger" \| "info" \| "neutral"` | — | 语义色调(复用全库 tone resolver 的 --ms-c / --ms-c-soft / --ms-c-glow)。 |
-| `size` | `"sm" \| "md" \| "lg"` | `md` | 尺寸(字号走 --ms-type-step-*、行高走 --ms-leading-*)。默认 md。 |
+| `size` | `"sm" \| "md" \| "lg"` | `md` | 尺寸(字号走 --ms-type-step-&#42;、行高走 --ms-leading-&#42;)。默认 md。 |
 | `accentSide` | `"end" \| "start"` | `start` | 强调条/缩进所在侧(逻辑值,RTL 友好)。默认 start。 |
 | `cite` | `ReactNode` | — | 出处槽:渲染为 &lt;footer&gt;&lt;cite&gt;…&lt;/cite&gt;&lt;/footer&gt;(语义出处)。 |
 | `citeUrl` | `string` | — | 引文来源 URL,写入真实 blockquote 的原生 cite 属性(机器可读出处)。 |
@@ -29,7 +29,7 @@
 | `gradient` | `boolean` | `false` | 渐变强调条(tone → glow,基于 background;不支持环境回退实色)。 |
 | `glow` | `"strong" \| "off" \| "soft"` | `off` | 强调条/底块发光(受全局 --ms-fx-glow 调制,data-ms-fx=off 时消失)。默认 off。 |
 | `classNames` | `BlockquoteClassNames` | — | 子部件 class 覆盖。 |
-| `...props` | `ComponentPropsWithoutRef<'blockquote'>` | — | 透传原生 blockquote 属性(className / style / aria-* / 事件等)。 |
+| `...props` | `ComponentPropsWithoutRef<'blockquote'>` | — | 透传原生 blockquote 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
 

@@ -6,7 +6,7 @@
 
 ## 说明
 
-自研、零依赖,消费 @magic-scope/tokens 的 --ms-* 变量。
+自研、零依赖,消费 @magic-scope/tokens 的 --ms-&#42; 变量。
 
 surface-raised 底 + 1px 描边 + 加粗底边模拟键帽立体感,radius-sm、font-mono、紧凑内边距。
 
@@ -31,7 +31,7 @@ surface-raised 底 + 1px 描边 + 加粗底边模拟键帽立体感,radius-sm、
 | `tone` | `"primary" \| "accent" \| "success" \| "warning" \| "danger" \| "info" \| "neutral"` | `neutral` | 语义色调,经全库 tone resolver 派生配色与发光。默认 neutral。 |
 | `asChild` | `boolean` | `false` | 渲染为子元素并保留键帽样式(Radix Slot 风格;由子元素自带内容)。 |
 | `classNames` | `{ key?: string; separator?: string; } \| undefined` | — | 关键子部件 className(键帽 / 分隔符)。 |
-| `...props` | `ComponentPropsWithoutRef<'kbd'>` | — | 透传原生 kbd 属性(className / style / aria-* / 事件等)。 |
+| `...props` | `ComponentPropsWithoutRef<'kbd'>` | — | 透传原生 kbd 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
 
@@ -46,5 +46,5 @@ surface-raised 底 + 1px 描边 + 加粗底边模拟键帽立体感,radius-sm、
 | 标签 | `kbd` `keyboard` `key` `shortcut` `hotkey` `keycap` `combo` `platform` `mac` `tone` `data-display` |
 
 ::: details 需求原文 / 设计意图
-键盘按键样式组件,surface-raised 底配加粗底边模拟键帽立体感,等宽字号展示快捷键。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-* 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion。深度补强:keys 多键帽解析(纯函数 logic.ts,可平移 core)+ 平台符号映射(cmd→⌘ ctrl→⌃ alt→⌥ shift→⇧ enter→⏎ esc→⎋ del→⌫)+ tone 色调 + lg 档 + 可定制 separator。
+键盘按键样式组件,surface-raised 底配加粗底边模拟键帽立体感,等宽字号展示快捷键。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-&#42; 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion。深度补强:keys 多键帽解析(纯函数 logic.ts,可平移 core)+ 平台符号映射(cmd→⌘ ctrl→⌃ alt→⌥ shift→⇧ enter→⏎ esc→⎋ del→⌫)+ tone 色调 + lg 档 + 可定制 separator。
 :::

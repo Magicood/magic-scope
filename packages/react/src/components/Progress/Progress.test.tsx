@@ -2,6 +2,7 @@
 import '@testing-library/jest-dom/vitest';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
+import { MessagesProvider } from '../../i18n';
 import { clampProgress, Progress } from './Progress';
 
 describe('Progress', () => {
@@ -106,5 +107,14 @@ describe('Progress', () => {
   it('无可见 label 且未传 aria-label 时给可读兜底', () => {
     render(<Progress value={10} />);
     expect(screen.getByRole('progressbar', { name: '进度' })).toBeInTheDocument();
+  });
+
+  it('兜底名走字典 progress.label,可被 MessagesProvider 覆盖', () => {
+    render(
+      <MessagesProvider messages={{ 'progress.label': 'Progress' }}>
+        <Progress value={10} />
+      </MessagesProvider>,
+    );
+    expect(screen.getByRole('progressbar', { name: 'Progress' })).toBeInTheDocument();
   });
 });

@@ -51,10 +51,12 @@
 }
 
 /* —— hover:面板微亮 + 文字提亮(tone) + 头部内侧收敛暖辉(tone glow) —— */
-.ms-accordion__trigger:not(:disabled):hover {
-  background-color: var(--ms-color-surface-raised);
-  color: var(--ms-c-hover);
-  box-shadow: inset 0 0 calc(8px * var(--ms-fx-glow, 1)) -16px var(--ms-c-glow);
+@media (hover: hover) {
+  .ms-accordion__trigger:not(:disabled):hover {
+    background-color: var(--ms-color-surface-raised);
+    color: var(--ms-c-hover);
+    box-shadow: inset 0 0 calc(8px * var(--ms-fx-glow, 1)) -16px var(--ms-c-glow);
+  }
 }
 
 /* —— focus-visible:干净细环(无发光晕) —— */
@@ -98,8 +100,10 @@
   font-size: 0.75rem;
 }
 
-.ms-accordion__trigger:not(:disabled):hover .ms-accordion__icon {
-  color: var(--ms-c-hover);
+@media (hover: hover) {
+  .ms-accordion__trigger:not(:disabled):hover .ms-accordion__icon {
+    color: var(--ms-c-hover);
+  }
 }
 
 .ms-accordion__item--open .ms-accordion__icon {

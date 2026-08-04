@@ -30,7 +30,7 @@ a11y:外层 role=group + i18n aria-label,每格独立「第 N 位」aria-label �
 | `placeholder` | `string` | — | 单字符占位符,逐格显示。 |
 | `aria-label` | `string` | — | 整组可访问名;默认走 i18n 的 pinInput.label。 |
 | `classNames` | `PinInputClassNames` | — | 子部件类名留口(root / cell)。 |
-| `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-* / 事件等)。 |
+| `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
 
