@@ -77,5 +77,5 @@ export const meta: ComponentMeta = {
     },
   ],
   spread: 'div',
-  alsoProps: ['Step'],
+  alsoProps: ['Steps.Step'],
 };

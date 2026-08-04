@@ -402,9 +402,17 @@ if (missingInManifest.length > 0 || missingInMeta.length > 0) {
     `meta 与 manifest 不对齐 —— manifest 缺:[${missingInManifest.join(', ')}];meta 缺:[${missingInMeta.join(', ')}]`,
   );
 }
-const noProps = metas.filter((m) => getRows(m).length === 0).map((m) => m.id);
-if (noProps.length > 0) {
-  console.warn(`  ⚠ ${noProps.length} 个组件在 props.json 中查不到任何行:${noProps.join(', ')}`);
+// 参数表红线:每个组件的主键(propsName ?? name)与 alsoProps 各键都必须在 props.json 命中且非空。
+// extract-props 的 docgen 归属缺陷曾让 12 个主组件键静默消失、参数表整页变空 —— 硬失败,不再仅警告。
+const missingPropsKeys = metas.flatMap((m) =>
+  [m.propsName ?? m.name, ...(m.alsoProps ?? [])]
+    .filter((k) => !PROPS[k]?.length)
+    .map((k) => `${m.id} → ${k}`),
+);
+if (missingPropsKeys.length > 0) {
+  throw new Error(
+    `以下组件的 props 键在 props.json 中查不到任何行(先跑 pnpm gen:props;若组件确实改名/删除请同步 meta):${missingPropsKeys.join('、')}`,
+  );
 }
 
 // 组件页(components/ 目录整体为生成物:先清后写,组件删除时旧页不残留)。
