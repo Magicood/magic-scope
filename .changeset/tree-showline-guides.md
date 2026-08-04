@@ -19,6 +19,8 @@ Tree 修复 `showLine` 完全失效,并改为「每层一条」的层级引导�
 
 RTL:平铺背景与长度型 `background-position` 都是物理轴(不像原来的 `border-inline-start` 自带方向感知),故补了一条 `:dir(rtl)` 规则从右边缘起算、渐变同时反向;不补的话每条会偏 `|2×相位 − 缩进|`(默认 md 即 6px)。
 
-同时新增一条全库 CSS 静态契约红线(`css-contract.test.ts`):**靠内联轴边框画竖线的盒子必须有块轴高度**。它跨规则合并同一元素的声明后判定 —— 逐条规则看永远看不出这个 bug(`.ms-tree__indent` 只写宽、`.ms-tree--line .ms-tree__indent` 只写边框,单看都合法)。实测全库 95 个 CSS 命中 0 条;把修复前的 `Tree.css` 放回去则精确报出 `Tree/Tree.css:56 .ms-tree__indent`,而不做跨规则合并的朴素版一条都抓不到。
+**兼容性备注(透明写明,勿藏)**:这是本库**首次**使用 `:dir()` 选择器 —— 此前的 RTL 写法只用 `direction` 属性。`:dir()` 的基线是 **Chrome 120+ / Edge 120+ / Safari 16.4+ / Firefox 49+**,符合本项目的 evergreen 策略;低于该基线的浏览器只是 RTL 下导轨相位不翻(每条偏 `|2×相位 − 缩进|`,默认 md 即 6px),LTR 与其余功能不受影响,属可接受的优雅降级。需要覆盖更老浏览器的使用方,可自行加一条 `[dir="rtl"] .ms-tree--line .ms-tree__indent { … }` 兜底。
+
+同时新增全库 CSS 静态契约的**第 6 条**红线(`css-contract.test.ts`):**靠内联轴边框画竖线的盒子必须有块轴高度**。它跨规则合并同一目标元素的声明后判定 —— 逐条规则看永远看不出这个 bug(`.ms-tree__indent` 只写宽、`.ms-tree--line .ms-tree__indent` 只写边框,单看都合法)。判据与其余红线一致,走真实 CSS 解析(`./testing/cssRules` 的 `parseCssRules` / `targetCompound`),不用正则切块。实测全库 100 个 CSS 命中 0 条;把修复前的 `Tree.css` 放回去则精确报出 `components/Tree/Tree.css:59 .ms-tree__indent`,而不做跨规则合并的朴素版一条都抓不到。
 
 验收:Playwright 真浏览器 + 逐像素解码截图,确认导轨落在 `x=14` / `x=36`(正是 level0 / level1 展开箭头中心)、根节点行只有箭头字形无导轨、导轨整行等高且跨行连续;RTL 下同样逐像素确认落在 `x=385.5 / 363.5 / 341.5`,与镜像后的箭头中心逐条对齐。并参数化扫过 md/sm/lg、密度 0.5/0.8/1.25、缩进 0.5rem/3rem、根字号 20px,每层条数与对齐均正确。

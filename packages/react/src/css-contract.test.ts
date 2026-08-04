@@ -56,11 +56,18 @@ const isZeroLength = (value: string): boolean => /^0([a-z%]*)$/.test(value.trim(
 const paintsLine = (value: string): boolean =>
   !/\bnone\b/.test(value) && !/^0\b/.test(value.trim());
 
+/** 声明 + 它所在规则的行号(报错要指到具体那一行)。 */
+interface LocatedDecl {
+  prop: string;
+  value: string;
+  line: number;
+}
+
 /** 把同一目标元素散落在各条规则上的声明并成一份 —— 逐条规则看永远看不出这个 bug:
  *  `.ms-tree__indent` 只写宽、`.ms-tree--line .ms-tree__indent` 只写边框,单看都合法。
  *  归并键与第 3 条红线的 blockAnchored 同源:targetCompound(分支) = 最后一个组合器之后那段。 */
-const unionDeclsByTarget = (text: string): Map<string, { prop: string; value: string; line: number }[]> => {
-  const byTarget = new Map<string, { prop: string; value: string; line: number }[]>();
+const unionDeclsByTarget = (text: string): Map<string, LocatedDecl[]> => {
+  const byTarget = new Map<string, LocatedDecl[]>();
   for (const rule of parseCssRules(text)) {
     for (const branch of rule.branches) {
       const key = targetCompound(branch);
