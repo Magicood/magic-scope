@@ -321,6 +321,18 @@ describe('Table', () => {
     expect(tds[1]).not.toHaveAttribute('data-label');
   });
 
+  it('汇总格带 data-label(字符串表头且提供 renderSummary),空汇总格不带', () => {
+    const cols = [
+      { key: 'name', header: '姓名' },
+      { key: 'age', header: '年龄', renderSummary: () => '55' },
+    ];
+    const { container } = render(<Table columns={cols} data={data} summary />);
+
+    const tds = container.querySelectorAll('.ms-table__foot .ms-table__td--summary');
+    expect(tds[0]).not.toHaveAttribute('data-label'); // 无 renderSummary → 空格,卡片模式由 :empty 隐藏
+    expect(tds[1]).toHaveAttribute('data-label', '年龄');
+  });
+
   it('选择列 / 展开列单元格不带 data-label(卡片模式不渲染空前缀)', () => {
     const { container } = render(
       <Table

@@ -183,18 +183,23 @@
   border: 0;
 }
 
-/* —— 动效降级:reduced-motion 或 data-ms-motion=off 去过渡与图标位移 —— */
+/* —— 动效降级:reduced-motion 或 data-ms-motion=off 去过渡,图标位移改为静态微移 ——
+   静态微移仍是可见绘制,hover 部分进守卫,触屏不粘滞 */
 @media (prefers-reduced-motion: reduce) {
   .ms-link {
     transition: none;
   }
-  .ms-link--external:hover .ms-link__external-icon {
-    transform: translateY(-0.04em);
+  @media (hover: hover) {
+    .ms-link--external:hover .ms-link__external-icon {
+      transform: translateY(-0.04em);
+    }
   }
 }
 [data-ms-motion="off"] .ms-link {
   transition: none;
 }
-[data-ms-motion="off"] .ms-link--external:hover .ms-link__external-icon {
-  transform: translateY(-0.04em);
+@media (hover: hover) {
+  [data-ms-motion="off"] .ms-link--external:hover .ms-link__external-icon {
+    transform: translateY(-0.04em);
+  }
 }

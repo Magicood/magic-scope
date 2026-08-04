@@ -280,7 +280,12 @@
     inset 2px 0 0 var(--ms-c),
     0 0 0 2px var(--ms-color-focus-ring);
 }
-[data-ms-fx="off"] .ms-menubar__item:hover:not(:disabled, [aria-disabled="true"]),
+/* fx 关断时导轨仍是可见绘制:hover 半边进守卫消触屏粘滞,focus 半边全设备生效 */
+@media (hover: hover) {
+  [data-ms-fx="off"] .ms-menubar__item:hover:not(:disabled, [aria-disabled="true"]) {
+    box-shadow: inset 2px 0 0 var(--ms-c);
+  }
+}
 [data-ms-fx="off"] .ms-menubar__item:focus-visible {
   box-shadow: inset 2px 0 0 var(--ms-c);
 }

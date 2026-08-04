@@ -530,6 +530,10 @@ function TableImpl<T>(props: TableProps<T>, ref: ForwardedRef<HTMLTableElement>)
         {columns.map((col) => (
           <td
             key={col.key}
+            // 卡片模式同样用 data-label 前缀列名(仅有值的汇总格;空汇总格由 CSS :empty 隐藏)
+            data-label={
+              col.renderSummary && typeof col.header === 'string' ? col.header : undefined
+            }
             className={[
               'ms-table__td',
               'ms-table__td--summary',

@@ -96,8 +96,11 @@
     0 1px 2px -1px rgb(0 0 0 / 0.22),
     0 3px 12px -8px rgb(0 0 0 / 0.28);
 }
-[data-ms-fx="off"] .ms-card--interactive:hover {
-  box-shadow: 0 4px 16px -10px rgb(0 0 0 / 0.32);
+/* fx 关断时 hover 换用中性投影(仍是可见绘制):进守卫,触屏不粘滞 */
+@media (hover: hover) {
+  [data-ms-fx="off"] .ms-card--interactive:hover {
+    box-shadow: 0 4px 16px -10px rgb(0 0 0 / 0.32);
+  }
 }
 [data-ms-fx="off"] .ms-card--interactive:focus-visible {
   box-shadow:

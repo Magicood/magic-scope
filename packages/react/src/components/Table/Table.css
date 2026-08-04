@@ -426,13 +426,30 @@
     border: 0;
   }
 
+  /* 键盘焦点进入表头(排序钮 / 全选框)时临时揭示:
+     sr-only 容器内遗留可聚焦控件会产生不可见焦点(WCAG 2.4.7),Tab 穿行时必须可见 */
+  .ms-table__head:focus-within {
+    position: static;
+    inline-size: auto;
+    block-size: auto;
+    margin: 0;
+    overflow: visible;
+    clip-path: none;
+    white-space: normal;
+  }
+  .ms-table__head:focus-within .ms-table__row {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
   .ms-table,
   .ms-table__caption,
   .ms-table__body,
   .ms-table__foot,
   .ms-table__row,
   .ms-table__td,
-  .ms-table__empty {
+  .ms-table__empty,
+  .ms-table__expansion {
     display: block;
     inline-size: 100%;
   }
@@ -497,8 +514,12 @@
     margin-block-start: calc(-1 * var(--ms-space-3) + var(--ms-space-1));
   }
 
-  /* 汇总 / 页脚:整块置底,沿用强调底色 */
+  /* 汇总 / 页脚:整块置底,沿用强调底色;
+     未提供 renderSummary 的空汇总格在卡片模式只会渲染成空条,直接隐藏 */
   .ms-table__foot .ms-table__td--summary {
     border-block-start: none;
+  }
+  .ms-table__foot .ms-table__td--summary:empty {
+    display: none;
   }
 }

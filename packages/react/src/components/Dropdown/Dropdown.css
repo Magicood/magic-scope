@@ -199,8 +199,13 @@
     0 0 0 2px var(--ms-color-focus-ring);
 }
 
-/* 发光总闸关断:项保留导轨,去掉外发光 */
-[data-ms-fx="off"] .ms-dropdown__item:hover:not(:disabled, [aria-disabled="true"]),
+/* 发光总闸关断:项保留导轨,去掉外发光。
+   导轨仍是可见绘制:hover 半边进守卫消触屏粘滞,focus 半边全设备生效 */
+@media (hover: hover) {
+  [data-ms-fx="off"] .ms-dropdown__item:hover:not(:disabled, [aria-disabled="true"]) {
+    box-shadow: inset 2px 0 0 var(--ms-c);
+  }
+}
 [data-ms-fx="off"] .ms-dropdown__item:focus-visible {
   box-shadow: inset 2px 0 0 var(--ms-c);
 }

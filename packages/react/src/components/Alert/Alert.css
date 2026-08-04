@@ -154,8 +154,11 @@
 [data-ms-fx="off"] .ms-alert {
   box-shadow: inset 1px 0 0 0 color-mix(in oklch, var(--ms-c) 30%, transparent);
 }
-[data-ms-fx="off"] .ms-alert:hover {
-  box-shadow: inset 1px 0 0 0 color-mix(in oklch, var(--ms-c) 45%, transparent);
+/* fx 关断时 hover 仍加深起始色条(可见绘制):进守卫,触屏不粘滞 */
+@media (hover: hover) {
+  [data-ms-fx="off"] .ms-alert:hover {
+    box-shadow: inset 1px 0 0 0 color-mix(in oklch, var(--ms-c) 45%, transparent);
+  }
 }
 
 /* —— 动效降级:位移归零,只保留无害的过渡 —— */
