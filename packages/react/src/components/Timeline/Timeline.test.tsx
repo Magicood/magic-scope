@@ -4,6 +4,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
+import { parseCssRules, targetCompound } from '../../testing/cssRules';
 import { Timeline, TimelineItem } from './Timeline';
 
 describe('Timeline + TimelineItem', () => {
@@ -230,18 +231,57 @@ describe('Timeline + TimelineItem', () => {
 });
 
 /* —— 连线贯通的 CSS 静态红线 ——
- * 连线是纯布局产物,jsdom 不排版也不解析 CSS,只能靠静态扫源文件守住已经踩过的两个坑。 */
-describe('Timeline 连线契约(静态扫 CSS)', () => {
-  const css = readFileSync(join(import.meta.dirname, 'Timeline.css'), 'utf8');
+ * 连线是纯布局产物,jsdom 不排版也不解析 CSS,只能靠静态扫源文件守住已经踩过的两个坑。
+ * 判据走真实 CSS 解析而不是正则:正则版曾经三种真回归全都检不出(归属整体对调、
+ * 间距规则被删、间距搬到带修饰符的选择器上),给的是虚假安全感。 */
+describe('Timeline 连线契约(静态解析 CSS)', () => {
+  const rules = parseCssRules(readFileSync(join(import.meta.dirname, 'Timeline.css'), 'utf8'));
+  /** 命中「目标元素是 sel」的全部规则(不管前面挂了多少祖先 / 修饰符)。 */
+  const rulesTargeting = (sel: string) =>
+    rules.filter((r) => r.branches.some((b) => targetCompound(b) === sel));
+  /** 剥掉 :not(...) 内容,用来判断「作用域」而不是「被排除项」。 */
+  const stripNot = (branch: string) => branch.replace(/:not\([^)]*\)/g, '');
 
-  it('条目间距不得写回 .ms-timeline__item —— 写在 li 上节点列就撑不满,连线断在间距处', () => {
-    const itemBlock = css.match(/^\.ms-timeline__item\s*\{([^}]*)\}/m)?.[1] ?? '';
-    expect(itemBlock).not.toMatch(/padding-block/);
-    expect(css).toMatch(/\.ms-timeline__content\s*\{[^}]*padding-block-end/);
+  it('条目间距只能挂在 .ms-timeline__content —— 写到 li 上节点列就撑不满,连线断在间距处', () => {
+    const itemRules = rulesTargeting('.ms-timeline__item');
+    // 找不到就是解析或结构变了,必须显式失败,不能静默退化成恒真
+    expect(itemRules.length).toBeGreaterThan(0);
+    const offenders = itemRules
+      .filter((r) => r.decls.some((d) => /^padding(-block(-end)?)?$/.test(d.prop)))
+      .map((r) => `${r.line}: ${r.selector}`);
+    expect(offenders).toEqual([]);
+
+    const gapCarrier = rulesTargeting('.ms-timeline__content').find((r) =>
+      r.decls.some((d) => d.prop === 'padding-block-end' && d.value.includes('--ms-tl-gap')),
+    );
+    expect(
+      gapCarrier,
+      '.ms-timeline__content 必须用 padding-block-end: var(--ms-tl-gap) 撑出条目间距',
+    ).toBeDefined();
   });
 
   it('连线显隐必须按 reverse 成对 —— column-reverse 下 DOM 末项才是视觉首项', () => {
-    expect(css).toMatch(/\.ms-timeline:not\(\.ms-timeline--reverse\)[^{]*:not\(:last-child\)/);
-    expect(css).toMatch(/\.ms-timeline--reverse[^{]*:not\(:first-child\)/);
+    const showRule = rules.find(
+      (r) =>
+        r.branches.every((b) => targetCompound(b) === '.ms-timeline__line') &&
+        r.decls.some((d) => d.prop === 'display' && d.value === 'block'),
+    );
+    expect(showRule, '找不到把连线设为 display: block 的规则').toBeDefined();
+    if (!showRule) return;
+    expect(showRule.branches).toHaveLength(2);
+
+    const reverseBranch = showRule.branches.find((b) =>
+      stripNot(b).includes('.ms-timeline--reverse'),
+    );
+    const forwardBranch = showRule.branches.find((b) => b.includes(':not(.ms-timeline--reverse)'));
+    expect(reverseBranch, 'reverse 作用域分支缺失').toBeDefined();
+    expect(forwardBranch, '正序作用域分支缺失').toBeDefined();
+    expect(reverseBranch).not.toBe(forwardBranch);
+
+    // 正序:除 DOM 末项外都画;反向:视觉顺序翻转,改为除 DOM 首项外都画
+    expect(forwardBranch).toContain(':not(:last-child)');
+    expect(forwardBranch).not.toContain(':not(:first-child)');
+    expect(reverseBranch).toContain(':not(:first-child)');
+    expect(reverseBranch).not.toContain(':not(:last-child)');
   });
 });

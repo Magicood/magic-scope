@@ -2,6 +2,11 @@
 .ms-timeline {
   /* 条目间距(留给用户的定制口:改这一个变量即可调整全线疏密) */
   --ms-tl-gap: var(--ms-space-6);
+  /* 连线宽度:跟随发丝线 token,但不低于 1px。
+   * 直接用 --ms-hairline(retina 上 0.5px)会让连线在 1.5rem 宽的节点列里居中到 11.75px,
+   * 正好跨在设备像素中缝上被反锯齿摊淡 —— 这条 PR 的主题是让连线看得见,不能反而更淡。
+   * 与 Anchor 的竖向导轨同写法。 */
+  --ms-tl-line-w: max(1px, var(--ms-hairline, 1px));
   margin: 0;
   padding: 0;
   list-style: none;
@@ -44,7 +49,7 @@
 .ms-timeline__line {
   display: none;
   flex: 1 1 auto;
-  inline-size: var(--ms-hairline, 1px);
+  inline-size: var(--ms-tl-line-w);
   min-block-size: 0;
   margin-block-start: 0.125rem;
   background: var(--ms-tl-line, var(--ms-color-border));
@@ -74,7 +79,7 @@
       var(--ms-tl-line, var(--ms-color-border)) 0 60%,
       transparent 60% 100%
     )
-    center / var(--ms-hairline, 1px) 0.5rem repeat-y;
+    center / var(--ms-tl-line-w) 0.5rem repeat-y;
 }
 
 /* —— 圆点:tone 强调色 + surface 描边(静息不发光,克制优雅) —— */
@@ -150,13 +155,13 @@
 }
 
 /* —— mode: right(轴在右)—— 反转每条的方向,内容文字靠右 —— */
-.ms-timeline--right .ms-timeline__item {
+.ms-timeline--right > .ms-timeline__item {
   flex-direction: row-reverse;
 }
-.ms-timeline--right .ms-timeline__content {
+.ms-timeline--right > .ms-timeline__item > .ms-timeline__content {
   text-align: end;
 }
-.ms-timeline--right .ms-timeline__header {
+.ms-timeline--right > .ms-timeline__item > .ms-timeline__content > .ms-timeline__header {
   justify-content: flex-end;
 }
 
@@ -165,7 +170,7 @@
 .ms-timeline--alternate {
   container-type: inline-size;
 }
-.ms-timeline--alternate .ms-timeline__item {
+.ms-timeline--alternate > .ms-timeline__item {
   position: relative;
   inline-size: 100%;
 }
@@ -177,7 +182,7 @@
    *   否则正文区的点击与拖选全被它吃掉。
    * - 圆点 / 图标由基础规则的 align-items: center 居中即可落在中轴,
    *   **不要**再给它们叠 inset-inline-start: 50%(那会把节点推到最右缘)。 */
-  .ms-timeline--alternate .ms-timeline__node {
+  .ms-timeline--alternate > .ms-timeline__item > .ms-timeline__node {
     position: absolute;
     inset-inline: 0;
     inset-block: 0;
@@ -186,24 +191,27 @@
   }
   /* 内容列锁死在中轴的一侧:基础规则的 flex-grow 会把它撑满整行,只给 inline-size 拦不住,
    * 长正文会横过中轴压到轴线上 —— 必须连 flex 一起改写。 */
-  .ms-timeline--alternate .ms-timeline__content {
+  .ms-timeline--alternate > .ms-timeline__item > .ms-timeline__content {
     flex: 0 0 calc(50% - 1.5rem);
     inline-size: calc(50% - 1.5rem);
   }
   /* 奇数(视觉左)、偶数(视觉右) */
-  .ms-timeline--alternate .ms-timeline__item:nth-child(odd) {
+  .ms-timeline--alternate > .ms-timeline__item:nth-child(odd) {
     flex-direction: row;
   }
-  .ms-timeline--alternate .ms-timeline__item:nth-child(odd) .ms-timeline__content {
+  .ms-timeline--alternate > .ms-timeline__item:nth-child(odd) > .ms-timeline__content {
     text-align: end;
   }
-  .ms-timeline--alternate .ms-timeline__item:nth-child(odd) .ms-timeline__header {
+  .ms-timeline--alternate
+    > .ms-timeline__item:nth-child(odd)
+    > .ms-timeline__content
+    > .ms-timeline__header {
     justify-content: flex-end;
   }
-  .ms-timeline--alternate .ms-timeline__item:nth-child(even) {
+  .ms-timeline--alternate > .ms-timeline__item:nth-child(even) {
     flex-direction: row-reverse;
   }
-  .ms-timeline--alternate .ms-timeline__item:nth-child(even) .ms-timeline__content {
+  .ms-timeline--alternate > .ms-timeline__item:nth-child(even) > .ms-timeline__content {
     text-align: start;
   }
 }
@@ -233,7 +241,7 @@
       var(--ms-tl-line, var(--ms-color-border)) 0 60%,
       transparent 60% 100%
     )
-    center / var(--ms-hairline, 1px) 0.5rem repeat-y;
+    center / var(--ms-tl-line-w) 0.5rem repeat-y;
 }
 
 /* —— 呼吸圆点:tone 发光脉冲。强度 / 位移乘 motion-scale;reduced-motion / 总闸停 —— */
@@ -285,7 +293,7 @@
 /* —— 触控:可交互条目热区抬到目标尺寸 —— */
 @media (pointer: coarse) {
   .ms-timeline__item--interactive {
-    min-block-size: max(0, var(--ms-target-min));
+    min-block-size: max(0px, var(--ms-target-min));
   }
 }
 
