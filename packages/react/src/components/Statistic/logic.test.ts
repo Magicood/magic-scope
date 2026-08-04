@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  decimalPlacesOf,
   easeOutCubic,
   formatStatistic,
   groupThousands,
@@ -216,5 +217,22 @@ describe('easeOutCubic', () => {
   it('越界夹紧', () => {
     expect(easeOutCubic(-0.5)).toBe(0);
     expect(easeOutCubic(1.5)).toBe(1);
+  });
+});
+
+describe('decimalPlacesOf', () => {
+  it('整数 → 0 位(动画帧不得拖出小数尾巴)', () => {
+    expect(decimalPlacesOf(1286430)).toBe(0);
+    expect(decimalPlacesOf(0)).toBe(0);
+    expect(decimalPlacesOf(-42)).toBe(0);
+  });
+  it('小数按定点串取位数', () => {
+    expect(decimalPlacesOf(99.2)).toBe(1);
+    expect(decimalPlacesOf(12846.5)).toBe(1);
+    expect(decimalPlacesOf(0.25)).toBe(2);
+  });
+  it('非有限数归 0', () => {
+    expect(decimalPlacesOf(Number.NaN)).toBe(0);
+    expect(decimalPlacesOf(Number.POSITIVE_INFINITY)).toBe(0);
   });
 });

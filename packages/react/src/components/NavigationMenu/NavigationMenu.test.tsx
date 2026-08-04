@@ -2,7 +2,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import '@testing-library/jest-dom/vitest';
-import { fireEvent, render, screen, within } from '@testing-library/react';
+import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import { createRef } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { MessagesProvider } from '../../i18n';
@@ -393,15 +393,46 @@ describe('NavigationMenu', () => {
     expect(viewport.style.getPropertyValue('position-anchor')).toBe('');
   });
 
-  it('回归(anchor):CSS 契约 —— anchor-name 锚 <nav>、position-anchor 锚 Viewport(固定锚名,免疫 inline 覆盖)', () => {
-    // 这些声明都在 `@supports (anchor-name: --x) { … }` 内,锚名固定为 --ms-navmenu-anchor。
-    const supportsBlock = navMenuCss.match(/@supports \(anchor-name:[^)]*\)\s*\{[\s\S]*?\n\}/);
-    expect(supportsBlock).not.toBeNull();
-    const css = supportsBlock?.[0] ?? '';
-    // 触发器侧:.ms-navmenu 设 anchor-name(经 CSS,非 inline)。
-    expect(css).toMatch(/\.ms-navmenu\s*\{[^}]*anchor-name:\s*--ms-navmenu-anchor/);
-    // 面板侧:.ms-navmenu__viewport 设 position-anchor 指向同一锚名 + position-area。
-    expect(css).toMatch(/\.ms-navmenu__viewport\s*\{[^}]*position-anchor:\s*--ms-navmenu-anchor/);
-    expect(css).toMatch(/\.ms-navmenu__viewport\s*\{[^}]*position-area:/);
+  it('回归(anchor):CSS 契约 —— Viewport 不走锚定位(anchor 对祖先无效),用相对 nav 根的 absolute 贴底', () => {
+    // 旧设计让 viewport position-anchor 锚自己的祖先 .ms-navmenu:锚定位对祖先锚点不生效,
+    // viewport 落回静态位置盖住触发器下半段,与 hover 热区形成持续开合闪烁(本测试曾把该错误设计固化为契约)。
+    expect(navMenuCss).not.toContain('position-anchor: --ms-navmenu-anchor');
+    expect(navMenuCss).not.toMatch(/\.ms-navmenu\s*\{[^}]*anchor-name:/);
+  });
+});
+
+describe('hover 热区(回归:panel 盖触发器闪烁 / 悬停 panel 误关)', () => {
+  it('指针离开 item 进入 viewport:closeDelay 被取消不误关;离开 viewport 才走宽限关闭', () => {
+    vi.useFakeTimers();
+    try {
+      const { container } = render(<NavigationMenu items={items} aria-label="nav" />);
+      const trigger = screen.getByRole('button', { name: /产品/ });
+      const item = trigger.closest('li') as HTMLLIElement;
+
+      // React 的 onPointerEnter/Leave 由 pointerover/out + relatedTarget 合成,
+      // fireEvent.pointerEnter 不会触发,须用 pointerOver/pointerOut。
+      fireEvent.pointerOver(item, { pointerType: 'mouse', relatedTarget: document.body });
+      act(() => vi.advanceTimersByTime(250)); // openDelay 默认 200
+      expect(trigger).toHaveAttribute('aria-expanded', 'true');
+
+      const viewport = container.querySelector('.ms-navmenu__viewport') as HTMLElement;
+      // 指针离开 item 移入 viewport(起 closeDelay 默认 300,进入热区即取消)
+      fireEvent.pointerOut(item, { pointerType: 'mouse', relatedTarget: viewport });
+      fireEvent.pointerOver(viewport, { pointerType: 'mouse', relatedTarget: item });
+      act(() => vi.advanceTimersByTime(1000));
+      expect(trigger).toHaveAttribute('aria-expanded', 'true'); // 悬停 panel 期间不误关
+
+      fireEvent.pointerOut(viewport, { pointerType: 'mouse', relatedTarget: document.body });
+      act(() => vi.advanceTimersByTime(400));
+      expect(trigger).toHaveAttribute('aria-expanded', 'false'); // 离开热区按宽限关闭
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('CSS 契约:viewport 不得锚定祖先(anchor 对祖先无效,曾致 panel 盖住触发器振荡闪烁)', () => {
+    expect(navMenuCss).not.toContain('position-anchor: --ms-navmenu-anchor');
+    // 基座定位必须保留:相对 nav 根的 absolute + 100% 贴底
+    expect(navMenuCss).toMatch(/\.ms-navmenu__viewport\s*\{[^}]*inset-block-start:\s*100%/);
   });
 });

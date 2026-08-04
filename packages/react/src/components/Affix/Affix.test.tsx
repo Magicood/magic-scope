@@ -156,18 +156,24 @@ describe('Affix', () => {
     expect(content.style.position).toBe('fixed');
   });
 
-  it('自定义 getTarget:在该元素上监听 scroll(非 window 也能驱动吸附)', () => {
+  it('滚动监听挂在 window 捕获段:任何祖先滚动(不止 getTarget 容器)都驱动重测', () => {
+    // 回归:吸附态是 position:fixed(视口坐标),旧实现只听 getTarget 容器自身的 scroll,
+    // 页面(window)一滚 fixed 坐标全过期 → 容器内吸附的内容钉在屏幕上跟着视口走。
+    // scroll 不冒泡,捕获段监听可同时覆盖 window 与任意嵌套容器的滚动。
     const scrollHost = document.createElement('div');
     document.body.appendChild(scrollHost);
-    const addSpy = vi.spyOn(scrollHost, 'addEventListener');
+    const winSpy = vi.spyOn(window, 'addEventListener');
 
     render(
       <Affix offsetTop={0} getTarget={() => scrollHost}>
         <div>内容</div>
       </Affix>,
     );
-    // 已在自定义容器上挂了 scroll 监听
-    expect(addSpy).toHaveBeenCalledWith('scroll', expect.any(Function), expect.anything());
+    expect(winSpy).toHaveBeenCalledWith(
+      'scroll',
+      expect.any(Function),
+      expect.objectContaining({ capture: true, passive: true }),
+    );
     document.body.removeChild(scrollHost);
   });
 
@@ -218,7 +224,11 @@ describe('Affix', () => {
       </Affix>,
     );
     unmount();
-    expect(removeSpy).toHaveBeenCalledWith('scroll', expect.any(Function));
+    expect(removeSpy).toHaveBeenCalledWith(
+      'scroll',
+      expect.any(Function),
+      expect.objectContaining({ capture: true }),
+    );
     expect(removeSpy).toHaveBeenCalledWith('resize', expect.any(Function));
   });
 
