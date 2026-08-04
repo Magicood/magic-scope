@@ -600,13 +600,13 @@ MenuBase.displayName = 'Menu';
 // —— 组合式 API:声明式占位组件,供 <Menu.Item> 等可读书写;主用法仍是 items 数组。
 
 export interface MenuItemElementProps extends Omit<ComponentPropsWithoutRef<'button'>, 'onSelect'> {
-  /** 是否危险项。 */
+  /** Menu.Item:是否危险项。 */
   danger?: boolean;
-  /** 前置图标。 */
+  /** Menu.Item:前置图标。 */
   icon?: ReactNode;
-  /** 快捷键提示。 */
+  /** Menu.Item:快捷键提示。 */
   shortcut?: string | readonly string[] | ReactNode;
-  /** asChild:渲染为子元素(如链接)。 */
+  /** Menu.Item:渲染为子元素(如链接),而非默认的 button。 */
   asChild?: boolean;
 }
 
@@ -661,7 +661,7 @@ const MenuSeparator = forwardRef<HTMLHRElement, ComponentPropsWithoutRef<'hr'>>(
 MenuSeparator.displayName = 'Menu.Separator';
 
 export interface MenuGroupProps extends ComponentPropsWithoutRef<'div'> {
-  /** 分组标题。 */
+  /** Menu.Group:分组标题。 */
   label?: ReactNode;
 }
 
@@ -686,10 +686,17 @@ const MenuGroup = forwardRef<HTMLDivElement, MenuGroupProps>(
 );
 MenuGroup.displayName = 'Menu.Group';
 
+export interface MenuTriggerProps {
+  /** Menu.Trigger 的唯一子元素(触发器本体);外部 ref 会 compose 到它身上,故须能接收 ref。 */
+  children: ReactElement;
+}
+
 /** Menu.Trigger —— 语义占位:把外部 ref compose 到子元素(组合式书写的可读性糖)。 */
-const MenuTrigger = forwardRef<HTMLElement, { children: ReactElement }>(({ children }, ref) => {
+const MenuTrigger = forwardRef<HTMLElement, MenuTriggerProps>(({ children }, ref) => {
   const child = children;
-  const childRef = (child as { ref?: Ref<unknown> }).ref;
+  // React 19 把 ref 移到 props.ref;旧版在 element.ref。两处都兼容(与 Tooltip 同口径)。
+  const childProps = child.props as { ref?: Ref<unknown> };
+  const childRef = childProps.ref ?? (child as { ref?: Ref<unknown> }).ref;
   return cloneElement(child, {
     ref: composeRefs(ref as Ref<unknown>, childRef),
   } as Record<string, unknown>);

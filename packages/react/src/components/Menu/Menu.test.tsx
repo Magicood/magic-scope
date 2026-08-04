@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 import '@testing-library/jest-dom/vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
+import { createRef } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { Menu } from './Menu';
 
@@ -288,5 +289,21 @@ describe('Menu', () => {
     expect(screen.getByRole('menuitem', { name: /保存/ })).toBeInTheDocument();
     expect(screen.getByRole('separator')).toBeInTheDocument();
     expect(screen.getByRole('menuitem', { name: '删除' })).toHaveClass('ms-menu__item--danger');
+  });
+
+  it('Menu.Trigger 透明转发子元素,并把外部 ref 与子元素自身 ref 一并 compose', () => {
+    const outer = createRef<HTMLButtonElement>();
+    const inner = createRef<HTMLButtonElement>();
+    render(
+      <Menu.Trigger ref={outer}>
+        <button type="button" ref={inner}>
+          操作
+        </button>
+      </Menu.Trigger>,
+    );
+    const btn = screen.getByRole('button', { name: '操作' });
+    // 不额外包一层 DOM:渲染出的就是子元素本身。
+    expect(outer.current).toBe(btn);
+    expect(inner.current).toBe(btn);
   });
 });

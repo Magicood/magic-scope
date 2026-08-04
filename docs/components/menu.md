@@ -33,6 +33,12 @@
 | `renderItem` | `((ctx: MenuItemRenderContext) => ReactNode)` | — | 自定义渲染每一项(render-prop)。返回的元素会替换默认项的内部内容。 |
 | `className` | `string` | — | 外部类名(作用于浮层根)。 |
 | `classNames` | `{ root?: string; item?: string; separator?: string \| undefined; groupLabel?: string \| undefined; } \| undefined` | — | 关键子部件 className 定制。 |
+| `danger` | `boolean` | — | Menu.Item:是否危险项。 |
+| `icon` | `ReactNode` | — | Menu.Item:前置图标。 |
+| `shortcut` | `ReactNode \| readonly string[]` | — | Menu.Item:快捷键提示。 |
+| `asChild` | `boolean` | `false` | Menu.Item:渲染为子元素(如链接),而非默认的 button。 |
+| `label` | `ReactNode` | — | Menu.Group:分组标题。 |
+| `children` * | `ReactElement<unknown, string \| JSXElementConstructor<any>>` | — | Menu.Trigger 的唯一子元素(触发器本体);外部 ref 会 compose 到它身上,故须能接收 ref。 |
 
 ## 事件 Events
 
