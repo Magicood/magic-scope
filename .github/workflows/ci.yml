@@ -54,21 +54,21 @@ jobs:
       - name: manifest.json 必须已提交最新结果
         run: git diff --exit-code registry/manifest.json
 
+      - name: docs 构建 (VitePress,含死链校验;用生产 base,提前暴露子路径问题)
+        run: pnpm docs:build
+        env:
+          DOCS_BASE: /magic-scope/docs/
+
       - name: docs 红线 (生成物与 meta/props/manifest 同步且已提交)
         run: |
-          pnpm gen:docs
-          # 不能直接 git diff --exit-code:默认 shell 带 -e,diff 一红 step 即死,下面的修复指引永远打不出来
+          # docs:build 已内嵌 pnpm gen:docs 重新生成 —— 此处只判定不再生成,保证判定对象=构建产物。
+          # 不能直接 git diff --exit-code:默认 shell 带 -e,diff 一红 step 即死,下面的修复指引永远打不出来。
           if ! git diff --quiet -- docs || [ -n "$(git status --porcelain -- docs)" ]; then
             echo "::error::docs 生成物与真相源不同步 —— 改了组件 meta / props / manifest 的分支,请本地运行 pnpm gen:docs 并提交 docs/ 变更:"
             git --no-pager diff --stat -- docs
             git status --porcelain -- docs
             exit 1
           fi
-
-      - name: docs 构建 (VitePress,含死链校验;用生产 base,提前暴露子路径问题)
-        run: pnpm docs:build
-        env:
-          DOCS_BASE: /magic-scope/docs/
 
       - name: docs 渲染红线 (结构完整 + 无转义/强调符渲染瑕疵)
         run: pnpm check:docs-render
@@ -91,7 +91,7 @@ jobs:
       - name: changeset 守卫 (改发布包应有 changeset)
         if: github.event_name == 'pull_request'
         run: |
-          git fetch origin "${{ github.base_ref }}" --depth=1 || true
+          # checkout 已 fetch-depth:0 全量拉取,勿再 --depth=1 浅 fetch(会引入 shallow 边界破坏 merge-base 计算)
           CHANGED=$(git diff --name-only "origin/${{ github.base_ref }}...HEAD" || true)
           if echo "$CHANGED" | grep -qE '^packages/(tokens|react)/(src/|package\.json)' \
             && ! echo "$CHANGED" | grep -qE '^\.changeset/.+\.md$'; then
