@@ -289,10 +289,9 @@ describe('Breadcrumb', () => {
     });
 
     it('与 maxItems 协同:JS 已折叠到 3 条渲染项时不再注入占位(避免双省略号)', () => {
-      const six = ['A', 'B', 'C', 'D', 'E', 'F'].map((label, i) => ({
-        label,
-        href: i < 5 ? `/${label}` : undefined,
-      }));
+      const six = ['A', 'B', 'C', 'D', 'E', 'F'].map((label, i) =>
+        i < 5 ? { label, href: `/${label}` } : { label },
+      );
       const { container } = render(<Breadcrumb items={six} maxItems={3} />);
 
       // JS 折叠:1 头 + … + 1 尾 = 3 条
