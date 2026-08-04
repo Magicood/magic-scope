@@ -2,6 +2,8 @@
 
 > 多框架架构(**路线 C**:框架无关 headless 逻辑内核 `packages/core` + 各框架薄壳 + 共享 CSS)的落地蓝图。
 > 本文是一次**只读源码体检**(2026-06)的产出,作为将来"抽内核试点"的直接参照。
+> **2026-08-03 局部更新**:§0 / §2.3 / §3 / §6.2 的 i18n 存量债描述已按现状重写(该债已还清);
+> 其余章节仍是 2026-06 体检的原始快照,组件数等数字未逐条复核,读时以此为准。
 > **现在不抽**(react 组件仍在铺、API 未稳,过早抽象会反复改契约);等组件稳了,照本文做。
 > 架构总决策见记忆 `magic-scope-architecture`;归类/深度遵 `component-categorization-rule` / `component-depth-mandate`。
 
@@ -9,7 +11,7 @@
 
 ## 0. 一句话结论
 
-库离 `core` 比预想近 —— 难抽的只有 2 个(且"不进 core"才对),真正的拦路虎不是"能不能抽",而是 **i18n 接入率**(35 个 key 仅 1 个组件在用、11 个还硬编码),这债必须在 core 化前还清。
+库离 `core` 比预想近 —— 难抽的只有 2 个(且"不进 core"才对)。体检当时的头号拦路虎是 **i18n 接入率**(35 个 key 仅 1 个组件在用、11 个还硬编码);**该债已于 2026-08-03 还清**(见 §3),现存阻断项只剩 i18n 内核本身的 P1–P4 加固。
 
 **全库一条天然分界线**:**「焦点算在哪」= 纯逻辑 → 进 core;「焦点移过去」= DOM 副作用 → 留薄壳。** 这刀在 35 个组件里都成立,就是 core / 壳的切口。
 
@@ -35,7 +37,7 @@
 
 1. **[公共原语先行]** 抽 `resolveControlled()` / `createDisclosure()` 进 core —— 八处重复的受控解析模式,所有抽取的地基,**优先级最高**。
 2. **[消重]** 合并 Menu 与 ContextMenu 的键盘内核为单一 `createMenuKeyboard` / `createRovingFocus`(两组件逐行重复),Accordion/Tabs 的 `nextEnabled/edgeEnabled` 并入同一 roving 原语。
-3. **[i18n 存量债,阻断项]** 11 个组件硬编码中文须批量改 `t()` / `translate()`(见 §3);命令式三件套必须走 `translate()` 单例而非 hook。**不还清就 core 化 = 把硬编码复制进 vue/angular 三套。**
+3. ~~**[i18n 存量债,阻断项]** 11 个组件硬编码中文须批量改 `t()` / `translate()`~~ —— **已于 2026-08-03 完成**(见 §3);命令式三件套已走 `translate()` 单例。剩下的阻断项是 §3 的 P1–P4 内核加固,与组件接入无关。
 4. **[i18n 核心加固]** 平移 `messages.ts` 前,先把裸模块单例 `activeMessages` 升级为 scope 安全 store,补 locale 概念与 dir/RTL 元数据(见 §3 的 P1–P4)。
 5. **[最值得压契约的内核]** Select 的 listbox 键盘状态机是教科书级纯 reducer,但与 Popover API / rAF 聚焦 / anchorName 深缠 —— 抽取时把命令式副作用干净留壳,只让 core 出"状态 + 动作意图"。
 6. **[store 型平移]** Toast / AlertDialog 的模块级 store 几乎原样进 core,唯需把 message 的 `ReactNode` 类型参数化脱 React,单条计时器做成 `createToastTimer(duration,onExpire) → {pause,resume,dispose}` 纯原语。
@@ -80,10 +82,15 @@ packages/core/src/i18n/
 - Angular:`MessagesService`(DI) + `TranslatePipe`(`{{ 'input.clear' | t }}`)。
 - 命令式(三框架共用):`translate(key, vars?)` 直接读 core store。
 
-**存量债清单(core 化前必还,11 组件,key 字典已备齐、仅未消费):**
-`Pagination`(prev/next/page `{page}`) · `Drawer`×2 / `Dialog` / `Toast`(close + region) · `Table`(empty/selectAll/selectRow `{index}`/selectionColumn) · `NumberInput`(increment/decrement) · `Tag`(remove) · `Select`(placeholder) · `Spinner`(label) · `Popconfirm`(confirm/cancel) · `AlertDialog`(confirm/cancel,走 `translate()` 单例)。
+**存量债:已还清(2026-08-03)。** 体检当时列的 11 个组件(Pagination / Drawer / Dialog / Toast / Table / NumberInput / Tag / Select / Spinner / Popconfirm / AlertDialog)全部接上,后续新增组件亦同步接入。当前状态:
 
-**落地顺序:** `messages.ts` 抽 core 并升级 store(补 locale/dir,解 P1–P4)→ 批量还 11 组件硬编码 → 再起 vue/angular 薄壳。
+- 字典 **119 个 key**,**零孤儿**(每个 key 都有真实组件消费,不再有"定义了没人用"的存量);
+- **94 个组件里 56 个消费 i18n**;其余 38 个是 Flex / Grid / Stack / Divider / Skeleton / Text 等布局与排版原语,自身不产生任何面向用户的文案,无需接入;
+- 组件内**不再有用户可见的硬编码中文**,也**不再有绕过字典的类型逃逸**(Avatar 的 `as MessageKey`、Pagination 的 `t as unknown as (key: string, …)` 均已消除)—— 字典是唯一真相源这条约束现在由 `tsc` 实际把关:key 拼错即编译失败。
+
+> 唯一保留的例外是 `Form/logic.ts` 里 `translate(issue.message as MessageKey, undefined, issue.message)` —— Standard Schema 的 issue.message 可能本身就是一个 key(用户自定义),也可能是成品文案,故以原文兜底,属设计使然而非欠债。
+
+**落地顺序:** `messages.ts` 抽 core 并升级 store(补 locale/dir,解 P1–P4)→ 再起 vue/angular 薄壳。**组件接入这一步已不在关键路径上。**
 
 ---
 
@@ -174,7 +181,7 @@ function getTabPanelProps(): { role: 'tabpanel'; id: string; 'aria-labelledby': 
 ## 6. 落地顺序(将来执行)
 
 1. **公共原语**:`resolveControlled` / `createDisclosure` / `createRovingFocus` 下沉 `packages/core`,顺带跑通 core 的打包/导出/测试链路(可拿 §2.7 的纯函数当首批)。
-2. **i18n 还债 + 加固**:`messages.ts` 抽 core 升级为带 locale/dir 的 store(解 P1–P4),批量还清 11 组件硬编码。**这步是抽内核的前置阻断项,必须先做。**
+2. **i18n 加固**:`messages.ts` 抽 core 升级为带 locale/dir 的 store(解 P1–P4)。**这步是抽内核的前置阻断项,必须先做**;其中"批量还清组件硬编码"部分已于 2026-08-03 完成,只剩内核加固。
 3. **5 个试点压契约**:Tabs → Select → NumberInput → Pagination → Toast,确认 `store + getXxxProps()` 契约对五条难点轴都成立。
 4. **契约定稿**后横向铺其余 30 个组件(多为这五类的同构/更轻版本)。
 5. **起薄壳**:react(等价重构、对外 API 不变、有测试兜底)→ vue → 单独攻 angular(最重,别当"照抄 vue")。

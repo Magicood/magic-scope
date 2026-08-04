@@ -24,12 +24,12 @@
 | `dismissable` | `boolean` | `true` | 点击遮罩是否关闭。默认 true。 |
 | `size` | `"sm" \| "md" \| "lg" \| "full"` | `md` | 尺寸:sm / md(默认)/ lg / full(铺满视口)。 |
 | `placement` | `"center" \| "top"` | `center` | 位置:center(默认,垂直居中)/ top(贴顶,长表单更稳)。 |
-| `tone` | `"primary" \| "accent" \| "success" \| "warning" \| "danger" \| "info" \| "neutral"` | — | 语义色调:设置后根元素加 ms-tone-*,focus 环 / 面板发光走 tone 槽位。 |
+| `tone` | `"primary" \| "accent" \| "success" \| "warning" \| "danger" \| "info" \| "neutral"` | — | 语义色调:设置后根元素加 ms-tone-&#42;,focus 环 / 面板发光走 tone 槽位。 |
 | `hideCloseButton` | `boolean` | `false` | 隐藏内建关闭按钮(自定义头部时)。 |
 | `closeIcon` | `ReactNode` | — | 自定义关闭按钮图标。 |
 | `classNames` | `{ backdrop?: string; panel?: string; close?: string \| undefined; } \| undefined` | — | 分部位 className:遮罩(根 dialog)/ 面板 / 关闭按钮。 |
 | `panelProps` | `Omit<DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "ref">` | — | 透传到 panel 外壳的原生属性 / 事件。 |
-| `asChild` | `boolean` | `false` | 用单个子元素替换 panel 外壳(保留 ms-dialog__panel 样式与 children),Slot 风格。 |
+| `asChild` | `boolean` | `false` | 用单个子元素替换 panel 外壳(保留 ms-dialog&#95;&#95;panel 样式与 children),Slot 风格。 |
 | `renderPanel` | `DialogPanelRender` | — | render-prop 替换 panel 外壳(优先级低于 asChild)。 |
 
 ## 事件 Events

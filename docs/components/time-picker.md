@@ -29,7 +29,7 @@
 | `disabledSeconds` | `number[] \| ((selectedHour: number \| null, selectedMinute: number \| null) => number[])` | — | 禁用的秒;数组或返回数组的函数。 |
 | `placeholder` | `string` | — | 占位文本(未选中)。默认走 i18n timePicker.placeholder。 |
 | `size` | `"sm" \| "md" \| "lg"` | — | 尺寸(随密度缩放)。默认 md。 |
-| `tone` | `"primary" \| "accent" \| "success" \| "warning" \| "danger" \| "info"` | — | 语义色调,派生高亮/发光(只读 --ms-c* 槽位)。默认 primary。 |
+| `tone` | `"primary" \| "accent" \| "success" \| "warning" \| "danger" \| "info"` | — | 语义色调,派生高亮/发光(只读 --ms-c&#42; 槽位)。默认 primary。 |
 | `invalid` | `boolean` | — | 校验失败态:染 danger、设 aria-invalid(供 Form)。 |
 | `disabled` | `boolean` | — | 是否禁用整个选择器。 |
 | `clearable` | `boolean` | — | 有值时显示清除按钮(走 input.clear 文案)。 |

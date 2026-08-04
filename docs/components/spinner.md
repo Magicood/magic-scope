@@ -6,7 +6,7 @@
 
 ## 说明
 
-自研、零依赖,消费 @magic-scope/tokens 的 --ms-* 变量。
+自研、零依赖,消费 @magic-scope/tokens 的 --ms-&#42; 变量。
 
 role="status" 并带 aria-label 供读屏播报;尺寸(sm / md / lg)同时决定圆环直径与边宽。开启系统「减弱动态效果」时放慢旋转而非完全静止,保留「加载中」语义。可透传原生 &lt;span&gt; 属性,便于行内搭配文案或塞进按钮。
 
@@ -29,7 +29,7 @@ role="status" 并带 aria-label 供读屏播报;尺寸(sm / md / lg)同时决定
 | `showLabel` | `boolean` | `false` | 是否把 label 同时渲染为可见旁注文字(默认 false,仅作 aria-label 隐形播报)。 |
 | `labelPlacement` | `"end" \| "start" \| "bottom" \| "top"` | `end` | 可见 label 相对指示器的位置(showLabel 为 true 时生效)。默认 end。 |
 | `labelContent` | `ReactNode` | — | 自定义可见旁注内容(ReactNode 槽位)。给出时覆盖 label 文本作为可见内容,<br>但 aria-label 仍用 label 保证读屏语义。隐含 showLabel。 |
-| `...props` | `ComponentPropsWithoutRef<'span'>` | — | 透传原生 span 属性(className / style / aria-* / 事件等)。 |
+| `...props` | `ComponentPropsWithoutRef<'span'>` | — | 透传原生 span 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
 
@@ -44,5 +44,5 @@ role="status" 并带 aria-label 供读屏播报;尺寸(sm / md / lg)同时决定
 | 标签 | `spinner` `loader` `loading` `feedback` `progress` `status` `indicator` `ring` `dots` `bars` `tone` `i18n` |
 
 ::: details 需求原文 / 设计意图
-加载旋转器,role=status。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-* 变量。补强为旗舰深度:形态变体(ring/dots/bars)、tone 色调系统(读 6 槽位,不传随 currentColor)、可见旁注 label(showLabel/labelPlacement/labelContent)、i18n aria-label(spinner.label)、密度缩放、发光与动效全局一键降级、...rest 留口透传。
+加载旋转器,role=status。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-&#42; 变量。补强为旗舰深度:形态变体(ring/dots/bars)、tone 色调系统(读 6 槽位,不传随 currentColor)、可见旁注 label(showLabel/labelPlacement/labelContent)、i18n aria-label(spinner.label)、密度缩放、发光与动效全局一键降级、...rest 留口透传。
 :::

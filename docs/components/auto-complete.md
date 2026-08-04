@@ -19,7 +19,7 @@
 | `value` | `string` | — | 当前输入值(受控,自由文本)。 |
 | `defaultValue` | `string` | — | 默认输入值(非受控)。 |
 | `options` | `AutoCompleteOptions` | — | 候选项(平铺或分组)。 |
-| `filterOption` | `false \| ((inputValue: string, option: AutoCompleteOption) => boolean)` | — | 过滤候选:`false` 关闭内置过滤(配 onSearch 做受控远程搜索);<br>传谓词 `(inputValue, option) =&gt; boolean` 自定义命中;缺省走子串大小写不敏感匹配。 |
+| `filterOption` | `false \| ((inputValue: string, option: AutoCompleteOption) => boolean)` | — | 过滤候选:`false` 关闭内置过滤(配 onSearch 做受控远程搜索);<br>传谓词 `(inputValue, option) => boolean` 自定义命中;缺省走子串大小写不敏感匹配。 |
 | `loading` | `boolean` | — | 加载态:列表显示加载文案(走 i18n select.loading),input 标记 aria-busy。 |
 | `allowClear` | `boolean` | — | 有值时显示清除按钮(走 i18n input.clear)。 |
 | `size` | `"sm" \| "md" \| "lg"` | — | 尺寸(随 data-ms-density 缩放)。默认 md。 |

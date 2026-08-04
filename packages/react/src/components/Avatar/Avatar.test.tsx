@@ -2,6 +2,7 @@
 import '@testing-library/jest-dom/vitest';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
+import { MessagesProvider } from '../../i18n';
 import { Avatar, AvatarGroup } from './Avatar';
 import { getInitials, toneFromName } from './logic';
 
@@ -66,6 +67,15 @@ describe('Avatar', () => {
     const dot = screen.getByRole('status', { name: '忙碌' });
     expect(dot).toHaveClass('ms-avatar__status', 'ms-avatar__status--busy', 'ms-tone-danger');
     expect(dot).toHaveClass('ms-avatar__status--pulse');
+  });
+
+  it('状态点标签走字典 avatar.status.*,可被 MessagesProvider 覆盖', () => {
+    render(
+      <MessagesProvider messages={{ 'avatar.status.busy': 'Busy' }}>
+        <Avatar name="x" status="busy" />
+      </MessagesProvider>,
+    );
+    expect(screen.getByRole('status', { name: 'Busy' })).toBeInTheDocument();
   });
 
   it('shape / ring / bordered / glow 加对应类', () => {

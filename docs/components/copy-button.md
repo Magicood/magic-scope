@@ -24,14 +24,14 @@
 | `timeout` | `number` | `1500` | 进入「已复制」反馈态后自动还原的毫秒数。默认 1500。 |
 | `icon` | `ReactNode` | — | 覆盖默认「复制」图标。 |
 | `copiedIcon` | `ReactNode` | — | 覆盖默认「已复制」(对勾)图标。 |
-| `children` | `CopyButtonChildren` | — | 自定义内容:普通节点,或 `(copied) =&gt; ReactNode` 按状态渲染(默认仅图标)。 |
+| `children` | `CopyButtonChildren` | — | 自定义内容:普通节点,或 `(copied) => ReactNode` 按状态渲染(默认仅图标)。 |
 | `tone` | `"primary" \| "accent" \| "success" \| "warning" \| "danger" \| "info"` | `primary` | 语义色调(复用 Button 的 tone resolver)。默认 primary。 |
 | `size` | `"sm" \| "md" \| "lg"` | `md` | 尺寸(随 data-ms-density 缩放,复用 Button)。默认 md。 |
 | `variant` | `"link" \| "solid" \| "soft" \| "outline" \| "ghost"` | `soft` | 视觉变体(复用 Button)。默认 soft。 |
 | `withTooltip` | `boolean` | `true` | 是否用 Tooltip 显示「复制 / 已复制」提示。默认 true。 |
 | `tooltipPlacement` | `"left" \| "right" \| "bottom" \| "top" \| "top-end" \| "top-start" \| "bottom-end" \| "bottom-start" \| "left-start" \| "left-end" \| "right-start" \| "right-end"` | `top` | Tooltip 方位(withTooltip 时生效)。默认 top。 |
 | `aria-label` | `string` | — | 自定义 aria-label;未传则随状态用 i18n「复制 / 已复制」。 |
-| `...props` | `ComponentPropsWithoutRef<'button'>` | — | 透传原生 button 属性(className / style / aria-* / 事件等)。 |
+| `...props` | `ComponentPropsWithoutRef<'button'>` | — | 透传原生 button 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
 

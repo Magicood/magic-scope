@@ -6,7 +6,7 @@
 
 ## 说明
 
-自研、零依赖,消费 @magic-scope/tokens 的 --ms-* 变量。
+自研、零依赖,消费 @magic-scope/tokens 的 --ms-&#42; 变量。
 
 elevated 用 surface 底配柔和阴影,outline 用透明底配描边。
 
@@ -29,7 +29,7 @@ interactive 时 hover 上浮带柔和发光,并补 focus-visible 聚焦环与默
 | `padding` | `"none" \| "sm" \| "md" \| "lg"` | `md` | 内边距档位(随密度 --ms-density-scale 缩放):none 供满血媒体 / sm / md / lg。默认 md。 |
 | `interactive` | `boolean` | `false` | 可交互:true 时 hover 上浮 + 发光、暴露键盘聚焦环(tabIndex/focus-visible),并支持 Enter/Space 触发 onClick。 |
 | `asChild` | `boolean` | `false` | 渲染为子元素(如 &lt;a&gt; / &lt;article&gt; / 路由 Link)并保留卡片样式与 interactive 行为(Radix Slot 风格;由子元素自带内容)。 |
-| `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-* / 事件等)。 |
+| `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
 
@@ -44,5 +44,5 @@ interactive 时 hover 上浮带柔和发光,并补 focus-visible 聚焦环与默
 | 标签 | `card` `layout` `container` `surface` `elevated` `outline` `interactive` `tone` `padding` `media` `header` `footer` `composable` `as-child` `keyboard` |
 
 ::: details 需求原文 / 设计意图
-内容卡片容器,支持 elevated(柔和阴影)与 outline(描边)两种变体,可设为 interactive 时 hover 上浮并发光。补强到生产级深度:tone 语义色调(读 tone 6 槽位,不写死语义色)、padding 档位(随密度缩放,none 供满血媒体)、interactive 键盘激活(Enter/Space → onClick,composeEventHandlers 合并不替换用户 handler)、asChild 多态(Radix Slot 风格,渲染为 a/article/路由 Link)、可组合子部件 CardHeader/CardTitle/CardBody/CardFooter/CardMedia。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-* 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion 与 data-ms-fx/motion 总闸。
+内容卡片容器,支持 elevated(柔和阴影)与 outline(描边)两种变体,可设为 interactive 时 hover 上浮并发光。补强到生产级深度:tone 语义色调(读 tone 6 槽位,不写死语义色)、padding 档位(随密度缩放,none 供满血媒体)、interactive 键盘激活(Enter/Space → onClick,composeEventHandlers 合并不替换用户 handler)、asChild 多态(Radix Slot 风格,渲染为 a/article/路由 Link)、可组合子部件 CardHeader/CardTitle/CardBody/CardFooter/CardMedia。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-&#42; 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion 与 data-ms-fx/motion 总闸。
 :::

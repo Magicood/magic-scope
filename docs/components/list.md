@@ -27,7 +27,7 @@
 | `classNames` | `ListClassNames` | — | 关键子部件 className 注入。 |
 | `markerNode` | `ReactNode` | — | 自定义标记节点(由 List 在 marker 为 ReactNode 时注入;也可单项覆盖)。 |
 | `markerClassName` | `string` | — | 自定义标记容器 className(由 List 的 classNames.marker 注入)。 |
-| `...props` | `ComponentPropsWithoutRef<'ul'>` | — | 透传原生 ul 属性(className / style / aria-* / 事件等)。 |
+| `...props` | `ComponentPropsWithoutRef<'ul'>` | — | 透传原生 ul 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
 
@@ -42,5 +42,5 @@
 | 标签 | `list` `typography` `unordered` `ordered` `description-list` `marker` `ul` `ol` `dl` `nested` `tone` `density` `polymorphic` `asChild` |
 
 ::: details 需求原文 / 设计意图
-生产级 typography 列表组件。variant: unordered\|ordered\|description → 渲染 ul/ol/dl;marker?: list-style-type(disc/circle/decimal/lower-roman…)或 icon ReactNode 自定义标记;spacing 档(随密度 --ms-density-scale);tone(::marker 着色读 --ms-c);List.Item 子部件(命名空间 List.Item);description 变体支持 term/detail。嵌套友好。对标旗舰 Text/Button/Input:多态 as/asChild、...rest 透传、classNames 注入子部件、魔法 glow 双降级、内容边界不撑破、strict TS。
+生产级 typography 列表组件。variant: unordered|ordered|description → 渲染 ul/ol/dl;marker?: list-style-type(disc/circle/decimal/lower-roman…)或 icon ReactNode 自定义标记;spacing 档(随密度 --ms-density-scale);tone(::marker 着色读 --ms-c);List.Item 子部件(命名空间 List.Item);description 变体支持 term/detail。嵌套友好。对标旗舰 Text/Button/Input:多态 as/asChild、...rest 透传、classNames 注入子部件、魔法 glow 双降级、内容边界不撑破、strict TS。
 :::

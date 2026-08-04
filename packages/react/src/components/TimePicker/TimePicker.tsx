@@ -605,13 +605,12 @@ export const TimePicker = forwardRef<TimePickerHandle, TimePickerProps>((props, 
   const triggerStyle = { anchorName } as CSSProperties;
   const panelStyle = { positionAnchor: anchorName } as CSSProperties;
 
-  // 列 aria-label:i18n 字典暂只放了 now/confirm/placeholder 三键(本批预加),
-  // 列名属"待补"键,先用本地中文兜底,不擅自改共享字典;日后字典补 timePicker.hour 等键时可平滑切换。
+  // 列 aria-label:走共享字典的 timePicker.hour / minute / second / meridiem。
   const unitLabel: Record<TimeUnit, string> = {
-    hour: '时',
-    minute: '分',
-    second: '秒',
-    meridiem: '上午/下午',
+    hour: t('timePicker.hour'),
+    minute: t('timePicker.minute'),
+    second: t('timePicker.second'),
+    meridiem: t('timePicker.meridiem'),
   };
 
   const renderColumn = (col: ColumnSpec, colKey: string) => {

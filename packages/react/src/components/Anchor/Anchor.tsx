@@ -1,5 +1,6 @@
 import type { ComponentPropsWithoutRef, MouseEvent, ReactNode } from 'react';
 import { forwardRef, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useMessages } from '../../i18n';
 import { type AnchorLinkOffset, hrefToId, resolveActiveLink } from './logic';
 
 export type AnchorSize = 'sm' | 'md' | 'lg';
@@ -55,7 +56,7 @@ export interface AnchorProps
   size?: AnchorSize | undefined;
   /** 墨条指示器开关。默认 true。 */
   showInk?: boolean | undefined;
-  /** nav 的可访问名(landmark 标签)。默认「页内导航」。 */
+  /** nav 的可访问名(landmark 标签)。不传则走字典 anchor.nav(默认「页内导航」)。 */
   ariaLabel?: string | undefined;
   /** 子部件类名留口(细粒度槽位)。 */
   classNames?: AnchorClassNames | undefined;
@@ -85,13 +86,14 @@ export const Anchor = forwardRef<HTMLElement, AnchorProps>(
       bounds = 5,
       size = 'md',
       showInk = true,
-      ariaLabel = '页内导航',
+      ariaLabel,
       classNames,
       className,
       ...props
     },
     forwardedRef,
   ) => {
+    const t = useMessages();
     const navRef = useRef<HTMLElement | null>(null);
     // key -> 链接 <a> 节点,用于定位墨条
     const linkRefs = useRef<Map<string, HTMLAnchorElement>>(new Map());
@@ -325,7 +327,12 @@ export const Anchor = forwardRef<HTMLElement, AnchorProps>(
       .join(' ');
 
     return (
-      <nav ref={setNavRef} aria-label={ariaLabel} className={rootClasses} {...props}>
+      <nav
+        ref={setNavRef}
+        aria-label={ariaLabel ?? t('anchor.nav')}
+        className={rootClasses}
+        {...props}
+      >
         {showInk ? (
           <span
             className={['ms-anchor__ink', classNames?.indicator].filter(Boolean).join(' ')}

@@ -6,9 +6,9 @@
 
 ## 说明
 
-自研、零依赖,消费 @magic-scope/tokens 的 --ms-* 变量。固定定位(fixed)右下,right/bottom 可调并叠加安全区。
+自研、零依赖,消费 @magic-scope/tokens 的 --ms-&#42; 变量。固定定位(fixed)右下,right/bottom 可调并叠加安全区。
 
-监听滚动容器(默认 window,可传 target=()=&gt;HTMLElement\|Window 指向内部滚动容器),scrollTop 超过 visibilityHeight(默认 400)才淡入,否则淡出并移出 tab 序 + aria-hidden,避免不可见时被键盘/读屏命中。
+监听滚动容器(默认 window,可传 target=()=&gt;HTMLElement|Window 指向内部滚动容器),scrollTop 超过 visibilityHeight(默认 400)才淡入,否则淡出并移出 tab 序 + aria-hidden,避免不可见时被键盘/读屏命中。
 
 点击用 requestAnimationFrame + easeInOutCubic 缓动滚回顶部(可调 duration);prefers-reduced-motion 或 data-ms-motion="off" 时降级为瞬时归顶。回顶与用户 onClick 经 composeEventHandlers 合并,用户可 preventDefault 阻断回顶。tone 7 色只读全库槽位、circle/square 形状、尺寸随 data-ms-density 缩放、focus-visible 发光环。
 
@@ -27,7 +27,7 @@
 | `tone` | `"primary" \| "accent" \| "success" \| "warning" \| "danger" \| "info" \| "neutral"` | `primary` | 语义色调,经全库 tone resolver 派生配色与 glow。默认 primary。 |
 | `children` | `ReactNode` | — | 自定义内容(默认向上箭头图标)。 |
 | `iconClassName` | `string` | — | 图标/内容部件类名留口。 |
-| `...props` | `ComponentPropsWithoutRef<'button'>` | — | 透传原生 button 属性(className / style / aria-* / 事件等)。 |
+| `...props` | `ComponentPropsWithoutRef<'button'>` | — | 透传原生 button 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
 
@@ -42,5 +42,5 @@
 | 标签 | `navigation` `scroll` `back-to-top` `fab` `floating` `affix` |
 
 ::: details 需求原文 / 设计意图
-长页面的「回到顶部」浮钮,定位 fixed 右下、距离可调(right/bottom)并叠加安全区。监听滚动容器(默认 window,可传 ()=&gt;HTMLElement\|Window 指向内部滚动容器),scrollTop 超过 visibilityHeight(默认 400)才淡入,否则淡出并移出 tab 序 + aria-hidden,避免不可见时被键盘/读屏命中。点击用 requestAnimationFrame + easeInOutCubic 缓动滚回顶部(可调 duration);prefers-reduced-motion 或 data-ms-motion=off 时降级为瞬时 scrollTo(0)。回顶动画与用户 onClick 解耦合并(composeEventHandlers,用户可 preventDefault 阻断回顶)。tone 7 色只读全库槽位、circle/square 形状、尺寸随 data-ms-density 缩放、focus-visible 发光环。缓动/滚动插值/可见性判定抽到零依赖 logic.ts 以便平移其它框架。
+长页面的「回到顶部」浮钮,定位 fixed 右下、距离可调(right/bottom)并叠加安全区。监听滚动容器(默认 window,可传 ()=&gt;HTMLElement|Window 指向内部滚动容器),scrollTop 超过 visibilityHeight(默认 400)才淡入,否则淡出并移出 tab 序 + aria-hidden,避免不可见时被键盘/读屏命中。点击用 requestAnimationFrame + easeInOutCubic 缓动滚回顶部(可调 duration);prefers-reduced-motion 或 data-ms-motion=off 时降级为瞬时 scrollTo(0)。回顶动画与用户 onClick 解耦合并(composeEventHandlers,用户可 preventDefault 阻断回顶)。tone 7 色只读全库槽位、circle/square 形状、尺寸随 data-ms-density 缩放、focus-visible 发光环。缓动/滚动插值/可见性判定抽到零依赖 logic.ts 以便平移其它框架。
 :::

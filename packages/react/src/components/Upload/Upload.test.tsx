@@ -177,6 +177,26 @@ describe('Upload', () => {
     expect(last[0]?.percent).toBe(100);
   });
 
+  it('条目已被移出列表后,迟到的 onProgress 直接忽略(不复活已删条目)', () => {
+    let captured: UploadRequestOption | null = null;
+    const customRequest = vi.fn((opt: UploadRequestOption) => {
+      captured = opt;
+    });
+    const onChange = vi.fn();
+    render(<Upload customRequest={customRequest} onChange={onChange} />);
+    const input = screen
+      .getByRole('button', { name: /上传/ })
+      .closest('.ms-upload')
+      ?.querySelector('input[type="file"]') as HTMLInputElement;
+    fireEvent.change(input, { target: { files: [makeFile('gone.txt')] } });
+    fireEvent.click(screen.getByRole('button', { name: /删除 gone.txt/ }));
+    const callsAfterRemove = onChange.mock.calls.length;
+    // 条目已不在 listRef 里:进度回报应静默丢弃,不得再触发一次 onChange
+    act(() => captured?.handlers.onProgress(42));
+    expect(onChange.mock.calls.length).toBe(callsAfterRemove);
+    expect(onChange.mock.calls.at(-1)?.[0]).toHaveLength(0);
+  });
+
   it('customRequest 经 onProgress/onSuccess 推进 status 与 percent', () => {
     let captured: UploadRequestOption | null = null;
     const customRequest = vi.fn((opt: UploadRequestOption) => {

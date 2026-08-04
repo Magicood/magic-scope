@@ -6,9 +6,9 @@
 
 ## 说明
 
-自研、零依赖的 flexbox 容器。direction / align / justify / wrap / gap 均接受「单值 或 断点对象」(如 gap={ { base: 2, md: 4 }}),响应式由预展开的静态 @media 块逐级覆盖。
+自研、零依赖的 flexbox 容器。direction / align / justify / wrap / gap 均接受「单值 或 断点对象」(如 gap=&#123;&#123; base: 2, md: 4 }}),响应式由预展开的静态 @media 块逐级覆盖。
 
-间距走 --ms-space-* token、对齐用逻辑值(flex-start/end)故 RTL 友好;多态 as(默认 div)+ asChild + forwardRef + 透传原生属性。配套 Flex.Item 做子项级 grow/shrink/basis/align/order。
+间距走 --ms-space-&#42; token、对齐用逻辑值(flex-start/end)故 RTL 友好;多态 as(默认 div)+ asChild + forwardRef + 透传原生属性。配套 Flex.Item 做子项级 grow/shrink/basis/align/order。
 
 ## 参数 Props
 
@@ -23,14 +23,14 @@
 | `align` | `Responsive<FlexAlign>` | — | 交叉轴对齐(align-items)。支持断点对象。 |
 | `justify` | `Responsive<FlexJustify>` | — | 主轴分布(justify-content)。支持断点对象。 |
 | `wrap` | `Responsive<FlexWrap>` | — | 换行。支持断点对象;布尔简写 true=wrap / false=nowrap。 |
-| `gap` | `Responsive<GapValue>` | — | 行列统一间距(数字档映射 --ms-space-*,或自定义 CSS 长度)。支持断点对象。 |
+| `gap` | `Responsive<GapValue>` | — | 行列统一间距(数字档映射 --ms-space-&#42;,或自定义 CSS 长度)。支持断点对象。 |
 | `rowGap` | `Responsive<GapValue>` | — | 仅行间距(覆盖 gap 的纵向分量)。支持断点对象。 |
 | `columnGap` | `Responsive<GapValue>` | — | 仅列间距(覆盖 gap 的横向分量)。支持断点对象。 |
 | `grow` | `number \| boolean` | — | flex-grow:布尔简写 true=1 / false=0,或具体数值。 |
 | `shrink` | `number \| boolean` | — | flex-shrink:布尔简写 true=1 / false=0,或具体数值。 |
 | `basis` | `string \| number` | — | flex-basis:数字按 px,字符串原样(如 '20%' / 'auto')。 |
 | `order` | `number` | — | 显示顺序(order)。 |
-| `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-* / 事件等)。 |
+| `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
 
@@ -45,5 +45,5 @@
 | 标签 | `flex` `flexbox` `layout` `responsive` `gap` `direction` `align` `justify` `wrap` `as-child` `polymorphic` `rtl` |
 
 ::: details 需求原文 / 设计意图
-magic-scope layout 分类的 flexbox 原语。对标主流库的 Flex/HStack/VStack:全部布局属性支持断点对象响应式(本库「多端适配」体现),响应式靠 JS 解析为带断点后缀的 CSS 变量 + 构建期预展开的静态 @media 块逐级提升(因 @media 条件里 var() 不生效)。间距 token 化(--ms-space-*)、对齐走 flex-start/flex-end 逻辑值 RTL 友好、多态 as + asChild 留口。纯逻辑放 logic.ts 以便单测与跨框架平移。
+magic-scope layout 分类的 flexbox 原语。对标主流库的 Flex/HStack/VStack:全部布局属性支持断点对象响应式(本库「多端适配」体现),响应式靠 JS 解析为带断点后缀的 CSS 变量 + 构建期预展开的静态 @media 块逐级提升(因 @media 条件里 var() 不生效)。间距 token 化(--ms-space-&#42;)、对齐走 flex-start/flex-end 逻辑值 RTL 友好、多态 as + asChild 留口。纯逻辑放 logic.ts 以便单测与跨框架平移。
 :::

@@ -27,7 +27,7 @@
 | `iconOnly` | `boolean` | `false` | 仅图标(正方形紧凑);务必配 aria-label,否则读屏失名。 |
 | `glow` | `boolean` | `true` | 按下态额外发光高亮(读 tone 槽位 --ms-c-glow)。默认 true。 |
 | `children` | `ReactNode` | — | 按钮内容(图标 / 文字,如加粗的 B 按钮)。 |
-| `...props` | `ComponentPropsWithoutRef<'button'>` | — | 透传原生 button 属性(className / style / aria-* / 事件等)。 |
+| `...props` | `ComponentPropsWithoutRef<'button'>` | — | 透传原生 button 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
 

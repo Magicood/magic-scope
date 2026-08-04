@@ -6,7 +6,7 @@
 
 ## 说明
 
-自研、零依赖,消费 @magic-scope/tokens 的 --ms-* 变量。
+自研、零依赖,消费 @magic-scope/tokens 的 --ms-&#42; 变量。
 
 紧凑的 tab / radio 替代:单个滑块 indicator 平滑跨段位移(过渡受 motion 双降级);数据入口为 options 数组或复合 &lt;Segmented.Item&gt;,label 支持 ReactNode + icon。
 
@@ -34,7 +34,7 @@
 | `aria-label` | `string` | — | 无可见 label 时的无障碍名称。 |
 | `aria-labelledby` | `string` | — | 关联可见 label 的 id。 |
 | `icon` | `ReactNode` | — | 段前置图标。 |
-| `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-* / 事件等)。 |
+| `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
 

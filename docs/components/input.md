@@ -31,7 +31,7 @@
 | `showCount` | `boolean` | `false` | 显示字数(配合 maxLength 显示 当前/上限)。 |
 | `className` | `string` | — | 外层容器 className(组件根)。 |
 | `inputClassName` | `string` | — | 原生 input 自身 className。 |
-| `...props` | `ComponentPropsWithoutRef<'input'>` | — | 透传原生 input 属性(className / style / aria-* / 事件等)。 |
+| `...props` | `ComponentPropsWithoutRef<'input'>` | — | 透传原生 input 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
 

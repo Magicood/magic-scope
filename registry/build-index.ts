@@ -38,7 +38,8 @@ const manifest = files
     }
     return parsed.data;
   })
-  .sort((a, b) => a.id.localeCompare(b.id));
+  // 码点序而非 localeCompare:manifest 已提交 + CI 逐字节比对,排序不能依赖宿主 ICU/locale。
+  .sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
 
 const out = join(import.meta.dirname, 'manifest.json');
 writeFileSync(out, `${JSON.stringify(manifest, null, 2)}\n`);

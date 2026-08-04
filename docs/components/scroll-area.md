@@ -23,7 +23,7 @@ thumb 尺寸 / 位置随真实 scrollTop / scrollHeight 同步、可拖拽反向
 | `orientation` | `"both" \| "horizontal" \| "vertical"` | `vertical` | 可滚动方向:纵 / 横 / 双向。默认 vertical。 |
 | `children` | `ReactNode` | — | 视口内的滚动内容。 |
 | `classNames` | `ScrollAreaClassNames` | — | 细粒度槽位类名。 |
-| `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-* / 事件等)。 |
+| `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
 

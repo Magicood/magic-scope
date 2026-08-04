@@ -32,7 +32,7 @@
 | `zIndex` | `number` | `9` | 覆盖层层级。默认 9。 |
 | `children` | `ReactNode` | — | 被覆盖的内容。 |
 | `classNames` | `WatermarkClassNames` | — | 子部件类名细粒度留口(root / overlay)。 |
-| `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-* / 事件等)。 |
+| `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
 

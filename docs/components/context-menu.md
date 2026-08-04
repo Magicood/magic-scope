@@ -8,7 +8,7 @@
 
 自研、零依赖。右键(contextmenu)在包裹区域内弹出,定位在光标处并在越界时自动夹回视口;浮层 portal 到 body。
 
-点选 / 点外 / Esc / 滚动均关闭,菜单内支持 ↑↓ / Home / End / Enter 键盘导航。菜单项复用 Menu 的 .ms-menu__item 视觉(含 disabled / danger),区别于点击锚定的 Menu。
+点选 / 点外 / Esc / 滚动均关闭,菜单内支持 ↑↓ / Home / End / Enter 键盘导航。菜单项复用 Menu 的 .ms-menu&#95;&#95;item 视觉(含 disabled / danger),区别于点击锚定的 Menu。
 
 ## 静态预览
 
@@ -28,7 +28,7 @@
 | `className` | `string` | — | 菜单浮层附加类名(作用于 .ms-context-menu)。 |
 | `classNames` | `ContextMenuClassNames` | — | 关键子部件 className 定制。 |
 | `renderItem` | `((ctx: ContextMenuItemRenderContext) => ReactNode)` | — | 自定义渲染每一项(render-prop)。返回的元素会替换默认项的内部内容。 |
-| `overlayProps` | `(Omit<DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "ref"> & { [key: `data-${string}`]: string \| ... 2 more ...; })` | — | 浮层根上挂载的原生属性 / 事件(data-* / onScroll / aria-* 等)。 |
+| `overlayProps` | `` (Omit<DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "ref"> & { [key: `data-${string}`]: string \| ... 2 more ...; }) `` | — | 浮层根上挂载的原生属性 / 事件(data-&#42; / onScroll / aria-&#42; 等)。 |
 | `open` | `boolean` | — | 受控开合状态。传入即受控,需配合 onOpenChange。 |
 | `defaultOpen` | `boolean` | `false` | 非受控初始开合。默认 false。 |
 
@@ -52,5 +52,5 @@
 | 标签 | `context-menu` `right-click` `menu` `overlay` `cursor` `tone` `typeahead` `controllable` `portal` `keyboard` |
 
 ::: details 需求原文 / 设计意图
-补齐弹窗体系:右键菜单。原创实现,与点击锚定的 Menu 不重复——由 contextmenu 事件触发、定位在鼠标光标处(夹回视口),复用 Menu 的项结构与 .ms-menu__item 样式;点外/Esc/滚动关闭,键盘方向键可达。旗舰补强:复用 Menu MenuItem/logic(separator/group/icon/shortcut/checked/href + typeahead)、接 tone、事件全留口(onContextMenu 可拦截 / onOpen 带坐标 / onOpenChange 受控双通道 / onSelect / onEscapeKeyDown / onPointerDownOutside)、包裹根与浮层透传原生属性、classNames/renderItem。
+补齐弹窗体系:右键菜单。原创实现,与点击锚定的 Menu 不重复——由 contextmenu 事件触发、定位在鼠标光标处(夹回视口),复用 Menu 的项结构与 .ms-menu&#95;&#95;item 样式;点外/Esc/滚动关闭,键盘方向键可达。旗舰补强:复用 Menu MenuItem/logic(separator/group/icon/shortcut/checked/href + typeahead)、接 tone、事件全留口(onContextMenu 可拦截 / onOpen 带坐标 / onOpenChange 受控双通道 / onSelect / onEscapeKeyDown / onPointerDownOutside)、包裹根与浮层透传原生属性、classNames/renderItem。
 :::
