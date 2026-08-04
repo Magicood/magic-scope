@@ -74,7 +74,7 @@
       var(--ms-tl-line, var(--ms-color-border)) 0 60%,
       transparent 60% 100%
     )
-    center / 1px 0.5rem repeat-y;
+    center / var(--ms-hairline, 1px) 0.5rem repeat-y;
 }
 
 /* —— 圆点:tone 强调色 + surface 描边(静息不发光,克制优雅) —— */
@@ -170,9 +170,13 @@
   inline-size: 100%;
 }
 @container (min-width: 32rem) {
-  /* 节点列脱流浮在整条上方居中:inset-block 必须显式给 0,否则块轴高度塌成圆点高度,
-   * 连线(inset-block: 起点 0)算出来是负值 → 高度 0,交替模式全程看不到轴。
-   * 它是 aria-hidden 的装饰层且盖住整条,必须 pointer-events: none 放行内容区的点击 / 选中。 */
+  /* 节点列脱流浮在整条上方,横跨整宽以便居中:
+   * - inset-block 必须显式给 0。绝对定位元素不锚块轴就走 shrink-to-fit,高度塌成圆点那么高,
+   *   连线(靠 flex 吃剩余高度)于是无处可长 → 整条中轴看不见。
+   * - 它是 aria-hidden 的纯装饰层却盖住整条,必须 pointer-events: none,
+   *   否则正文区的点击与拖选全被它吃掉。
+   * - 圆点 / 图标由基础规则的 align-items: center 居中即可落在中轴,
+   *   **不要**再给它们叠 inset-inline-start: 50%(那会把节点推到最右缘)。 */
   .ms-timeline--alternate .ms-timeline__node {
     position: absolute;
     inset-inline: 0;
@@ -180,8 +184,6 @@
     inline-size: 100%;
     pointer-events: none;
   }
-  /* 节点列已是整条宽度且 justify-content: center,圆点 / 图标天然落在中轴,
-   * 不能再叠 50% 位移(会把节点推到最右边)。 */
   /* 内容列锁死在中轴的一侧:基础规则的 flex-grow 会把它撑满整行,只给 inline-size 拦不住,
    * 长正文会横过中轴压到轴线上 —— 必须连 flex 一起改写。 */
   .ms-timeline--alternate .ms-timeline__content {
@@ -231,7 +233,7 @@
       var(--ms-tl-line, var(--ms-color-border)) 0 60%,
       transparent 60% 100%
     )
-    center / 1px 0.5rem repeat-y;
+    center / var(--ms-hairline, 1px) 0.5rem repeat-y;
 }
 
 /* —— 呼吸圆点:tone 发光脉冲。强度 / 位移乘 motion-scale;reduced-motion / 总闸停 —— */
