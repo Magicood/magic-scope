@@ -27,7 +27,7 @@
 | `value` | `string \| null` | — | 受控:当前打开的菜单 value(null = 全关)。传入即受控,需配合 onValueChange。 |
 | `defaultValue` | `string \| null` | `null` | 非受控初始打开的菜单 value。默认 null(全关)。 |
 | `classNames` | `MenubarClassNames` | — | 各部件细粒度 className 槽位。 |
-| `label` * | `ReactNode` | — | 触发器文本(顶级菜单名,如「文件」)。 |
+| `label` | `ReactNode` | — | 触发器文本(顶级菜单名,如「文件」)。 |
 | `items` | `MenubarItem[]` | — | 数据驱动的菜单项(item / separator / group + 一层 submenu)。与 children 二选一,优先 items。 |
 | `textValue` | `string` | — | typeahead 用于匹配触发器纯文本(label 非字符串时提供)。 |
 

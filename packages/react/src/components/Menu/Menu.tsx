@@ -391,7 +391,9 @@ const MenuBase = forwardRef<HTMLDivElement, MenuProps>(
       style?: CSSProperties;
     };
     const triggerStyle: AnchorStyle = { ...triggerProps.style, anchorName };
-    const childTriggerRef = (trigger as { ref?: Ref<unknown> }).ref;
+    // React 19 把 ref 移到 props.ref;旧版在 element.ref。两处都兼容(与 Tooltip 同口径)。
+    const childTriggerRef =
+      (triggerProps.ref as Ref<unknown> | undefined) ?? (trigger as { ref?: Ref<unknown> }).ref;
 
     const renderedTrigger = cloneElement(trigger, {
       ...triggerProps,
@@ -618,7 +620,9 @@ const MenuItemElement = forwardRef<HTMLButtonElement, MenuItemElementProps>(
       .join(' ');
     if (asChild && isValidElement(children)) {
       const child = children as ReactElement<Record<string, unknown>>;
-      const childRef = (child as { ref?: Ref<unknown> }).ref;
+      // React 19 把 ref 移到 props.ref;旧版在 element.ref。两处都兼容(与 Tooltip 同口径)。
+      const childRef =
+        (child.props.ref as Ref<unknown> | undefined) ?? (child as { ref?: Ref<unknown> }).ref;
       const merged = mergeAsChildProps({ ...props, className: cls, role: 'menuitem' }, child.props);
       return cloneElement(child, {
         ...merged,
@@ -695,7 +699,9 @@ export interface MenuTriggerProps {
 const MenuTrigger = forwardRef<HTMLElement, MenuTriggerProps>(({ children }, ref) => {
   const child = children;
   // React 19 把 ref 移到 props.ref;旧版在 element.ref。两处都兼容(与 Tooltip 同口径)。
-  const childProps = child.props as { ref?: Ref<unknown> };
+  // `?? {}`:children 非法元素时(TS 挡不住 JS 使用方)不在这里抛 TypeError,
+  // 把报错留给下面的 cloneElement,使用方看到的仍是 React 自己那句「元素类型无效」。
+  const childProps = (child.props ?? {}) as { ref?: Ref<unknown> };
   const childRef = childProps.ref ?? (child as { ref?: Ref<unknown> }).ref;
   return cloneElement(child, {
     ref: composeRefs(ref as Ref<unknown>, childRef),
