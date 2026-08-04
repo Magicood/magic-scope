@@ -498,7 +498,6 @@ const SplitterBase = forwardRef<SplitterHandle, SplitterProps>(
     );
   },
 );
-SplitterBase.displayName = 'Splitter';
 
 // 只把真正的 DOM 透传属性放到面板 div 上(剔除 Splitter.Panel 的元数据 props 与已单独处理的 className/style/children)。
 function filterPanelDomProps(
@@ -531,4 +530,7 @@ function filterPanelDomProps(
 /** 复合导出:Splitter.Panel 作为静态属性挂载,支持 <Splitter><Splitter.Panel/></Splitter> 写法。 */
 type SplitterComponent = typeof SplitterBase & { Panel: typeof SplitterPanel };
 export const Splitter = SplitterBase as SplitterComponent;
+// displayName 挂在导出名(而非局部 SplitterBase)上:props 抽取按「导出名 === 赋值目标名」匹配,
+// 挂局部名会让 react-docgen 把主组件 doc 错配成 'Splitter.Panel' 而被静默丢弃(运行时同一对象,无行为差异)。
+Splitter.displayName = 'Splitter';
 Splitter.Panel = SplitterPanel;

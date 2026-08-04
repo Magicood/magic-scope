@@ -226,7 +226,6 @@ const DescriptionsRoot = forwardRef<HTMLDivElement, DescriptionsProps>((props, r
     </Tag>
   );
 });
-DescriptionsRoot.displayName = 'Descriptions';
 
 /** 从 children 里提取 Descriptions.Item 的 props 为 items(复合子组件入口)。 */
 function collectItemsFromChildren(children: ReactNode): DescriptionsItem[] {
@@ -280,6 +279,9 @@ function resolveBaseColumns(columns: ResponsiveColumns): number {
  */
 type DescriptionsComponent = typeof DescriptionsRoot & { Item: typeof DescriptionsItemComponent };
 export const Descriptions = DescriptionsRoot as DescriptionsComponent;
+// displayName 挂在导出名(而非局部 DescriptionsRoot)上:props 抽取按「导出名 === 赋值目标名」匹配,
+// 挂局部名会让 react-docgen 把主组件 doc 错配成 'Descriptions.Item' 而被静默丢弃(运行时同一对象,无行为差异)。
+Descriptions.displayName = 'Descriptions';
 Descriptions.Item = DescriptionsItemComponent;
 
 // 注:数据项类型 `DescriptionsItem`(来自 logic)已占用该名;复合子组件以 `Descriptions.Item`

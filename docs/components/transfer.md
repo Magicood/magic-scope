@@ -16,9 +16,23 @@
 
 | 参数 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
+| `dataSource` * | `readonly TransferItem[]` | — | 全量数据源(左右两栏合并的真相源)。 |
+| `targetKeys` | `readonly string[]` | — | 受控:位于右栏(目标)的 key 集合。 |
+| `defaultTargetKeys` | `readonly string[]` | — | 非受控初始右栏 key 集合。 |
+| `render` | `((item: TransferItem) => ReactNode)` | — | 自定义每项渲染(覆盖默认 title 文本);返回内联节点。 |
+| `titles` | `readonly [ReactNode, ReactNode]` | — | 两栏标题 &#91;左, 右]。 |
+| `showSearch` | `boolean` | `false` | 是否显示搜索框(两栏均显示)。默认 false。 |
+| `filterOption` | `((query: string, item: TransferItem) => boolean)` | — | 自定义过滤匹配器(返回 true 保留);缺省按 title 包含匹配。 |
+| `oneWay` | `boolean` | `false` | 单向模式:仅保留「左→右」方向按钮,右栏不显示移回控件。默认 false。 |
+| `disabled` | `boolean` | `false` | 整体禁用:两栏不可选、方向按钮不可用。 |
+| `classNames` | `TransferClassNames` | — | 细粒度槽位 className。 |
 | `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
+
+| 事件 | 签名 | 说明 |
+| --- | --- | --- |
+| `onChange` | `(targetKeys: string[], direction: TransferDirection, moveKeys: string[]) => void` | 右栏 key 集合变化回调。<br>· `targetKeys` — 移动后的新右栏 key 集合(按 dataSource 原序)。<br>· `direction` — 本次移动方向(`right` 左→右 / `left` 右→左)。<br>· `moveKeys` — 本次实际移动的 key(已剔除禁用 / 不存在的)。 |
 
 此外透传原生 `<div>` 的全部标准事件(onClick / onFocus / onKeyDown …),与自有事件按 compose 合并、互不覆盖。
 

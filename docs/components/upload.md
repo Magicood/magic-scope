@@ -16,9 +16,29 @@
 
 | 参数 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
+| `fileList` | `UploadFile[]` | — | 受控文件列表。传入即受控,增删/状态推进只通过 onChange 反映,组件不持有内部副本。 |
+| `defaultFileList` | `UploadFile[]` | — | 非受控初始列表。 |
+| `multiple` | `boolean` | `false` | 允许多选。默认 false。 |
+| `accept` | `string` | — | 原生 accept 串(逗号分隔扩展名 / MIME / 通配),同时用于客户端过滤。 |
+| `maxCount` | `number` | — | 最大条数(含已有)。超出的新文件被拒。&lt;=0 / 未给视为不限。 |
+| `disabled` | `boolean` | `false` | 禁用整个组件。 |
+| `listType` | `"picture" \| "text"` | `text` | 列表形态:文本行 / 图片缩略(picture 用 url 显缩略图)。默认 text。 |
+| `tone` | `"primary" \| "accent" \| "success" \| "warning" \| "danger" \| "info" \| "neutral"` | `primary` | 语义色调,经全库 tone resolver 派生触发区高亮 / 进度发光。默认 primary。 |
+| `beforeUpload` | `((file: File, fileList: File[]) => boolean \| File \| Promise<boolean \| File>) \| undefined` | — | 添加前钩子:返回 false 阻止该文件入列;返回新的 File 则替换(如压缩 / 改名);<br>返回 Promise 同理(异步校验)。不实现网络,只做准入与改写。 |
+| `customRequest` | `((option: UploadRequestOption) => void)` | — | 自定义上传实现(可插拔):组件把 file + 三个状态回调交给你,你用 XHR/fetch 真正传,<br>并在合适时机调用 onProgress / onSuccess / onError。&#42;&#42;组件本身不内置任何网络请求&#42;&#42;——<br>不提供 customRequest 时,文件停在 pending(仅做选择/校验/展示)。 |
+| `triggerText` | `ReactNode` | — | 触发区主文案(覆盖 i18n upload.trigger)。 |
+| `hint` | `ReactNode` | — | 触发区提示文案(覆盖 i18n upload.hint)。 |
+| `children` | `ReactNode` | — | 触发区自定义内容(完全替换默认图标+文案);受控的拖拽/点击仍由根接管。 |
+| `classNames` | `UploadClassNames` | — | 各部件细粒度 className 槽位。 |
 | `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
+
+| 事件 | 签名 | 说明 |
+| --- | --- | --- |
+| `onChange` | `(fileList: UploadFile[]) => void` | 列表变化回调(增删、状态/进度推进都会触发,入参为最新整表)。<br>· `fileList` — 变化后的最新文件整表(含各条最新 status / percent / url)。 |
+| `onPreview` | `(file: UploadFile) => void` | 点击列表项预览图标 / 缩略图时回调(组件不内置 lightbox,交由用户)。<br>· `file` — 被点击预览的那条文件视图模型。 |
+| `onRemove` | `(file: UploadFile) => void` | 删除某条时回调(在列表更新之前)。<br>· `file` — 即将被删除的那条文件视图模型(此时尚未从列表移除)。 |
 
 此外透传原生 `<div>` 的全部标准事件(onClick / onFocus / onKeyDown …),与自有事件按 compose 合并、互不覆盖。
 
