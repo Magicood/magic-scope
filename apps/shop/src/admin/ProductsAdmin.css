@@ -1,0 +1,163 @@
+/* ============================================================================
+ * ProductsAdmin 私有样式(.pa-*)—— 目录总表 + 新建商品抽屉。
+ * 只消费 --ms-* 语义变量 / .ad-* 骨架 + color-mix 派生;
+ * 分隔一律发丝线或留白,无硬边框;商品色板经 CSS 变量注入(数据即颜色真相)。
+ * ========================================================================== */
+
+/* 视觉隐藏:纯装饰列(色板 / 操作)的表头仍要给读屏可读名 */
+.pa-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ------------------------------- 工具条 ----------------------------------- */
+
+.pa-search {
+  inline-size: 236px;
+}
+
+.pa-cat-trigger {
+  min-inline-size: 172px;
+}
+
+/* 「本地改动」提示:纯文字,退到最轻的层级 */
+.pa-local-hint {
+  font-size: 12px;
+  color: var(--ms-color-fg-subtle);
+}
+
+/* ------------------------------- 主表 ------------------------------------- */
+
+/* Table 自带内边距,卡面只留一圈呼吸 */
+.pa-table-card {
+  padding: 6px 8px 8px;
+}
+
+/* 商品视觉:36px 圆角色块,用 visual.field → visual.body 渐变(变量由行内注入) */
+.pa-swatch {
+  display: block;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--pa-field), var(--pa-body) 130%);
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--ms-color-fg), transparent 92%);
+}
+
+.pa-product {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.pa-product-name {
+  font-weight: 500;
+  color: var(--ms-color-fg);
+}
+
+.pa-product-tagline {
+  max-width: 340px;
+  overflow: hidden;
+  font-size: 12px;
+  color: var(--ms-color-fg-muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 数字列统一等宽数字,右对齐才站得住 */
+.pa-num {
+  font-variant-numeric: tabular-nums;
+}
+
+.pa-price {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 1px;
+  color: var(--ms-color-fg);
+}
+
+.pa-price-preview,
+.pa-price-input {
+  font-variant-numeric: tabular-nums;
+}
+
+.pa-price-input {
+  max-inline-size: 5.5em;
+}
+
+.pa-stock {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.pa-rating {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 5px;
+  color: var(--ms-color-fg);
+}
+
+.pa-rating svg {
+  color: var(--ms-color-warning);
+}
+
+/* 下架行:内容列整体退隐(Active 开关与行尾操作保持全亮,便于恢复) */
+.pa-cell-off {
+  opacity: 0.45;
+  transition: opacity var(--ms-duration-base) var(--ms-ease-standard);
+}
+
+.pa-row-actions {
+  display: inline-flex;
+}
+
+.pa-empty {
+  margin: 0;
+  padding: 26px 0;
+  font-size: 13px;
+  color: var(--ms-color-fg-muted);
+  text-align: center;
+}
+
+/* ------------------------------ 新建抽屉 ---------------------------------- */
+
+/* 规格:480px 面板(库的 size 档之外,经 Drawer 的宽度变量覆盖) */
+.pa-drawer-panel {
+  --ms-drawer-inline: min(480px, 100vw);
+}
+
+.pa-drawer-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* 价格 + 色板并排:价格吃满剩余,色板按内容收缩 */
+.pa-form-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: start;
+}
+
+.pa-upload-block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* 与库的 Form label(md 档)同字号字重,视觉上归为同一列表 */
+.pa-upload-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--ms-color-fg);
+}
