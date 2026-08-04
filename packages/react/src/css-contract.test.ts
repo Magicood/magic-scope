@@ -51,15 +51,21 @@ describe('CSS 静态契约(全组件)', () => {
     const BLOCK_ANCHOR = /inset-block|inset:|\btop:|\bbottom:|block-size:/;
     const bad: string[] = [];
     for (const file of cssFiles) {
-      const text = readFileSync(file, 'utf8');
+      const raw = readFileSync(file, 'utf8');
+      // 先把注释抹成等长空白(保留换行以免行号漂移):注释里出现的大括号
+      // (如 `.ms-tone-{tone}` 这种写法)会把下面的块切歪,造成漏报。
+      const text = raw.replace(/\/\*[\s\S]*?\*\//g, (c) => c.replace(/[^\n]/g, ' '));
       // 只匹配最内层规则块(@media / @container 的块体含大括号,自然被跳过)
       for (const m of text.matchAll(/\{([^{}]*)\}/g)) {
         const body = m[1] ?? '';
         if (!/position:\s*absolute/.test(body)) continue;
-        if (/position-area|inset-area|ms-contract:\s*static-block-ok/.test(body)) continue;
         if (INLINE_ANCHOR.test(body) && !BLOCK_ANCHOR.test(body)) {
-          const line = text.slice(0, m.index).split('\n').length;
-          bad.push(`${file.split('/components/')[1] ?? file}:${line}`);
+          // 豁免只认原文(注释已被抹掉):锚点定位浮层由 position-area 给位置,天然豁免
+          const rawBody = raw.slice(m.index, m.index + m[0].length);
+          if (/position-area|inset-area|ms-contract:\s*static-block-ok/.test(rawBody)) continue;
+          bad.push(
+            `${file.split('/components/')[1] ?? file}:${text.slice(0, m.index).split('\n').length}`,
+          );
         }
       }
     }
