@@ -564,7 +564,7 @@ function GridCardInner({ product, index }: { product: Product; index: number }) 
         {product.badges && product.badges.length > 0 ? (
           <span className="pl-card-badges">
             {product.badges.map((b) => (
-              <Tag key={b} size="sm" tone={BADGE_META[b].tone}>
+              <Tag key={b} size="sm" variant="solid" tone="neutral" className="sf-badge">
                 {BADGE_META[b].label}
               </Tag>
             ))}

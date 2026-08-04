@@ -309,8 +309,20 @@
   cursor: help;
 }
 
+/* Share 是次要动作:收成纯文字,不铺浅色底(浅底彩块是上一版留下的旧味) */
 .pd-share {
   margin-left: auto;
+  background: none;
+  color: var(--ms-color-fg-muted);
+  padding-inline: 0;
+  font-weight: 600;
+}
+
+.pd-share:hover {
+  background: none;
+  color: var(--ms-color-fg);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 /* Accordion:去掉组件自带的描边卡片外壳,只留行间发丝线,融进信息塔 */

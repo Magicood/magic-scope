@@ -9,7 +9,6 @@ import {
   ScrollArea,
   Statistic,
   Tag,
-  type TagTone,
 } from '@magic-scope/react';
 import type { ComponentPropsWithoutRef } from 'react';
 import { ProductVisual } from '../components/ProductVisual';
@@ -34,11 +33,12 @@ import './Home.css';
  * 全部经 --ms-motion-scale 门控(弱=打折,关=瞬时)。不用 parallax / scrub。
  * ========================================================================== */
 
-/* 徽标文案与色调:克制映射,不做大红大绿。 */
-const BADGE_META: Record<ProductBadge, { label: string; tone: TagTone }> = {
-  new: { label: 'New', tone: 'accent' },
-  bestseller: { label: 'Bestseller', tone: 'neutral' },
-  limited: { label: 'Limited', tone: 'warning' },
+/* 徽标文案。颜色不在这里分叉 —— 三种徽标一律墨色实心(.sf-badge),
+   颜色维度留给品类编码。 */
+const BADGE_LABEL: Record<ProductBadge, string> = {
+  new: 'New',
+  bestseller: 'Bestseller',
+  limited: 'Limited',
 };
 
 const CATEGORY_LABEL = new Map<CategoryId, string>(categories.map((c) => [c.id, c.label]));
@@ -163,8 +163,8 @@ function ProductCard({
           <span className="sf-dot sf-cat-dot" />
           <span className="sf-product-cat">{CATEGORY_LABEL.get(product.category)}</span>
           {badge && (
-            <Tag size="sm" variant="soft" tone={BADGE_META[badge].tone}>
-              {BADGE_META[badge].label}
+            <Tag size="sm" variant="solid" tone="neutral" className="sf-badge">
+              {BADGE_LABEL[badge]}
             </Tag>
           )}
         </div>

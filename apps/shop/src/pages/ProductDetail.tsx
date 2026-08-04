@@ -15,7 +15,6 @@ import {
   Stack,
   Tabs,
   Tag,
-  type TagTone,
   Tooltip,
   toast,
 } from '@magic-scope/react';
@@ -55,10 +54,10 @@ const CROPS: ReadonlyArray<{
 ];
 
 /* 徽标文案与色调(与列表页同一套映射)。 */
-const BADGE_META: Record<ProductBadge, { label: string; tone: TagTone }> = {
-  new: { label: 'New', tone: 'accent' },
-  bestseller: { label: 'Bestseller', tone: 'neutral' },
-  limited: { label: 'Limited', tone: 'warning' },
+const BADGE_LABEL: Record<ProductBadge, string> = {
+  new: 'New',
+  bestseller: 'Bestseller',
+  limited: 'Limited',
 };
 
 /* 产地(mock 数据未含,按品类补合理值)。拆成结构化字段:
@@ -212,8 +211,8 @@ function ProductDetailView({ product }: { product: Product }) {
             {badges.length > 0 && (
               <Stack className="pd-topbar-tags" direction="horizontal" align="center" gap={2}>
                 {badges.map((badge) => (
-                  <Tag key={badge} size="sm" variant="soft" tone={BADGE_META[badge].tone}>
-                    {BADGE_META[badge].label}
+                  <Tag key={badge} size="sm" variant="solid" tone="neutral" className="sf-badge">
+                    {BADGE_LABEL[badge]}
                   </Tag>
                 ))}
               </Stack>
@@ -350,10 +349,9 @@ function ProductDetailView({ product }: { product: Product }) {
               </Stack>
 
               <Stack className="pd-meta" direction="horizontal" align="center" gap={3} wrap="wrap">
+                {/* 库存告警是状态不是标签:只用色点 + 文字,不铺一块浅黄底 */}
                 {product.stock < 15 ? (
-                  <Tag tone="warning" size="sm">
-                    Low stock — {product.stock} left
-                  </Tag>
+                  <span className="sf-badge-warn">Low stock — {product.stock} left</span>
                 ) : null}
                 <Tooltip content="Free over $150. Carbon-neutral carriers." placement="top" arrow>
                   <span className="pd-shipnote">Free shipping over $150</span>

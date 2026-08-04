@@ -295,6 +295,46 @@ body {
   color: var(--cat);
 }
 
+/* -------------------------------- 徽标 ----------------------------------- */
+
+/* 商品徽标(Bestseller / New / Limited):一律墨色实心小标。
+   刻意不给三者不同的色 —— 这套系统里颜色是**品类编码**,徽标再引入一个颜色维度
+   就会和品类色打架(浅底彩色标签也正是上一版留下的旧味)。区分靠文字本身。 */
+.sf-badge {
+  background: var(--ms-color-fg);
+  color: var(--ms-color-bg);
+  border: 0;
+  border-radius: 999px;
+  padding: 3px 9px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+/* 库存告警:唯一允许破例用语义色的徽标(它是状态不是标签),但只用文字与色点,不铺底 */
+.sf-badge-warn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  color: var(--ms-color-fg-muted);
+  padding: 0;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.sf-badge-warn::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ms-color-warning);
+  flex: none;
+}
+
 /* ------------------------------ 满出血横滚 ------------------------------- */
 
 .sf-rail {
