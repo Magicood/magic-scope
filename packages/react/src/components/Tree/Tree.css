@@ -7,6 +7,10 @@
 .ms-tree {
   --ms-tree-indent: calc(1.375rem * var(--ms-density-scale, 1));
   --ms-tree-row-h: calc(1.75rem * var(--ms-density-scale, 1));
+  /* 箭头边长与行内 gap:引导线要对齐箭头中心,三者必须同一个真相源,否则改一处就错位 */
+  --ms-tree-toggle: 1.25rem;
+  --ms-tree-gap: var(--ms-space-1, 0.25rem);
+  --ms-tree-line-w: max(1px, 0.0625rem);
   list-style: none;
   margin: 0;
   padding: 0;
@@ -25,7 +29,7 @@
 .ms-tree__node {
   display: flex;
   align-items: center;
-  gap: var(--ms-space-1);
+  gap: var(--ms-tree-gap);
   min-block-size: var(--ms-tree-row-h);
   padding-inline-end: var(--ms-space-2);
   border-radius: var(--ms-radius-sm);
@@ -56,16 +60,54 @@
   flex: none;
   inline-size: calc(var(--ms-tree-level, 0) * var(--ms-tree-indent));
 }
+/* 层级引导线:每个祖先层级一条竖导轨,对齐该层级展开箭头的中心。
+ * 用平铺背景而不是 border,原因有二:
+ * 1) 空元素的 border 只有一条边,画不出「每层一条」,深层节点会没有自己父级的导轨;
+ * 2) border 挂在空盒上要靠块轴撑高 —— 父级 .ms-tree__node 是 align-items: center,
+ *    flex 子项默认不拉伸,空盒块高 = 0,0 高度的边框一个像素都不绘制(本 bug 的根因)。
+ * 平铺周期 = 一级缩进;相位 = 行内 gap + 箭头半宽 —— 缩进盒与箭头之间隔着 .ms-tree__node 的
+ * flex gap(缩进盒宽 0 时也照样存在),漏算这一段整排导轨就会整体偏 gap 那么多像素。
+ * 盒宽 = level × 缩进,根节点 level 0 宽 0,背景被裁成零面积,天然不画多余竖线。
+ * 相位再夹一层 min(…, 缩进 − 线宽):背景裁在盒内,相位 ≥ 缩进时最深一条(也就是直接父级那条)
+ * 会被裁掉,于是把缩进调窄到 < 14px(或密度缩到 < 0.64)就会少画一条。夹住后
+ * 「每层恰好一条」对任意缩进都成立,极窄缩进下导轨退化为贴紧该层右沿、不再跟箭头中心。 */
 .ms-tree--line .ms-tree__indent {
-  border-inline-start: 1px dashed var(--ms-color-border);
-  margin-inline-start: calc(var(--ms-tree-indent) / 2);
+  align-self: stretch;
+  background-image: linear-gradient(
+    to right,
+    var(--ms-tree-line, var(--ms-color-border)) 0 var(--ms-tree-line-w),
+    transparent var(--ms-tree-line-w)
+  );
+  background-size: var(--ms-tree-indent) 100%;
+  background-position: min(
+      calc(var(--ms-tree-gap) + var(--ms-tree-toggle) / 2),
+      calc(var(--ms-tree-indent) - var(--ms-tree-line-w))
+    )
+    0;
+  background-repeat: repeat-x;
+}
+/* RTL 补正:渐变方向与长度型 background-position 都是物理轴,而缩进盒是 inline-size 排布、
+ * RTL 下整体镜像到行的右侧 —— 相位不跟着翻的话每条会偏 |2×相位 − 缩进|(默认 md 即 6px)。
+ * 故 RTL 改为从右边缘起算、渐变同时反向;min() 夹持必须一并带上,否则窄缩进又会少画一条。 */
+.ms-tree--line:dir(rtl) .ms-tree__indent {
+  background-image: linear-gradient(
+    to left,
+    var(--ms-tree-line, var(--ms-color-border)) 0 var(--ms-tree-line-w),
+    transparent var(--ms-tree-line-w)
+  );
+  background-position: right
+    min(
+      calc(var(--ms-tree-gap) + var(--ms-tree-toggle) / 2),
+      calc(var(--ms-tree-indent) - var(--ms-tree-line-w))
+    )
+    top 0;
 }
 
 /* 展开箭头 */
 .ms-tree__toggle {
   flex: none;
-  inline-size: 1.25rem;
-  block-size: 1.25rem;
+  inline-size: var(--ms-tree-toggle);
+  block-size: var(--ms-tree-toggle);
   display: inline-flex;
   align-items: center;
   justify-content: center;
