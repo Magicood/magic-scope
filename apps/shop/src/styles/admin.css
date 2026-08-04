@@ -1,12 +1,17 @@
 /* ============================================================================
- * Arden 商家控制台设计系统(.ad-*)—— Linear / Stripe Dashboard 式轻线条控制台。
- * 原则与买家端一致:发丝线 + 表面分级代替硬边框;密度切换(data-ms-density)
- * 由组件库接管,这里只管版面骨架。页面私有样式放各页面同名 .css。
+ * Arden 商家控制台设计系统(.ad-*)—— Chromatic Grid 的控制台方言。
+ *
+ * 与买家端同源:同一套拼贴块 / 同一套品类色 / 同样的不等分网格思路,
+ * 但密度更高、动效更少。关键差异点(相对上一版的"四张一样的白卡"):
+ *   · KPI 行不等宽,首张是主色满色块 —— 一眼看到最重要的数;
+ *   · 状态用**色条**编码而不是彩色药丸(表格里更安静、更好扫);
+ *   · 订单号 / 编号一律等宽字体,数字列 tabular。
+ * 密度切换(data-ms-density)由组件库接管,这里只管版面骨架。
  * ========================================================================== */
 
 .ad-root {
   display: grid;
-  grid-template-columns: 228px minmax(0, 1fr);
+  grid-template-columns: 200px minmax(0, 1fr);
   min-height: 100dvh;
   background: var(--ms-color-bg);
 }
@@ -19,38 +24,37 @@
   height: 100dvh;
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  padding: 18px 12px;
-  background: color-mix(in oklab, var(--ms-color-surface), var(--ms-color-bg) 40%);
-  border-right: 1px solid var(--sf-hairline);
+  gap: 3px;
+  padding: 16px 12px;
+  background: var(--ms-color-surface-raised);
 }
 
 .ad-brand {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 6px 10px 18px;
-  font-family: var(--sf-display);
+  gap: 8px;
+  padding: 4px 10px 16px;
   font-size: 17px;
-  letter-spacing: 0.01em;
+  font-weight: 800;
+  letter-spacing: -0.05em;
   color: var(--ms-color-fg);
   text-decoration: none;
 }
 
 .ad-brand-mark {
-  width: 22px;
-  height: 22px;
-  border-radius: 7px;
-  background: linear-gradient(135deg, var(--ms-color-primary), var(--ms-color-accent) 130%);
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  flex: none;
+  background: linear-gradient(135deg, var(--cat-ceramics) 0%, var(--cat-objects) 100%);
 }
 
 .ad-brand small {
-  font-family: var(--sf-sans);
-  font-size: 10.5px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
+  font-size: 9.5px;
+  font-weight: 650;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--ms-color-fg-subtle);
+  color: var(--ms-color-fg-muted);
 }
 
 .ad-nav {
@@ -62,11 +66,11 @@
 .ad-nav-item {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 9px;
   padding: 7px 10px;
-  border-radius: 9px;
+  border-radius: 8px;
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 550;
   color: var(--ms-color-fg-muted);
   text-decoration: none;
   transition:
@@ -79,31 +83,36 @@
   background: color-mix(in oklab, var(--ms-color-fg), transparent 94%);
 }
 
+/* 当前项:实心深块(不是浅灰底)—— 与拼贴语言一致 */
 .ad-nav-item[data-active] {
-  color: var(--ms-color-fg);
-  background: color-mix(in oklab, var(--ms-color-fg), transparent 91%);
+  background: var(--ms-color-fg);
+  color: var(--ms-color-bg);
 }
 
 .ad-nav-item svg {
-  opacity: 0.72;
+  opacity: 0.7;
+  flex: none;
+}
+
+.ad-nav-item[data-active] svg {
+  opacity: 1;
 }
 
 .ad-nav-section {
-  margin: 14px 10px 6px;
-  font-size: 10.5px;
-  font-weight: 600;
-  letter-spacing: 0.12em;
+  margin: 14px 10px 5px;
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--ms-color-fg-subtle);
 }
 
 .ad-sidebar-footer {
   margin-top: auto;
-  padding: 10px 10px 4px;
+  padding: 10px 4px 2px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  border-top: 1px solid var(--sf-hairline);
+  gap: 8px;
 }
 
 /* ------------------------------- 顶栏 ------------------------------------ */
@@ -114,12 +123,11 @@
   z-index: 20;
   display: flex;
   align-items: center;
-  gap: 14px;
-  height: 54px;
-  padding-inline: 24px;
-  background: color-mix(in oklab, var(--ms-color-bg), transparent 18%);
+  gap: 12px;
+  height: 52px;
+  padding-inline: 16px;
+  background: color-mix(in oklab, var(--ms-color-bg), transparent 16%);
   backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--sf-hairline);
 }
 
 .ad-topbar-spacer {
@@ -136,70 +144,135 @@
 
 .ad-content {
   width: 100%;
-  max-width: 1160px;
-  margin-inline: auto;
-  padding: 26px 28px 64px;
-  display: flex;
-  flex-direction: column;
-  gap: 22px;
+  padding: 4px 16px 48px;
+  display: grid;
+  gap: var(--sf-gap);
+  align-content: start;
 }
 
 .ad-page-header {
   display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 16px;
+  align-items: center;
+  gap: 12px;
   flex-wrap: wrap;
+  padding: 10px 4px 2px;
 }
 
 .ad-page-title {
   margin: 0;
-  font-size: 20px;
-  font-weight: 600;
-  letter-spacing: -0.015em;
+  font-size: 21px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
 }
 
 .ad-page-sub {
-  margin: 4px 0 0;
-  font-size: 13px;
+  margin: 3px 0 0;
+  font-size: 12.5px;
   color: var(--ms-color-fg-muted);
 }
 
 .ad-page-actions {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
+  margin-left: auto;
 }
 
-/* 卡面:表面分级 + 极柔阴影,无边框 */
+/* 面板:控制台的基本块,无描边靠表面分级 */
 .ad-card {
   background: var(--ms-color-surface-raised);
-  border-radius: 14px;
-  box-shadow:
-    0 0 0 1px color-mix(in oklab, var(--ms-color-border), transparent 55%),
-    0 1px 2px color-mix(in oklab, var(--ms-color-fg), transparent 95%);
-  padding: 18px 20px;
+  border-radius: var(--sf-r);
+  padding: 16px 18px;
 }
 
 .ad-card-title {
-  margin: 0 0 2px;
-  font-size: 13px;
-  font-weight: 600;
+  margin: 0 0 3px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.ad-card-sub {
+  font-size: 12px;
   color: var(--ms-color-fg-muted);
+  margin-bottom: 12px;
 }
 
-/* 指标卡阵列 */
-.ad-stat-grid {
+/* ---- KPI 行:不等宽,首张满色 ---- */
+
+.ad-kpis {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 14px;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr;
+  gap: var(--sf-gap);
 }
 
-/* 表格工具条(筛选/搜索/批量操作) */
+.ad-kpi {
+  background: var(--ms-color-surface-raised);
+  border-radius: var(--sf-r);
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ad-kpi-lead {
+  background: var(--ms-color-primary);
+  color: var(--ms-color-on-primary);
+}
+
+.ad-kpi-k {
+  font-size: 10.5px;
+  font-weight: 650;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.72;
+}
+
+/* 数值一律中性色(语义色只给趋势行)—— 专业控制台的做法 */
+.ad-kpi-v {
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.ad-kpi-lead .ad-kpi-v {
+  font-size: 40px;
+}
+
+.ad-kpi-d {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.ad-kpi-d-up {
+  color: var(--ms-color-success);
+}
+
+.ad-kpi-d-dn {
+  color: var(--ms-color-danger);
+}
+
+.ad-kpi-lead .ad-kpi-d {
+  color: color-mix(in oklab, var(--ms-color-on-primary), transparent 20%);
+}
+
+/* ---- 双栏:主内容 + 侧栏,不等分 ---- */
+
+.ad-split {
+  display: grid;
+  grid-template-columns: 1.85fr 1fr;
+  gap: var(--sf-gap);
+  align-items: start;
+}
+
+/* ---- 工具条 ---- */
+
 .ad-toolbar {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   flex-wrap: wrap;
 }
 
@@ -207,16 +280,94 @@
   flex: 1;
 }
 
-/* 双栏:主内容 + 侧详情 */
-.ad-split {
+/* ---- 表格语言:状态色条 + 等宽单号 ---- */
+
+.ad-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.ad-status::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
+  background: var(--ad-status-color, var(--ms-color-fg-subtle));
+  flex: none;
+}
+
+.ad-status-pending {
+  --ad-status-color: var(--ms-color-warning);
+}
+
+.ad-status-paid {
+  --ad-status-color: var(--cat-textiles);
+}
+
+.ad-status-fulfilled {
+  --ad-status-color: var(--cat-objects);
+}
+
+.ad-status-shipped {
+  --ad-status-color: var(--cat-ceramics);
+}
+
+.ad-status-delivered {
+  --ad-status-color: var(--ms-color-success);
+}
+
+.ad-status-refunded,
+.ad-status-cancelled {
+  --ad-status-color: var(--ms-color-danger);
+}
+
+.ad-ord {
+  font-family: var(--sf-mono);
+  font-size: 12px;
+}
+
+/* 需处理清单:左侧色条编码严重度 */
+.ad-attn {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 320px;
-  gap: 18px;
-  align-items: start;
+  gap: 1px;
+}
+
+.ad-attn-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 0;
+  font-size: 13px;
+  border-bottom: 1px solid var(--sf-hairline);
+}
+
+.ad-attn-row:last-child {
+  border-bottom: 0;
+}
+
+.ad-attn-row::before {
+  content: "";
+  width: 3px;
+  height: 20px;
+  border-radius: 2px;
+  background: var(--ad-attn-color, var(--ms-color-fg-subtle));
+  flex: none;
+}
+
+.ad-attn-n {
+  margin-left: auto;
+  font-size: 12px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
 }
 
 @media (max-width: 1080px) {
-  .ad-split {
+  .ad-split,
+  .ad-kpis {
     grid-template-columns: 1fr;
   }
 }
@@ -227,6 +378,20 @@
   }
 
   .ad-sidebar {
+    position: static;
+    height: auto;
+    flex-direction: row;
+    align-items: center;
+    overflow-x: auto;
+    padding: 10px 12px;
+  }
+
+  .ad-nav {
+    flex-direction: row;
+  }
+
+  .ad-nav-section,
+  .ad-sidebar-footer {
     display: none;
   }
 }

@@ -1,26 +1,49 @@
 /* ============================================================================
- * Arden 买家端设计系统 —— 建在 @magic-scope/tokens 的 --ms-* 语义变量之上。
- * 取向:编辑式精品零售(Aesop / Everlane / Toast 一路)——
- *   暖纸白底、深 ink 文字与 CTA、serif 展示标题、去硬边框、留白做分隔。
+ * Arden 买家端设计系统 —— Chromatic Grid
+ *
+ * 设计语言的一句话:**色块是版面骨架,不是装饰**。
+ * 页面由不等分的色块拼贴构成,尺度对比强烈(超大标题块 / 小数据块 / 满出血带),
+ * 没有「标题 + 等分卡片」的章节堆叠。四个品类各有自己的色,色彩承担导航与信息编码。
+ *
+ * 与被否的上一版(暖纸白 + serif + 等分三列 + 全站居中)彻底切割:
+ *   底色冷灰白 · 字体几何无衬线 800 紧字距 · 网格不等分 · 密度有疏密反差。
+ *
  * 约定:买家端前缀 .sf-,商品视觉 .pv-,后台前缀 .ad-(见 admin.css)。
  * 页面私有样式放各页面同名 .css,只允许消费这里的原语与 --ms- / --sf- 变量。
  * ========================================================================== */
 
 :root {
-  /* 展示衬线:macOS 上是 New York,其余平台优雅回退 —— 编辑式标题的关键 */
-  --sf-display: ui-serif, "New York", "Iowan Old Style", Palatino, Georgia, serif;
-  --sf-sans: var(--ms-font-sans);
-  /* 发丝线:比 --ms-color-border 更轻,分隔靠它 + 留白,不靠硬边框 */
-  --sf-hairline: color-mix(in oklab, var(--ms-color-border), transparent 40%);
-  --sf-radius: 20px;
-  --sf-radius-sm: 12px;
-  /* 版心与节奏 */
-  --sf-container: 1180px;
-  --sf-gutter: clamp(20px, 4vw, 48px);
+  /* 几何无衬线:标题靠字重与紧字距拉张力,不靠衬线「显高级」 */
+  --sf-sans: "Avenir Next", "Helvetica Neue", Helvetica, sans-serif;
+  --sf-mono: ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* 拼贴系统:块间距 / 卡内边距 / 圆角 —— 全站只用这几档 */
+  --sf-gap: 10px;
+  --sf-pad: clamp(18px, 2.4vw, 30px);
+  --sf-r: 14px;
+  --sf-r-sm: 5px;
+
+  --sf-container: 1280px;
+  --sf-gutter: clamp(12px, 2vw, 22px);
+
+  /* 发丝线:只用于表格与清单的行分隔,不用于卡片描边 */
+  --sf-hairline: color-mix(in oklab, var(--ms-color-border), transparent 30%);
+
+  /* ---- 品类色:主色在 OKLCH 色相轮上等距旋转派生 ----
+     换任何主题家族,四色跟着转,彼此区分度不变 —— 主题引擎「核心驱动可变」的实证。 */
+  --cat-ceramics: var(--ms-color-primary);
+  --cat-lighting: oklch(from var(--ms-color-primary) l c calc(h + 208));
+  --cat-textiles: oklch(from var(--ms-color-primary) calc(l - 0.06) c calc(h + 116));
+  --cat-objects: oklch(from var(--ms-color-primary) l c calc(h + 292));
 }
 
-html {
-  scroll-behavior: smooth;
+/* 不支持相对颜色语法时退回主题语义色,保证功能与可读性 */
+@supports not (color: oklch(from red l c h)) {
+  :root {
+    --cat-lighting: var(--ms-color-accent);
+    --cat-textiles: var(--ms-color-success);
+    --cat-objects: var(--ms-color-danger);
+  }
 }
 
 body {
@@ -29,7 +52,6 @@ body {
   color: var(--ms-color-fg);
   font-family: var(--sf-sans);
   -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
 }
 
 ::selection {
@@ -37,7 +59,7 @@ body {
   color: var(--ms-color-on-selection);
 }
 
-/* ------------------------------- 版面原语 -------------------------------- */
+/* ============================== 版面原语 ================================== */
 
 .sf-container {
   max-width: var(--sf-container);
@@ -45,65 +67,102 @@ body {
   padding-inline: var(--sf-gutter);
 }
 
-.sf-section {
-  padding-block: clamp(72px, 10vw, 136px);
+/* 拼贴区:块与块之间只有 --sf-gap,靠色块自身体量分节,不靠大段留白 */
+.sf-tiles {
+  display: grid;
+  gap: var(--sf-gap);
+  padding-inline: var(--sf-gap);
 }
 
-.sf-section-tight {
-  padding-block: clamp(48px, 6vw, 88px);
+/* 通用块:任何一块拼贴内容的基座 */
+.sf-tile {
+  border-radius: var(--sf-r);
+  padding: var(--sf-pad);
+  background: var(--ms-color-surface-raised);
+  display: flex;
+  flex-direction: column;
 }
 
-/* 章节眉标:小号大写 + 陶土圆点 —— 全站统一的章节起手式 */
-.sf-eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--ms-color-fg-subtle);
+/* 满色块:承载主标题 / 大数字 */
+.sf-tile-solid {
+  background: var(--ms-color-primary);
+  color: var(--ms-color-on-primary);
 }
 
-.sf-eyebrow::before {
-  content: "";
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--ms-color-accent);
+.sf-tile-ink {
+  background: var(--ms-color-fg);
+  color: var(--ms-color-bg);
 }
 
-/* 展示标题:衬线、常规字重、收紧字距 —— 大而轻,不靠加粗压人 */
+/* ------------------------------- 字体尺度 -------------------------------- */
+
+/* 展示标题:几何无衬线 800,字距收到 -0.045em —— 大而紧,靠尺度差拉张力 */
 .sf-display {
-  font-family: var(--sf-display);
-  font-weight: 460;
-  letter-spacing: -0.015em;
-  line-height: 1.06;
-  text-wrap: balance;
   margin: 0;
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  line-height: 0.98;
+  text-wrap: balance;
 }
 
 .sf-display-xl {
-  font-size: clamp(44px, 6.4vw, 84px);
+  font-size: clamp(30px, 4.4vw, 58px);
 }
 
 .sf-display-lg {
-  font-size: clamp(32px, 4.2vw, 56px);
+  font-size: clamp(24px, 3vw, 38px);
+  line-height: 1.02;
 }
 
 .sf-display-md {
-  font-size: clamp(24px, 3vw, 36px);
+  font-size: clamp(19px, 2.2vw, 27px);
+  letter-spacing: -0.04em;
+}
+
+/* 超大数字:数字墙 / KPI 的主角,永远 tabular */
+.sf-numeral {
+  font-weight: 800;
+  letter-spacing: -0.06em;
+  line-height: 0.84;
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(64px, 10vw, 132px);
 }
 
 .sf-lede {
-  font-size: clamp(16px, 1.6vw, 19px);
-  line-height: 1.65;
-  color: var(--ms-color-fg-muted);
-  max-width: 56ch;
-  text-wrap: pretty;
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.6;
+  max-width: 32ch;
+  opacity: 0.82;
 }
 
-/* 发丝分隔:代替边框的唯一线条用法 */
+/* 眉标:小号大写宽字距,可挂色点 */
+.sf-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.72;
+}
+
+.sf-kicker-dot::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* 索引编号:等宽,用于清单与订单号 */
+.sf-index {
+  font-family: var(--sf-mono);
+  font-size: 11px;
+  opacity: 0.6;
+}
+
 .sf-hairline {
   border: 0;
   height: 1px;
@@ -111,21 +170,157 @@ body {
   margin: 0;
 }
 
-/* 下划线动效链接(hover 从左划入) */
-.sf-link {
-  color: inherit;
-  text-decoration: none;
-  background-image: linear-gradient(currentColor, currentColor);
-  background-size: 0% 1px;
-  background-repeat: no-repeat;
-  background-position: 0 100%;
-  transition: background-size var(--ms-duration-base) var(--ms-ease-standard);
-  padding-bottom: 2px;
+/* ------------------------------ 交互原语 --------------------------------- */
+
+/* 悬浮抬升:拼贴块统一的 hover 语言(位移,不加阴影不加描边) */
+.sf-lift {
+  transition: transform 0.22s cubic-bezier(0.2, 0.7, 0.3, 1);
 }
 
-.sf-link:hover,
-.sf-link:focus-visible {
-  background-size: 100% 1px;
+.sf-lift:hover,
+.sf-lift:focus-visible {
+  transform: translateY(-3px);
+}
+
+:root[data-ms-motion="off"] .sf-lift {
+  transition: none;
+}
+
+:root[data-ms-motion="off"] .sf-lift:hover {
+  transform: none;
+}
+
+.sf-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex: none;
+}
+
+/* 四色条:品牌签名图形,用在满色块底边与页脚 */
+.sf-spectrum {
+  display: flex;
+  height: 5px;
+  overflow: hidden;
+}
+
+.sf-spectrum i {
+  flex: 1;
+}
+
+.sf-spectrum i:nth-child(1) {
+  background: var(--cat-ceramics);
+}
+
+.sf-spectrum i:nth-child(2) {
+  background: var(--cat-lighting);
+}
+
+.sf-spectrum i:nth-child(3) {
+  background: var(--cat-textiles);
+}
+
+.sf-spectrum i:nth-child(4) {
+  background: var(--cat-objects);
+}
+
+/* ---------------------------- 品类色作用域 -------------------------------- */
+
+/* 给任意容器挂 data-cat,内部的 --cat 即该品类色 */
+[data-cat="ceramics"] {
+  --cat: var(--cat-ceramics);
+}
+
+[data-cat="lighting"] {
+  --cat: var(--cat-lighting);
+}
+
+[data-cat="textiles"] {
+  --cat: var(--cat-textiles);
+}
+
+[data-cat="objects"] {
+  --cat: var(--cat-objects);
+}
+
+.sf-cat-fill {
+  background: var(--cat);
+  color: #fff;
+}
+
+.sf-cat-dot {
+  background: var(--cat);
+}
+
+.sf-cat-text {
+  color: var(--cat);
+}
+
+/* ------------------------------ 满出血横滚 ------------------------------- */
+
+.sf-rail {
+  display: flex;
+  gap: var(--sf-gap);
+  overflow-x: auto;
+  padding-inline: var(--sf-gap);
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.sf-rail::-webkit-scrollbar {
+  display: none;
+}
+
+.sf-rail > * {
+  scroll-snap-align: start;
+  flex: 0 0 226px;
+}
+
+/* -------------------------------- 跑马灯 --------------------------------- */
+
+.sf-ticker {
+  display: flex;
+  align-items: center;
+  height: 42px;
+  overflow: hidden;
+  border-radius: var(--sf-r);
+  background: var(--ms-color-fg);
+  color: var(--ms-color-bg);
+}
+
+.sf-ticker-track {
+  display: flex;
+  gap: 34px;
+  white-space: nowrap;
+  padding-left: 20px;
+  animation: sf-slide 26s linear infinite;
+}
+
+.sf-ticker-track > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.82;
+}
+
+@keyframes sf-slide {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sf-ticker-track {
+    animation: none;
+  }
+}
+
+:root[data-ms-motion="off"] .sf-ticker-track {
+  animation: none;
 }
 
 /* ============================================================================
@@ -465,4 +660,129 @@ body {
 :root[data-ms-motion="off"] .sf-product-card .pv,
 :root[data-ms-motion="off"] .sf-product-card .pv-form {
   transition: none;
+}
+/* ============================ 商品卡(拼贴件) ============================ */
+
+.sf-product-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--ms-color-surface-raised);
+  border-radius: var(--sf-r);
+  padding: var(--sf-gap);
+  color: inherit;
+  text-decoration: none;
+}
+
+.sf-product-card .pv {
+  border-radius: 9px;
+  aspect-ratio: 1;
+}
+
+/* 大卡:跨 2×2,视觉铺满剩余高度 */
+.sf-product-card-lg {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+.sf-product-card-lg .pv {
+  aspect-ratio: auto;
+  flex: 1;
+  min-height: 250px;
+}
+
+/* 横向宽卡:图左信息右,打破纵向节奏 */
+.sf-product-card-wide {
+  grid-column: span 2;
+  flex-direction: row;
+  gap: 14px;
+  align-items: center;
+}
+
+.sf-product-card-wide .pv {
+  width: 40%;
+  flex: none;
+}
+
+.sf-product-card-wide .sf-product-meta {
+  flex: 1;
+  padding-right: 8px;
+}
+
+.sf-product-meta {
+  padding: 12px 6px 4px;
+}
+
+.sf-product-tagrow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.sf-product-cat {
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ms-color-fg-muted);
+}
+
+.sf-product-name {
+  margin: 0 0 3px;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+.sf-product-card-lg .sf-product-name {
+  font-size: 22px;
+}
+
+.sf-product-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.sf-product-row small {
+  font-size: 12.5px;
+  color: var(--ms-color-fg-muted);
+}
+
+.sf-product-price {
+  font-size: 14px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.sf-product-card-lg .sf-product-price {
+  font-size: 17px;
+}
+
+.sf-price-compare {
+  margin-right: 8px;
+  color: var(--ms-color-fg-subtle);
+  text-decoration: line-through;
+  font-weight: 500;
+}
+
+/* ------------------------------ 响应式收敛 ------------------------------- */
+
+@media (max-width: 900px) {
+  .sf-product-card-lg,
+  .sf-product-card-wide {
+    grid-column: span 2;
+    grid-row: span 1;
+  }
+
+  .sf-product-card-wide {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .sf-product-card-wide .pv {
+    width: 100%;
+  }
 }
