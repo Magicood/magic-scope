@@ -130,11 +130,18 @@ body {
 
 /* ============================================================================
  * ProductVisual —— 艺术化商品视觉配方(.pv-*)
- * 分层:色场底 → 长投影 → 形体(渐变塑形)→ 颗粒。颜色全部由行内变量
- * --pv-field/tint/body/shade 注入,高光暗部用 color-mix(in oklab) 派生。
+ * 分层:色场底 → 接触阴影 → 器物剪影(内联 SVG)→ 颗粒。
+ * 剪影按商品逐件造型(花瓶 / 碗组 / 壁灯 / 书立 / 织物 / 灯具…),形体之间不撞形;
+ * 颜色全部由行内变量 --pv-field/tint/body/shade 注入,高光暗部用 color-mix(in oklab)
+ * 派生 —— SVG 一律靠 class 上色(stop-color / fill / stroke 走 CSS 才吃 var())。
  * ========================================================================== */
 
 .pv {
+  /* 器物盒子的默认尺寸与落地位置,按母题在下方覆写 */
+  --pv-form-w: 72%;
+  --pv-form-h: 62%;
+  --pv-form-b: 13%;
+  --pv-floor-w: 46%;
   position: relative;
   overflow: hidden;
   isolation: isolate;
@@ -170,13 +177,13 @@ body {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
 }
 
-/* 地面接触阴影:形体"落"在色场上的关键 */
+/* 地面接触阴影:形体"落"在色场上的关键,宽度随母题走 */
 .pv-floor {
   position: absolute;
   left: 50%;
-  bottom: 12.5%;
-  width: 56%;
-  height: 6.5%;
+  bottom: calc(var(--pv-form-b) - 3%);
+  width: var(--pv-floor-w);
+  height: 6%;
   transform: translateX(-50%);
   border-radius: 50%;
   background: radial-gradient(
@@ -187,178 +194,198 @@ body {
   filter: blur(7px);
 }
 
+/* 器物盒子:底边 = 落地线;SVG 用 xMidYMax 贴底,任何比例下都站得住。
+   container-type 只放在这个「宽度已被显式指定」的绝对定位盒上,不会塌宽。 */
 .pv-form {
   position: absolute;
   left: 50%;
-  bottom: 16%;
+  bottom: var(--pv-form-b);
+  width: var(--pv-form-w);
+  height: var(--pv-form-h);
   transform: translateX(-50%);
+  transform-origin: 50% 100%;
+  container-type: inline-size;
 }
 
-/* 球体(灯 / 烛台):三段径向渐变塑体积 + 内侧收边 */
-.pv-form-sphere {
-  width: 46%;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle at 33% 27%,
-    color-mix(in oklab, var(--pv-body), white 45%) 0%,
-    var(--pv-body) 52%,
-    var(--pv-shade) 104%
-  );
-  box-shadow: inset -10px -16px 30px color-mix(in oklab, var(--pv-shade), transparent 55%);
-}
-
-/* 灯具:体外一圈暖光晕(装饰性光效,尊重 data-ms-fx 总闸) */
-.pv-form[data-luminous] {
-  box-shadow:
-    inset -10px -16px 30px color-mix(in oklab, var(--pv-shade), transparent 62%),
-    0 0 64px 10px color-mix(in oklab, var(--pv-body), transparent 38%);
-}
-
-:root[data-ms-fx="off"] .pv-form[data-luminous] {
-  box-shadow: inset -10px -16px 30px color-mix(in oklab, var(--pv-shade), transparent 62%);
-}
-
-/* 拱形(花瓶 / 书立):顶部全圆角,纵向明暗 + 侧向核心影 */
-.pv-form-arch {
-  width: 40%;
-  height: 54%;
-  border-radius: 999px 999px 10px 10px;
-  background:
-    linear-gradient(
-      92deg,
-      color-mix(in oklab, var(--pv-shade), transparent 55%) 0%,
-      transparent 26%,
-      color-mix(in oklab, white, transparent 74%) 44%,
-      transparent 62%,
-      color-mix(in oklab, var(--pv-shade), transparent 42%) 100%
-    ),
-    linear-gradient(
-      180deg,
-      color-mix(in oklab, var(--pv-body), white 24%) 0%,
-      var(--pv-body) 48%,
-      var(--pv-shade) 118%
-    );
-}
-
-/* 圆柱(水瓶 / 落地灯):横向五段渐变 + 顶盖椭圆 */
-.pv-form-cylinder {
-  width: 28%;
-  height: 56%;
-  border-radius: 14px 14px 10px 10px;
-  background: linear-gradient(
-    90deg,
-    var(--pv-shade) 0%,
-    var(--pv-body) 30%,
-    color-mix(in oklab, var(--pv-body), white 40%) 47%,
-    var(--pv-body) 72%,
-    var(--pv-shade) 100%
-  );
-}
-
-.pv-form-cylinder .pv-cap {
-  position: absolute;
-  top: -2.5%;
-  left: 0;
-  width: 100%;
-  height: 6%;
-  border-radius: 50%;
-  background: color-mix(in oklab, var(--pv-body), white 28%);
-}
-
-/* 叠盘(碗组):三只递减的椭圆盘,自下而上渐亮 */
-.pv-form-stack {
-  width: 50%;
-  height: 40%;
-  display: flex;
-  flex-direction: column-reverse;
-  align-items: center;
-  gap: 4%;
-}
-
-.pv-form-stack i {
+.pv-svg {
   display: block;
-  border-radius: 999px;
-  background: linear-gradient(
-    180deg,
-    color-mix(in oklab, var(--pv-body), white 26%),
-    var(--pv-shade) 135%
-  );
-}
-
-.pv-form-stack i:nth-child(1) {
   width: 100%;
-  height: 32%;
+  height: 100%;
+  overflow: visible;
 }
 
-.pv-form-stack i:nth-child(2) {
-  width: 78%;
-  height: 30%;
-  background: linear-gradient(
-    180deg,
-    color-mix(in oklab, var(--pv-body), white 34%),
-    var(--pv-shade) 150%
-  );
+/* 小尺寸(购物车 56px 行项等)只保留剪影与体积,收掉细节层 */
+@container (max-width: 96px) {
+  .pv-detail {
+    display: none;
+  }
 }
 
-.pv-form-stack i:nth-child(3) {
-  width: 56%;
-  height: 28%;
-  background: linear-gradient(
-    180deg,
-    color-mix(in oklab, var(--pv-body), white 42%),
-    var(--pv-shade) 165%
-  );
+/* ---- SVG 取色原语:渐变色标 / 填充 / 描边,全部由商品色派生,不写死色值 ---- */
+
+.pv-c-lume {
+  stop-color: color-mix(in oklab, var(--pv-body), white 90%);
 }
 
-/* 织物卷(毯 / 靠垫):横置圆枕 + 两道柔和折痕 */
-.pv-form-roll {
-  width: 60%;
-  height: 27%;
-  border-radius: 999px;
-  background: linear-gradient(
-    180deg,
-    color-mix(in oklab, var(--pv-body), white 26%) 0%,
-    var(--pv-body) 52%,
-    var(--pv-shade) 130%
-  );
+.pv-c-spec {
+  stop-color: color-mix(in oklab, var(--pv-body), white 74%);
 }
 
-.pv-form-roll .pv-fold {
-  position: absolute;
-  top: 7%;
-  bottom: 7%;
-  width: 9%;
-  border-radius: 999px;
-  filter: blur(3px);
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    color-mix(in oklab, var(--pv-shade), transparent 52%) 50%,
-    transparent 100%
-  );
+.pv-c-hi {
+  stop-color: color-mix(in oklab, var(--pv-body), white 44%);
 }
 
-.pv-form-roll .pv-fold:nth-child(1) {
-  left: 30%;
+.pv-c-wax {
+  stop-color: color-mix(in oklab, var(--pv-body), white 62%);
 }
 
-.pv-form-roll .pv-fold:nth-child(2) {
-  left: 58%;
+.pv-c-lit {
+  stop-color: color-mix(in oklab, var(--pv-body), white 20%);
 }
 
-/* 浅盘(托盘 / 壁灯 / 桌旗):宽扁椭圆 + 边缘高光 */
-.pv-form-disc {
-  width: 56%;
-  height: 15%;
-  border-radius: 50%;
-  background: linear-gradient(
-    180deg,
-    color-mix(in oklab, var(--pv-body), white 34%) 0%,
-    var(--pv-body) 55%,
-    var(--pv-shade) 125%
-  );
-  box-shadow: inset 0 2px 6px color-mix(in oklab, white, transparent 55%);
+.pv-c-body {
+  stop-color: var(--pv-body);
+}
+
+.pv-c-shade {
+  stop-color: var(--pv-shade);
+}
+
+.pv-c-deep {
+  stop-color: color-mix(in oklab, var(--pv-shade), black 26%);
+}
+
+.pv-f-hi {
+  fill: color-mix(in oklab, var(--pv-body), white 46%);
+}
+
+.pv-f-lit {
+  fill: color-mix(in oklab, var(--pv-body), white 22%);
+}
+
+.pv-f-body {
+  fill: var(--pv-body);
+}
+
+.pv-f-shade {
+  fill: var(--pv-shade);
+}
+
+.pv-f-deep {
+  fill: color-mix(in oklab, var(--pv-shade), black 24%);
+}
+
+.pv-k {
+  fill: none;
+  stroke-linecap: round;
+}
+
+.pv-k-spec {
+  stroke: color-mix(in oklab, var(--pv-body), white 84%);
+}
+
+.pv-k-hi {
+  stroke: color-mix(in oklab, var(--pv-body), white 62%);
+}
+
+.pv-k-shade {
+  stroke: var(--pv-shade);
+}
+
+.pv-k-deep {
+  stroke: color-mix(in oklab, var(--pv-shade), black 24%);
+}
+
+/* 灯具的暖光晕:screen 叠加才真的"发光"(纯浅色叠上去只会糊成一团);
+   属装饰性光效,尊重 data-ms-fx 总闸 */
+.pv-glow {
+  mix-blend-mode: screen;
+}
+
+:root[data-ms-fx="off"] .pv-glow {
+  opacity: 0;
+}
+
+/* ---- 各母题的取景:盒子宽高 / 落地高度 / 接触阴影宽度 ---- */
+
+.pv[data-motif="vase"] {
+  --pv-form-w: 72%;
+  --pv-form-h: 68%;
+  --pv-floor-w: 28%;
+}
+
+.pv[data-motif="carafe"] {
+  --pv-form-w: 70%;
+  --pv-form-h: 62%;
+  --pv-floor-w: 32%;
+}
+
+.pv[data-motif="bowls"] {
+  --pv-form-w: 88%;
+  --pv-form-h: 48%;
+  --pv-floor-w: 0%;
+}
+
+.pv[data-motif="lamp-table"] {
+  --pv-form-w: 74%;
+  --pv-form-h: 62%;
+  --pv-form-b: 12%;
+  --pv-floor-w: 36%;
+}
+
+.pv[data-motif="sconce"] {
+  --pv-form-w: 92%;
+  --pv-form-h: 74%;
+  --pv-form-b: 14%;
+  --pv-floor-w: 0%;
+}
+
+.pv[data-motif="lamp-floor"] {
+  --pv-form-w: 62%;
+  --pv-form-h: 86%;
+  --pv-form-b: 8%;
+  --pv-floor-w: 30%;
+}
+
+.pv[data-motif="throw"] {
+  --pv-form-w: 88%;
+  --pv-form-h: 64%;
+  --pv-form-b: 11%;
+  --pv-floor-w: 60%;
+}
+
+.pv[data-motif="cushion"] {
+  --pv-form-w: 74%;
+  --pv-form-h: 58%;
+  --pv-floor-w: 48%;
+}
+
+.pv[data-motif="runner"] {
+  --pv-form-w: 92%;
+  --pv-form-h: 40%;
+  --pv-form-b: 15%;
+  --pv-floor-w: 60%;
+}
+
+.pv[data-motif="bookend"] {
+  --pv-form-w: 74%;
+  --pv-form-h: 50%;
+  --pv-form-b: 14%;
+  --pv-floor-w: 44%;
+}
+
+.pv[data-motif="tray"] {
+  --pv-form-w: 88%;
+  --pv-form-h: 40%;
+  --pv-form-b: 15%;
+  --pv-floor-w: 58%;
+}
+
+.pv[data-motif="candle"] {
+  --pv-form-w: 56%;
+  --pv-form-h: 76%;
+  --pv-form-b: 11%;
+  --pv-floor-w: 30%;
 }
 
 /* --------------------------- 商品卡(列表/精选) --------------------------- */
