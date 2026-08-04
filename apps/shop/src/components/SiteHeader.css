@@ -1,0 +1,143 @@
+/* ============================================================================
+ * SiteHeader —— 公告条 + sticky 主头部。
+ * 未滚动:透明融入页面;data-scrolled:毛玻璃半透明底 + 底部发丝线。
+ * 只消费 --ms-* 语义变量与 --sf- 原语;线条一律 var(--sf-hairline)。
+ * ========================================================================== */
+
+/* ------------------------------- 公告条 ---------------------------------- */
+
+.sh-announce {
+  height: 34px;
+  display: grid;
+  align-items: center;
+  overflow: hidden;
+  background: var(--ms-color-bg);
+  /* 底部发丝线:inset 阴影代替边框 */
+  box-shadow: inset 0 -1px 0 var(--sf-hairline);
+}
+
+.sh-announce-item {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  font-size: 10.5px;
+  font-weight: 550;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ms-color-fg-subtle);
+}
+
+/* 短句间以陶土色圆点分隔(与 .sf-eyebrow 呼应),尾随式保证首尾相接不断拍 */
+.sh-announce-item::after {
+  content: "·";
+  margin-inline: 28px;
+  color: var(--ms-color-accent);
+}
+
+/* ------------------------------- 主头部 ---------------------------------- */
+
+.sh {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background-color: transparent;
+  transition:
+    background-color var(--ms-duration-base) var(--ms-ease-standard),
+    box-shadow var(--ms-duration-base) var(--ms-ease-standard);
+}
+
+.sh[data-scrolled] {
+  background-color: color-mix(in oklab, var(--ms-color-bg), transparent 18%);
+  -webkit-backdrop-filter: blur(14px) saturate(1.15);
+  backdrop-filter: blur(14px) saturate(1.15);
+  box-shadow: 0 1px 0 var(--sf-hairline);
+}
+
+.sh-inner {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 24px;
+  height: 64px;
+}
+
+/* serif 字标 —— 与展示标题共用衬线家族 */
+.sh-brand {
+  justify-self: start;
+  font-family: var(--sf-display);
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--ms-color-fg);
+  text-decoration: none;
+}
+
+.sh-nav {
+  display: flex;
+  align-items: center;
+  gap: clamp(18px, 2.6vw, 30px);
+}
+
+.sh-nav-link {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: var(--ms-color-fg-muted);
+  transition: color var(--ms-duration-fast) var(--ms-ease-standard);
+}
+
+.sh-nav-link:hover,
+.sh-nav-link:focus-visible {
+  color: var(--ms-color-fg);
+}
+
+.sh-actions {
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.sh-search-kbd {
+  margin-left: 2px;
+}
+
+/* 命令面板里商品项右侧的价格 */
+.sh-cmd-price {
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ms-color-fg-subtle);
+}
+
+/* ----------------------------- 响应式与动效 ------------------------------- */
+
+/* 移动端导航入口:默认隐藏,窄屏才出现 */
+.sh-menu {
+  display: none;
+}
+
+@media (max-width: 760px) {
+  .sh-nav {
+    display: none;
+  }
+
+  .sh-menu {
+    display: inline-flex;
+  }
+
+  .sh-search-kbd {
+    display: none;
+  }
+
+  .sh-inner {
+    grid-template-columns: 1fr auto;
+    height: 56px;
+    gap: 12px;
+  }
+}
+
+/* 动效总闸关闭时,头部过渡一并取消 */
+:root[data-ms-motion="off"] .sh,
+:root[data-ms-motion="off"] .sh-nav-link {
+  transition: none;
+}

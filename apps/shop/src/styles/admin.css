@@ -1,0 +1,232 @@
+/* ============================================================================
+ * Arden 商家控制台设计系统(.ad-*)—— Linear / Stripe Dashboard 式轻线条控制台。
+ * 原则与买家端一致:发丝线 + 表面分级代替硬边框;密度切换(data-ms-density)
+ * 由组件库接管,这里只管版面骨架。页面私有样式放各页面同名 .css。
+ * ========================================================================== */
+
+.ad-root {
+  display: grid;
+  grid-template-columns: 228px minmax(0, 1fr);
+  min-height: 100dvh;
+  background: var(--ms-color-bg);
+}
+
+/* ------------------------------- 侧栏 ------------------------------------ */
+
+.ad-sidebar {
+  position: sticky;
+  top: 0;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 18px 12px;
+  background: color-mix(in oklab, var(--ms-color-surface), var(--ms-color-bg) 40%);
+  border-right: 1px solid var(--sf-hairline);
+}
+
+.ad-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 10px 18px;
+  font-family: var(--sf-display);
+  font-size: 17px;
+  letter-spacing: 0.01em;
+  color: var(--ms-color-fg);
+  text-decoration: none;
+}
+
+.ad-brand-mark {
+  width: 22px;
+  height: 22px;
+  border-radius: 7px;
+  background: linear-gradient(135deg, var(--ms-color-primary), var(--ms-color-accent) 130%);
+}
+
+.ad-brand small {
+  font-family: var(--sf-sans);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ms-color-fg-subtle);
+}
+
+.ad-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ad-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 10px;
+  border-radius: 9px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ms-color-fg-muted);
+  text-decoration: none;
+  transition:
+    background var(--ms-duration-fast) var(--ms-ease-standard),
+    color var(--ms-duration-fast) var(--ms-ease-standard);
+}
+
+.ad-nav-item:hover {
+  color: var(--ms-color-fg);
+  background: color-mix(in oklab, var(--ms-color-fg), transparent 94%);
+}
+
+.ad-nav-item[data-active] {
+  color: var(--ms-color-fg);
+  background: color-mix(in oklab, var(--ms-color-fg), transparent 91%);
+}
+
+.ad-nav-item svg {
+  opacity: 0.72;
+}
+
+.ad-nav-section {
+  margin: 14px 10px 6px;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ms-color-fg-subtle);
+}
+
+.ad-sidebar-footer {
+  margin-top: auto;
+  padding: 10px 10px 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-top: 1px solid var(--sf-hairline);
+}
+
+/* ------------------------------- 顶栏 ------------------------------------ */
+
+.ad-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  height: 54px;
+  padding-inline: 24px;
+  background: color-mix(in oklab, var(--ms-color-bg), transparent 18%);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--sf-hairline);
+}
+
+.ad-topbar-spacer {
+  flex: 1;
+}
+
+/* ------------------------------- 内容区 ---------------------------------- */
+
+.ad-main {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.ad-content {
+  width: 100%;
+  max-width: 1160px;
+  margin-inline: auto;
+  padding: 26px 28px 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.ad-page-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.ad-page-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+
+.ad-page-sub {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: var(--ms-color-fg-muted);
+}
+
+.ad-page-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* 卡面:表面分级 + 极柔阴影,无边框 */
+.ad-card {
+  background: var(--ms-color-surface-raised);
+  border-radius: 14px;
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--ms-color-border), transparent 55%),
+    0 1px 2px color-mix(in oklab, var(--ms-color-fg), transparent 95%);
+  padding: 18px 20px;
+}
+
+.ad-card-title {
+  margin: 0 0 2px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ms-color-fg-muted);
+}
+
+/* 指标卡阵列 */
+.ad-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+}
+
+/* 表格工具条(筛选/搜索/批量操作) */
+.ad-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.ad-toolbar-spacer {
+  flex: 1;
+}
+
+/* 双栏:主内容 + 侧详情 */
+.ad-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 18px;
+  align-items: start;
+}
+
+@media (max-width: 1080px) {
+  .ad-split {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  .ad-root {
+    grid-template-columns: 1fr;
+  }
+
+  .ad-sidebar {
+    display: none;
+  }
+}

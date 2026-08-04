@@ -1,35 +1,70 @@
-import { Toaster } from '@magic-scope/react';
-import './styles/shop.css';
+import { ConfigProvider, Toaster } from '@magic-scope/react';
+import { AdminLayout } from './admin/AdminLayout';
+import { CartDrawer } from './components/CartDrawer';
 import { SiteFooter } from './components/SiteFooter';
 import { SiteHeader } from './components/SiteHeader';
-import { productIdFromPath, useHashPath } from './lib/router';
+import { AppearanceProvider, type AppearanceState } from './lib/appearance';
+import { messagesEn } from './lib/messages-en';
+import {
+  isAdminPath,
+  orderIdFromPath,
+  pathnameOf,
+  productIdFromPath,
+  useHashPath,
+} from './lib/router';
+import { CartProvider } from './lib/store';
 import { Checkout } from './pages/Checkout';
 import { Home } from './pages/Home';
-import { ProductPage } from './pages/ProductPage';
-import { Shop } from './pages/Shop';
+import { OrderTracking } from './pages/OrderTracking';
+import { ProductDetail } from './pages/ProductDetail';
+import { Products } from './pages/Products';
 
-export function App() {
+/* ============================================================================
+ * Arden 应用根 —— 双面:买家店面(/)与商家控制台(/admin)共用一套
+ * 外观四轴 / 购物车 / 数据,靠 hash 路由切换两个世界。
+ * ========================================================================== */
+
+export function App({ initialAppearance }: { initialAppearance: AppearanceState }) {
+  return (
+    <AppearanceProvider initial={initialAppearance}>
+      <CartProvider>
+        {/* 库组件文案全量切英文(默认字典是 zh-CN);Toaster 也要在 Provider 内取文案 */}
+        <ConfigProvider messages={messagesEn} locale="en">
+          <Routes />
+          <Toaster position="bottom-end" max={4} />
+        </ConfigProvider>
+      </CartProvider>
+    </AppearanceProvider>
+  );
+}
+
+function Routes() {
   const path = useHashPath();
+  return isAdminPath(path) ? <AdminLayout path={path} /> : <Storefront path={path} />;
+}
+
+function Storefront({ path }: { path: string }) {
+  const pathname = pathnameOf(path);
   const productId = productIdFromPath(path);
+  const orderId = orderIdFromPath(path);
 
   let page = <Home />;
   if (productId) {
-    page = <ProductPage id={productId} />;
-  } else if (path.startsWith('/shop')) {
-    page = <Shop />;
-  } else if (path.startsWith('/checkout')) {
+    page = <ProductDetail id={productId} />;
+  } else if (pathname.startsWith('/products')) {
+    page = <Products routePath={path} />;
+  } else if (pathname.startsWith('/checkout')) {
     page = <Checkout />;
+  } else if (orderId) {
+    page = <OrderTracking id={orderId} />;
   }
 
   return (
-    <>
-      <div className="db-glow" aria-hidden="true" />
-      <div className="db-app">
-        <SiteHeader />
-        <main>{page}</main>
-        <SiteFooter />
-      </div>
-      <Toaster />
-    </>
+    <div className="sf-root">
+      <SiteHeader />
+      <main>{page}</main>
+      <SiteFooter />
+      <CartDrawer />
+    </div>
   );
 }

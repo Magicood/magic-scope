@@ -1,0 +1,4 @@
+/* 占位:由 wave-2 agent 实现。 */
+export function ProductDetail({ id }: { id: string }) {
+  return <section className="sf-section" data-id={id} />;
+}
