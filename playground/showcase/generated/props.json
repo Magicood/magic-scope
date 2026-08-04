@@ -36188,7 +36188,7 @@
       "name": "label",
       "type": "ReactNode",
       "default": "—",
-      "description": "分组标题。",
+      "description": "Menu.Group:分组标题。",
       "required": false,
       "native": false
     },
@@ -36590,7 +36590,7 @@
       "name": "danger",
       "type": "boolean",
       "default": "—",
-      "description": "是否危险项。",
+      "description": "Menu.Item:是否危险项。",
       "required": false,
       "native": false
     },
@@ -36598,7 +36598,7 @@
       "name": "icon",
       "type": "ReactNode",
       "default": "—",
-      "description": "前置图标。",
+      "description": "Menu.Item:前置图标。",
       "required": false,
       "native": false
     },
@@ -36606,7 +36606,7 @@
       "name": "shortcut",
       "type": "ReactNode | readonly string[]",
       "default": "—",
-      "description": "快捷键提示。",
+      "description": "Menu.Item:快捷键提示。",
       "required": false,
       "native": false
     },
@@ -36614,7 +36614,7 @@
       "name": "asChild",
       "type": "boolean",
       "default": "false",
-      "description": "asChild:渲染为子元素(如链接)。",
+      "description": "Menu.Item:渲染为子元素(如链接),而非默认的 button。",
       "required": false,
       "native": false
     },
@@ -37395,6 +37395,16 @@
       "description": "",
       "required": false,
       "native": true
+    }
+  ],
+  "Menu.Trigger": [
+    {
+      "name": "children",
+      "type": "ReactElement<unknown, string | JSXElementConstructor<any>>",
+      "default": "—",
+      "description": "Menu.Trigger 的唯一子元素(触发器本体);外部 ref 会 compose 到它身上,故须能接收 ref。",
+      "required": true,
+      "native": false
     }
   ],
   "Menubar": [

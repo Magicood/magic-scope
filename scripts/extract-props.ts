@@ -77,6 +77,8 @@ const docs = parser.parse(files);
 
 // displayName → PropRow[](同名多导出合并)。
 const out: Record<string, PropRow[]> = {};
+// 被 rows.length === 0 丢掉的「命名空间子组件」(displayName 形如 'Menu.Trigger')。
+const droppedNamespaced: string[] = [];
 for (const doc of docs) {
   const filePath = (doc as { filePath?: string }).filePath ?? '';
   const fileParams = paramDocs[filePath] ?? {};
@@ -109,7 +111,12 @@ for (const doc of docs) {
     if (/^on[A-Z]/.test(p.name) && params) row.params = params;
     return row;
   });
-  if (rows.length === 0) continue;
+  if (rows.length === 0) {
+    // 带点的 displayName 只可能来自 `X.displayName = 'Menu.Trigger'` 这类子组件赋值
+    // (类型别名 / 接口走 componentNameResolver 拿自身名,不含点),所以 0 行必是抽取事故而非「本就无参」。
+    if (doc.displayName.includes('.')) droppedNamespaced.push(doc.displayName);
+    continue;
+  }
   // 同 displayName 合并(如 RadioGroup + Radio 各自一条 displayName,这里按名分别存)。
   out[doc.displayName] = (out[doc.displayName] ?? []).concat(rows);
 }
@@ -163,7 +170,19 @@ for (const [name, rows] of Object.entries(extractOptionInterfaces(files))) {
   out[name] = rows;
 }
 
-// —— 守卫:每个组件目录必须产出「与目录同名的主 displayName」且 props 非空,否则报错 ——
+// —— 守卫①:命名空间子组件不得抽出 0 行 ——
+// 抽出 0 行整条 doc 会被丢,props.json 里连键都没有,展示站 / docs 那一段参数无声消失
+// (Menu.Trigger 曾如此:唯一自有 prop 是无 JSDoc 的 children,被 react-docgen 的
+// skipChildrenPropWithoutDoc 在自定义 propFilter 之前剔掉,又没有原生事件兜底)。
+// 复发时的修法:给该子组件补一个带 JSDoc 的导出 props 接口(见 MenuTriggerProps)。
+if (droppedNamespaced.length) {
+  console.error(
+    `✖ 以下命名空间子组件抽出 0 行 props,已被整条丢弃(props.json 里将无此键):${droppedNamespaced.join(', ')}\n  多半是唯一的自有 prop 是无 JSDoc 的 children——给它补文档注释即可。`,
+  );
+  process.exit(1);
+}
+
+// —— 守卫②:每个组件目录必须产出「与目录同名的主 displayName」且 props 非空,否则报错 ——
 // react-docgen 在多种导出形态下会静默丢主组件(见上方 componentNameResolver 注释;
 // `as` 断言导出 + displayName 挂在局部名上是另一触发形态),丢了页面只剩 ...props 合成行,
 // 却仍声称「自动抽取、永不漂移」。这里硬性拦截,任何形态的复发都会让 gen/check 直接失败。

@@ -11,4 +11,6 @@ export const meta: ComponentMeta = {
     { type: 'boolean', prop: 'withDisabled', label: '含禁用项 disabled', default: true },
     { type: 'boolean', prop: 'withDanger', label: '含危险项 danger', default: true },
   ],
+  // 组合式子组件的参数此前在展示站 / docs 里完全不可见(meta 没引用即等于没文档)。
+  alsoProps: ['Menu.Item', 'Menu.Group', 'Menu.Separator', 'Menu.Trigger'],
 };
