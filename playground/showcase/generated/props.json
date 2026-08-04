@@ -64982,7 +64982,7 @@
       "name": "showLine",
       "type": "boolean",
       "default": "false",
-      "description": "显示缩进引导线。",
+      "description": "显示层级引导线:每个祖先层级一条竖导轨,对齐该层展开箭头;线色可用 --ms-tree-line 覆写。",
       "required": false,
       "native": false
     },
