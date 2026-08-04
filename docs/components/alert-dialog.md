@@ -41,7 +41,7 @@ danger 变体会把确认按钮染危险色、默认焦点落在取消以防误�
 
 | 事件 | 签名 | 说明 |
 | --- | --- | --- |
-| `onConfirm` | `() => void \| Promise<void>` | 点击确认时触发(与 Promise 双轨;不 await 也能挂回调)。返回 Promise 时进入异步态:<br>确认按钮 loading + 禁用,resolve 才关闭,reject 保持打开便于重试。<br>· `value` — 确认时输入框的当前值(已通过校验)。 |
+| `onConfirm` | `() => void \| Promise<void>` | 点击确认时触发(与 Promise 双轨;不 await 也能挂回调)。返回 Promise 时进入异步态:<br>确认按钮 loading + 禁用,resolve 才关闭,reject 保持打开便于重试。 |
 | `onCancel` | `() => void` | 点取消时触发(主动取消语义,区别于 Esc / 点外关闭)。 |
 | `onEscapeKeyDown` | `(event: Event) => void` | 按 Esc 关闭前触发;可拦截(危险操作禁 Esc 关闭)。<br>· `event` — 触发关闭的原生事件(Esc),在其上调用 preventDefault 可拦截默认关闭。 |
 | `onPointerDownOutside` | `(event: MouseEvent) => void` | 点击遮罩(面板外)关闭前触发;可拦截(危险操作禁点外关)。<br>· `event` — 遮罩上按下的原生鼠标事件,在其上调用 preventDefault 可拦截关闭。 |

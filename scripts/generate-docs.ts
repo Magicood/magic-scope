@@ -13,6 +13,7 @@
 import { execFileSync } from 'node:child_process';
 import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { parseEventParams } from '../playground/showcase/core/eventSig';
 
 const ROOT = join(import.meta.dirname, '..');
 const SHOWCASE = join(ROOT, 'playground', 'showcase');
@@ -220,8 +221,12 @@ function eventsTable(rows: PropRow[], elType?: string): string {
       '$1',
     );
     let desc = escText(r.description);
-    if (r.params?.length) {
-      desc += `<br>${r.params.map((p) => `· \`${p.name}\` — ${escText(p.description)}`).join('<br>')}`;
+    // 与展示站 ComponentDocV2 同口径:@param 按真实签名的参数名回配,签名中不存在的参数不展示
+    // (react-docgen 会把同文件其它接口的重名事件 @param 串写进来,全量拼接会张冠李戴)。
+    const sigNames = new Set(parseEventParams(sig).map((p) => p.name));
+    const shownParams = (r.params ?? []).filter((p) => sigNames.has(p.name));
+    if (shownParams.length > 0) {
+      desc += `<br>${shownParams.map((p) => `· \`${p.name}\` — ${escText(p.description)}`).join('<br>')}`;
     }
     lines.push(`| \`${r.name}\` | ${escCode(sig)} | ${desc} |`);
   }
@@ -402,9 +407,25 @@ if (missingInManifest.length > 0 || missingInMeta.length > 0) {
     `meta 与 manifest 不对齐 —— manifest 缺:[${missingInManifest.join(', ')}];meta 缺:[${missingInMeta.join(', ')}]`,
   );
 }
-const noProps = metas.filter((m) => getRows(m).length === 0).map((m) => m.id);
-if (noProps.length > 0) {
-  console.warn(`  ⚠ ${noProps.length} 个组件在 props.json 中查不到任何行:${noProps.join(', ')}`);
+// 主接口缺失守卫:按主键(propsName ?? name)判断,不被合成的 spread 行 / alsoProps 子键掩盖
+// (曾有 12 个主组件被 react-docgen 静默丢弃,页面只剩 ...props 行却零告警)。
+// TODO(extract-props 修复后):升级为硬错误。
+const missingMainProps = metas
+  .filter((m) => (PROPS[m.propsName ?? m.name] ?? []).length === 0)
+  .map((m) => m.id);
+if (missingMainProps.length > 0) {
+  console.warn(
+    `  ⚠ ${missingMainProps.length} 个组件在 props.json 中查不到主接口,参数表失真(待修 extract-props):\n    ${missingMainProps.join(', ')}`,
+  );
+}
+// alsoProps 键缺失同样不许静默(如 Splitter.Panel 不在 props.json,Panel 全部参数无声消失)。
+const missingAlso = metas.flatMap((m) =>
+  (m.alsoProps ?? []).filter((a) => !PROPS[a]?.length).map((a) => `${m.id} → ${a}`),
+);
+if (missingAlso.length > 0) {
+  console.warn(
+    `  ⚠ ${missingAlso.length} 个 alsoProps 键在 props.json 中缺失:${missingAlso.join('; ')}`,
+  );
 }
 
 // 组件页(components/ 目录整体为生成物:先清后写,组件删除时旧页不残留)。
@@ -442,10 +463,12 @@ const sidebar = [
 ];
 const sidebarOut = join(DOCS, '.vitepress', 'sidebar.generated.json');
 writeFileSync(sidebarOut, `${JSON.stringify(sidebar, null, 2)}\n`);
-execFileSync('pnpm', ['exec', 'biome', 'format', '--write', sidebarOut], {
-  cwd: ROOT,
-  stdio: 'ignore',
-});
+// stderr 直通:biome 失败时必须能看到诊断;Windows 下 execFile 不解析 pnpm 的 .cmd shim,需带扩展名。
+execFileSync(
+  process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm',
+  ['exec', 'biome', 'format', '--write', sidebarOut],
+  { cwd: ROOT, stdio: ['ignore', 'ignore', 'inherit'] },
+);
 
 console.log(
   `docs 已生成:${metas.length} 个组件页(${previewCount} 个含静态预览)+ 总览 + 侧栏 → docs/`,
