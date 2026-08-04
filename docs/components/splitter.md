@@ -20,9 +20,25 @@
 
 | 参数 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
+| `orientation` | `"horizontal" \| "vertical"` | `horizontal` | 朝向:水平左右分栏 / 垂直上下分栏。默认 horizontal。 |
+| `sizes` | `number[]` | — | 受控:各面板像素尺寸数组(长度需与面板数一致)。传入即受控,须配 onResize 回写。 |
+| `gutterSize` | `number` | `6` | 分隔条厚度(像素)。默认 6。 |
+| `keyboardStep` | `number` | `16` | 键盘方向键单步位移(像素)。默认 16。 |
+| `classNames` | `SplitterClassNames` | — | 各部件细粒度 className 槽位。 |
+| `children` | `ReactNode` | — | 面板(Splitter.Panel)。非 Panel 子节点会被忽略。 |
+| `min` | `SplitterLength` | — | 最小尺寸(px 数字或百分比字符串)。默认 0。 |
+| `max` | `SplitterLength` | — | 最大尺寸(px 数字或百分比字符串)。默认无界。 |
+| `defaultSize` | `SplitterLength` | — | 初始尺寸(px 数字或百分比字符串);所有面板都缺省时等分。 |
+| `collapsible` | `boolean` | — | 是否可折叠(双击相邻 gutter 或调用折叠按钮把本面板收起)。默认 false。 |
+| `collapsedSize` | `number` | — | 折叠后保留的尺寸(像素),如留一条窄边。默认 0。 |
 | `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
+
+| 事件 | 签名 | 说明 |
+| --- | --- | --- |
+| `onResize` | `(detail: SplitterResizeDetail) => void` | 拖拽 / 键盘 / 折叠导致尺寸变化时回调(高频)。<br>· `detail` — 本次变化后各面板的尺寸明细(像素 sizes + 百分比 percents)。 |
+| `onResizeEnd` | `(detail: SplitterResizeDetail) => void` | 落定回调:松手 / 键盘抬起时以最终尺寸触发一次(适合提交持久化)。<br>· `detail` — 落定时各面板的最终尺寸明细(像素 sizes + 百分比 percents)。 |
 
 此外透传原生 `<div>` 的全部标准事件(onClick / onFocus / onKeyDown …),与自有事件按 compose 合并、互不覆盖。
 

@@ -20,14 +20,29 @@ container 开启后改用 @container 对父容器宽度自适应而非视口;多
 
 | 参数 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
+| `columns` | `Responsive<string \| number>` | — | 列定义(响应式):<br>- `number` → `repeat(n, minmax(0, 1fr))`(等宽、不被内容撑破);<br>- 模板字符串 → 原样作为 `grid-template-columns`(如 `"1fr auto 2fr"`);<br>- 断点对象 → 各断点分别取上述形态(如 `{ base: 1, md: 2, lg: 4 }`)。 |
+| `minChildWidth` | `Responsive<SpaceValue>` | — | 自适应列:每列至少 `minChildWidth` 宽、放不下自动折行(`auto-fit` + `minmax`)。<br>提供后由它驱动列模板,优先级高于 `columns`。接 token 档位或任意 CSS 长度,支持响应式。 |
+| `gap` | `Responsive<SpaceValue>` | — | 行列统一间距(token 档位或 CSS 长度,响应式)。被 rowGap/columnGap 覆盖。 |
+| `rowGap` | `Responsive<SpaceValue>` | — | 行间距(覆盖 gap 的行向分量)。 |
+| `columnGap` | `Responsive<SpaceValue>` | — | 列间距(覆盖 gap 的列向分量)。 |
+| `rows` | `Responsive<string>` | — | 行模板(原样作为 grid-template-rows)。 |
+| `autoRows` | `Responsive<SpaceValue>` | — | 隐式行高(grid-auto-rows,token 档位或 CSS 长度,响应式)。 |
+| `autoColumns` | `Responsive<SpaceValue>` | — | 隐式列宽(grid-auto-columns,token 档位或 CSS 长度,响应式)。 |
+| `autoFlow` | `Responsive<GridAutoFlow>` | — | 自动布局流向 / dense 紧凑回填(grid-auto-flow,响应式)。 |
+| `align` | `Responsive<AlignValue>` | — | 子项块向对齐(align-items,响应式)。 |
+| `justify` | `Responsive<AlignValue>` | — | 子项行向对齐(justify-items,响应式)。 |
+| `alignContent` | `Responsive<DistributeValue>` | — | 整体轨道块向分布(align-content,响应式)。 |
+| `justifyContent` | `Responsive<DistributeValue>` | — | 整体轨道行向分布(justify-content,响应式)。 |
+| `inline` | `boolean` | — | 行内网格(display: inline-grid)。 |
+| `container` | `boolean` | — | 用容器查询而非视口媒体查询驱动响应式(@container):<br>让 Grid 随「父容器宽度」而非视口自适应。开启后根设 container-type: inline-size。 |
+| `as` | `"div" \| "article" \| "aside" \| "footer" \| "header" \| "main" \| "nav" \| "ol" \| "section" \| "ul"` | — | 多态:渲染为指定标签(默认 div)。 |
+| `asChild` | `boolean` | — | 渲染为子元素并把样式/属性合并下去(Slot 风格,子元素自带内容)。 |
 | `colSpan` | `Responsive<GridLineValue>` | — | 跨列:数字 → `span n`,或原生关键字(如 `"auto"`),响应式。 |
 | `rowSpan` | `Responsive<GridLineValue>` | — | 跨行:数字 → `span n`,或原生关键字,响应式。 |
 | `colStart` | `Responsive<GridLineValue>` | — | 起始列网格线(数字或关键字),响应式。 |
 | `rowStart` | `Responsive<GridLineValue>` | — | 起始行网格线(数字或关键字),响应式。 |
 | `alignSelf` | `Responsive<AlignValue>` | — | 自身块向对齐(align-self,覆盖父 align),响应式。 |
 | `justifySelf` | `Responsive<AlignValue>` | — | 自身行向对齐(justify-self,覆盖父 justify),响应式。 |
-| `as` | `"div" \| "article" \| "aside" \| "footer" \| "header" \| "li" \| "section"` | — | 多态:渲染为指定标签(默认 div)。 |
-| `asChild` | `boolean` | — | 渲染为子元素并把样式/属性合并下去(Slot 风格)。 |
 | `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events

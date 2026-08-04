@@ -14,7 +14,32 @@
 
 自动抽取自真实 TS 类型(`scripts/extract-props.ts`),与源码永不漂移。
 
-该组件无独立参数。
+| 参数 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `steps` * | `TourStep[]` | — | 引导步集。 |
+| `open` | `boolean` | — | 是否打开(受控);省略则始终展示(配合非受控 current 用得少,一般会传)。 |
+| `current` | `number` | — | 受控当前步索引。传入即进入受控,需配合 onChange 推进。 |
+| `defaultCurrent` | `number` | `0` | 非受控初始步。默认 0。 |
+| `spotlightPadding` | `number` | `8` | 高亮洞相对目标的外扩量(像素)。默认 8。 |
+| `tone` | `"primary" \| "accent" \| "success" \| "warning" \| "danger" \| "info" \| "neutral"` | `primary` | 语义色调:经全库 tone resolver 派生卡片高亮 / focus 环 / 发光。默认 primary。 |
+| `maskClosable` | `boolean` | `false` | 点击遮罩(高亮洞之外)是否关闭。默认 false(引导一般要求显式跳过 / 完成)。 |
+| `closeOnEscape` | `boolean` | `true` | 按 Esc 是否关闭。默认 true。 |
+| `scrollIntoView` | `boolean` | `true` | 切步时是否把目标滚动进视口。默认 true。 |
+| `hideSkip` | `boolean` | `false` | 隐藏「跳过」。 |
+| `showCounter` | `boolean` | `true` | 是否显示步数指示。默认 true。 |
+| `closeIcon` | `ReactNode` | — | 自定义关闭(跳过 ×)图标。 |
+| `className` | `string` | — | 遮罩根附加 className。 |
+| `classNames` | `TourClassNames` | — | 各部件细粒度 className 槽位。 |
+| `style` | `CSSProperties` | — | 透传到遮罩根的内联 style(与组件计算值合并,用户优先)。 |
+| `container` | `Element \| null` | — | portal 挂载容器,默认 document.body。 |
+
+## 事件 Events
+
+| 事件 | 签名 | 说明 |
+| --- | --- | --- |
+| `onChange` | `(current: number) => void` | 步变化回调(上一步 / 下一步 / 程序化跳步)。<br>· `current` — 切换后的目标步索引(已夹取到合法区间)。 |
+| `onClose` | `(info: { reason: "mask" \| "escape" \| "finish" \| "skip"; current: number; }) => void` | 关闭回调(Esc / 点击跳过 / 点击遮罩,据 maskClosable)。<br>· `info` — 关闭来源信息:reason 区分跳过 / Esc / 点遮罩 / 完成。 |
+| `onFinish` | `(current: number) => void` | 走完最后一步点「完成」回调。<br>· `current` — 完成时所处的步索引(通常为最后一步)。 |
 
 ## 溯源
 

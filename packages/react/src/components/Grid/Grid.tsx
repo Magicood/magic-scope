@@ -202,7 +202,6 @@ const GridRoot = forwardRef<HTMLDivElement, GridProps>((props, ref) => {
 
   return <Tag ref={ref} className={classes} style={mergedStyle} {...rest} />;
 });
-GridRoot.displayName = 'Grid';
 
 /** Grid.Item 可用的多态标签子集(默认 div)。 */
 type GridItemElement = 'div' | 'section' | 'article' | 'li' | 'header' | 'footer' | 'aside';
@@ -292,4 +291,7 @@ GridItem.displayName = 'Grid.Item';
  */
 type GridComponent = typeof GridRoot & { Item: typeof GridItem };
 export const Grid = GridRoot as GridComponent;
+// displayName 挂在导出名(而非局部 GridRoot)上:props 抽取按「导出名 === 赋值目标名」匹配,
+// 挂局部名会让 react-docgen 把主组件 doc 错配成别的名字而被静默丢弃(运行时二者同一对象,无行为差异)。
+Grid.displayName = 'Grid';
 Grid.Item = GridItem;

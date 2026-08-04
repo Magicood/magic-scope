@@ -52,6 +52,13 @@ const parser = withCompilerOptions(
     savePropValueAsString: true,
     shouldExtractLiteralValuesFromEnum: true,
     shouldRemoveUndefinedFromOptional: true,
+    // react-docgen 的 displayName 计算有坑:文件里存在 `X.displayName = '...'` 赋值时,
+    // 「类型 re-export(export type { ... } from './logic')」这类无值声明的导出会被错误冠上
+    // 该赋值的名字(找不到同名赋值就兜底取文件里第一条),产出一个 0 props 的同名 doc;
+    // 而 parse 对同名 doc「保留第一个」,真组件(排在后面)被静默丢弃——这正是 12 个主组件键
+    // 曾整体消失的根因。这里对无 valueDeclaration 的符号(类型别名 / 接口)强制用其自身名,
+    // 让它们各归各名(0 props 会被下游 rows.length 过滤),不再抢占组件名。
+    componentNameResolver: (exp) => (exp.valueDeclaration ? undefined : exp.getName()),
     propFilter: (prop) => {
       const own = prop.parent ? !prop.parent.fileName.includes('node_modules') : true;
       // 事件处理器:组件自有的(onValueChange 等)全留;继承自原生元素的只留白名单内的标准交互事件。
@@ -68,11 +75,13 @@ const dirs = readdirSync(COMPONENTS_DIR, { withFileTypes: true })
   .map((d) => d.name);
 
 const files: string[] = [];
+const mainDirs: string[] = [];
 for (const dir of dirs) {
   const main = join(COMPONENTS_DIR, dir, `${dir}.tsx`);
   try {
     readFileSync(main);
     files.push(main);
+    mainDirs.push(dir);
   } catch {
     // 没有同名主文件的目录跳过。
   }
@@ -215,6 +224,26 @@ function extractOptionInterfaces(filePaths: string[]): Record<string, PropRow[]>
 
 for (const [name, rows] of Object.entries(extractOptionInterfaces(files))) {
   out[name] = rows;
+}
+
+// —— 守卫:每个组件目录必须产出「与目录同名的主 displayName」且 props 非空,否则报错 ——
+// react-docgen 在多种导出形态下会静默丢主组件(见上方 componentNameResolver 注释;
+// `as` 断言导出 + displayName 挂在局部名上是另一触发形态),丢了页面只剩 ...props 合成行,
+// 却仍声称「自动抽取、永不漂移」。这里硬性拦截,任何形态的复发都会让 gen/check 直接失败。
+const GUARD_EXCEPTIONS: Record<string, string[]> = {
+  // 命令式 API 目录:无与目录同名的组件本体,以其真实产出键代为把关。
+  AlertDialog: ['ConfirmOptions', 'AlertOptions', 'PromptOptions'],
+  Toast: ['Toaster', 'ToastOptions'],
+};
+const missingMain = mainDirs.filter((dir) => {
+  const expected = GUARD_EXCEPTIONS[dir] ?? [dir];
+  return !expected.some((k) => (out[k] ?? []).length > 0);
+});
+if (missingMain.length) {
+  console.error(
+    `✖ 以下组件目录未产出主组件 displayName(被 react-docgen 静默丢弃,须排查导出形态):${missingMain.join(', ')}`,
+  );
+  process.exit(1);
 }
 
 const json = `${JSON.stringify(out, null, 2)}\n`;

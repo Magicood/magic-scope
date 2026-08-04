@@ -16,6 +16,13 @@
 
 | 参数 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
+| `as` | `ElementType` | — | 多态根标签。默认 `div`。需要语义时换 `section` 等。与 `asChild` 互斥(asChild 优先)。 |
+| `asChild` | `boolean` | `false` | 渲染为唯一子元素并把空状态样式合并上去(Radix Slot 风格,由子元素自带内容)。<br>用于不额外包一层 DOM 的场景。 |
+| `image` | `string \| number \| bigint \| boolean \| ReactElement<unknown, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal \| Promise<...> \| null` | — | 插画:<br>- 不传 → 内置极简插画(预设 `default`);<br>- 预设名 `'default'` / `'simple'` → 对应内置 SVG;<br>- 任意 `ReactNode` → 自定义插画(图片 / 图标 / 自绘 SVG);<br>- `false` → 完全不渲染插画列。<br>内置 SVG 用 `currentColor` 绘制,经 `tone` 着色。 |
+| `description` | `ReactNode` | — | 描述文案。不传走 i18n `empty.description`(默认「暂无数据」);传 `false` 关闭描述;<br>传 `ReactNode` 覆盖。 |
+| `size` | `"sm" \| "md" \| "lg"` | `md` | 尺寸(随 data-ms-density 缩放)。默认 md。 |
+| `tone` | `"primary" \| "accent" \| "success" \| "warning" \| "danger" \| "info" \| "neutral"` | `neutral` | 语义色调:驱动内置插画着色与发光(读统一 6 槽位)。默认 neutral。 |
+| `classNames` | `EmptyClassNames` | — | 各部件细粒度 className。 |
 | `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
