@@ -74,7 +74,7 @@ export interface TreeProps {
   ) => void;
   /** 显示节点图标。 */
   showIcon?: boolean;
-  /** 显示缩进引导线。 */
+  /** 显示层级引导线:每个祖先层级一条竖导轨,对齐该层展开箭头;线色可用 --ms-tree-line 覆写。 */
   showLine?: boolean;
   /** 节点整行可点(整行高亮),否则仅标题区。默认 true。 */
   blockNode?: boolean;
