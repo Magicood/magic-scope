@@ -29,21 +29,28 @@ import {
  * 这是组件库「一键切换」能力的实战展示:全部走 tokens runtime,localStorage 持久化。
  * ========================================================================== */
 
-/** 品牌主题 Arden:暖纸白 + 深 ink 主色 + 陶土点缀,由 deriveTheme 派生明暗双版。 */
+/**
+ * 品牌主题 Arden(Chromatic Grid)—— 冷灰白底 + 石墨字 + 饱和靛蓝主色。
+ *
+ * 与上一版(暖纸白 + 深棕 ink + 陶土)彻底切割:这一版的设计语言里
+ * **色彩是版面骨架与信息编码**,不是点缀,所以主色必须是敢整块铺的饱和色。
+ * 四个品类色由主色在 OKLCH 色相轮上等距旋转派生(见 shop.css 的 --cat-*),
+ * 因此换任何主题家族,整套品类色都跟着转而彼此区分度不变。
+ */
 const ardenSeed = {
   name: 'arden',
   label: 'Arden',
-  primary: '#2A241C', // 深暖 ink —— 主 CTA 用深色而非亮色(编辑式零售质感)
-  neutral: '#2B251E', // 暖调中性,浅色端派生出暖纸白底
-  accent: '#A9603E', // 陶土,克制使用
+  primary: '#2E48D6', // 靛蓝 —— 大色块主角
+  neutral: '#1A1A22', // 冷调中性(略偏蓝),浅色端派生出冷灰白 ground
+  accent: '#E2531D', // 朱红 —— 第二色,承担强调与 lighting 品类
 };
 
 export const ardenLight = deriveTheme({ ...ardenSeed, scheme: 'light' });
-// 深色端主色翻转为暖 bone 白(深底上深 ink CTA 会隐身),陶土点缀提亮一档
+// 深色端把主色提亮一档(深底上 #2E48D6 压得住但对比不足),保持同色相
 export const ardenDark = deriveTheme({
   ...ardenSeed,
-  primary: '#E7E1D5',
-  accent: '#C08A63',
+  primary: '#6B85FF',
+  accent: '#FF7A45',
   scheme: 'dark',
 });
 

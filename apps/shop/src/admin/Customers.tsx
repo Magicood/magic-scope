@@ -19,7 +19,7 @@ import {
   TimelineItem,
   toast,
 } from '@magic-scope/react';
-import { useMemo, useState } from 'react';
+import { type CSSProperties, useMemo, useState } from 'react';
 import { customers } from '../data/customers';
 import { orders } from '../data/orders';
 import type { Customer, CustomerTier, Order, OrderStatus } from '../data/types';
@@ -29,20 +29,18 @@ import './Customers.css';
 
 /* ============================================================================
  * 后台客户页 —— 30 位客户的名册。
- * 迷你统计(VIP / 订阅率 / 客单)→ 搜索 + 分层筛选 → 主表(HoverCard 档案
- * 预览 / 受控排序 / 本地分页)→ 行点击抽屉档案(Descriptions + 订单 + 活动
- * 时间线)。mock 数据只读,营销订阅开关只改本地映射。
+ * 版式走 Chromatic Grid 的控制台方言:不等分 KPI 行(首块主色满色 + 分层配比条)
+ * → 名册面板(大号计数 + 搜索 / 分层筛选收进面板头)→ 主表(HoverCard 档案预览 /
+ * 受控排序 / 本地分页)→ 行点击抽屉档案(tier 色条 + 大号姓名 + 数字块 +
+ * Descriptions + 订单 + 活动时间线)。
+ * 分层(tier)一律用色条编码,不用彩色药丸;mock 数据只读,订阅开关只改本地映射。
  * ========================================================================== */
 
 const PAGE_SIZE = 10;
 
 type TierFilter = 'all' | CustomerTier;
 
-const TIER_TONE: Record<CustomerTier, TagTone> = {
-  vip: 'accent',
-  member: 'primary',
-  new: 'neutral',
-};
+const TIER_ORDER: readonly CustomerTier[] = ['vip', 'member', 'new'];
 
 const TIER_LABEL: Record<CustomerTier, string> = {
   vip: 'VIP',
@@ -70,8 +68,12 @@ const STATUS_LABEL: Record<OrderStatus, string> = {
   cancelled: 'Cancelled',
 };
 
-/* 静态指标(数据源不变,模块级算一次):VIP 数 / 平均生涯消费 */
-const VIP_COUNT = customers.filter((c) => c.tier === 'vip').length;
+/* 静态指标(数据源不变,模块级算一次):各层人数 / 平均生涯消费 */
+const TIER_COUNTS: Record<CustomerTier, number> = {
+  vip: customers.filter((c) => c.tier === 'vip').length,
+  member: customers.filter((c) => c.tier === 'member').length,
+  new: customers.filter((c) => c.tier === 'new').length,
+};
 const AVG_SPENT = Math.round(customers.reduce((sum, c) => sum + c.spent, 0) / customers.length);
 
 /* 14px 放大镜(搜索框前缀,纯装饰) */
@@ -80,6 +82,14 @@ const iconSearch = (
     <circle cx="6.6" cy="6.6" r="4.3" stroke="currentColor" strokeWidth="1.2" />
     <path d="m10 10 3.1 3.1" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
   </svg>
+);
+
+/* 分层色条:走控制台的 .ad-status 语言(色块编码,不是彩色药丸);
+   色值由 data-tier 在 .cst-tone 作用域里派生,见 Customers.css。 */
+const TierMark = ({ tier }: { tier: CustomerTier }) => (
+  <span className="ad-status cst-tier cst-tone" data-tier={tier}>
+    {TIER_LABEL[tier]}
+  </span>
 );
 
 /* ------------------------------ 活动时间线 --------------------------------
@@ -243,6 +253,16 @@ export function Customers() {
                   <span className="cst-peek-email">{c.email}</span>
                 </div>
               </div>
+              <div className="cst-figs cst-figs-sm">
+                <div className="cst-fig">
+                  <span className="cst-fig-n">{c.orders}</span>
+                  <span className="cst-fig-k">Orders</span>
+                </div>
+                <div className="cst-fig cst-fig-ink">
+                  <span className="cst-fig-n">{money(c.spent)}</span>
+                  <span className="cst-fig-k">Lifetime</span>
+                </div>
+              </div>
               <dl className="cst-peek-meta">
                 <div>
                   <dt>Location</dt>
@@ -253,15 +273,9 @@ export function Customers() {
                   <dd>{formatDate(c.joinedAt)}</dd>
                 </div>
                 <div>
-                  <dt>Lifetime spend</dt>
-                  <dd>{money(c.spent)}</dd>
-                </div>
-                <div>
                   <dt>Tier</dt>
                   <dd>
-                    <Tag size="sm" tone={TIER_TONE[c.tier]}>
-                      {TIER_LABEL[c.tier]}
-                    </Tag>
+                    <TierMark tier={c.tier} />
                   </dd>
                 </div>
               </dl>
@@ -295,12 +309,8 @@ export function Customers() {
     {
       key: 'tier',
       header: 'Tier',
-      width: 96,
-      render: (c) => (
-        <Tag size="sm" tone={TIER_TONE[c.tier]}>
-          {TIER_LABEL[c.tier]}
-        </Tag>
-      ),
+      width: 104,
+      render: (c) => <TierMark tier={c.tier} />,
     },
     {
       key: 'joinedAt',
@@ -334,70 +344,121 @@ export function Customers() {
       <header className="ad-page-header">
         <div>
           <h1 className="ad-page-title">Customers</h1>
-          <p className="ad-page-sub">{customers.length} customers</p>
+          <p className="ad-page-sub">
+            {customers.length} accounts · {optInCount} subscribed
+          </p>
         </div>
       </header>
 
-      {/* 迷你统计:VIP 数 / 订阅率(跟随本地开关)/ 平均生涯消费 */}
-      <div className="ad-stat-grid">
-        <div className="ad-card">
-          <Statistic size="sm" title="VIP customers" value={VIP_COUNT} animateOnMount />
-        </div>
-        <div className="ad-card">
+      {/* KPI 行:不等分 1.4fr 1fr 1fr,首块主色满色 + 分层配比条 */}
+      <div className="ad-kpis cst-kpis">
+        <div className="ad-kpi ad-kpi-lead cst-kpi-lead">
           <Statistic
-            size="sm"
+            title="VIP customers"
+            value={TIER_COUNTS.vip}
+            animateOnMount
+            classNames={{ title: 'cst-kpi-k' }}
+            valueClassName="cst-kpi-num"
+          />
+          {/* 分层配比:超大数字旁边一份密集清单,密度反差 */}
+          <div className="cst-mix">
+            {TIER_ORDER.map((t) => (
+              <div className="cst-mix-row" key={t}>
+                <span className="cst-mix-k">{TIER_LABEL[t]}</span>
+                <span
+                  className="cst-mix-bar"
+                  style={
+                    {
+                      '--cst-mix-w': `${Math.round((TIER_COUNTS[t] / customers.length) * 100)}%`,
+                    } as CSSProperties
+                  }
+                />
+                <span className="cst-mix-n">{TIER_COUNTS[t]}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="ad-kpi">
+          <Statistic
             title="Marketing opt-in"
             value={optInShare}
             suffix="%"
             animateOnMount
+            classNames={{ title: 'cst-kpi-k' }}
+            valueClassName="cst-kpi-num-sm"
           />
+          <div className="cst-kpi-foot">
+            {/* 订阅率的量感条:与首块的配比条同一套语言 */}
+            <span
+              className="cst-meter"
+              aria-hidden="true"
+              style={{ '--cst-meter-w': `${optInShare}%` } as CSSProperties}
+            />
+            <p className="cst-kpi-note">
+              {optInCount} of {customers.length} subscribed
+            </p>
+          </div>
         </div>
-        <div className="ad-card">
+
+        <div className="ad-kpi">
           <Statistic
-            size="sm"
             title="Avg lifetime spend"
             value={AVG_SPENT}
             prefix="$"
             animateOnMount
+            classNames={{ title: 'cst-kpi-k' }}
+            valueClassName="cst-kpi-num-sm"
           />
+          <p className="cst-kpi-note">across all accounts</p>
         </div>
       </div>
 
-      <div className="ad-toolbar">
-        <Input
-          className="cst-search"
-          size="sm"
-          value={query}
-          onChange={(event) => {
-            setQuery(event.target.value);
-            setPage(1);
-          }}
-          placeholder="Search name or email"
-          prefix={iconSearch}
-          clearable
-          aria-label="Search customers"
-        />
-        <div className="ad-toolbar-spacer" />
-        <Segmented
-          size="sm"
-          value={tier}
-          onValueChange={(value) => {
-            setTier(value as TierFilter);
-            setPage(1);
-          }}
-          options={[
-            { value: 'all', label: 'All' },
-            { value: 'vip', label: 'VIP' },
-            { value: 'member', label: 'Member' },
-            { value: 'new', label: 'New' },
-          ]}
-        />
-      </div>
-
+      {/* 名册面板:面板头承载大号计数 + 搜索 / 分层筛选,底下是密集表格 */}
       <section className="ad-card cst-table-card">
+        <div className="cst-table-head">
+          <div className="cst-table-id">
+            <span className="cst-table-kicker">Directory</span>
+            <span className="cst-table-count">
+              {sorted.length}
+              <small>/ {customers.length}</small>
+            </span>
+          </div>
+          <div className="cst-table-tools">
+            <Input
+              className="cst-search"
+              size="sm"
+              value={query}
+              onChange={(event) => {
+                setQuery(event.target.value);
+                setPage(1);
+              }}
+              placeholder="Search name or email"
+              prefix={iconSearch}
+              clearable
+              aria-label="Search customers"
+            />
+            <Segmented
+              size="sm"
+              value={tier}
+              onValueChange={(value) => {
+                setTier(value as TierFilter);
+                setPage(1);
+              }}
+              options={[
+                { value: 'all', label: 'All' },
+                { value: 'vip', label: 'VIP' },
+                { value: 'member', label: 'Member' },
+                { value: 'new', label: 'New' },
+              ]}
+            />
+          </div>
+        </div>
+
         <Table<Customer>
           columns={columns}
           data={paged}
+          size="sm"
           hoverable
           getRowKey={(c) => c.id}
           sortState={sortState}
@@ -431,7 +492,7 @@ export function Customers() {
         )}
       </section>
 
-      {/* 客户档案抽屉(420px):头部身份 → 基本信息 → 订单 → 活动时间线 */}
+      {/* 客户档案抽屉(420px):tier 色条 + 大号姓名 → 数字块 → 基本信息 → 订单 → 时间线 */}
       <Drawer
         open={drawerOpen}
         onOpenChange={setDrawerOpen}
@@ -441,12 +502,13 @@ export function Customers() {
         aria-label={selected ? `Customer profile — ${selected.name}` : 'Customer profile'}
         header={
           selected ? (
-            <div className="cst-drawer-head">
-              <Avatar name={selected.name} size="lg" />
+            <div className="cst-drawer-head cst-tone" data-tier={selected.tier}>
+              <span className="cst-drawer-bar" aria-hidden="true" />
+              <span className="cst-drawer-meta">
+                <span className="cst-drawer-tier">{TIER_LABEL[selected.tier]}</span>
+                <span className="cst-drawer-id">{selected.id}</span>
+              </span>
               <span className="cst-drawer-name">{selected.name}</span>
-              <Tag size="sm" tone={TIER_TONE[selected.tier]}>
-                {TIER_LABEL[selected.tier]}
-              </Tag>
             </div>
           ) : null
         }
@@ -460,6 +522,17 @@ export function Customers() {
       >
         {selected && (
           <div className="cst-profile">
+            <div className="cst-figs">
+              <div className="cst-fig">
+                <span className="cst-fig-n">{selected.orders}</span>
+                <span className="cst-fig-k">Orders</span>
+              </div>
+              <div className="cst-fig cst-fig-ink">
+                <span className="cst-fig-n">{money(selected.spent)}</span>
+                <span className="cst-fig-k">Lifetime spend</span>
+              </div>
+            </div>
+
             <Descriptions
               size="sm"
               columns={1}

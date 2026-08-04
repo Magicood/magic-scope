@@ -1,12 +1,206 @@
 /* ============================================================================
- * Orders 页私有样式(.od-*)—— 只消费 --ms-* / --sf-* 变量与 .ad-* 骨架原语。
- * 表格卡采用 Linear 式"卡内分层":工具条 / 批量条 / 表格 / 分页脚,发丝线分隔。
+ * Orders 页私有样式(.od-*)—— 只消费 --ms-* / --sf-* 变量与 .ad-* / .sf-* 原语。
+ *
+ * 版面:概览带(不等分 1.72fr/1fr,左满色块大数字 · 右密集状态账本)
+ *      + 一张分层表格卡(快切条 / 工具条 / 深色批量块 / 表格 / 分页脚)。
+ * 分隔一律用 --sf-hairline 或色块自身边界,不给卡片描边。
  * ========================================================================== */
 
-/* ------------------------------ 状态快切 ---------------------------------- */
+/* ============================== 概览带 ==================================== */
 
-.od-segments {
-  align-self: flex-start;
+.od-band {
+  display: grid;
+  grid-template-columns: 1.72fr 1fr;
+  gap: var(--sf-gap);
+  align-items: stretch;
+}
+
+/* 左块:满色 ink,只放一个超大数字 —— 极简一侧 */
+.od-band-lead {
+  position: relative;
+  overflow: hidden;
+  padding: 15px 20px 24px;
+  justify-content: flex-start;
+}
+
+/* 中段:左边一个超大数字,右边两组极小数字 —— 同一块色块内的尺度反差 */
+.od-band-mid {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-top: 10px;
+}
+
+.od-band-figures {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  min-width: 0;
+}
+
+.od-band-numeral {
+  font-size: clamp(56px, 6.6vw, 96px);
+  font-weight: 800;
+  letter-spacing: -0.06em;
+  line-height: 0.82;
+  font-variant-numeric: tabular-nums;
+}
+
+.od-band-unit {
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.58;
+}
+
+.od-band-aside {
+  display: grid;
+  gap: 14px;
+  margin: 0;
+  text-align: right;
+}
+
+.od-band-aside dt {
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.52;
+}
+
+.od-band-aside dd {
+  margin: 3px 0 0;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  font-variant-numeric: tabular-nums;
+}
+
+.od-band-foot {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 16px;
+}
+
+.od-band-money {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  font-variant-numeric: tabular-nums;
+}
+
+.od-band-lead .sf-index {
+  opacity: 0.5;
+}
+
+/* 四色签名条压在块底边 */
+.od-band-lead .sf-spectrum {
+  position: absolute;
+  inset: auto 0 0;
+}
+
+/* 右块:七行状态账本 —— 密集一侧,同时是表格状态色条的图例 */
+.od-ledger {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 15px 18px 10px;
+  border-radius: var(--sf-r);
+  background: var(--ms-color-surface-raised);
+}
+
+.od-ledger-list {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0;
+  display: grid;
+}
+
+.od-ledger-row {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr) 28px;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 5px 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: opacity var(--ms-duration-fast) var(--ms-ease-standard);
+}
+
+.od-ledger li + li .od-ledger-row {
+  border-top: 1px solid var(--sf-hairline);
+}
+
+.od-ledger-row:hover,
+.od-ledger-row:focus-visible {
+  opacity: 0.68;
+}
+
+.od-ledger-label {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--ms-color-fg-muted);
+  font-weight: 550;
+}
+
+.od-ledger-row[data-on] .od-ledger-label {
+  color: var(--ms-color-fg);
+  font-weight: 700;
+}
+
+.od-ledger-track {
+  height: 4px;
+  border-radius: 2px;
+  overflow: hidden;
+  background: color-mix(in oklab, var(--ms-color-fg), transparent 92%);
+}
+
+.od-ledger-fill {
+  display: block;
+  height: 100%;
+  width: var(--od-w, 0%);
+  border-radius: inherit;
+  background: var(--ad-status-color, var(--ms-color-fg-subtle));
+}
+
+.od-ledger-n {
+  font-size: 12px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+/* ============================== 表格卡 ==================================== */
+
+.od-table-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+/* 卡首条:状态快切 + 右侧极小号计数,与下方工具条以发丝线分层 */
+.od-card-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 11px 16px;
+  border-bottom: 1px solid var(--sf-hairline);
+}
+
+.od-card-head-meta {
+  margin-left: auto;
+  white-space: nowrap;
 }
 
 .od-seg-opt {
@@ -21,15 +215,8 @@
   color: var(--ms-color-fg-subtle);
 }
 
-/* ------------------------------ 表格卡 ------------------------------------ */
-
-.od-table-card {
-  padding: 0;
-  overflow: hidden;
-}
-
 .od-toolbar {
-  padding: 12px 16px;
+  padding: 11px 16px;
   border-bottom: 1px solid var(--sf-hairline);
 }
 
@@ -43,28 +230,57 @@
   flex: none;
 }
 
-/* 选中批量条:soft primary 底 + 轻浮入,替代硬弹窗 */
+/* ---- 批量操作:深色块浮入(.sf-tile-ink 语言),数字大、标签小 ---- */
+
 .od-bulkbar {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 8px 16px;
-  background: color-mix(in oklab, var(--ms-color-primary), transparent 93%);
-  border-bottom: 1px solid var(--sf-hairline);
+  margin: 10px 16px;
+  padding: 7px 10px 7px 14px;
+  border-radius: var(--sf-r-sm);
   animation: od-bulk-in var(--ms-duration-fast, 160ms) var(--ms-ease-standard, ease) both;
 }
 
 .od-bulk-count {
-  font-size: 12.5px;
-  font-weight: 600;
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -0.045em;
   font-variant-numeric: tabular-nums;
-  color: var(--ms-color-fg);
+}
+
+.od-bulk-label {
+  margin-left: -5px;
+  margin-right: 4px;
+  font-size: 10.5px;
+  font-weight: 650;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+
+/* 库的 ghost / outline 变体没显式声明背景,浏览器会漏出原生按钮的 buttonface 灰,
+   在浅色面上看不出来,压到深色块上就是一块白 —— 这里按页面作用域抹平。 */
+.od-bulkbar .ms-button--ghost,
+.od-bulkbar .ms-button--outline {
+  background-color: transparent;
+}
+
+/* ghost 钮在深底上要跟着反色,否则是深字压深底 */
+.od-bulkbar .ms-button--ghost {
+  color: color-mix(in oklab, var(--ms-color-bg), transparent 26%);
+}
+
+.od-bulkbar .ms-button--ghost:hover,
+.od-bulkbar .ms-button--ghost:focus-visible {
+  color: var(--ms-color-bg);
+  background: color-mix(in oklab, var(--ms-color-bg), transparent 88%);
 }
 
 @keyframes od-bulk-in {
   from {
     opacity: 0;
-    transform: translateY(-3px);
+    transform: translateY(-4px);
   }
   to {
     opacity: 1;
@@ -78,16 +294,35 @@
   }
 }
 
-/* ------------------------------ 表格单元 ---------------------------------- */
+/* ============================== 表格单元 ================================== */
 
-.od-number {
-  font-weight: 550;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0.01em;
+/* 库给选中行的每个单元格都打了 inset 左边线,一整行看下来像画满了竖格线;
+   本页只留行首那一道(库侧修好前的页面级兜底,不改共享样式)。 */
+.od-table .ms-table__row--selected .ms-table__td {
+  box-shadow: none;
+}
+
+.od-table .ms-table__row--selected .ms-table__td:first-child {
+  box-shadow: inset 2px 0 0 -1px var(--ms-c);
 }
 
 .od-num {
   font-variant-numeric: tabular-nums;
+}
+
+.od-total {
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.015em;
+}
+
+.od-dest {
+  display: block;
+  font-size: 12.5px;
+  color: var(--ms-color-fg-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .od-date {
@@ -180,7 +415,7 @@
   border-top: 1px solid var(--sf-hairline);
 }
 
-/* ------------------------------ 详情抽屉 ---------------------------------- */
+/* ============================== 详情抽屉 ================================== */
 
 /* 规格:480px 侧抽屉(覆盖库的 size 档位变量) */
 .ms-drawer.od-drawer {
@@ -190,9 +425,26 @@
 .od-drawer-head {
   display: flex;
   flex-direction: column;
-  gap: 3px;
   min-width: 0;
   flex: 1;
+}
+
+/* 顶部状态色条:颜色取自 .ad-status-<status> 注入的 --ad-status-color */
+.od-drawer-rule {
+  display: block;
+  height: 3px;
+  border-radius: 2px;
+  margin-bottom: 13px;
+  background: var(--ad-status-color, var(--ms-color-fg-subtle));
+}
+
+.od-drawer-number {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
 }
 
 .od-drawer-titlerow {
@@ -201,16 +453,16 @@
   gap: 8px;
 }
 
-.od-drawer-number {
-  margin: 0;
-  font-size: 16px;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  font-variant-numeric: tabular-nums;
-}
-
 .od-drawer-spacer {
   flex: 1;
+}
+
+.od-drawer-metarow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 9px;
 }
 
 .od-drawer-sub {
@@ -220,17 +472,14 @@
 }
 
 .od-drawer-body {
-  display: flex;
-  flex-direction: column;
-  gap: 22px;
   padding-block: 4px 12px;
 }
 
 .od-section-title {
   margin: 0 0 10px;
   font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
+  font-weight: 650;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--ms-color-fg-subtle);
 }
@@ -280,7 +529,7 @@
   color: var(--ms-color-fg-muted);
 }
 
-/* 金额小结 */
+/* 金额小结:合计用大字,与上面两行小字拉开尺度 */
 .od-totals {
   margin: 10px 0 0;
   padding-top: 10px;
@@ -307,14 +556,23 @@
   font-variant-numeric: tabular-nums;
 }
 
+.od-totals .od-grand {
+  margin-top: 3px;
+}
+
 .od-totals .od-grand dt {
-  font-weight: 600;
-  color: var(--ms-color-fg);
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ms-color-fg-subtle);
 }
 
 .od-totals .od-grand dd {
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  line-height: 1;
 }
 
 /* 时间线:抽屉内走紧凑密度 */
@@ -330,4 +588,16 @@
   display: flex;
   justify-content: flex-end;
   margin-top: 10px;
+}
+
+/* ============================== 响应式收敛 ================================ */
+
+@media (max-width: 1080px) {
+  .od-band {
+    grid-template-columns: 1fr;
+  }
+
+  .od-band-foot {
+    padding-top: 20px;
+  }
 }

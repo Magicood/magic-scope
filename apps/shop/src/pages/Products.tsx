@@ -28,8 +28,13 @@ import { useCart } from '../lib/store';
 import './Products.css';
 
 /* ============================================================================
- * Products —— 商品列表页:左侧粘性筛选栏(分类/价格/库存/标签)+ 右侧商品区
- * (排序 + 网格/列表切换 + 假加载骨架 + 分页)。?category= 与导航受控联动。
+ * Products —— 商品列表页(Chromatic Grid 版式)
+ *
+ * 版面骨架 = 三块拼贴:
+ *   ① 页头 1.6fr / 1fr —— 左满色块(选中分类即该品类色)扛标题,右白块扛结果大数字 + 密集筛选摘要;
+ *   ② 左 220px 白色筛选拼贴块(粘性),分组之间发丝线,分类项前挂品类色点;
+ *   ③ 右商品区 —— 4 列网格里穿插大卡(跨 2×2)与宽卡(跨 2 列)打破等分。
+ * 筛选 / 排序 / 分页 / 视图切换 / 假加载的逻辑与组件全部沿用,改的只是版式与视觉。
  * ========================================================================== */
 
 const PAGE_SIZE = 8;
@@ -37,6 +42,8 @@ const PAGE_SIZE = 8;
 const PRICE_CAP = 450;
 /* 假加载时长:短到不烦躁,长到骨架可感知。 */
 const FAKE_LOAD_MS = 350;
+/* 网格列数 —— 卡型编排要按它算尾行余数,和 Products.css 的列模板是一对。 */
+const GRID_COLS = 4;
 
 type SortMode = 'featured' | 'price-asc' | 'price-desc' | 'rating';
 type ViewMode = 'grid' | 'list';
@@ -56,10 +63,51 @@ const BADGE_META: Record<ProductBadge, { label: string; tone: TagTone }> = {
   limited: { label: 'Limited', tone: 'warning' },
 };
 
-/* 每个分类的商品数(静态目录,模块级算一次)。 */
+/* 每个分类的商品数与名称(静态目录,模块级算一次)。 */
 const CATEGORY_COUNTS = new Map(
   categories.map((c) => [c.id, products.filter((p) => p.category === c.id).length]),
 );
+/* 键放宽成 string:筛选态 cats 是 string[](受 URL 影响),不必为查名而收窄 */
+const CATEGORY_LABELS = new Map<string, string>(categories.map((c) => [c.id, c.label]));
+
+/* 两位数序号:等宽小字的索引,和超大数字构成尺度对比。 */
+const pad2 = (n: number) => String(n).padStart(2, '0');
+
+/* ---------------------------------------------------------------------------
+ * 卡型编排 —— 网格用 4 等列,但靠混排卡型打破等分节奏。
+ * 规则:全局每 7 张出一张大卡(跨 2×2,分页后节奏依旧连续);页内没命中就退回首张,
+ * 保证任何一页都不会退化成规规矩矩的等分方阵。大卡多吃 3 格,尾行余下的空格由末尾
+ * 若干张升级成宽卡(跨 2 列、图左信息右)补平 —— 于是尾行永远铺满,不留半行空洞。
+ * ------------------------------------------------------------------------- */
+type CardSpan = 'lg' | 'wide' | null;
+
+function planCards(offset: number, count: number): CardSpan[] {
+  if (count <= 0) return [];
+  /* 结果极少时直接用大卡 / 宽卡占满一行,免得孤零零一张小卡挂在左上角 */
+  if (count === 1) return ['lg'];
+  if (count === 2) return ['wide', 'wide'];
+
+  const spans = new Array<CardSpan>(count).fill(null);
+  const anchors: number[] = [];
+  for (let i = 0; i < count; i += 1) {
+    /* 后面至少还剩 4 张才放大卡 —— 大卡 + 4 张小卡刚好补满两行 */
+    if ((offset + i) % 7 === 0 && count - i >= 5) anchors.push(i);
+  }
+  if (anchors.length === 0) anchors.push(0);
+  for (const i of anchors) spans[i] = 'lg';
+
+  let cells = count + anchors.length * 3;
+  for (let i = count - 1; i >= 0 && cells % GRID_COLS !== 0; i -= 1) {
+    if (spans[i] === null) {
+      spans[i] = 'wide';
+      cells += 1;
+    }
+  }
+  return spans;
+}
+
+const spanClass = (span: CardSpan) =>
+  span === 'lg' ? 'sf-product-card-lg' : span === 'wide' ? 'sf-product-card-wide' : '';
 
 /* ------------------------- 视图切换图标(15px,与页头同风格) ------------------------- */
 
@@ -174,7 +222,8 @@ export function Products({ routePath }: { routePath: string }) {
 
   const totalPages = Math.ceil(sorted.length / PAGE_SIZE);
   const safePage = Math.min(page, Math.max(1, totalPages));
-  const pageItems = sorted.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
+  const offset = (safePage - 1) * PAGE_SIZE;
+  const pageItems = sorted.slice(offset, offset + PAGE_SIZE);
 
   const hasActiveFilters =
     cats.length > 0 || maxPrice < PRICE_CAP || inStockOnly || badges.length > 0;
@@ -204,20 +253,59 @@ export function Products({ routePath }: { routePath: string }) {
     mainRef.current?.scrollIntoView({ block: 'start' });
   };
 
-  /* ------------------------------ 页头文案 ------------------------------ */
+  /* ------------------------------ 页头拼贴文案 ------------------------------ */
   const activeCategory = cats.length === 1 ? categories.find((c) => c.id === cats[0]) : undefined;
   const title = activeCategory?.label ?? 'All pieces';
   const lede =
     activeCategory?.blurb ??
     'Twelve objects across four families — thrown, woven, cast and finished to stay.';
-  const countText =
-    sorted.length === products.length
-      ? `${products.length} pieces`
-      : `${sorted.length} of ${products.length} pieces`;
 
-  const cards = pageItems.map((p) => (
-    <RouterLink key={p.id} to={`/products/${p.id}`} className="sf-product-card">
-      <GridCardInner product={p} />
+  /* 右侧白块的密集摘要:五条口径常驻(未启用的写「不限」),
+     一份紧排清单顶在超大数字下面 —— 页头的密度反差就靠这一疏一密。 */
+  const summaryRows: { key: string; value: string }[] = [
+    {
+      key: 'Family',
+      value:
+        cats.length === 0
+          ? 'All four'
+          : cats.map((id) => CATEGORY_LABELS.get(id) ?? id).join(' · '),
+    },
+    {
+      key: 'Order',
+      value: SORT_OPTIONS.find((o) => o.value === sort)?.label ?? 'Featured',
+    },
+    { key: 'Ceiling', value: maxPrice < PRICE_CAP ? `Up to ${money(maxPrice)}` : 'No limit' },
+    { key: 'Stock', value: inStockOnly ? 'In stock only' : 'Any' },
+    {
+      key: 'Tagged',
+      value: badges.length > 0 ? badges.map((b) => BADGE_META[b].label).join(' · ') : 'Any',
+    },
+  ];
+
+  const rangeStart = sorted.length === 0 ? 0 : offset + 1;
+  const rangeEnd = offset + pageItems.length;
+
+  /* 家族配比条:当前结果按品类的比例,用四品类色画成一条数据条。
+     色彩在这里是编码而不是装饰 —— 一眼看出这批结果偏哪一族。 */
+  const familySplit = categories
+    .map((c) => ({
+      id: c.id,
+      label: c.label,
+      count: sorted.filter((p) => p.category === c.id).length,
+    }))
+    .filter((row) => row.count > 0);
+
+  /* ------------------------------ 卡片编排 ------------------------------ */
+  const plan = planCards(offset, pageItems.length);
+
+  const cards = pageItems.map((p, i) => (
+    <RouterLink
+      key={p.id}
+      to={`/products/${p.id}`}
+      className={['sf-product-card', spanClass(plan[i] ?? null)].filter(Boolean).join(' ')}
+      data-cat={p.category}
+    >
+      <GridCardInner product={p} index={offset + i + 1} />
     </RouterLink>
   ));
 
@@ -227,34 +315,85 @@ export function Products({ routePath }: { routePath: string }) {
   return (
     <section className="pl-page">
       <div className="sf-container">
+        {/* ============================ 页头拼贴 ============================ */}
         <header className="pl-head">
-          <Reveal trigger="mount" variant="fade" duration={500} asChild>
-            <p className="sf-eyebrow">The collection</p>
+          <Reveal trigger="mount" variant="fade" duration={520} asChild>
+            <div
+              className={`sf-tile pl-head-hero ${activeCategory ? 'sf-cat-fill' : 'sf-tile-solid'}`}
+              data-cat={activeCategory?.id}
+            >
+              <p className="sf-kicker sf-kicker-dot pl-head-kicker">The collection</p>
+              <h1 className="sf-display sf-display-lg pl-head-title">
+                <Reveal as="span" trigger="mount" variant="mask-up" duration={640} delay={90}>
+                  {title}
+                </Reveal>
+              </h1>
+              <p className="sf-lede pl-head-lede">{lede}</p>
+              <span className="sf-spectrum pl-head-spectrum" aria-hidden="true">
+                <i />
+                <i />
+                <i />
+                <i />
+              </span>
+            </div>
           </Reveal>
-          <h1 className="sf-display sf-display-lg">
-            <Reveal as="span" trigger="mount" variant="mask-up" duration={650} delay={70}>
-              {title}
-            </Reveal>
-          </h1>
-          <Reveal trigger="mount" variant="up" distance={14} duration={600} delay={160} asChild>
-            <div className="pl-head-sub">
-              <p className="sf-lede">{lede}</p>
-              <p className="pl-count">{countText}</p>
+
+          <Reveal trigger="mount" variant="up" distance={14} duration={600} delay={170} asChild>
+            <div className="sf-tile pl-head-count">
+              <div className="pl-count-block">
+                <p className="sf-numeral pl-count-num">{sorted.length}</p>
+                <p className="pl-count-unit">
+                  {sorted.length === 1 ? 'piece' : 'pieces'}
+                  {sorted.length === products.length ? null : (
+                    <span className="sf-index">of {products.length}</span>
+                  )}
+                </p>
+                {familySplit.length > 0 ? (
+                  <div
+                    className="pl-split"
+                    role="img"
+                    aria-label={familySplit.map((r) => `${r.label}: ${r.count}`).join(', ')}
+                  >
+                    {familySplit.map((row) => (
+                      <i
+                        key={row.id}
+                        data-cat={row.id}
+                        className="sf-cat-fill"
+                        style={{ flexGrow: row.count }}
+                      />
+                    ))}
+                  </div>
+                ) : null}
+              </div>
+
+              <hr className="sf-hairline pl-count-rule" />
+
+              <dl className="pl-summary">
+                {summaryRows.map((row) => (
+                  <div key={row.key} className="pl-summary-row">
+                    <dt className="sf-index">{row.key}</dt>
+                    <dd>{row.value}</dd>
+                  </div>
+                ))}
+              </dl>
             </div>
           </Reveal>
         </header>
 
         <div className="pl-layout">
-          {/* ------------------------- 筛选栏(桌面粘性) ------------------------- */}
-          <Reveal trigger="mount" variant="fade" duration={600} delay={240} asChild>
-            <aside className="pl-filters" aria-label="Product filters">
+          {/* ------------------------- 筛选拼贴块(桌面粘性) ------------------------- */}
+          <Reveal trigger="mount" variant="fade" duration={600} delay={250} asChild>
+            <aside className="sf-tile pl-filters" aria-label="Product filters">
               <div className="pl-facet">
-                <h3 className="pl-facet-title">Category</h3>
+                <h2 className="pl-facet-title">Category</h2>
                 <CheckboxGroup value={cats} onChange={setCats} size="sm">
                   {categories.map((c) => (
                     <Checkbox key={c.id} value={c.id}>
-                      {c.label}
-                      <span className="pl-facet-count">{CATEGORY_COUNTS.get(c.id) ?? 0}</span>
+                      <span className="pl-cat" data-cat={c.id}>
+                        <i className="sf-dot sf-cat-dot" aria-hidden="true" />
+                        <span className="pl-cat-label">{c.label}</span>
+                        <span className="pl-facet-count">{CATEGORY_COUNTS.get(c.id) ?? 0}</span>
+                      </span>
                     </Checkbox>
                   ))}
                 </CheckboxGroup>
@@ -263,7 +402,7 @@ export function Products({ routePath }: { routePath: string }) {
               <hr className="sf-hairline" />
 
               <div className="pl-facet">
-                <h3 className="pl-facet-title">Price</h3>
+                <h2 className="pl-facet-title">Price</h2>
                 <Slider
                   min={0}
                   max={PRICE_CAP}
@@ -280,7 +419,7 @@ export function Products({ routePath }: { routePath: string }) {
               <hr className="sf-hairline" />
 
               <div className="pl-facet">
-                <h3 className="pl-facet-title">Availability</h3>
+                <h2 className="pl-facet-title">Availability</h2>
                 <Switch
                   size="sm"
                   checked={inStockOnly}
@@ -293,7 +432,7 @@ export function Products({ routePath }: { routePath: string }) {
               <hr className="sf-hairline" />
 
               <div className="pl-facet">
-                <h3 className="pl-facet-title">Highlights</h3>
+                <h2 className="pl-facet-title">Highlights</h2>
                 <div className="pl-facet-tags">
                   {BADGE_ORDER.map((b) => (
                     <Tag
@@ -319,9 +458,12 @@ export function Products({ routePath }: { routePath: string }) {
 
           {/* ------------------------------ 商品区 ------------------------------ */}
           <div className="pl-main" ref={mainRef} aria-busy={pending || undefined}>
-            <Reveal trigger="mount" variant="fade" duration={550} delay={200} asChild>
+            <Reveal trigger="mount" variant="fade" duration={550} delay={210} asChild>
               <div className="pl-toolbar">
-                <div className="pl-toolbar-sort">
+                <p className="sf-index pl-toolbar-range">
+                  {pad2(rangeStart)} — {pad2(rangeEnd)} / {pad2(sorted.length)}
+                </p>
+                <div className="pl-toolbar-controls">
                   <span className="pl-toolbar-label" aria-hidden="true">
                     Sort
                   </span>
@@ -335,25 +477,25 @@ export function Products({ routePath }: { routePath: string }) {
                       if (typeof value === 'string' && value !== '') setSort(value as SortMode);
                     }}
                   />
+                  <Segmented
+                    size="sm"
+                    value={view}
+                    onValueChange={handleViewChange}
+                    aria-label="Layout"
+                    options={[
+                      {
+                        value: 'grid',
+                        icon: GridIcon,
+                        label: <span className="pl-vh">Grid view</span>,
+                      },
+                      {
+                        value: 'list',
+                        icon: ListIcon,
+                        label: <span className="pl-vh">List view</span>,
+                      },
+                    ]}
+                  />
                 </div>
-                <Segmented
-                  size="sm"
-                  value={view}
-                  onValueChange={handleViewChange}
-                  aria-label="Layout"
-                  options={[
-                    {
-                      value: 'grid',
-                      icon: GridIcon,
-                      label: <span className="pl-vh">Grid view</span>,
-                    },
-                    {
-                      value: 'list',
-                      icon: ListIcon,
-                      label: <span className="pl-vh">List view</span>,
-                    },
-                  ]}
-                />
               </div>
             </Reveal>
 
@@ -369,8 +511,8 @@ export function Products({ routePath }: { routePath: string }) {
               </div>
             ) : view === 'list' ? (
               <div key={contentKey} className="pl-list pl-fade-in">
-                {pageItems.map((p) => (
-                  <ListRow key={p.id} product={p} />
+                {pageItems.map((p, i) => (
+                  <ListRow key={p.id} product={p} index={offset + i + 1} />
                 ))}
               </div>
             ) : entranceDone ? (
@@ -412,16 +554,17 @@ export function Products({ routePath }: { routePath: string }) {
 
 /* ---------------------------------------------------------------------------
  * 网格卡内容 —— 外层 RouterLink 即卡片(整卡可点),这里只负责视觉与 meta。
+ * 顶行是「品类色点 + 品类名 + 等宽序号」:色彩当信息编码,序号当极小尺度的对照物。
  * ------------------------------------------------------------------------- */
-function GridCardInner({ product }: { product: Product }) {
+function GridCardInner({ product, index }: { product: Product; index: number }) {
   return (
     <>
       <div className="pl-card-media">
-        <ProductVisual product={product} aspect="portrait" />
+        <ProductVisual product={product} aspect="square" />
         {product.badges && product.badges.length > 0 ? (
           <span className="pl-card-badges">
             {product.badges.map((b) => (
-              <Tag key={b} size="sm" tone={BADGE_META[b].tone}>
+              <Tag key={b} size="sm" variant="solid" tone="neutral" className="sf-badge">
                 {BADGE_META[b].label}
               </Tag>
             ))}
@@ -429,25 +572,32 @@ function GridCardInner({ product }: { product: Product }) {
         ) : null}
       </div>
       <div className="sf-product-meta">
-        <div>
+        <div className="sf-product-tagrow">
+          <i className="sf-dot sf-cat-dot" aria-hidden="true" />
+          <span className="sf-product-cat">{CATEGORY_LABELS.get(product.category)}</span>
+          <span className="sf-index pl-card-index">{pad2(index)}</span>
+        </div>
+        {/* 名称与价格同一条基线,一句话卖点另起一行 —— 窄列里才不会互相挤断 */}
+        <div className="sf-product-row">
           <div className="sf-product-name">{product.name}</div>
-          <div className="sf-product-tagline">{product.tagline}</div>
+          <span className="sf-product-price">
+            {product.compareAt != null ? (
+              <span className="sf-price-compare">{money(product.compareAt)}</span>
+            ) : null}
+            {money(product.price)}
+          </span>
         </div>
-        <div className="sf-product-price">
-          {product.compareAt != null ? (
-            <span className="sf-price-compare">{money(product.compareAt)}</span>
-          ) : null}
-          {money(product.price)}
-        </div>
+        <small className="pl-card-tagline">{product.tagline}</small>
       </div>
     </>
   );
 }
 
 /* ---------------------------------------------------------------------------
- * 列表行 —— 名称链接做 stretched-link 铺满整行;右侧操作区抬 z-index 保持可点。
+ * 列表行 —— 宽卡的语言:自身就是一块白色拼贴件(图左 / 信息中 / 价格右,列宽不等分)。
+ * 名称链接做 stretched-link 铺满整行;右侧操作区抬 z-index 保持可点。
  * ------------------------------------------------------------------------- */
-function ListRow({ product }: { product: Product }) {
+function ListRow({ product, index }: { product: Product; index: number }) {
   const { add, openDrawer } = useCart();
   const firstColorway = product.colorways[0];
   const firstDetail = product.details[0];
@@ -462,13 +612,18 @@ function ListRow({ product }: { product: Product }) {
   };
 
   return (
-    <article className="pl-row">
+    <article className="pl-row sf-lift" data-cat={product.category}>
       {/* 视觉列纯装饰:可访问名由名称链接承担 */}
       <div className="pl-row-media" aria-hidden="true">
-        <ProductVisual product={product} aspect="square" />
+        <ProductVisual product={product} aspect="wide" />
       </div>
 
       <div className="pl-row-body">
+        <div className="sf-product-tagrow">
+          <i className="sf-dot sf-cat-dot" aria-hidden="true" />
+          <span className="sf-product-cat">{CATEGORY_LABELS.get(product.category)}</span>
+          <span className="sf-index pl-row-index">{pad2(index)}</span>
+        </div>
         <RouterLink to={`/products/${product.id}`} className="pl-row-name">
           {product.name}
         </RouterLink>
@@ -504,21 +659,23 @@ function ListRow({ product }: { product: Product }) {
 }
 
 /* ---------------------------------------------------------------------------
- * 假加载骨架 —— 6 张,形状贴住当前视图的真实卡片/行,切换无跳动。
+ * 假加载骨架 —— 形状跟着真实卡型走(含跨 2×2 的大卡与跨 2 列的宽卡),切换无跳动。
  * ------------------------------------------------------------------------- */
-const SKELETON_KEYS = ['s1', 's2', 's3', 's4', 's5', 's6'];
+const GRID_SKELETON_KEYS = Array.from({ length: PAGE_SIZE }, (_, i) => `g${i + 1}`);
+const GRID_SKELETON_PLAN = planCards(0, PAGE_SIZE);
+const LIST_SKELETON_KEYS = ['r1', 'r2', 'r3', 'r4', 'r5'];
 
 function ResultsSkeleton({ view }: { view: ViewMode }) {
   if (view === 'list') {
     return (
       <div className="pl-list" aria-hidden="true">
-        {SKELETON_KEYS.map((k) => (
+        {LIST_SKELETON_KEYS.map((k) => (
           <div key={k} className="pl-row pl-skel-row">
             <Skeleton className="pl-skel-row-media" />
             <div className="pl-skel-lines">
-              <Skeleton variant="text" width="34%" />
-              <Skeleton variant="text" width="58%" />
               <Skeleton variant="text" width="26%" />
+              <Skeleton variant="text" width="46%" />
+              <Skeleton variant="text" width="34%" />
             </div>
             <div className="pl-skel-side">
               <Skeleton variant="text" width={56} />
@@ -531,14 +688,19 @@ function ResultsSkeleton({ view }: { view: ViewMode }) {
   }
   return (
     <div className="pl-grid" aria-hidden="true">
-      {SKELETON_KEYS.map((k) => (
-        <div key={k} className="pl-skel-card">
+      {GRID_SKELETON_KEYS.map((k, i) => (
+        <div
+          key={k}
+          className={['sf-product-card', 'pl-skel-card', spanClass(GRID_SKELETON_PLAN[i] ?? null)]
+            .filter(Boolean)
+            .join(' ')}
+        >
           <Skeleton className="pl-skel-media" height="auto" />
           <div className="pl-skel-meta">
-            <Skeleton variant="text" width="52%" />
-            <Skeleton variant="text" width={44} />
+            <Skeleton variant="text" width="42%" />
+            <Skeleton variant="text" width="66%" />
+            <Skeleton variant="text" width={48} />
           </div>
-          <Skeleton variant="text" width="38%" />
         </div>
       ))}
     </div>

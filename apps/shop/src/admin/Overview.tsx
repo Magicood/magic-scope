@@ -8,7 +8,6 @@ import {
   Table,
   type TableColumn,
   Tag,
-  type TagTone,
   toast,
 } from '@magic-scope/react';
 import { type PointerEvent as ReactPointerEvent, useEffect, useRef, useState } from 'react';
@@ -22,7 +21,11 @@ import { navigate, RouterLink } from '../lib/router';
 import './Overview.css';
 
 /* ============================================================================
- * Overview —— 后台总览:指标行 / 手写 SVG 收入面积图 / 最近订单 / 待处理与热销。
+ * Overview —— 后台总览。版面按 Chromatic Grid 的控制台方言排:
+ *   ① KPI 带 1.5fr/1fr/1fr/1fr,首块是主色满色块(超大数字),右侧三块小一档;
+ *   ② 收入行 1fr/3.05fr —— 左边一块密集的墨色摘要,右边一张空的面积图(密度反差);
+ *   ③ 底部 1.85fr/1fr —— 左表格,右两块清单。
+ * 状态一律用色条(.ad-status)而不是彩色药丸,单号等宽。
  * 动效克制:仅 Statistic animateOnMount 与 hover 过渡(后台不做滚动编排)。
  * ========================================================================== */
 
@@ -37,17 +40,8 @@ const RECENT_ORDERS = orders.slice(0, 8);
 const PENDING_COUNT = orders.filter((o) => o.status === 'pending').length;
 const REFUND_COUNT = orders.filter((o) => o.status === 'refunded').length;
 const LOW_STOCK = products.filter((p) => p.stock < 15);
-
-/** 订单状态 → Tag 语义色(与全后台约定一致:进行中偏冷、完成绿、异常红)。 */
-const STATUS_TONE: Record<OrderStatus, TagTone> = {
-  pending: 'warning',
-  paid: 'info',
-  fulfilled: 'accent',
-  shipped: 'primary',
-  delivered: 'success',
-  refunded: 'danger',
-  cancelled: 'neutral',
-};
+/** 待处理清单的总行数(页头小号计数用)。 */
+const ATTENTION_ROWS = LOW_STOCK.length + 2;
 
 const STATUS_LABEL: Record<OrderStatus, string> = {
   pending: 'Pending',
@@ -92,8 +86,8 @@ const TOP_PRODUCTS: TopProduct[] = (() => {
 const ORDER_COLUMNS: TableColumn<Order>[] = [
   {
     key: 'number',
-    header: 'Number',
-    render: (row) => <span className="ov-order-number">{row.number}</span>,
+    header: 'Order',
+    render: (row) => <span className="ad-ord">{row.number}</span>,
   },
   {
     key: 'customer',
@@ -103,23 +97,22 @@ const ORDER_COLUMNS: TableColumn<Order>[] = [
   {
     key: 'status',
     header: 'Status',
+    // 色条编码,不用彩色药丸 —— 表格里更安静、更好扫
     render: (row) => (
-      <Tag size="sm" tone={STATUS_TONE[row.status]}>
-        {STATUS_LABEL[row.status]}
-      </Tag>
+      <span className={`ad-status ad-status-${row.status}`}>{STATUS_LABEL[row.status]}</span>
     ),
   },
   {
     key: 'total',
     header: 'Total',
     align: 'end',
-    render: (row) => money(row.total),
+    render: (row) => <span className="ov-num">{money(row.total)}</span>,
   },
   {
     key: 'placedAt',
     header: 'Placed',
     align: 'end',
-    render: (row) => formatDate(row.placedAt),
+    render: (row) => <span className="ov-cell-muted">{formatDate(row.placedAt)}</span>,
   },
 ];
 
@@ -132,6 +125,38 @@ const RANGE_OPTIONS: SelectOption[] = [
   { value: '14', label: 'Last 14 days' },
   { value: '7', label: 'Last 7 days' },
 ];
+
+/* ------------------------------ 区间摘要计算 ------------------------------ */
+
+interface RangeDigest {
+  peak: DailyPoint | null;
+  low: DailyPoint | null;
+  /** 日均收入(整数)。 */
+  avg: number;
+  total: number;
+  orders: number;
+}
+
+/** 从当前区间的日点算出峰值 / 谷值 / 日均 / 合计(墨色摘要块消费)。 */
+function digestOf(points: DailyPoint[]): RangeDigest {
+  let peak: DailyPoint | null = null;
+  let low: DailyPoint | null = null;
+  let total = 0;
+  let orders = 0;
+  for (const p of points) {
+    total += p.revenue;
+    orders += p.orders;
+    if (peak === null || p.revenue > peak.revenue) peak = p;
+    if (low === null || p.revenue < low.revenue) low = p;
+  }
+  return {
+    peak,
+    low,
+    avg: points.length > 0 ? Math.round(total / points.length) : 0,
+    total,
+    orders,
+  };
+}
 
 /* ------------------------------ 图表纯函数 -------------------------------- */
 
@@ -185,7 +210,7 @@ function axisLabel(v: number): string {
 
 /* ------------------------------ 收入面积图 -------------------------------- */
 
-const CHART_HEIGHT = 260;
+const CHART_HEIGHT = 256;
 const PAD = { top: 18, right: 12, bottom: 28, left: 46 } as const;
 
 /**
@@ -263,7 +288,7 @@ function RevenueChart({ points }: { points: DailyPoint[] }) {
       >
         <defs>
           <linearGradient id="ov-revenue-fill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="var(--ms-color-primary)" stopOpacity="0.2" />
+            <stop offset="0%" stopColor="var(--ms-color-primary)" stopOpacity="0.22" />
             <stop offset="100%" stopColor="var(--ms-color-primary)" stopOpacity="0" />
           </linearGradient>
         </defs>
@@ -280,7 +305,7 @@ function RevenueChart({ points }: { points: DailyPoint[] }) {
                 y1={gy}
                 y2={gy}
               />
-              <text className="ov-chart-axis" x={PAD.left - 8} y={gy + 3} textAnchor="end">
+              <text className="ov-chart-axis" x={PAD.left - 10} y={gy + 3} textAnchor="end">
                 {axisLabel(gridStep * step)}
               </text>
             </g>
@@ -390,6 +415,7 @@ const iconReturn = (
 export function Overview() {
   const [range, setRange] = useState<RangeKey>('30');
   const chartPoints = revenueSeries.slice(-Number(range));
+  const digest = digestOf(chartPoints);
 
   // 假导出:toast.promise 走完 loading → success 三态
   const handleExport = () => {
@@ -409,8 +435,9 @@ export function Overview() {
     <div className="ad-content">
       <header className="ad-page-header">
         <div>
+          <span className="sf-kicker sf-kicker-dot ov-eyebrow">Arden Studio · store</span>
           <h1 className="ad-page-title">Overview</h1>
-          <p className="ad-page-sub">Last 30 days · ending Aug 3, 2026</p>
+          <p className="ad-page-sub">Last {range} days · ending Aug 3, 2026</p>
         </div>
         <div className="ad-page-actions">
           <Select
@@ -427,62 +454,102 @@ export function Overview() {
         </div>
       </header>
 
-      {/* 指标行:库的 Statistic,仅挂载滚数动画 */}
-      <div className="ad-stat-grid">
-        <div className="ad-card">
+      {/* ① KPI 带:1.5fr/1fr/1fr/1fr,首块主色满色块 —— 数值中性,语义色只留给趋势行 */}
+      <div className="ad-kpis">
+        <div className="ad-kpi ad-kpi-lead ov-kpi">
           <Statistic
             title="Revenue"
             value={overviewStats.revenue30d}
             prefix="$"
-            trend="up"
             animateOnMount
+            classNames={{ title: 'ad-kpi-k', value: 'ad-kpi-v' }}
           />
-          <p className="ov-stat-note" data-delta="up">
-            +12.4% vs prior
-          </p>
+          <span className="ad-kpi-d">+12.4% vs prior period</span>
         </div>
-        <div className="ad-card">
-          <Statistic title="Orders" value={overviewStats.orders30d} trend="up" animateOnMount />
-          <p className="ov-stat-note" data-delta="up">
-            +9.1% vs prior
-          </p>
+        <div className="ad-kpi ov-kpi">
+          <Statistic
+            title="Orders"
+            value={overviewStats.orders30d}
+            animateOnMount
+            classNames={{ title: 'ad-kpi-k', value: 'ad-kpi-v' }}
+          />
+          <span className="ad-kpi-d ad-kpi-d-up">+9.1%</span>
         </div>
-        <div className="ad-card">
-          <Statistic title="Avg order value" value={overviewStats.aov} prefix="$" animateOnMount />
-          <p className="ov-stat-note">+2.8% vs prior</p>
+        <div className="ad-kpi ov-kpi">
+          <Statistic
+            title="Avg order"
+            value={overviewStats.aov}
+            prefix="$"
+            animateOnMount
+            classNames={{ title: 'ad-kpi-k', value: 'ad-kpi-v' }}
+          />
+          <span className="ad-kpi-d ad-kpi-d-up">+2.8%</span>
         </div>
-        <div className="ad-card">
+        <div className="ad-kpi ov-kpi">
           <Statistic
             title="Repeat rate"
             value={Math.round(overviewStats.repeatRate * 100)}
             suffix="%"
-            trend="down"
             animateOnMount
+            classNames={{ title: 'ad-kpi-k', value: 'ad-kpi-v' }}
           />
-          <p className="ov-stat-note" data-delta="down">
-            −1.9 pts vs prior
-          </p>
+          <span className="ad-kpi-d ad-kpi-d-dn">−1.9 pts</span>
         </div>
       </div>
 
-      {/* 收入面积图 */}
-      <section className="ad-card">
-        <div className="ov-card-head">
-          <h2 className="ad-card-title">Revenue</h2>
-          <span className="ov-legend">
-            <i className="ov-legend-dot" aria-hidden="true" />
-            Revenue
-            <span className="ov-legend-muted">· daily, USD</span>
-          </span>
-        </div>
-        <RevenueChart points={chartPoints} />
-      </section>
+      {/* ② 收入行:左边密集的墨色摘要,右边留白的面积图 —— 密度反差 */}
+      <div className="ov-chart-row">
+        <aside className="ad-card ov-digest">
+          <span className="ad-kpi-k">Peak day</span>
+          <p className="ov-digest-v">{digest.peak ? money(digest.peak.revenue) : '—'}</p>
+          <p className="ov-digest-meta">
+            {digest.peak ? `${shortDate(digest.peak.date)} · ${digest.peak.orders} orders` : '—'}
+          </p>
+          <div className="ov-digest-rows">
+            <span className="ov-digest-row">
+              <i className="sf-index">Avg / day</i>
+              <b>{money(digest.avg)}</b>
+            </span>
+            <span className="ov-digest-row">
+              <i className="sf-index">Slowest</i>
+              <b>{digest.low ? money(digest.low.revenue) : '—'}</b>
+            </span>
+            <span className="ov-digest-row">
+              <i className="sf-index">Orders</i>
+              <b>{digest.orders}</b>
+            </span>
+            <span className="ov-digest-row">
+              <i className="sf-index">Days</i>
+              <b>{chartPoints.length}</b>
+            </span>
+            <span className="ov-digest-row">
+              <i className="sf-index">Range total</i>
+              <b>{money(digest.total)}</b>
+            </span>
+          </div>
+        </aside>
 
+        <section className="ad-card ov-chart-card">
+          <div className="ov-card-head">
+            <h2 className="ad-card-title">Revenue</h2>
+            <span className="ov-legend">
+              <i className="ov-legend-dot" aria-hidden="true" />
+              Daily
+              <span className="ov-legend-muted">· USD</span>
+            </span>
+          </div>
+          <RevenueChart points={chartPoints} />
+        </section>
+      </div>
+
+      {/* ③ 底部:1.85fr 表格 / 1fr 两块清单 */}
       <div className="ad-split">
-        {/* 最近订单 */}
-        <section className="ad-card ov-orders-card">
+        <section className="ad-card ov-orders">
           <div className="ov-card-head">
             <h2 className="ad-card-title">Recent orders</h2>
+            <span className="sf-index">
+              {RECENT_ORDERS.length} / {orders.length}
+            </span>
           </div>
           <Table<Order>
             columns={ORDER_COLUMNS}
@@ -500,53 +567,62 @@ export function Overview() {
         </section>
 
         <div className="ov-side">
-          {/* 待处理事项 */}
+          {/* 待处理:左侧色条编码 —— 语义色标严重度,品类色标是哪一类在缺货 */}
           <section className="ad-card">
-            <h2 className="ad-card-title">Needs attention</h2>
-            <List marker="none" spacing="none" className="ov-attn-list">
+            <div className="ov-card-head">
+              <h2 className="ad-card-title">Needs attention</h2>
+              <span className="sf-index">{ATTENTION_ROWS} items</span>
+            </div>
+            <List
+              marker="none"
+              spacing="none"
+              className="ad-attn ov-attn-list"
+              classNames={{ item: 'ov-attn-item' }}
+            >
               <List.Item>
-                <RouterLink to="/admin/orders" className="ov-attn-row">
+                <RouterLink to="/admin/orders" className="ad-attn-row ov-attn-row ov-attn-warn">
                   <span className="ov-attn-icon">{iconClock}</span>
-                  <span className="ov-attn-label">{PENDING_COUNT} orders awaiting payment</span>
-                  <span className="ov-attn-go" aria-hidden="true">
-                    →
-                  </span>
+                  <span className="ov-attn-label">Orders awaiting payment</span>
+                  <span className="ad-attn-n">{PENDING_COUNT}</span>
                 </RouterLink>
               </List.Item>
               {LOW_STOCK.map((product) => (
                 <List.Item key={product.id}>
-                  <RouterLink to="/admin/products" className="ov-attn-row">
+                  <RouterLink
+                    to="/admin/products"
+                    className="ad-attn-row ov-attn-row"
+                    data-cat={product.category}
+                  >
                     <span className="ov-attn-icon">{iconBox}</span>
                     <span className="ov-attn-label">{product.name}</span>
-                    <Tag size="sm" tone="warning">
+                    {/* 色条编码品类,药丸编码严重度 —— 两套颜色各管一件事 */}
+                    <Tag size="sm" tone={product.stock < 10 ? 'danger' : 'warning'}>
                       {product.stock} left
                     </Tag>
                   </RouterLink>
                 </List.Item>
               ))}
               <List.Item>
-                <RouterLink to="/admin/orders" className="ov-attn-row">
+                <RouterLink to="/admin/orders" className="ad-attn-row ov-attn-row ov-attn-danger">
                   <span className="ov-attn-icon">{iconReturn}</span>
-                  <span className="ov-attn-label">{REFUND_COUNT} refund requests to review</span>
-                  <span className="ov-attn-go" aria-hidden="true">
-                    →
-                  </span>
+                  <span className="ov-attn-label">Refund requests to review</span>
+                  <span className="ad-attn-n">{REFUND_COUNT}</span>
                 </RouterLink>
               </List.Item>
             </List>
           </section>
 
-          {/* 热销榜 */}
+          {/* 热销榜:等宽序号 + 品类色点 + Progress 占比 */}
           <section className="ad-card">
-            <h2 className="ad-card-title">Top products</h2>
-            <ul className="ov-top-list">
-              {TOP_PRODUCTS.map(({ product, share }) => (
-                <li key={product.id} className="ov-top-row">
-                  <span
-                    className="ov-top-swatch"
-                    style={{ background: product.visual.body }}
-                    aria-hidden="true"
-                  />
+            <div className="ov-card-head">
+              <h2 className="ad-card-title">Top products</h2>
+              <span className="sf-index">Share of lines</span>
+            </div>
+            <ol className="ov-top-list">
+              {TOP_PRODUCTS.map(({ product, share }, i) => (
+                <li key={product.id} className="ov-top-row" data-cat={product.category}>
+                  <span className="sf-index ov-top-rank">{String(i + 1).padStart(2, '0')}</span>
+                  <span className="sf-dot sf-cat-dot" aria-hidden="true" />
                   <span className="ov-top-name">{product.name}</span>
                   <Progress
                     value={share}
@@ -556,7 +632,7 @@ export function Overview() {
                   <span className="ov-top-share">{share}%</span>
                 </li>
               ))}
-            </ul>
+            </ol>
           </section>
         </div>
       </div>

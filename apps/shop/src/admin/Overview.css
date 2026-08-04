@@ -1,22 +1,135 @@
 /* ============================================================================
- * Overview 页私有样式(.ov-*)—— 指标行 / 收入面积图 / 最近订单 / 侧卡。
- * 只消费 --ms-* / --sf-* 变量与 .ad-* 原语;发丝线 + 留白,无硬边框。
+ * Overview 页私有样式(.ov-*)。
+ * 只消费 --ms-* / --sf-* 变量与 .ad-* / .sf-* 原语;分隔一律发丝线或色块边界,
+ * 不给面板描 1px 硬边框。库组件(Statistic / Table)只在本页作用域内让位于
+ * .ad-kpi-* / 发丝行分隔的版面语言,不改库本身。
  * ========================================================================== */
 
-/* ------------------------------- 指标行 ---------------------------------- */
+/* ------------------------------- 页头 ------------------------------------ */
 
-.ov-stat-note {
-  margin: 10px 0 0;
-  font-size: 12px;
+.ov-eyebrow {
+  display: inline-flex;
+  margin-bottom: 7px;
   color: var(--ms-color-fg-muted);
 }
 
-.ov-stat-note[data-delta="up"] {
-  color: var(--ms-color-success);
+/* ------------------------------ ① KPI 色块带 ------------------------------ */
+
+/* Statistic 落进 .ad-kpi:字号 / 字重 / 颜色全部交给 .ad-kpi-k 与 .ad-kpi-v,
+   库默认(inline-flex、fg 固定色、2rem 数字、muted 前后缀)在本页一律让位。 */
+.ov-kpi .ms-statistic {
+  display: flex;
+  gap: 5px;
+  max-inline-size: 100%;
+  color: inherit;
 }
 
-.ov-stat-note[data-delta="down"] {
-  color: var(--ms-color-danger);
+.ov-kpi .ad-kpi-k {
+  font-size: 10.5px;
+  line-height: 1.5;
+  color: inherit;
+}
+
+.ov-kpi .ad-kpi-v {
+  font-weight: 800;
+  line-height: 1;
+}
+
+.ov-kpi .ms-statistic__number {
+  font-size: inherit;
+  color: inherit;
+}
+
+.ov-kpi .ms-statistic__prefix,
+.ov-kpi .ms-statistic__suffix {
+  font-size: 0.48em;
+  font-weight: 700;
+  color: inherit;
+  opacity: 0.5;
+}
+
+/* 首块是主色满色块:数字再放大一档,与右侧三块拉开尺度差 */
+.ov-kpi.ad-kpi-lead {
+  padding: 18px 20px 15px;
+}
+
+.ov-kpi.ad-kpi-lead .ad-kpi-v {
+  font-size: clamp(40px, 4vw, 62px);
+}
+
+/* 趋势行贴底,四块高度不同也能对齐成一条线 */
+.ov-kpi .ad-kpi-d {
+  margin-top: auto;
+  padding-top: 4px;
+}
+
+/* --------------------- ② 收入行:墨色摘要 + 面积图 ------------------------ */
+
+.ov-chart-row {
+  display: grid;
+  grid-template-columns: 1fr 3.05fr;
+  gap: var(--sf-gap);
+  align-items: stretch;
+}
+
+/* 墨色摘要块:密集的小字表,与右侧留白的图形成密度反差 */
+.ov-digest {
+  display: flex;
+  flex-direction: column;
+  padding: 18px 20px 14px;
+  background: var(--ms-color-fg);
+  color: var(--ms-color-bg);
+}
+
+.ov-digest .ad-kpi-k {
+  color: inherit;
+}
+
+.ov-digest-v {
+  margin: 10px 0 0;
+  font-size: clamp(34px, 3.3vw, 52px);
+  font-weight: 800;
+  letter-spacing: -0.055em;
+  line-height: 0.92;
+  font-variant-numeric: tabular-nums;
+}
+
+.ov-digest-meta {
+  margin: 9px 0 0;
+  font-size: 12px;
+  opacity: 0.6;
+}
+
+.ov-digest-rows {
+  display: grid;
+  margin-top: auto;
+  padding-top: 18px;
+}
+
+.ov-digest-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 9px 0;
+  border-top: 1px solid color-mix(in oklab, currentcolor, transparent 86%);
+}
+
+.ov-digest-row .sf-index {
+  font-style: normal;
+  letter-spacing: 0.04em;
+}
+
+.ov-digest-row b {
+  font-size: 12.5px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.ov-chart-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
 }
 
 /* ------------------------------- 卡头通用 -------------------------------- */
@@ -26,20 +139,23 @@
   align-items: baseline;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 .ov-legend {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  font-size: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   color: var(--ms-color-fg-muted);
 }
 
 .ov-legend-dot {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
   background: var(--ms-color-primary);
 }
@@ -52,6 +168,7 @@
 
 .ov-chart {
   position: relative;
+  margin-top: auto;
 }
 
 .ov-chart-svg {
@@ -63,10 +180,11 @@
   stroke: var(--sf-hairline);
 }
 
+/* 刻度用等宽小字 —— 与超大数字并置,尺度差就是版面的张力 */
 .ov-chart-axis {
   fill: var(--ms-color-fg-subtle);
-  font-family: var(--sf-sans);
-  font-size: 10.5px;
+  font-family: var(--sf-mono);
+  font-size: 10px;
 }
 
 .ov-chart-line {
@@ -82,7 +200,7 @@
 }
 
 .ov-chart-cursor {
-  stroke: color-mix(in oklab, var(--ms-color-fg), transparent 72%);
+  stroke: color-mix(in oklab, var(--ms-color-fg), transparent 74%);
   stroke-dasharray: 3 3;
 }
 
@@ -92,19 +210,19 @@
   stroke-width: 1.6;
 }
 
+/* tooltip 也是一块墨色块(不描边),与左侧摘要同语言 */
 .ov-chart-tip {
   position: absolute;
   z-index: 4;
   display: flex;
   flex-direction: column;
   gap: 2px;
-  min-width: 108px;
-  padding: 8px 11px;
-  border-radius: 10px;
-  background: var(--ms-color-surface-raised);
-  box-shadow:
-    0 0 0 1px color-mix(in oklab, var(--ms-color-border), transparent 55%),
-    0 8px 24px color-mix(in oklab, var(--ms-color-fg), transparent 88%);
+  min-width: 104px;
+  padding: 9px 12px;
+  border-radius: var(--sf-r-sm);
+  background: var(--ms-color-fg);
+  color: var(--ms-color-bg);
+  box-shadow: 0 10px 26px color-mix(in oklab, var(--ms-color-fg), transparent 84%);
   transform: translate(-50%, calc(-100% - 14px));
   pointer-events: none;
   transition:
@@ -113,42 +231,98 @@
 }
 
 .ov-chart-tip-date {
-  font-size: 11px;
-  color: var(--ms-color-fg-subtle);
+  font-family: var(--sf-mono);
+  font-size: 10.5px;
+  opacity: 0.6;
 }
 
 .ov-chart-tip-value {
-  font-size: 14px;
-  font-weight: 600;
-  letter-spacing: -0.01em;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
 }
 
 .ov-chart-tip-orders {
   font-size: 11.5px;
-  color: var(--ms-color-fg-muted);
+  opacity: 0.62;
 }
 
-/* ------------------------------- 最近订单 -------------------------------- */
+/* ------------------------------ ③ 最近订单 -------------------------------- */
 
-.ov-order-number {
-  font-weight: 600;
-  letter-spacing: 0.01em;
+.ov-orders {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
 }
 
-.ov-orders-card tbody tr {
+/* 表格并进面板:去掉库的描边卡壳与自带底色,只留发丝行分隔 */
+.ov-orders .ms-table-wrap {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.ov-orders .ms-table__th {
+  padding-block: 0 9px;
+  background: transparent;
+  border-block-end: 1px solid var(--sf-hairline);
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--ms-color-fg-subtle);
+}
+
+.ov-orders .ms-table__td {
+  border-block-start: 1px solid var(--sf-hairline);
+  color: var(--ms-color-fg);
+}
+
+/* 首列 / 末列与面板边界对齐,行看起来像铺满整块 */
+.ov-orders .ms-table__th:first-child,
+.ov-orders .ms-table__td:first-child {
+  padding-inline-start: 0;
+}
+
+.ov-orders .ms-table__th:last-child,
+.ov-orders .ms-table__td:last-child {
+  padding-inline-end: 0;
+}
+
+/* 面板本身就是 surface-raised,库的 hover 底色在这里看不见 —— 换成极淡的 fg 混色 */
+@media (hover: hover) {
+  .ov-orders .ms-table-wrap--hoverable .ms-table__body .ms-table__row--data:hover .ms-table__td {
+    background-color: color-mix(in oklab, var(--ms-color-fg), transparent 95%);
+    box-shadow: none;
+  }
+}
+
+.ov-orders .ms-table__row--interactive {
   cursor: pointer;
+}
+
+.ov-num {
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}
+
+.ov-cell-muted {
+  color: var(--ms-color-fg-muted);
+  font-variant-numeric: tabular-nums;
 }
 
 .ov-card-foot {
   display: flex;
   justify-content: flex-end;
   margin-top: 14px;
-  padding-top: 12px;
+  padding-top: 11px;
   border-top: 1px solid var(--sf-hairline);
 }
 
 .ov-card-link {
-  font-size: 13px;
+  font-size: 12.5px;
+  font-weight: 550;
   color: var(--ms-color-fg-muted);
   text-decoration: none;
   transition: color var(--ms-duration-fast) var(--ms-ease-standard);
@@ -158,28 +332,30 @@
   color: var(--ms-color-fg);
 }
 
-/* ------------------------------- 右侧两卡 -------------------------------- */
+/* ------------------------------- 右侧两块 -------------------------------- */
 
 .ov-side {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: var(--sf-gap);
+  min-width: 0;
 }
 
-/* 待处理清单:List 关掉原生标记,行自己排 icon + 文案 + 尾注 */
-.ad-card .ov-attn-list {
-  margin-top: 6px;
+/* 待处理清单:.ad-attn-row 各自被包在 List.Item 里(总是 :last-child),
+   所以行分隔改挂在 li 之间,由 classNames.item 注入的 .ov-attn-item 承担。 */
+.ov-attn-list {
+  gap: 0;
+  margin: 0;
   padding-inline-start: 0;
 }
 
+.ov-attn-item + .ov-attn-item {
+  border-top: 1px solid var(--sf-hairline);
+}
+
 .ov-attn-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 7px 8px;
-  margin-inline: -8px;
-  border-radius: 9px;
-  font-size: 13px;
+  margin-inline: -18px;
+  padding-inline: 18px;
   color: var(--ms-color-fg);
   text-decoration: none;
   transition: background var(--ms-duration-fast) var(--ms-ease-standard);
@@ -187,6 +363,19 @@
 
 .ov-attn-row:hover {
   background: color-mix(in oklab, var(--ms-color-fg), transparent 95%);
+}
+
+/* 色条编码:语义色标严重度,品类色标是哪一类在缺货 */
+.ov-attn-warn {
+  --ad-attn-color: var(--ms-color-warning);
+}
+
+.ov-attn-danger {
+  --ad-attn-color: var(--ms-color-danger);
+}
+
+.ov-attn-row[data-cat] {
+  --ad-attn-color: var(--cat);
 }
 
 .ov-attn-icon {
@@ -203,38 +392,25 @@
   white-space: nowrap;
 }
 
-.ov-attn-go {
-  color: var(--ms-color-fg-subtle);
-  opacity: 0;
-  transition: opacity var(--ms-duration-fast) var(--ms-ease-standard);
-}
-
-.ov-attn-row:hover .ov-attn-go {
-  opacity: 1;
-}
-
-/* 热销榜:24px 色块 + 名称 + 细 Progress + 占比 */
+/* 热销榜:等宽序号 + 品类色点 + 细 Progress + 占比 */
 .ov-top-list {
   display: flex;
   flex-direction: column;
   gap: 11px;
-  margin: 12px 0 0;
+  margin: 2px 0 0;
   padding: 0;
   list-style: none;
 }
 
 .ov-top-row {
   display: grid;
-  grid-template-columns: 24px minmax(0, 1fr) 76px 32px;
+  grid-template-columns: 18px 6px minmax(0, 1fr) 84px 30px;
   align-items: center;
-  gap: 10px;
+  gap: 9px;
 }
 
-.ov-top-swatch {
-  width: 24px;
-  height: 24px;
-  border-radius: 7px;
-  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--ms-color-fg), transparent 86%);
+.ov-top-rank {
+  font-variant-numeric: tabular-nums;
 }
 
 .ov-top-name {
@@ -246,6 +422,7 @@
 
 .ov-top-share {
   font-size: 12px;
+  font-weight: 650;
   color: var(--ms-color-fg-muted);
   text-align: end;
   font-variant-numeric: tabular-nums;
@@ -257,12 +434,19 @@
   min-width: 138px;
 }
 
+/* ------------------------------- 响应式 ---------------------------------- */
+
+@media (max-width: 1080px) {
+  .ov-chart-row {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* 减弱动效:去掉本页自绘过渡(库组件自行响应 reduced-motion) */
 @media (prefers-reduced-motion: reduce) {
   .ov-chart-tip,
   .ov-card-link,
-  .ov-attn-row,
-  .ov-attn-go {
+  .ov-attn-row {
     transition: none;
   }
 }

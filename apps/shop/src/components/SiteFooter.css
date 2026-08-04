@@ -1,170 +1,208 @@
 /* ============================================================================
- * SiteFooter —— 买家端页脚样式。
- * 只消费 --ms-* 语义变量与 shop.css 的 .sf- 原语;分隔一律发丝线 + 留白,
- * 不使用硬边框与写死颜色。
+ * SiteFooter —— 整块墨色拼贴件的内部版式。
+ * 块本身借 .sf-tile + .sf-tile-ink(圆角 / 内边距 / 墨底反白),这里只排内容。
+ * 墨底之上所有分级都由 currentColor 混出(color-mix),不写死任何色值,
+ * 换主题 / 切明暗时对比关系自动跟着走。
  * ========================================================================== */
 
-.sf-footer {
-  border-top: 1px solid var(--sf-hairline);
+.sfoot-block {
+  /* 版心与 .sf-container/.sf-tiles 同源;左右外边距即块间距,与页头内容线对齐 */
+  max-width: calc(var(--sf-container) - var(--sf-gap) * 2);
+  margin: var(--sf-gap) auto;
+  padding-block: clamp(30px, 4.2vw, 56px) var(--sf-pad);
+  gap: clamp(28px, 3.6vw, 48px);
 }
 
-.sf-footer-inner {
-  padding-block: clamp(64px, 9vw, 96px) clamp(36px, 5vw, 48px);
-}
-
-/* 主体网格:品牌列明显宽于导航列,拉出编辑式的不对称节奏 */
-.sf-footer-grid {
+/* 主体网格:字标列明显宽于三列链接,一疏一密 —— 不等分是骨架的一部分 */
+.sfoot-grid {
   display: grid;
-  grid-template-columns: minmax(0, 2.4fr) repeat(3, minmax(0, 1fr));
-  column-gap: clamp(32px, 5vw, 72px);
-  row-gap: clamp(40px, 6vw, 56px);
+  grid-template-columns: 1.5fr 1fr 1fr 1fr;
+  column-gap: clamp(22px, 3vw, 46px);
+  row-gap: clamp(30px, 4vw, 44px);
   align-items: start;
 }
 
-/* ------------------------------- 品牌与订阅 ------------------------------- */
+/* ------------------------------- 字标与订阅 ------------------------------- */
 
-.sf-footer-wordmark {
+/* 超大字标:与 11px 的栏目眉标并置,尺度对比在这一列内部完成 */
+.sfoot-wordmark {
   display: inline-block;
-  font-family: var(--sf-display);
-  font-size: 28px;
-  font-weight: 480;
-  letter-spacing: -0.015em;
-  line-height: 1;
+  font-size: clamp(40px, 4.6vw, 62px);
+  letter-spacing: -0.055em;
   color: inherit;
   text-decoration: none;
 }
 
-.sf-footer-statement {
-  margin: 16px 0 0;
+.sfoot-statement {
+  margin: 14px 0 0;
   max-width: 30ch;
-  font-size: 14.5px;
-  line-height: 1.65;
-  color: var(--ms-color-fg-muted);
+  font-size: 14px;
+  line-height: 1.6;
+  color: color-mix(in oklab, currentColor, transparent 34%);
   text-wrap: pretty;
 }
 
-.sf-footer-news {
-  margin-top: clamp(32px, 4vw, 44px);
+.sfoot-news {
+  margin-top: clamp(26px, 3.2vw, 40px);
 }
 
-/* 小号大写栏目标签(订阅区与导航列共用) */
-.sf-footer-heading {
+/* 眉标(订阅区与链接列共用):.sf-kicker 的墨底版 */
+.sfoot-heading {
   margin: 0;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--ms-color-fg-subtle);
+  color: inherit;
+  opacity: 0.5;
 }
 
-.sf-footer-form {
+/* 栏目编号:等宽小字,和全站的 01 / 02 索引语言同源 */
+.sfoot-index {
+  opacity: 0.72;
+  letter-spacing: 0;
+}
+
+.sfoot-form {
   display: flex;
-  gap: 10px;
-  margin-top: 14px;
-  max-width: 420px;
+  gap: 8px;
+  margin-top: 12px;
+  max-width: 410px;
 }
 
-/* Input 的 className 落在包装元素上:让它吃掉剩余宽度 */
-.sf-footer-form .sf-footer-input {
+/* Input 的 className 落在容器上:药丸化 + 半透明浅底,吃掉剩余宽度 */
+.sfoot-input.sfoot-input {
   flex: 1 1 auto;
   min-width: 0;
+  border-radius: 999px;
+  border-color: color-mix(in oklab, currentColor, transparent 82%);
+  background-color: color-mix(in oklab, currentColor, transparent 92%);
+  color: inherit;
+  padding-inline: 15px;
 }
 
-.sf-footer-hint {
+.sfoot-input-field::placeholder {
+  color: color-mix(in oklab, currentColor, transparent 58%);
+}
+
+.sfoot-hint {
   margin: 10px 0 0;
-  font-size: 12.5px;
-  color: var(--ms-color-fg-subtle);
+  font-size: 12px;
+  color: color-mix(in oklab, currentColor, transparent 52%);
 }
 
-/* --------------------------------- 导航列 --------------------------------- */
+/* --------------------------------- 链接列 --------------------------------- */
 
-.sf-footer-list {
+.sfoot-list {
   list-style: none;
   display: grid;
-  gap: 12px;
-  margin: 18px 0 0;
+  gap: 9px;
+  margin: 15px 0 0;
   padding: 0;
-  font-size: 14px;
+  font-size: 13.5px;
 }
 
-/* 占位条目:保留 .sf-link 的悬停下划线观感,但不是可导航链接 */
-.sf-footer-dead {
-  cursor: default;
-}
-
-.sf-footer-list a,
-.sf-footer-list .sf-footer-dead {
-  color: var(--ms-color-fg-muted);
+.sfoot-link {
+  color: color-mix(in oklab, currentColor, transparent 38%);
+  text-decoration: none;
   transition: color var(--ms-duration-base) var(--ms-ease-standard);
 }
 
-.sf-footer-list a:hover,
-.sf-footer-list a:focus-visible,
-.sf-footer-list .sf-footer-dead:hover {
-  color: var(--ms-color-fg);
+.sfoot-link:hover,
+.sfoot-link:focus-visible {
+  color: inherit;
 }
 
-/* --------------------------------- 版权行 --------------------------------- */
+/* 占位条目:保留链接观感,但不是可导航链接 */
+.sfoot-dead {
+  cursor: default;
+}
 
-.sf-footer-bottom {
+/* --------------------------------- 底行 ----------------------------------- */
+
+.sfoot-bottom {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 12px 24px;
-  margin-top: clamp(48px, 7vw, 72px);
-  padding-top: 22px;
-  border-top: 1px solid var(--sf-hairline);
-  font-size: 12.5px;
-  color: var(--ms-color-fg-subtle);
+  gap: 12px 20px;
+  padding-top: clamp(18px, 2vw, 24px);
+  border-top: 1px solid color-mix(in oklab, currentColor, transparent 86%);
+  font-size: 12px;
 }
 
-.sf-footer-fineprint {
+.sfoot-fineprint {
   margin: 0;
+  color: color-mix(in oklab, currentColor, transparent 46%);
 }
 
-/* Admin console —— 双面站切换入口,刻意低调 */
-.sf-footer-admin {
-  color: var(--ms-color-fg-subtle);
-  transition: color var(--ms-duration-base) var(--ms-ease-standard);
+/* 四色点:品牌签名,也是四个品类的图形索引 */
+.sfoot-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
 }
 
-.sf-footer-admin:hover,
-.sf-footer-admin:focus-visible {
-  color: var(--ms-color-fg-muted);
+.sfoot-dots .sf-dot {
+  width: 7px;
+  height: 7px;
+}
+
+/* Admin console —— 双面站的切换入口,做成一枚浅底药丸,底行右端的落点 */
+.sfoot-admin {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 13px;
+  border-radius: 999px;
+  background-color: color-mix(in oklab, currentColor, transparent 92%);
+  color: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  transition: background-color var(--ms-duration-base) var(--ms-ease-standard);
+}
+
+.sfoot-admin:hover,
+.sfoot-admin:focus-visible {
+  background-color: color-mix(in oklab, currentColor, transparent 84%);
+}
+
+.sfoot-admin svg {
+  opacity: 0.7;
 }
 
 /* -------------------------------- 响应式 --------------------------------- */
 
-/* 中屏:品牌块占整行,三列导航并排其下 */
-@media (max-width: 960px) {
-  .sf-footer-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+/* 中屏:字标列独占一行,三列链接并排其下(仍不等分) */
+@media (max-width: 1000px) {
+  .sfoot-grid {
+    grid-template-columns: 1.35fr 1fr 1fr;
   }
 
-  .sf-footer-brand {
+  .sfoot-brand {
     grid-column: 1 / -1;
   }
 }
 
 /* 窄屏:单列堆叠 */
-@media (max-width: 640px) {
-  .sf-footer-grid {
+@media (max-width: 660px) {
+  .sfoot-grid {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .sf-footer-brand {
+  .sfoot-brand {
     grid-column: auto;
   }
 
-  .sf-footer-form {
+  .sfoot-form {
     max-width: none;
+  }
+
+  .sfoot-bottom {
+    justify-content: flex-start;
   }
 }
 
 /* 动效总闸关闭时,悬停变色的过渡一并取消 */
-:root[data-ms-motion="off"] .sf-footer-list a,
-:root[data-ms-motion="off"] .sf-footer-list .sf-footer-dead,
-:root[data-ms-motion="off"] .sf-footer-admin {
+:root[data-ms-motion="off"] .sfoot-link,
+:root[data-ms-motion="off"] .sfoot-admin {
   transition: none;
 }

@@ -24,6 +24,7 @@ import {
   Select,
   type SelectOption,
   type SortState,
+  Stack,
   Table,
   type TableColumn,
   Tag,
@@ -45,20 +46,25 @@ import './Orders.css';
  * Orders —— 后台订单页(Table 全功能主战场)。
  * 数据以 data/orders.ts 为种子进本地 state,一切状态变更(发货/配货/退款/备注)
  * 都真实写回本地数据;筛选(Segmented × Select × 搜索 × 日期区间)全部受控。
+ *
+ * 版式(Chromatic Grid 控制台方言):
+ *   概览带 = 不等分 1.72fr/1fr —— 左边一个满色 ink 块只放一个超大数字,
+ *   右边一份七行状态账本(密集清单),密度反差即版面骨架;账本同时是表格
+ *   状态色条的图例,色彩在这一页是信息编码而非装饰。
  * ========================================================================== */
 
 const PAGE_SIZE = 10;
 
 /* ------------------------------ 状态语义 ---------------------------------- */
 
-const STATUS_META: Record<OrderStatus, { label: string; tone: TagTone }> = {
-  pending: { label: 'Pending', tone: 'warning' },
-  paid: { label: 'Paid', tone: 'info' },
-  fulfilled: { label: 'Fulfilled', tone: 'accent' },
-  shipped: { label: 'Shipped', tone: 'primary' },
-  delivered: { label: 'Delivered', tone: 'success' },
-  refunded: { label: 'Refunded', tone: 'danger' },
-  cancelled: { label: 'Cancelled', tone: 'neutral' },
+const STATUS_LABEL: Record<OrderStatus, string> = {
+  pending: 'Pending',
+  paid: 'Paid',
+  fulfilled: 'Fulfilled',
+  shipped: 'Shipped',
+  delivered: 'Delivered',
+  refunded: 'Refunded',
+  cancelled: 'Cancelled',
 };
 
 const ORDER_STATUSES: readonly OrderStatus[] = [
@@ -107,7 +113,7 @@ function segmentOf(status: OrderStatus): Exclude<SegmentKey, 'all'> {
 
 const STATUS_OPTIONS: SelectOption[] = [
   { value: 'all', label: 'All statuses' },
-  ...ORDER_STATUSES.map((s) => ({ value: s, label: STATUS_META[s].label })),
+  ...ORDER_STATUSES.map((s) => ({ value: s, label: STATUS_LABEL[s] })),
 ];
 
 /* mock 数据窗口固定在 2026-06 ~ 08,预设区间同样钉死,不随真实"今天"漂移 */
@@ -297,6 +303,21 @@ export function Orders() {
     return bySegment;
   }, [rows]);
 
+  /* 状态账本:七个细分状态的条数,既是分布图也是表格色条的图例 */
+  const statusCounts = useMemo(() => {
+    const byStatus: Record<OrderStatus, number> = {
+      pending: 0,
+      paid: 0,
+      fulfilled: 0,
+      shipped: 0,
+      delivered: 0,
+      refunded: 0,
+      cancelled: 0,
+    };
+    for (const o of rows) byStatus[o.status] += 1;
+    return byStatus;
+  }, [rows]);
+
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     const startMs = range.start ? range.start.getTime() : null;
@@ -333,6 +354,21 @@ export function Orders() {
     return copy;
   }, [filtered, sortState]);
 
+  /* 当前筛选范围内的成交额与待处理量 —— 概览块的次级数字 */
+  const inViewTotal = useMemo(() => sorted.reduce((sum, o) => sum + o.total, 0), [sorted]);
+  const awaiting = useMemo(
+    () => sorted.filter((o) => o.status === 'pending' || o.status === 'paid').length,
+    [sorted],
+  );
+  const avgOrder = sorted.length > 0 ? Math.round(inViewTotal / sorted.length) : 0;
+
+  /* 卡首右侧的极小号状态行:说明当前排序,不与分页脚的条数重复 */
+  const sortLabel = sortState
+    ? `${sortState.columnKey === 'total' ? 'total' : 'placed'} ${
+        sortState.direction === 'asc' ? '↑' : '↓'
+      }`
+    : 'unsorted';
+
   const pageCount = Math.max(1, Math.ceil(sorted.length / PAGE_SIZE));
   const safePage = Math.min(page, pageCount);
   const paged = useMemo(
@@ -344,6 +380,14 @@ export function Orders() {
     () => rows.filter((o) => selectedKeys.includes(o.id)),
     [rows, selectedKeys],
   );
+
+  /* 概览块眉标:告诉用户这个大数字统计的是哪一部分 */
+  const scopeLabel =
+    statusFilter !== 'all'
+      ? STATUS_LABEL[statusFilter]
+      : segment === 'all'
+        ? 'All orders'
+        : `${SEGMENTS.find((s) => s.value === segment)?.label ?? 'All'} orders`;
 
   /* ------------------------------ 筛选联动 -------------------------------- */
 
@@ -487,17 +531,32 @@ export function Orders() {
       ]
     : [];
 
+  /* 单号等宽 + 状态色条紧随其后:两列合起来是一条贯穿表格的色彩索引轨 */
   const columns: TableColumn<Order>[] = [
     {
       key: 'number',
       header: 'Order',
       width: 96,
-      render: (o) => <span className="od-number">{o.number}</span>,
+      render: (o) => <span className="ad-ord">{o.number}</span>,
+    },
+    {
+      key: 'status',
+      header: 'Status',
+      width: 112,
+      render: (o) => (
+        <span className={`ad-status ad-status-${o.status}`}>{STATUS_LABEL[o.status]}</span>
+      ),
     },
     {
       key: 'customer',
       header: 'Customer',
+      width: 200,
       render: (o) => <CustomerCell customerId={o.customerId} />,
+    },
+    {
+      key: 'destination',
+      header: 'Destination',
+      render: (o) => <span className="od-dest">{o.destination}</span>,
     },
     {
       key: 'items',
@@ -507,22 +566,12 @@ export function Orders() {
       render: (o) => <span className="od-num">{o.items.reduce((sum, it) => sum + it.qty, 0)}</span>,
     },
     {
-      key: 'status',
-      header: 'Status',
-      width: 116,
-      render: (o) => (
-        <Tag size="sm" tone={STATUS_META[o.status].tone}>
-          {STATUS_META[o.status].label}
-        </Tag>
-      ),
-    },
-    {
       key: 'total',
       header: 'Total',
       align: 'end',
       width: 96,
       sortable: true,
-      render: (o) => <span className="od-num">{money(o.total)}</span>,
+      render: (o) => <span className="od-total">{money(o.total)}</span>,
     },
     {
       key: 'placedAt',
@@ -566,7 +615,7 @@ export function Orders() {
       <header className="ad-page-header">
         <div>
           <h1 className="ad-page-title">Orders</h1>
-          <p className="ad-page-sub">{rows.length} orders in the last 60 days</p>
+          <p className="ad-page-sub">Fulfilment queue · last 60 days</p>
         </div>
         <div className="ad-page-actions">
           <Button variant="ghost" leftIcon={iconExport} onClick={exportCsv}>
@@ -575,23 +624,97 @@ export function Orders() {
         </div>
       </header>
 
-      <Segmented
-        className="od-segments"
-        aria-label="Quick filter by order state"
-        value={statusFilter === 'all' ? segment : segmentOf(statusFilter)}
-        onValueChange={handleSegment}
-        options={SEGMENTS.map((s) => ({
-          value: s.value,
-          label: (
-            <span className="od-seg-opt">
-              {s.label}
-              <span className="od-seg-count">{counts[s.value]}</span>
+      {/* 概览带:满色块的超大数字 ↔ 右侧七行密集账本,尺度与密度双反差 */}
+      <section className="od-band" aria-label="Order overview">
+        <div className="sf-tile sf-tile-ink od-band-lead">
+          <span className="sf-kicker sf-kicker-dot">{scopeLabel}</span>
+          <div className="od-band-mid">
+            <div className="od-band-figures">
+              <span className="od-band-numeral">{sorted.length}</span>
+              <span className="od-band-unit">{sorted.length === 1 ? 'order' : 'orders'}</span>
+            </div>
+            {/* 超大数字旁边压一组极小数字 —— 同一块色块里就有尺度反差 */}
+            <dl className="od-band-aside">
+              <div>
+                <dt>Avg order</dt>
+                <dd>{money(avgOrder)}</dd>
+              </div>
+              <div>
+                <dt>Awaiting fulfilment</dt>
+                <dd>{awaiting}</dd>
+              </div>
+            </dl>
+          </div>
+          <div className="od-band-foot">
+            <span className="od-band-money">{money(inViewTotal)} gross</span>
+            <span className="sf-index">
+              {sorted.length} / {rows.length}
             </span>
-          ),
-        }))}
-      />
+          </div>
+          <span className="sf-spectrum" aria-hidden="true">
+            <i />
+            <i />
+            <i />
+            <i />
+          </span>
+        </div>
+
+        <div className="od-ledger">
+          <span className="sf-kicker">By status</span>
+          <ul className="od-ledger-list">
+            {ORDER_STATUSES.map((status) => {
+              const n = statusCounts[status];
+              const share = rows.length > 0 ? Math.round((n / rows.length) * 100) : 0;
+              const on = statusFilter === status;
+              return (
+                <li key={status}>
+                  <button
+                    type="button"
+                    className="od-ledger-row"
+                    data-on={on ? '' : undefined}
+                    aria-pressed={on}
+                    onClick={() => handleStatus(on ? 'all' : status)}
+                  >
+                    <span className={`ad-status ad-status-${status} od-ledger-label`}>
+                      {STATUS_LABEL[status]}
+                    </span>
+                    <span className="od-ledger-track" aria-hidden="true">
+                      <i
+                        className={`od-ledger-fill ad-status-${status}`}
+                        style={{ '--od-w': `${share}%` } as CSSProperties}
+                      />
+                    </span>
+                    <span className="od-ledger-n">{n}</span>
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      </section>
 
       <section className="ad-card od-table-card" aria-label="Orders table">
+        <div className="od-card-head">
+          <Segmented
+            size="sm"
+            aria-label="Quick filter by order state"
+            value={statusFilter === 'all' ? segment : segmentOf(statusFilter)}
+            onValueChange={handleSegment}
+            options={SEGMENTS.map((s) => ({
+              value: s.value,
+              label: (
+                <span className="od-seg-opt">
+                  {s.label}
+                  <span className="od-seg-count">{counts[s.value]}</span>
+                </span>
+              ),
+            }))}
+          />
+          <span className="sf-index od-card-head-meta">
+            {sorted.length} matching · sorted by {sortLabel}
+          </span>
+        </div>
+
         <Toolbar className="ad-toolbar od-toolbar" size="sm" aria-label="Order filters">
           <Input
             className="od-search"
@@ -630,12 +753,14 @@ export function Orders() {
         </Toolbar>
 
         {selectedKeys.length > 0 && (
-          <div className="od-bulkbar">
-            <span className="od-bulk-count">{selectedKeys.length} selected</span>
-            <Button size="sm" variant="soft" onClick={bulkFulfill}>
+          /* 批量条:深色 ink 块浮入,与买家端满色块同一套语言 */
+          <div className="sf-tile-ink od-bulkbar">
+            <span className="od-bulk-count">{selectedKeys.length}</span>
+            <span className="od-bulk-label">selected</span>
+            <Button size="sm" onClick={bulkFulfill}>
               Mark fulfilled
             </Button>
-            <Button size="sm" variant="soft" tone="danger" onClick={() => void bulkRefund()}>
+            <Button size="sm" variant="outline" tone="danger" onClick={() => void bulkRefund()}>
               Refund…
             </Button>
             <span className="ad-toolbar-spacer" />
@@ -718,6 +843,8 @@ export function Orders() {
           aria-label={`Order ${active.number}`}
           header={
             <div className="od-drawer-head">
+              {/* 顶部状态色条:抽屉一打开就用颜色说清这单在哪个环节 */}
+              <span className={`od-drawer-rule ad-status-${active.status}`} aria-hidden="true" />
               <div className="od-drawer-titlerow">
                 <h2 className="od-drawer-number">{active.number}</h2>
                 {/* withTooltip 关闭:Tooltip 锚定在 top-layer 抽屉内会退化到视口原点 */}
@@ -728,9 +855,6 @@ export function Orders() {
                   withTooltip={false}
                   aria-label="Copy order number"
                 />
-                <Tag size="sm" tone={STATUS_META[active.status].tone}>
-                  {STATUS_META[active.status].label}
-                </Tag>
                 <span className="od-drawer-spacer" />
                 <Button
                   size="sm"
@@ -740,13 +864,18 @@ export function Orders() {
                   Mark as shipped
                 </Button>
               </div>
-              <p className="od-drawer-sub">
-                Placed {formatDateTime(active.placedAt)} · {activeCustomer?.name ?? 'Guest'}
-              </p>
+              <div className="od-drawer-metarow">
+                <span className={`ad-status ad-status-${active.status}`}>
+                  {STATUS_LABEL[active.status]}
+                </span>
+                <span className="od-drawer-sub">
+                  Placed {formatDateTime(active.placedAt)} · {activeCustomer?.name ?? 'Guest'}
+                </span>
+              </div>
             </div>
           }
         >
-          <div className="od-drawer-body">
+          <Stack className="od-drawer-body" gap={6}>
             <Descriptions
               size="sm"
               columns={2}
@@ -836,7 +965,7 @@ export function Orders() {
                 </Button>
               </div>
             </section>
-          </div>
+          </Stack>
         </Drawer>
       )}
     </div>

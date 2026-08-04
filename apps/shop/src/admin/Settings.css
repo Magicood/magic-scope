@@ -1,28 +1,133 @@
 /* ============================================================================
- * Settings 页私有样式(.stg-*)。骨架复用 admin.css 的 .ad-*;
- * 这里只管四个 Tab 内部的排版:两列表单栅格、目录树双栏、发票卡、危险区。
- * 颜色一律走 --ms-* 语义变量与 color-mix 派生,分隔线用 var(--sf-hairline)。
+ * Settings 页私有样式(.stg-*)—— Chromatic Grid 的设置页方言。
+ *
+ * 骨架来自 admin.css(.ad-card / .ad-status)与 shop.css(.sf-tile / .sf-hairline /
+ * .sf-kicker / .sf-index / 品类色)。本文件只补四个 Tab 内部的版式:
+ *   · 不等分双栏(1fr+288px / 1.62fr+1fr / 1fr+2.15fr / 1.85fr+1fr),没有等分卡片行;
+ *   · 分节靠「大号索引数字 + 极小名称 + 发丝线」,不靠标题堆叠;
+ *   · 超大数字与 11px 小字并置,相邻块一简一密;
+ *   · 颜色一律语义变量 / 品类色 + color-mix 派生,分隔只用 var(--sf-hairline)。
  * ========================================================================== */
 
 .stg-tabs-card {
-  padding: 10px 24px 30px;
+  padding: 8px 22px 26px;
 }
 
 .stg-panel {
-  padding-top: 24px;
+  padding-top: 20px;
+}
+
+/* 每个 Tab 的纵向节奏 */
+.stg-tab {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ---------------------------- 工作区拼贴条 -------------------------------- */
+
+.stg-masthead {
+  display: grid;
+  grid-template-columns: 1.72fr 1fr;
+  gap: var(--sf-gap);
+  align-items: stretch;
+}
+
+.stg-workspace {
+  gap: 12px;
+  justify-content: center;
+  min-height: 138px;
+}
+
+.stg-workspace .stg-workspace-name {
+  color: inherit;
+}
+
+.stg-workspace-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 22px;
+  margin: 2px 0 0;
+  font-family: var(--sf-mono);
+  font-size: 11.5px;
+  opacity: 0.72;
+}
+
+/* 事实清单:密集、发丝线分行、数值等宽 —— 与左侧满色块形成密度反差 */
+.stg-facts {
+  gap: 0;
+  justify-content: center;
+  padding-block: 10px;
+}
+
+.stg-fact {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 8px 0;
+}
+
+.stg-fact + .stg-fact {
+  border-top: 1px solid var(--sf-hairline);
+}
+
+.stg-fact dt {
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--ms-color-fg-subtle);
+  white-space: nowrap;
+}
+
+.stg-fact dd {
+  margin: 0;
+  font-size: 12.5px;
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------- 分节带 ---------------------------------- */
+
+.stg-sec {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* 大号索引数字:与右侧 11px 名称并置,尺度对比就在这一行 */
+.stg-sec-no {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.06em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: color-mix(in oklab, var(--ms-color-fg), transparent 78%);
+}
+
+.stg-sec-name {
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ms-color-fg-muted);
+  white-space: nowrap;
+}
+
+.stg-sec .stg-sec-rule {
+  flex: 1;
+  min-width: 20px;
+}
+
+.stg-sec-hint {
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  color: var(--ms-color-fg-subtle);
+  white-space: nowrap;
 }
 
 /* ------------------------------ 通用小件 ---------------------------------- */
-
-/* 小节标签:小型大写,弱化存在感 */
-.stg-section-label {
-  margin: 0 0 16px;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.11em;
-  text-transform: uppercase;
-  color: var(--ms-color-fg-subtle);
-}
 
 .stg-hint {
   margin: 0;
@@ -32,8 +137,30 @@
   max-width: 62ch;
 }
 
-/* ------------------------------ General ----------------------------------
- * Form 用 layout=horizontal(标签左 / 控件右),这里只做分节与宽度收束。 */
+/* ------------------------------ General -----------------------------------
+ * Form layout=horizontal + labelWidth=200:标签列固定 200px,控件列自适应。
+ * 右侧 288px 是「未保存」块,不等分。 */
+
+.stg-general {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 288px;
+  gap: var(--sf-gap);
+  align-items: start;
+}
+
+/* 表单列封顶:分节发丝线与页脚跟控件右边缘对齐,不拖出一条空长线 */
+.stg-general-main {
+  min-width: 0;
+  max-width: 760px;
+}
+
+.stg-form.ms-form {
+  gap: 0;
+}
+
+.stg-form.ms-form--horizontal .ms-form__item {
+  column-gap: 22px;
+}
 
 .stg-form .ms-form__control {
   max-width: 460px;
@@ -42,25 +169,86 @@
 .stg-form-section {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 16px;
 }
 
 .stg-form-section + .stg-form-section {
-  border-top: 1px solid var(--sf-hairline);
-  padding-top: 24px;
+  margin-top: 30px;
 }
 
 .stg-slider {
   width: 100%;
-  max-width: 380px;
+  max-width: 340px;
 }
 
 .stg-form-footer {
   display: flex;
-  justify-content: flex-end;
+  align-items: center;
   gap: 10px;
+  margin-top: 28px;
+  padding-top: 16px;
   border-top: 1px solid var(--sf-hairline);
-  padding-top: 20px;
+}
+
+.stg-form-note {
+  margin: 0 auto 0 0;
+  font-size: 12px;
+  color: var(--ms-color-fg-subtle);
+}
+
+/* 未保存块:有改动转墨色满块(色 = 状态编码),无改动是安静的表面块 */
+.stg-pending {
+  position: sticky;
+  top: 66px;
+  gap: 0;
+}
+
+/* 卡内的块要比卡面沉一档才读得出边界(满色态由 .sf-tile-ink 接管) */
+.stg-pending:not(.sf-tile-ink) {
+  background: var(--ms-color-surface-sunken);
+}
+
+.stg-pending-num {
+  margin-top: 16px;
+  font-size: clamp(46px, 4.6vw, 70px);
+  font-weight: 800;
+  letter-spacing: -0.06em;
+  line-height: 0.84;
+  font-variant-numeric: tabular-nums;
+}
+
+.stg-pending-unit {
+  margin-top: 8px;
+  font-size: 10.5px;
+  font-weight: 650;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  opacity: 0.66;
+}
+
+.stg-pending-list {
+  list-style: none;
+  margin: 18px 0 0;
+  padding: 0;
+}
+
+.stg-pending-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 0;
+  font-size: 12.5px;
+}
+
+.stg-pending-list li + li {
+  border-top: 1px solid color-mix(in oklab, currentcolor, transparent 86%);
+}
+
+.stg-pending-empty {
+  margin: 16px 0 0;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--ms-color-fg-muted);
 }
 
 /* 窄屏:标签堆叠到控件上方 */
@@ -83,33 +271,128 @@
 
 .stg-catalog {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 320px;
-  gap: 30px;
+  grid-template-columns: 1.62fr 1fr;
+  gap: var(--sf-gap);
   align-items: start;
 }
 
 .stg-catalog-main {
+  min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
+  padding-right: 8px;
 }
 
-.stg-catalog-count {
-  margin: 0;
-  font-size: 12px;
-  color: var(--ms-color-fg-subtle);
-}
-
-/* 高级规则:柔和底色的独立小面板 */
-.stg-adv-rules {
-  background: color-mix(in oklab, var(--ms-color-surface), var(--ms-color-bg) 35%);
-  border-radius: 12px;
-  padding: 8px 16px;
-}
-
-.stg-adv-trigger {
-  font-size: 13px;
+/* 分类节点:方形品类色块 + 名称,色即分类识别 */
+.stg-node {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
   font-weight: 600;
+}
+
+.stg-node .stg-node-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+}
+
+.stg-catalog-side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sf-gap);
+}
+
+.stg-count {
+  gap: 0;
+}
+
+.stg-count-num {
+  margin-top: 16px;
+  font-size: clamp(52px, 5.4vw, 80px);
+  font-weight: 800;
+  letter-spacing: -0.06em;
+  line-height: 0.84;
+  font-variant-numeric: tabular-nums;
+}
+
+.stg-count-unit {
+  margin-top: 8px;
+  font-size: 10.5px;
+  font-weight: 650;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  opacity: 0.66;
+}
+
+/* 四色条:哪一族还在店面上,一眼可读 */
+.stg-count-bars {
+  display: flex;
+  gap: 6px;
+  margin-top: 22px;
+}
+
+.stg-count-bar {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.stg-count-bar i {
+  display: block;
+  height: 5px;
+  border-radius: 2px;
+  background: var(--cat);
+}
+
+.stg-count-bar .sf-index {
+  opacity: 0.55;
+}
+
+.stg-count-bar[data-off] i {
+  opacity: 0.22;
+}
+
+.stg-count-bar[data-off] .sf-index {
+  opacity: 0.3;
+}
+
+/* 高级规则:沉底表面上的独立小面板,无描边 */
+.stg-adv-rules {
+  background: var(--ms-color-surface-sunken);
+  border-radius: var(--sf-r);
+  padding: 6px 16px 10px;
+}
+
+/* 触发头做成整行:去掉描边药丸,只留文字 + 加减号 */
+.stg-adv-trigger.ms-collapsible__trigger {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  padding-inline: 0;
+  border: 0;
+  background: transparent;
+  font-size: 12.5px;
+  font-weight: 650;
+  letter-spacing: 0.02em;
+}
+
+.stg-adv-trigger.ms-collapsible__trigger:not(:disabled):hover {
+  background: transparent;
+  box-shadow: none;
+}
+
+.stg-adv-trigger.ms-collapsible__trigger::after {
+  content: "+";
+  font-size: 15px;
+  line-height: 1;
+  opacity: 0.5;
+}
+
+.ms-collapsible--open .stg-adv-trigger.ms-collapsible__trigger::after {
+  content: "–";
 }
 
 .stg-rule-row {
@@ -117,7 +400,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 14px;
-  padding: 12px 0;
+  padding: 11px 0;
 }
 
 .stg-rule-row + .stg-rule-row {
@@ -131,8 +414,8 @@
 }
 
 .stg-rule-title {
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 12.5px;
+  font-weight: 600;
   color: var(--ms-color-fg);
 }
 
@@ -141,18 +424,133 @@
   color: var(--ms-color-fg-muted);
 }
 
-@media (max-width: 980px) {
-  .stg-catalog {
-    grid-template-columns: 1fr;
-  }
-}
-
 /* -------------------------------- Team ------------------------------------ */
 
-.stg-team {
+.stg-team-head {
+  display: grid;
+  grid-template-columns: 1fr 2.15fr;
+  gap: var(--sf-gap);
+  align-items: stretch;
+}
+
+.stg-seats,
+.stg-roles {
+  background: var(--ms-color-surface-sunken);
+}
+
+.stg-seats {
+  gap: 0;
+  justify-content: center;
+}
+
+.stg-seats-num {
+  margin-top: 14px;
+  font-size: clamp(44px, 4.6vw, 68px);
+  font-weight: 800;
+  letter-spacing: -0.06em;
+  line-height: 0.84;
+  font-variant-numeric: tabular-nums;
+}
+
+.stg-seats-unit {
+  margin-top: 8px;
+  font-size: 10.5px;
+  font-weight: 650;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--ms-color-fg-subtle);
+}
+
+.stg-seats-avatars {
+  margin-top: 20px;
+}
+
+/* 角色图例:窄色条编码权限,同一套色也用在表格 Role 列 */
+.stg-roles {
+  gap: 0;
+  justify-content: center;
+}
+
+.stg-role-row {
+  display: grid;
+  grid-template-columns: 3px 92px minmax(0, 1fr) 22px;
+  align-items: center;
+  gap: 0 14px;
+  padding: 10px 0;
+}
+
+.stg-role-row + .stg-role-row {
+  border-top: 1px solid var(--sf-hairline);
+}
+
+.stg-roles dt {
+  font-size: 12.5px;
+  font-weight: 650;
+}
+
+.stg-roles dd {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--ms-color-fg-muted);
+}
+
+.stg-role-count {
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+.stg-role-invite {
   display: flex;
-  flex-direction: column;
-  gap: 18px;
+  justify-content: flex-end;
+  margin-top: 4px;
+  padding-top: 12px;
+  border-top: 1px solid var(--sf-hairline);
+}
+
+.stg-role-bar {
+  width: 3px;
+  height: 16px;
+  border-radius: 2px;
+  background: var(--stg-role, var(--ms-color-fg-subtle));
+  flex: none;
+}
+
+.stg-role-row[data-role="owner"],
+.stg-role-cell[data-role="owner"] {
+  --stg-role: var(--cat-ceramics);
+}
+
+.stg-role-row[data-role="manager"],
+.stg-role-cell[data-role="manager"] {
+  --stg-role: var(--cat-lighting);
+}
+
+.stg-role-row[data-role="support"],
+.stg-role-cell[data-role="support"] {
+  --stg-role: var(--cat-textiles);
+}
+
+.stg-role-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+/* 状态:复用控制台的 .ad-status,把方点拉成窄色条 */
+.stg-status::before {
+  width: 3px;
+  height: 15px;
+  border-radius: 2px;
+}
+
+.stg-status[data-status="active"] {
+  --ad-status-color: var(--ms-color-success);
+}
+
+.stg-status[data-status="invited"] {
+  --ad-status-color: var(--ms-color-warning);
+  color: var(--ms-color-fg-muted);
 }
 
 .stg-member {
@@ -169,7 +567,7 @@
 
 .stg-member-name {
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--ms-color-fg);
 }
 
@@ -199,6 +597,14 @@
 /* ------------------------------ Advanced ----------------------------------- */
 
 .stg-advanced {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 26px 26px;
+  align-items: start;
+}
+
+.stg-adv-main {
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 30px;
@@ -208,11 +614,18 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+  min-width: 0;
 }
 
-.stg-adv-section + .stg-adv-section {
-  border-top: 1px solid var(--sf-hairline);
-  padding-top: 28px;
+.stg-api-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.stg-api-label {
+  font-size: 12.5px;
+  font-weight: 650;
 }
 
 .stg-api-row {
@@ -222,33 +635,69 @@
   max-width: 640px;
 }
 
-.stg-api-code {
+/* API key:沉底表面,无描边,等宽小字 */
+.stg-api-code.ms-code {
   flex: 1;
   min-width: 0;
+  padding: 12px 14px;
+  font-size: 11.5px;
+  border-radius: var(--sf-r-sm);
+  background: var(--ms-color-surface-sunken);
 }
 
 .stg-hint-warn {
-  color: color-mix(in oklab, var(--ms-color-warning), var(--ms-color-fg) 30%);
+  color: color-mix(in oklab, var(--ms-color-warning), var(--ms-color-fg) 34%);
 }
 
-/* 发票卡:A5 竖版比例(148 × 210),Watermark 只罩这一张卡 */
+/* 危险区:一根 danger 窄色条 + 常规深色文字 + ghost 按钮,不做整块红 */
+.stg-danger {
+  display: grid;
+  grid-template-columns: 3px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0 16px;
+  padding: 14px 16px;
+  border-radius: var(--sf-r);
+  background: var(--ms-color-surface-sunken);
+}
+
+.stg-danger-bar {
+  align-self: stretch;
+  width: 3px;
+  border-radius: 2px;
+  background: var(--ms-color-danger);
+}
+
+.stg-danger-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.stg-danger-title {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+/* 发票:浅色拼贴块(无描边无阴影),四色条当信笺抬头,Watermark 罩在其上 */
 .stg-invoice-frame {
-  width: fit-content;
-  max-width: 100%;
+  width: 100%;
 }
 
 .stg-invoice {
-  width: min(340px, 100%);
+  width: 100%;
   aspect-ratio: 148 / 210;
   display: flex;
   flex-direction: column;
-  gap: 18px;
-  padding: 26px 24px;
-  border-radius: 12px;
-  background: var(--ms-color-surface-raised);
-  box-shadow:
-    0 0 0 1px color-mix(in oklab, var(--ms-color-border), transparent 55%),
-    0 1px 2px color-mix(in oklab, var(--ms-color-fg), transparent 95%);
+  gap: 16px;
+  padding: 22px 20px;
+  border-radius: var(--sf-r);
+  background: color-mix(in oklab, var(--ms-color-primary) 6%, var(--ms-color-surface-sunken));
+}
+
+.stg-invoice .stg-invoice-rule {
+  height: 4px;
+  border-radius: 2px;
 }
 
 .stg-invoice-head {
@@ -259,46 +708,48 @@
 }
 
 .stg-invoice-brand {
-  font-family: var(--sf-display);
-  font-size: 20px;
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -0.05em;
   color: var(--ms-color-fg);
 }
 
 .stg-invoice-no {
-  font-size: 11px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  font-family: var(--sf-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
   color: var(--ms-color-fg-subtle);
 }
 
 .stg-invoice-meta {
   display: flex;
-  gap: 28px;
+  gap: 26px;
   margin: 0;
 }
 
 .stg-invoice-meta dt {
-  font-size: 10.5px;
-  letter-spacing: 0.08em;
+  font-size: 9.5px;
+  font-weight: 650;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--ms-color-fg-subtle);
 }
 
 .stg-invoice-meta dd {
-  margin: 2px 0 0;
-  font-size: 12.5px;
+  margin: 3px 0 0;
+  font-size: 12px;
   color: var(--ms-color-fg);
 }
 
 .stg-invoice-lines {
   list-style: none;
   margin: 0;
-  padding: 14px 0 0;
+  padding: 13px 0 0;
   display: flex;
   flex-direction: column;
   gap: 9px;
   border-top: 1px solid var(--sf-hairline);
-  font-size: 12.5px;
+  font-size: 12px;
   color: var(--ms-color-fg-muted);
 }
 
@@ -315,25 +766,38 @@
 
 .stg-invoice-total {
   margin-top: auto;
-  padding-top: 14px;
+  padding-top: 13px;
   border-top: 1px solid var(--sf-hairline);
   display: flex;
   justify-content: space-between;
-  font-size: 13.5px;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
   color: var(--ms-color-fg);
+  font-variant-numeric: tabular-nums;
 }
 
-/* 危险区:额外留白把它和上文拉开 */
-.stg-danger {
-  margin-top: 8px;
-  padding-top: 34px;
-}
+/* ------------------------------ 响应式收敛 -------------------------------- */
 
-.stg-danger-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 18px;
-  flex-wrap: wrap;
+@media (max-width: 1180px) {
+  .stg-masthead,
+  .stg-general,
+  .stg-catalog,
+  .stg-team-head,
+  .stg-advanced {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .stg-pending {
+    position: static;
+  }
+
+  .stg-general-main,
+  .stg-catalog-main {
+    padding-right: 0;
+  }
+
+  .stg-invoice {
+    max-width: 340px;
+  }
 }

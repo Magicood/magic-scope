@@ -1,10 +1,13 @@
 /* ============================================================================
  * ProductsAdmin 私有样式(.pa-*)—— 目录总表 + 新建商品抽屉。
- * 只消费 --ms-* 语义变量 / .ad-* 骨架 + color-mix 派生;
- * 分隔一律发丝线或留白,无硬边框;商品色板经 CSS 变量注入(数据即颜色真相)。
+ *
+ * 版式骨架:页头 → 不等分双块(超大计数 / 品类账本)→ 工具条 → 主表。
+ * 色彩即信息:品类色由容器上的 data-cat 派生(--cat 来自 shop.css),
+ * 账本条形 / 缩略块 / 分类列色点共用同一套色;选中品类整行翻成 .sf-cat-fill 满色块。
+ * 只消费 --ms-* / --sf-* 变量与 color-mix 派生;分隔一律发丝线或留白,无卡片描边。
  * ========================================================================== */
 
-/* 视觉隐藏:纯装饰列(色板 / 操作)的表头仍要给读屏可读名 */
+/* 视觉隐藏:纯装饰列(色块 / 操作)的表头仍要给读屏可读名 */
 .pa-sr-only {
   position: absolute;
   width: 1px;
@@ -16,14 +19,193 @@
   white-space: nowrap;
 }
 
+/* --------------------------------- 页头 ----------------------------------- */
+
+/* .ad-content 的 100% 宽 + 横向内边距在 content-box 下会把内容顶出视口 32px,
+   这里按页收成 border-box(不动共享的 admin.css) */
+
+/* .ad-content 是 grid,子项默认 min-width:auto 会被表格的 min-content 顶宽;
+   归零后表格在窄屏改为自己横滚,页面不再出现横向滚动条 */
+.pa-page > * {
+  min-inline-size: 0;
+}
+
+.pa-eyebrow {
+  margin-block-end: 5px;
+}
+
+/* ---------------------------- 不等分双块拼贴 ------------------------------- */
+
+/* 左窄右宽:一边一个超大数字,一边一份密集清单 —— 密度反差就是这一屏的骨架 */
+.pa-masthead {
+  display: grid;
+  grid-template-columns: 1fr 2.34fr;
+  gap: var(--sf-gap);
+  align-items: stretch;
+}
+
+/* ---- 计数块:深色满色块,超大数字 ---- */
+
+.pa-count {
+  position: relative;
+  overflow: hidden;
+  gap: 0;
+  padding-block-end: calc(var(--sf-pad) + 4px);
+}
+
+/* 尺度对比的「大」端:比 .sf-numeral 默认档略收,给控制台密度留余地 */
+.pa-count-n {
+  margin: auto 0 0;
+  padding-block-start: 14px;
+  font-size: clamp(54px, 6vw, 88px);
+}
+
+.pa-count-note {
+  margin: 10px 0 0;
+  font-size: 12.5px;
+  opacity: 0.68;
+}
+
+/* 低库存提示复用后台状态语言(小色条 + 文字),不用亮色药丸 */
+.pa-count-low {
+  --ad-status-color: var(--ms-color-warning);
+  margin-block-start: 7px;
+  font-size: 12px;
+  font-weight: 550;
+  opacity: 0.9;
+}
+
+/* 四色签名条贴满色块底边 */
+.pa-count-edge {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+}
+
+/* ---- 品类账本:密集清单,条形宽度 = 在库件数占比 ---- */
+
+.pa-ledger {
+  gap: 12px;
+  justify-content: space-between;
+}
+
+.pa-ledger-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.pa-ledger-rows {
+  display: grid;
+  gap: 2px;
+}
+
+.pa-led {
+  display: grid;
+  grid-template-columns: 22px 108px minmax(56px, 1fr) 52px 68px 46px;
+  align-items: center;
+  gap: 14px;
+  inline-size: 100%;
+  padding: 7px 10px;
+  border: 0;
+  border-radius: var(--sf-r-sm);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+  transition:
+    background var(--ms-duration-fast) var(--ms-ease-standard),
+    color var(--ms-duration-fast) var(--ms-ease-standard);
+}
+
+/* 未选中才清底色 —— 选中态的满色块交给 .sf-cat-fill 原语,不在这里重写颜色 */
+.pa-led:not(.sf-cat-fill) {
+  background: transparent;
+  color: inherit;
+}
+
+.pa-led-i {
+  font-variant-numeric: tabular-nums;
+}
+
+.pa-led-name {
+  font-size: 13px;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+.pa-led-sku,
+.pa-led-avg {
+  font-size: 11.5px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ms-color-fg-muted);
+  white-space: nowrap;
+  text-align: end;
+}
+
+.pa-led-track {
+  block-size: 7px;
+  border-radius: 4px;
+  background: color-mix(in oklab, var(--ms-color-fg), transparent 92%);
+  overflow: hidden;
+}
+
+.pa-led-bar {
+  display: block;
+  block-size: 100%;
+  border-radius: 4px;
+  background: var(--cat);
+}
+
+.pa-led-units {
+  font-size: 13px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-align: end;
+}
+
+/* hover:极淡品类底 + 品类色标题,先给出「这一行是可点的筛选」 */
+.pa-led:not(.sf-cat-fill):hover {
+  background: color-mix(in oklab, var(--cat), transparent 91%);
+}
+
+.pa-led:not(.sf-cat-fill):hover .pa-led-name {
+  color: var(--cat);
+}
+
+/* 选中态:整行翻成品类满色块 —— 色块自己就是「当前筛选」的指示 */
+.pa-led.sf-cat-fill .pa-led-sku,
+.pa-led.sf-cat-fill .pa-led-avg {
+  color: inherit;
+  opacity: 0.78;
+}
+
+.pa-led.sf-cat-fill .pa-led-i {
+  opacity: 0.78;
+}
+
+.pa-led.sf-cat-fill .pa-led-track {
+  background: color-mix(in oklab, currentColor, transparent 74%);
+}
+
+.pa-led.sf-cat-fill .pa-led-bar {
+  background: currentColor;
+}
+
 /* ------------------------------- 工具条 ----------------------------------- */
+
+.pa-toolbar {
+  padding: 11px 13px;
+}
 
 .pa-search {
   inline-size: 236px;
 }
 
-.pa-cat-trigger {
-  min-inline-size: 172px;
+/* Select trigger 自带 inline-size:100%,在 flex 工具条里会独占一行,这里收成定宽 */
+.pa-toolbar .pa-cat-trigger {
+  inline-size: 186px;
 }
 
 /* 「本地改动」提示:纯文字,退到最轻的层级 */
@@ -34,31 +216,136 @@
 
 /* ------------------------------- 主表 ------------------------------------- */
 
-/* Table 自带内边距,卡面只留一圈呼吸 */
 .pa-table-card {
-  padding: 6px 8px 8px;
+  padding: 2px 10px 8px;
 }
 
-/* 商品视觉:36px 圆角色块,用 visual.field → visual.body 渐变(变量由行内注入) */
-.pa-swatch {
+/* 表格外框交给 .ad-card,自身去描边去底色,避免双层框 */
+.pa-table {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+/* 表头改成眉标语言:小号大写宽字距 + 发丝线 */
+.pa-table .pa-th {
+  padding-block: 12px 9px;
+  background: transparent;
+  border-block-end: 1px solid var(--sf-hairline);
+  color: var(--ms-color-fg-subtle);
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* 可排序表头包了一层 <button>,按钮不继承 text-transform,得单独交代 */
+.pa-table .pa-th button {
+  text-transform: uppercase;
+}
+
+.pa-table .pa-td {
+  border-block-start: 1px solid var(--sf-hairline);
+  color: var(--ms-color-fg);
+}
+
+/* 行 hover:.ad-card 已是 raised 面,库默认的 raised 底看不见,这里换极淡墨底 */
+.pa-table.ms-table-wrap--hoverable .ms-table__body .pa-tr:hover .pa-td {
+  background: color-mix(in oklab, var(--ms-color-fg), transparent 96%);
+  box-shadow: none;
+}
+
+/* 商品缩略:36px 圆角色块,底色 = 品类色,内部剪影 = 该商品自己的形体色 */
+.pa-thumb {
+  /* 没有品类时(抽屉里尚未选分类)退到中性灰,不假装某个品类色 */
+  --pa-c: var(--cat, color-mix(in oklab, var(--ms-color-fg-subtle), var(--ms-color-surface) 52%));
+  display: grid;
+  place-items: end center;
+  inline-size: 36px;
+  block-size: 36px;
+  border-radius: var(--sf-r-sm);
+  overflow: hidden;
+  background: linear-gradient(
+    152deg,
+    color-mix(in oklab, var(--pa-c), white 30%) 0%,
+    var(--pa-c) 60%,
+    color-mix(in oklab, var(--pa-c), black 14%) 100%
+  );
+}
+
+.pa-thumb-form {
   display: block;
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, var(--pa-field), var(--pa-body) 130%);
-  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--ms-color-fg), transparent 92%);
+  inline-size: 15px;
+  block-size: 14px;
+  margin-block-end: 5px;
+  border-radius: 2px;
+  background: var(--pa-body, currentColor);
+}
+
+/* 六种母题各给一个剪影,同品类的两件商品也不会撞形 */
+.pa-thumb-form[data-shape="sphere"] {
+  inline-size: 15px;
+  block-size: 15px;
+  border-radius: 50%;
+  margin-block-end: 6px;
+}
+
+.pa-thumb-form[data-shape="arch"] {
+  inline-size: 15px;
+  block-size: 14px;
+  border-radius: 7.5px 7.5px 1px 1px;
+}
+
+.pa-thumb-form[data-shape="cylinder"] {
+  inline-size: 11px;
+  block-size: 17px;
+  border-radius: 2px 2px 1px 1px;
+}
+
+.pa-thumb-form[data-shape="stack"] {
+  inline-size: 20px;
+  block-size: 9px;
+  border-radius: 4px 4px 1px 1px;
+}
+
+.pa-thumb-form[data-shape="roll"] {
+  inline-size: 18px;
+  block-size: 10px;
+  border-radius: 5px;
+}
+
+.pa-thumb-form[data-shape="disc"] {
+  inline-size: 21px;
+  block-size: 6px;
+  border-radius: 3px;
 }
 
 .pa-product {
   display: flex;
   min-width: 0;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
+}
+
+.pa-product-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .pa-product-name {
-  font-weight: 500;
+  font-size: 13.5px;
+  font-weight: 650;
+  letter-spacing: -0.02em;
   color: var(--ms-color-fg);
+}
+
+/* 营销标:极小号大写,安静地跟在品名后面 */
+.pa-badge {
+  font-size: 9.5px;
+  font-weight: 650;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 .pa-product-tagline {
@@ -70,6 +357,17 @@
   white-space: nowrap;
 }
 
+/* 分类列:品类色点 + 文字,不用灰药丸 */
+.pa-cat {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  font-weight: 550;
+  color: var(--ms-color-fg);
+  white-space: nowrap;
+}
+
 /* 数字列统一等宽数字,右对齐才站得住 */
 .pa-num {
   font-variant-numeric: tabular-nums;
@@ -78,7 +376,8 @@
 .pa-price {
   display: inline-flex;
   align-items: baseline;
-  gap: 1px;
+  gap: 0;
+  font-weight: 600;
   color: var(--ms-color-fg);
 }
 
@@ -87,15 +386,33 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* 行内改价的展示态贴住 $,不让默认内边距把货币符号推开 */
+.pa-price-preview {
+  padding-inline: 3px;
+}
+
 .pa-price-input {
   max-inline-size: 5.5em;
 }
 
+/* 库存:数字 + 常驻色条槽位(仅低库存着 warning 色),数字列因此始终对齐 */
 .pa-stock {
-  display: inline-flex;
+  display: inline-grid;
+  grid-template-columns: auto 3px;
   align-items: center;
-  justify-content: flex-end;
-  gap: 8px;
+  justify-content: end;
+  gap: 9px;
+  font-weight: 600;
+}
+
+.pa-low {
+  block-size: 16px;
+  border-radius: 2px;
+  background: transparent;
+}
+
+.pa-low[data-on] {
+  background: var(--ms-color-warning);
 }
 
 .pa-rating {
@@ -112,7 +429,7 @@
 
 /* 下架行:内容列整体退隐(Active 开关与行尾操作保持全亮,便于恢复) */
 .pa-cell-off {
-  opacity: 0.45;
+  opacity: 0.42;
   transition: opacity var(--ms-duration-base) var(--ms-ease-standard);
 }
 
@@ -122,7 +439,7 @@
 
 .pa-empty {
   margin: 0;
-  padding: 26px 0;
+  padding: 34px 0;
   font-size: 13px;
   color: var(--ms-color-fg-muted);
   text-align: center;
@@ -139,6 +456,53 @@
   display: flex;
   justify-content: flex-end;
   gap: 10px;
+}
+
+/* 草稿预览:把「品类色底 + 色板色形体」当场画出来,和表格里的缩略块同一套语言 */
+.pa-draft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: var(--sf-r);
+  background: color-mix(in oklab, var(--ms-color-fg), transparent 96%);
+}
+
+.pa-draft-thumb {
+  inline-size: 44px;
+  block-size: 44px;
+  flex: none;
+}
+
+.pa-draft-text {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.pa-draft-name {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.pa-draft-path {
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ms-color-fg-muted);
+}
+
+/* 表单分节:眉标坐在发丝线上 */
+.pa-form-rule {
+  margin-block: 8px 2px;
+}
+
+.pa-form-i {
+  opacity: 1;
+  letter-spacing: 0;
 }
 
 /* 价格 + 色板并排:价格吃满剩余,色板按内容收缩 */
@@ -160,4 +524,52 @@
   font-size: 0.9rem;
   font-weight: 500;
   color: var(--ms-color-fg);
+}
+
+/* ------------------------------ 响应式收敛 -------------------------------- */
+
+@media (max-width: 1180px) {
+  .pa-masthead {
+    grid-template-columns: 1fr;
+  }
+
+  /* 上下堆叠时计数块变成横带:大数字与旁注并排,不留一整条空白 */
+  .pa-count {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: end;
+    column-gap: 26px;
+  }
+
+  .pa-count > .sf-kicker {
+    grid-area: 1 / 1 / 2 / 3;
+  }
+
+  .pa-count-n {
+    grid-area: 2 / 1 / 4 / 2;
+    margin: 0;
+    padding-block-start: 8px;
+    font-size: clamp(48px, 9vw, 68px);
+  }
+
+  .pa-count-note {
+    grid-area: 2 / 2 / 3 / 3;
+    margin: 0;
+  }
+
+  .pa-count-low {
+    grid-area: 3 / 2 / 4 / 3;
+    margin: 0;
+  }
+}
+
+@media (max-width: 860px) {
+  .pa-led {
+    grid-template-columns: 22px minmax(0, 1fr) 52px 46px;
+  }
+
+  .pa-led-avg,
+  .pa-led-track {
+    display: none;
+  }
 }

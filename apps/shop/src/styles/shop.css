@@ -1,26 +1,62 @@
 /* ============================================================================
- * Arden 买家端设计系统 —— 建在 @magic-scope/tokens 的 --ms-* 语义变量之上。
- * 取向:编辑式精品零售(Aesop / Everlane / Toast 一路)——
- *   暖纸白底、深 ink 文字与 CTA、serif 展示标题、去硬边框、留白做分隔。
+ * Arden 买家端设计系统 —— Chromatic Grid
+ *
+ * 设计语言的一句话:**色块是版面骨架,不是装饰**。
+ * 页面由不等分的色块拼贴构成,尺度对比强烈(超大标题块 / 小数据块 / 满出血带),
+ * 没有「标题 + 等分卡片」的章节堆叠。四个品类各有自己的色,色彩承担导航与信息编码。
+ *
+ * 与被否的上一版(暖纸白 + serif + 等分三列 + 全站居中)彻底切割:
+ *   底色冷灰白 · 字体几何无衬线 800 紧字距 · 网格不等分 · 密度有疏密反差。
+ *
  * 约定:买家端前缀 .sf-,商品视觉 .pv-,后台前缀 .ad-(见 admin.css)。
  * 页面私有样式放各页面同名 .css,只允许消费这里的原语与 --ms- / --sf- 变量。
  * ========================================================================== */
 
 :root {
-  /* 展示衬线:macOS 上是 New York,其余平台优雅回退 —— 编辑式标题的关键 */
-  --sf-display: ui-serif, "New York", "Iowan Old Style", Palatino, Georgia, serif;
-  --sf-sans: var(--ms-font-sans);
-  /* 发丝线:比 --ms-color-border 更轻,分隔靠它 + 留白,不靠硬边框 */
-  --sf-hairline: color-mix(in oklab, var(--ms-color-border), transparent 40%);
-  --sf-radius: 20px;
-  --sf-radius-sm: 12px;
-  /* 版心与节奏 */
-  --sf-container: 1180px;
-  --sf-gutter: clamp(20px, 4vw, 48px);
+  /* 几何无衬线:标题靠字重与紧字距拉张力,不靠衬线「显高级」 */
+  --sf-sans: "Avenir Next", "Helvetica Neue", Helvetica, sans-serif;
+  --sf-mono: ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* 拼贴系统:块间距 / 卡内边距 / 圆角 —— 全站只用这几档 */
+  --sf-gap: 10px;
+  --sf-pad: clamp(18px, 2.4vw, 30px);
+  --sf-r: 14px;
+  --sf-r-sm: 5px;
+
+  --sf-container: 1280px;
+  --sf-gutter: clamp(12px, 2vw, 22px);
+
+  /* 发丝线:只用于表格与清单的行分隔,不用于卡片描边 */
+  --sf-hairline: color-mix(in oklab, var(--ms-color-border), transparent 30%);
+
+  /* ---- 品类色:品牌四色,手工调校 ----
+     教训:曾试过「主色在 OKLCH 色相轮上等距旋转」派生四色以炫耀主题引擎,
+     结果是色相轮上等距 ≠ 视觉上和谐(蓝转 208° 得军绿、转 116° 得暗红,
+     四色摆一起像上世纪配色)。品牌默认皮肤必须是挑过的色,不能交给公式。
+     跟随主题的能力放到下面的 :not([data-ms-theme="arden"]) 里,两者不冲突。 */
+  --cat-ceramics: #2e48d6; /* 靛蓝 */
+  --cat-lighting: #e2531d; /* 朱红 —— 灯光的颜色 */
+  --cat-textiles: #4d6b2f; /* 橄榄 */
+  --cat-objects: #9b2b52; /* 酒红 */
 }
 
-html {
-  scroll-behavior: smooth;
+/* 暗色端整体提亮一档并降一点彩度,保证深底上的对比与不刺眼 */
+:root[data-ms-scheme="dark"] {
+  --cat-ceramics: #6b85ff;
+  --cat-lighting: #ff7a45;
+  --cat-textiles: #8fb464;
+  --cat-objects: #e0699a;
+}
+
+/* 换到别的主题家族时,四色才由该主题主色派生 —— 主题引擎「核心驱动可变」在此展示,
+   而品牌自己的默认皮肤仍是上面挑好的四色。 */
+@supports (color: oklch(from red l c h)) {
+  :root:not([data-ms-theme="arden"]) {
+    --cat-ceramics: var(--ms-color-primary);
+    --cat-lighting: oklch(from var(--ms-color-primary) l c calc(h + 32));
+    --cat-textiles: oklch(from var(--ms-color-primary) calc(l - 0.04) c calc(h + 168));
+    --cat-objects: oklch(from var(--ms-color-primary) l c calc(h + 300));
+  }
 }
 
 body {
@@ -29,7 +65,15 @@ body {
   color: var(--ms-color-fg);
   font-family: var(--sf-sans);
   -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
+}
+
+/* 全局 border-box —— 拼贴系统里每个块都同时有 min-height/flex-basis 与内边距,
+   content-box 会让内边距额外撑出一圈(实测首屏多出 66px、横滚卡 226→246)。
+   放在 app 自己的样式里,不进组件库的 reset 层。 */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 ::selection {
@@ -37,73 +81,112 @@ body {
   color: var(--ms-color-on-selection);
 }
 
-/* ------------------------------- 版面原语 -------------------------------- */
+/* ============================== 版面原语 ================================== */
 
-.sf-container {
+/* 版心:全站唯一一条内容起始线。拼贴语言里色块要贴边,所以内边距就是块间距
+   ——.sf-container 与 .sf-tiles 必须同宽同边距,否则页面之间内容线会跳。 */
+.sf-container,
+.sf-tiles {
   max-width: var(--sf-container);
   margin-inline: auto;
-  padding-inline: var(--sf-gutter);
+  padding-inline: var(--sf-gap);
 }
 
-.sf-section {
-  padding-block: clamp(72px, 10vw, 136px);
+/* 拼贴区:块与块之间只有 --sf-gap,靠色块自身体量分节,不靠大段留白 */
+.sf-tiles {
+  display: grid;
+  gap: var(--sf-gap);
 }
 
-.sf-section-tight {
-  padding-block: clamp(48px, 6vw, 88px);
+/* 通用块:任何一块拼贴内容的基座 */
+.sf-tile {
+  border-radius: var(--sf-r);
+  padding: var(--sf-pad);
+  background: var(--ms-color-surface-raised);
+  display: flex;
+  flex-direction: column;
 }
 
-/* 章节眉标:小号大写 + 陶土圆点 —— 全站统一的章节起手式 */
-.sf-eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--ms-color-fg-subtle);
+/* 满色块:承载主标题 / 大数字 */
+.sf-tile-solid {
+  background: var(--ms-color-primary);
+  color: var(--ms-color-on-primary);
 }
 
-.sf-eyebrow::before {
-  content: "";
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--ms-color-accent);
+.sf-tile-ink {
+  background: var(--ms-color-fg);
+  color: var(--ms-color-bg);
 }
 
-/* 展示标题:衬线、常规字重、收紧字距 —— 大而轻,不靠加粗压人 */
+/* ------------------------------- 字体尺度 -------------------------------- */
+
+/* 展示标题:几何无衬线 800,字距收到 -0.045em —— 大而紧,靠尺度差拉张力 */
 .sf-display {
-  font-family: var(--sf-display);
-  font-weight: 460;
-  letter-spacing: -0.015em;
-  line-height: 1.06;
-  text-wrap: balance;
   margin: 0;
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  line-height: 0.98;
+  text-wrap: balance;
 }
 
 .sf-display-xl {
-  font-size: clamp(44px, 6.4vw, 84px);
+  font-size: clamp(30px, 4.4vw, 58px);
 }
 
 .sf-display-lg {
-  font-size: clamp(32px, 4.2vw, 56px);
+  font-size: clamp(24px, 3vw, 38px);
+  line-height: 1.02;
 }
 
 .sf-display-md {
-  font-size: clamp(24px, 3vw, 36px);
+  font-size: clamp(19px, 2.2vw, 27px);
+  letter-spacing: -0.04em;
+}
+
+/* 超大数字:数字墙 / KPI 的主角,永远 tabular */
+.sf-numeral {
+  font-weight: 800;
+  letter-spacing: -0.06em;
+  line-height: 0.84;
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(64px, 10vw, 132px);
 }
 
 .sf-lede {
-  font-size: clamp(16px, 1.6vw, 19px);
-  line-height: 1.65;
-  color: var(--ms-color-fg-muted);
-  max-width: 56ch;
-  text-wrap: pretty;
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.6;
+  max-width: 32ch;
+  opacity: 0.82;
 }
 
-/* 发丝分隔:代替边框的唯一线条用法 */
+/* 眉标:小号大写宽字距,可挂色点 */
+.sf-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.72;
+}
+
+.sf-kicker-dot::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* 索引编号:等宽,用于清单与订单号 */
+.sf-index {
+  font-family: var(--sf-mono);
+  font-size: 11px;
+  opacity: 0.6;
+}
+
 .sf-hairline {
   border: 0;
   height: 1px;
@@ -111,41 +194,259 @@ body {
   margin: 0;
 }
 
-/* 下划线动效链接(hover 从左划入) */
-.sf-link {
-  color: inherit;
-  text-decoration: none;
-  background-image: linear-gradient(currentColor, currentColor);
-  background-size: 0% 1px;
-  background-repeat: no-repeat;
-  background-position: 0 100%;
-  transition: background-size var(--ms-duration-base) var(--ms-ease-standard);
-  padding-bottom: 2px;
+/* ------------------------------ 交互原语 --------------------------------- */
+
+/* 悬浮抬升:拼贴块统一的 hover 语言(位移,不加阴影不加描边) */
+.sf-lift {
+  transition: transform 0.22s cubic-bezier(0.2, 0.7, 0.3, 1);
 }
 
-.sf-link:hover,
-.sf-link:focus-visible {
-  background-size: 100% 1px;
+.sf-lift:hover,
+.sf-lift:focus-visible {
+  transform: translateY(-3px);
+}
+
+:root[data-ms-motion="off"] .sf-lift {
+  transition: none;
+}
+
+:root[data-ms-motion="off"] .sf-lift:hover {
+  transform: none;
+}
+
+.sf-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex: none;
+}
+
+/* 四色条:品牌签名图形,用在满色块底边与页脚 */
+.sf-spectrum {
+  display: flex;
+  height: 5px;
+  overflow: hidden;
+}
+
+.sf-spectrum i {
+  flex: 1;
+}
+
+.sf-spectrum i:nth-child(1) {
+  background: var(--cat-ceramics);
+}
+
+.sf-spectrum i:nth-child(2) {
+  background: var(--cat-lighting);
+}
+
+.sf-spectrum i:nth-child(3) {
+  background: var(--cat-textiles);
+}
+
+.sf-spectrum i:nth-child(4) {
+  background: var(--cat-objects);
+}
+
+/* ---------------------------- 品类色作用域 -------------------------------- */
+
+/* 给任意容器挂 data-cat,内部的 --cat 即该品类色 */
+[data-cat="ceramics"] {
+  --cat: var(--cat-ceramics);
+}
+
+[data-cat="lighting"] {
+  --cat: var(--cat-lighting);
+}
+
+[data-cat="textiles"] {
+  --cat: var(--cat-textiles);
+}
+
+[data-cat="objects"] {
+  --cat: var(--cat-objects);
+}
+
+/* 品类满色块:前景由该品类色自动派生 —— 不写死 #fff。
+   contrast-color() 可用时交给浏览器算;否则按明度阈值在近白/近黑之间二选一,
+   保证任何主题(含暗色下被提亮的品类色)上的文字都够对比。 */
+.sf-cat-fill {
+  background: var(--cat);
+  color: oklch(from var(--cat) clamp(0, (0.62 - l) * 1000, 1) 0.02 h);
+}
+
+@supports (color: contrast-color(red)) {
+  .sf-cat-fill {
+    color: contrast-color(var(--cat));
+  }
+}
+
+@supports not (color: oklch(from red l c h)) {
+  .sf-cat-fill {
+    color: #fff;
+  }
+}
+
+.sf-cat-dot {
+  background: var(--cat);
+}
+
+.sf-cat-text {
+  color: var(--cat);
+}
+
+/* -------------------------------- 徽标 ----------------------------------- */
+
+/* 商品徽标(Bestseller / New / Limited):一律墨色实心小标。
+   刻意不给三者不同的色 —— 这套系统里颜色是**品类编码**,徽标再引入一个颜色维度
+   就会和品类色打架(浅底彩色标签也正是上一版留下的旧味)。区分靠文字本身。 */
+.sf-badge {
+  background: var(--ms-color-fg);
+  color: var(--ms-color-bg);
+  border: 0;
+  border-radius: 999px;
+  padding: 3px 9px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+/* 库存告警:唯一允许破例用语义色的徽标(它是状态不是标签),但只用文字与色点,不铺底 */
+.sf-badge-warn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  color: var(--ms-color-fg-muted);
+  padding: 0;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.sf-badge-warn::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ms-color-warning);
+  flex: none;
+}
+
+/* ------------------------------ 满出血横滚 ------------------------------- */
+
+.sf-rail {
+  display: flex;
+  gap: var(--sf-gap);
+  overflow-x: auto;
+  padding-inline: var(--sf-gap);
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.sf-rail::-webkit-scrollbar {
+  display: none;
+}
+
+.sf-rail > * {
+  scroll-snap-align: start;
+  flex: 0 0 226px;
+}
+
+/* -------------------------------- 跑马灯 --------------------------------- */
+
+.sf-ticker {
+  display: flex;
+  align-items: center;
+  height: 42px;
+  overflow: hidden;
+  border-radius: var(--sf-r);
+  background: var(--ms-color-fg);
+  color: var(--ms-color-bg);
+}
+
+.sf-ticker-track {
+  display: flex;
+  gap: 34px;
+  white-space: nowrap;
+  padding-left: 20px;
+  animation: sf-slide 26s linear infinite;
+}
+
+.sf-ticker-track > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.82;
+}
+
+@keyframes sf-slide {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sf-ticker-track {
+    animation: none;
+  }
+}
+
+:root[data-ms-motion="off"] .sf-ticker-track {
+  animation: none;
 }
 
 /* ============================================================================
  * ProductVisual —— 艺术化商品视觉配方(.pv-*)
- * 分层:色场底 → 长投影 → 形体(渐变塑形)→ 颗粒。颜色全部由行内变量
- * --pv-field/tint/body/shade 注入,高光暗部用 color-mix(in oklab) 派生。
+ * 分层:色场底 → 接触阴影 → 器物剪影(内联 SVG)→ 颗粒。
+ * 剪影按商品逐件造型(花瓶 / 碗组 / 壁灯 / 书立 / 织物 / 灯具…),形体之间不撞形;
+ * 颜色全部由行内变量 --pv-field/tint/body/shade 注入,高光暗部用 color-mix(in oklab)
+ * 派生 —— SVG 一律靠 class 上色(stop-color / fill / stroke 走 CSS 才吃 var())。
  * ========================================================================== */
 
 .pv {
+  /* 器物盒子的默认尺寸与落地位置,按母题在下方覆写 */
+  --pv-form-w: 72%;
+  --pv-form-h: 62%;
+  --pv-form-b: 13%;
+  --pv-floor-w: 46%;
+
+  /* ---- 配色由所属品类色(--cat,来自 data-cat)派生 ----
+     色场是品类色的极浅版,器物本体是品类色本身;于是每张商品图都属于这套色彩系统,
+     且换主题时跟着走。--pv-seed(商品自带色)只用来给同品类的商品之间做细微区分。 */
+  --pv-cat: var(--cat, var(--ms-color-primary));
+  --pv-field: color-mix(in oklab, var(--pv-cat), var(--ms-color-surface-raised) 88%);
+  --pv-tint: color-mix(in oklab, var(--pv-cat), var(--ms-color-surface-raised) 78%);
+  --pv-body: color-mix(in oklab, var(--pv-cat), var(--pv-seed, var(--pv-cat)) 22%);
+  --pv-shade: color-mix(in oklab, var(--pv-cat), black 34%);
+
   position: relative;
   overflow: hidden;
   isolation: isolate;
-  border-radius: var(--sf-radius);
+  border-radius: var(--sf-r);
   background:
     radial-gradient(
       120% 85% at 18% -4%,
-      color-mix(in oklab, white, transparent 52%) 0%,
+      color-mix(in oklab, var(--ms-color-surface-raised), transparent 40%) 0%,
       transparent 56%
     ),
     linear-gradient(168deg, var(--pv-tint) 0%, var(--pv-field) 64%);
+}
+
+/* 灯具:本体是光源,要接近暖白而不是品类色的浅版
+   (朱红混纯白会得到粉色,灯看着像粉球)。往暖白混,只在暗部留品类色的染。 */
+.pv[data-luminous] {
+  --pv-lume: #fff4e2;
+  --pv-body: color-mix(in oklab, var(--pv-cat), var(--pv-lume) 84%);
+  --pv-shade: color-mix(in oklab, var(--pv-cat), var(--pv-lume) 34%);
+  --pv-field: color-mix(in oklab, var(--pv-cat), var(--ms-color-surface-raised) 91%);
+  --pv-tint: color-mix(in oklab, var(--pv-lume), var(--ms-color-surface-raised) 40%);
 }
 
 .pv-portrait {
@@ -170,13 +471,13 @@ body {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
 }
 
-/* 地面接触阴影:形体"落"在色场上的关键 */
+/* 地面接触阴影:形体"落"在色场上的关键,宽度随母题走 */
 .pv-floor {
   position: absolute;
   left: 50%;
-  bottom: 12.5%;
-  width: 56%;
-  height: 6.5%;
+  bottom: calc(var(--pv-form-b) - 3%);
+  width: var(--pv-floor-w);
+  height: 6%;
   transform: translateX(-50%);
   border-radius: 50%;
   background: radial-gradient(
@@ -187,178 +488,198 @@ body {
   filter: blur(7px);
 }
 
+/* 器物盒子:底边 = 落地线;SVG 用 xMidYMax 贴底,任何比例下都站得住。
+   container-type 只放在这个「宽度已被显式指定」的绝对定位盒上,不会塌宽。 */
 .pv-form {
   position: absolute;
   left: 50%;
-  bottom: 16%;
+  bottom: var(--pv-form-b);
+  width: var(--pv-form-w);
+  height: var(--pv-form-h);
   transform: translateX(-50%);
+  transform-origin: 50% 100%;
+  container-type: inline-size;
 }
 
-/* 球体(灯 / 烛台):三段径向渐变塑体积 + 内侧收边 */
-.pv-form-sphere {
-  width: 46%;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle at 33% 27%,
-    color-mix(in oklab, var(--pv-body), white 45%) 0%,
-    var(--pv-body) 52%,
-    var(--pv-shade) 104%
-  );
-  box-shadow: inset -10px -16px 30px color-mix(in oklab, var(--pv-shade), transparent 55%);
-}
-
-/* 灯具:体外一圈暖光晕(装饰性光效,尊重 data-ms-fx 总闸) */
-.pv-form[data-luminous] {
-  box-shadow:
-    inset -10px -16px 30px color-mix(in oklab, var(--pv-shade), transparent 62%),
-    0 0 64px 10px color-mix(in oklab, var(--pv-body), transparent 38%);
-}
-
-:root[data-ms-fx="off"] .pv-form[data-luminous] {
-  box-shadow: inset -10px -16px 30px color-mix(in oklab, var(--pv-shade), transparent 62%);
-}
-
-/* 拱形(花瓶 / 书立):顶部全圆角,纵向明暗 + 侧向核心影 */
-.pv-form-arch {
-  width: 40%;
-  height: 54%;
-  border-radius: 999px 999px 10px 10px;
-  background:
-    linear-gradient(
-      92deg,
-      color-mix(in oklab, var(--pv-shade), transparent 55%) 0%,
-      transparent 26%,
-      color-mix(in oklab, white, transparent 74%) 44%,
-      transparent 62%,
-      color-mix(in oklab, var(--pv-shade), transparent 42%) 100%
-    ),
-    linear-gradient(
-      180deg,
-      color-mix(in oklab, var(--pv-body), white 24%) 0%,
-      var(--pv-body) 48%,
-      var(--pv-shade) 118%
-    );
-}
-
-/* 圆柱(水瓶 / 落地灯):横向五段渐变 + 顶盖椭圆 */
-.pv-form-cylinder {
-  width: 28%;
-  height: 56%;
-  border-radius: 14px 14px 10px 10px;
-  background: linear-gradient(
-    90deg,
-    var(--pv-shade) 0%,
-    var(--pv-body) 30%,
-    color-mix(in oklab, var(--pv-body), white 40%) 47%,
-    var(--pv-body) 72%,
-    var(--pv-shade) 100%
-  );
-}
-
-.pv-form-cylinder .pv-cap {
-  position: absolute;
-  top: -2.5%;
-  left: 0;
-  width: 100%;
-  height: 6%;
-  border-radius: 50%;
-  background: color-mix(in oklab, var(--pv-body), white 28%);
-}
-
-/* 叠盘(碗组):三只递减的椭圆盘,自下而上渐亮 */
-.pv-form-stack {
-  width: 50%;
-  height: 40%;
-  display: flex;
-  flex-direction: column-reverse;
-  align-items: center;
-  gap: 4%;
-}
-
-.pv-form-stack i {
+.pv-svg {
   display: block;
-  border-radius: 999px;
-  background: linear-gradient(
-    180deg,
-    color-mix(in oklab, var(--pv-body), white 26%),
-    var(--pv-shade) 135%
-  );
-}
-
-.pv-form-stack i:nth-child(1) {
   width: 100%;
-  height: 32%;
+  height: 100%;
+  overflow: visible;
 }
 
-.pv-form-stack i:nth-child(2) {
-  width: 78%;
-  height: 30%;
-  background: linear-gradient(
-    180deg,
-    color-mix(in oklab, var(--pv-body), white 34%),
-    var(--pv-shade) 150%
-  );
+/* 小尺寸(购物车 56px 行项等)只保留剪影与体积,收掉细节层 */
+@container (max-width: 96px) {
+  .pv-detail {
+    display: none;
+  }
 }
 
-.pv-form-stack i:nth-child(3) {
-  width: 56%;
-  height: 28%;
-  background: linear-gradient(
-    180deg,
-    color-mix(in oklab, var(--pv-body), white 42%),
-    var(--pv-shade) 165%
-  );
+/* ---- SVG 取色原语:渐变色标 / 填充 / 描边,全部由商品色派生,不写死色值 ---- */
+
+.pv-c-lume {
+  stop-color: color-mix(in oklab, var(--pv-body), white 90%);
 }
 
-/* 织物卷(毯 / 靠垫):横置圆枕 + 两道柔和折痕 */
-.pv-form-roll {
-  width: 60%;
-  height: 27%;
-  border-radius: 999px;
-  background: linear-gradient(
-    180deg,
-    color-mix(in oklab, var(--pv-body), white 26%) 0%,
-    var(--pv-body) 52%,
-    var(--pv-shade) 130%
-  );
+.pv-c-spec {
+  stop-color: color-mix(in oklab, var(--pv-body), white 74%);
 }
 
-.pv-form-roll .pv-fold {
-  position: absolute;
-  top: 7%;
-  bottom: 7%;
-  width: 9%;
-  border-radius: 999px;
-  filter: blur(3px);
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    color-mix(in oklab, var(--pv-shade), transparent 52%) 50%,
-    transparent 100%
-  );
+.pv-c-hi {
+  stop-color: color-mix(in oklab, var(--pv-body), white 44%);
 }
 
-.pv-form-roll .pv-fold:nth-child(1) {
-  left: 30%;
+.pv-c-wax {
+  stop-color: color-mix(in oklab, var(--pv-body), white 62%);
 }
 
-.pv-form-roll .pv-fold:nth-child(2) {
-  left: 58%;
+.pv-c-lit {
+  stop-color: color-mix(in oklab, var(--pv-body), white 20%);
 }
 
-/* 浅盘(托盘 / 壁灯 / 桌旗):宽扁椭圆 + 边缘高光 */
-.pv-form-disc {
-  width: 56%;
-  height: 15%;
-  border-radius: 50%;
-  background: linear-gradient(
-    180deg,
-    color-mix(in oklab, var(--pv-body), white 34%) 0%,
-    var(--pv-body) 55%,
-    var(--pv-shade) 125%
-  );
-  box-shadow: inset 0 2px 6px color-mix(in oklab, white, transparent 55%);
+.pv-c-body {
+  stop-color: var(--pv-body);
+}
+
+.pv-c-shade {
+  stop-color: var(--pv-shade);
+}
+
+.pv-c-deep {
+  stop-color: color-mix(in oklab, var(--pv-shade), black 26%);
+}
+
+.pv-f-hi {
+  fill: color-mix(in oklab, var(--pv-body), white 46%);
+}
+
+.pv-f-lit {
+  fill: color-mix(in oklab, var(--pv-body), white 22%);
+}
+
+.pv-f-body {
+  fill: var(--pv-body);
+}
+
+.pv-f-shade {
+  fill: var(--pv-shade);
+}
+
+.pv-f-deep {
+  fill: color-mix(in oklab, var(--pv-shade), black 24%);
+}
+
+.pv-k {
+  fill: none;
+  stroke-linecap: round;
+}
+
+.pv-k-spec {
+  stroke: color-mix(in oklab, var(--pv-body), white 84%);
+}
+
+.pv-k-hi {
+  stroke: color-mix(in oklab, var(--pv-body), white 62%);
+}
+
+.pv-k-shade {
+  stroke: var(--pv-shade);
+}
+
+.pv-k-deep {
+  stroke: color-mix(in oklab, var(--pv-shade), black 24%);
+}
+
+/* 灯具的暖光晕:screen 叠加才真的"发光"(纯浅色叠上去只会糊成一团);
+   属装饰性光效,尊重 data-ms-fx 总闸 */
+.pv-glow {
+  mix-blend-mode: screen;
+}
+
+:root[data-ms-fx="off"] .pv-glow {
+  opacity: 0;
+}
+
+/* ---- 各母题的取景:盒子宽高 / 落地高度 / 接触阴影宽度 ---- */
+
+.pv[data-motif="vase"] {
+  --pv-form-w: 72%;
+  --pv-form-h: 68%;
+  --pv-floor-w: 28%;
+}
+
+.pv[data-motif="carafe"] {
+  --pv-form-w: 70%;
+  --pv-form-h: 62%;
+  --pv-floor-w: 32%;
+}
+
+.pv[data-motif="bowls"] {
+  --pv-form-w: 88%;
+  --pv-form-h: 48%;
+  --pv-floor-w: 0%;
+}
+
+.pv[data-motif="lamp-table"] {
+  --pv-form-w: 74%;
+  --pv-form-h: 62%;
+  --pv-form-b: 12%;
+  --pv-floor-w: 36%;
+}
+
+.pv[data-motif="sconce"] {
+  --pv-form-w: 92%;
+  --pv-form-h: 74%;
+  --pv-form-b: 14%;
+  --pv-floor-w: 0%;
+}
+
+.pv[data-motif="lamp-floor"] {
+  --pv-form-w: 62%;
+  --pv-form-h: 86%;
+  --pv-form-b: 8%;
+  --pv-floor-w: 30%;
+}
+
+.pv[data-motif="throw"] {
+  --pv-form-w: 88%;
+  --pv-form-h: 64%;
+  --pv-form-b: 11%;
+  --pv-floor-w: 60%;
+}
+
+.pv[data-motif="cushion"] {
+  --pv-form-w: 74%;
+  --pv-form-h: 58%;
+  --pv-floor-w: 48%;
+}
+
+.pv[data-motif="runner"] {
+  --pv-form-w: 92%;
+  --pv-form-h: 40%;
+  --pv-form-b: 15%;
+  --pv-floor-w: 60%;
+}
+
+.pv[data-motif="bookend"] {
+  --pv-form-w: 74%;
+  --pv-form-h: 50%;
+  --pv-form-b: 14%;
+  --pv-floor-w: 44%;
+}
+
+.pv[data-motif="tray"] {
+  --pv-form-w: 88%;
+  --pv-form-h: 40%;
+  --pv-form-b: 15%;
+  --pv-floor-w: 58%;
+}
+
+.pv[data-motif="candle"] {
+  --pv-form-w: 56%;
+  --pv-form-h: 76%;
+  --pv-form-b: 11%;
+  --pv-floor-w: 30%;
 }
 
 /* --------------------------- 商品卡(列表/精选) --------------------------- */
@@ -438,4 +759,129 @@ body {
 :root[data-ms-motion="off"] .sf-product-card .pv,
 :root[data-ms-motion="off"] .sf-product-card .pv-form {
   transition: none;
+}
+/* ============================ 商品卡(拼贴件) ============================ */
+
+.sf-product-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--ms-color-surface-raised);
+  border-radius: var(--sf-r);
+  padding: var(--sf-gap);
+  color: inherit;
+  text-decoration: none;
+}
+
+.sf-product-card .pv {
+  border-radius: 9px;
+  aspect-ratio: 1;
+}
+
+/* 大卡:跨 2×2,视觉铺满剩余高度 */
+.sf-product-card-lg {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+.sf-product-card-lg .pv {
+  aspect-ratio: auto;
+  flex: 1;
+  min-height: 250px;
+}
+
+/* 横向宽卡:图左信息右,打破纵向节奏 */
+.sf-product-card-wide {
+  grid-column: span 2;
+  flex-direction: row;
+  gap: 14px;
+  align-items: center;
+}
+
+.sf-product-card-wide .pv {
+  width: 40%;
+  flex: none;
+}
+
+.sf-product-card-wide .sf-product-meta {
+  flex: 1;
+  padding-right: 8px;
+}
+
+.sf-product-meta {
+  padding: 12px 6px 4px;
+}
+
+.sf-product-tagrow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.sf-product-cat {
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ms-color-fg-muted);
+}
+
+.sf-product-name {
+  margin: 0 0 3px;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+.sf-product-card-lg .sf-product-name {
+  font-size: 22px;
+}
+
+.sf-product-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.sf-product-row small {
+  font-size: 12.5px;
+  color: var(--ms-color-fg-muted);
+}
+
+.sf-product-price {
+  font-size: 14px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.sf-product-card-lg .sf-product-price {
+  font-size: 17px;
+}
+
+.sf-price-compare {
+  margin-right: 8px;
+  color: var(--ms-color-fg-subtle);
+  text-decoration: line-through;
+  font-weight: 500;
+}
+
+/* ------------------------------ 响应式收敛 ------------------------------- */
+
+@media (max-width: 900px) {
+  .sf-product-card-lg,
+  .sf-product-card-wide {
+    grid-column: span 2;
+    grid-row: span 1;
+  }
+
+  .sf-product-card-wide {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .sf-product-card-wide .pv {
+    width: 100%;
+  }
 }

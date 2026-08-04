@@ -9,16 +9,15 @@
   --ms-drawer-inline: min(420px, 100vw);
 }
 
-/* 头部:标题走衬线展示字,内建分隔线降为发丝线 */
+/* 头部:标题与全站展示字同一张力(800 / 紧字距),内建分隔线降为发丝线 */
 .cart-drawer-header.cart-drawer-header {
   border-block-end-color: var(--sf-hairline);
 }
 
 .cart-drawer-title.cart-drawer-title {
-  font-family: var(--sf-display);
-  font-size: 22px;
-  font-weight: 480;
-  letter-spacing: -0.01em;
+  font-size: 21px;
+  font-weight: 800;
+  letter-spacing: -0.045em;
 }
 
 /* 底栏:纵向堆叠(汇总块自成体系),分隔线同样降为发丝线 */
@@ -58,14 +57,14 @@
   border-block-start: 1px solid var(--sf-hairline);
 }
 
-/* 56px 小视觉:圆角收小、地面影收紧,小尺寸下体积关系依然成立 */
+/* 56px 小视觉:圆角收到 --sf-r-sm、地面影收紧,小尺寸下体积关系依然成立 */
 .cart-line-media {
   display: block;
   inline-size: 56px;
 }
 
 .cart-line-media .pv {
-  border-radius: 10px;
+  border-radius: var(--sf-r-sm);
 }
 
 .cart-line-media .pv-floor {
@@ -77,7 +76,7 @@
   display: block;
   inline-size: 56px;
   aspect-ratio: 1;
-  border-radius: 10px;
+  border-radius: var(--sf-r-sm);
   background: var(--ms-color-surface-sunken);
 }
 
@@ -89,16 +88,28 @@
   padding-block-start: 2px;
 }
 
-/* 名称链接:配合 .sf-link 的下划线划入动效 */
+/* 名称:700 紧字距,与商品卡的名称同一档 */
 .cart-line-name {
   align-self: flex-start;
   font-size: 14px;
-  font-weight: 550;
-  letter-spacing: -0.01em;
+  font-weight: 700;
+  letter-spacing: -0.025em;
   line-height: 1.35;
+  color: inherit;
+  text-decoration: none;
 }
 
-.cart-line-colorway {
+.cart-line-name:hover,
+.cart-line-name:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* 色号 / 品类行:前挂品类色点,色彩在这里也是识别信息 */
+.cart-line-sub {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-size: 12px;
   color: var(--ms-color-fg-muted);
 }
@@ -176,10 +187,10 @@
 }
 
 .cart-summary-value {
-  font-size: 17px;
-  font-weight: 560;
+  font-size: 20px;
+  font-weight: 800;
   font-variant-numeric: tabular-nums;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.045em;
 }
 
 .cart-summary-shipping {
@@ -188,8 +199,16 @@
   color: var(--ms-color-fg-subtle);
 }
 
+/* 结算 CTA:墨色实心药丸全宽 —— 与页头购物车 chip 同一枚重音色块 */
 .cart-checkout.cart-checkout {
   margin-block-start: 16px;
+  font-size: 15px;
+  letter-spacing: -0.015em;
+  --ms-c: var(--ms-color-fg);
+  --ms-on-c: var(--ms-color-bg);
+  --ms-c-hover: color-mix(in oklab, var(--ms-color-fg), var(--ms-color-bg) 16%);
+  --ms-c-active: color-mix(in oklab, var(--ms-color-fg), var(--ms-color-bg) 26%);
+  --ms-c-glow: transparent;
 }
 
 .cart-checkout-amount {

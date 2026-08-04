@@ -1,6 +1,7 @@
 import {
   AlertDialogHost,
   Avatar,
+  AvatarGroup,
   Button,
   Code,
   Collapsible,
@@ -22,6 +23,7 @@ import {
   type TreeNode,
   toast,
   useForm,
+  useWatch,
   Watermark,
 } from '@magic-scope/react';
 import { useState } from 'react';
@@ -29,15 +31,38 @@ import { formatDate, money } from '../lib/format';
 import './Settings.css';
 
 /* ============================================================================
- * Settings —— 控制台设置页。一张大卡四个 Tab:
- * General(Form 两列表单)/ Catalog(Tree 可见性 + Collapsible 高级规则)/
- * Team(Table 成员 + Dialog 邀请)/ Advanced(Code API key + Watermark 发票
- * 预览 + AlertDialog 危险区)。后台动效极简,只保留 hover 过渡。
+ * Settings —— 控制台设置页(Chromatic Grid 方言)。
+ *
+ * 版面骨架:页头 → 工作区拼贴条(满色块 + 密集事实清单)→ 一张 .ad-card 装四个 Tab。
+ * 每个 Tab 内部都是「不等分双栏 + 一侧超大数字 / 一侧密集清单」的密度反差,
+ * 分节靠大号索引数字 + 发丝线,不靠标题堆叠;色彩全部承担信息编码:
+ *   品类色 = 目录分类;角色色条 = 权限;danger 窄色条 = 危险操作;满色块 = 未保存状态。
+ * 后台不做滚动编排,只保留 hover / 表单态过渡。
  * ========================================================================== */
+
+/* ------------------------------ 通用小件 ---------------------------------- */
+
+interface SectionBandProps {
+  index: string;
+  name: string;
+  hint?: string;
+}
+
+/** 分节带:大号索引数字 + 极小名称 + 发丝线,尺度对比就在这一行里。 */
+function SectionBand({ index, name, hint }: SectionBandProps) {
+  return (
+    <header className="stg-sec">
+      <span className="stg-sec-no">{index}</span>
+      <span className="stg-sec-name">{name}</span>
+      <hr className="sf-hairline stg-sec-rule" />
+      {hint != null && <span className="stg-sec-hint">{hint}</span>}
+    </header>
+  );
+}
 
 /* ------------------------------ General ---------------------------------- */
 
-/** 表单初值:也是 Discard(store.reset)的回退基准。 */
+/** 表单初值:也是 Discard(store.reset)与「未保存」比对的回退基准。 */
 const GENERAL_DEFAULTS = {
   storeName: 'Arden Studio',
   supportEmail: 'care@arden.studio',
@@ -48,6 +73,23 @@ const GENERAL_DEFAULTS = {
   weeklyDigest: false,
   publicReviews: true,
 };
+
+type GeneralKey = keyof typeof GENERAL_DEFAULTS;
+
+/** 字段展示名:未保存清单直接列它们,比列 path 可读。 */
+const FIELD_LABELS: Record<GeneralKey, string> = {
+  storeName: 'Store name',
+  supportEmail: 'Support email',
+  currency: 'Currency',
+  timezone: 'Timezone',
+  lowStockThreshold: 'Low-stock threshold',
+  orderNotifications: 'Order notifications',
+  weeklyDigest: 'Weekly digest',
+  publicReviews: 'Public reviews',
+};
+
+const GENERAL_KEYS = Object.keys(FIELD_LABELS) as GeneralKey[];
+const GENERAL_BASELINE: Record<GeneralKey, unknown> = GENERAL_DEFAULTS;
 
 const CURRENCY_OPTIONS: SelectOption[] = [
   { value: 'USD', label: 'USD — US dollar' },
@@ -62,6 +104,51 @@ const TIMEZONE_OPTIONS: SelectOption[] = [
   { value: 'jst', label: 'Japan (Tokyo)' },
 ];
 
+/**
+ * 未保存摘要:逐字段订阅表单 store(useWatch),与初值比对。
+ * 有改动 → 整块转为墨色满块(色彩编码状态);无改动 → 安静的表面块。
+ */
+function ChangeSummary() {
+  // hooks 顺序固定(非条件、非循环),与 GENERAL_KEYS 一一对应
+  const current: Record<GeneralKey, unknown> = {
+    storeName: useWatch('storeName'),
+    supportEmail: useWatch('supportEmail'),
+    currency: useWatch('currency'),
+    timezone: useWatch('timezone'),
+    lowStockThreshold: useWatch('lowStockThreshold'),
+    orderNotifications: useWatch('orderNotifications'),
+    weeklyDigest: useWatch('weeklyDigest'),
+    publicReviews: useWatch('publicReviews'),
+  };
+  const changed = GENERAL_KEYS.filter((key) => current[key] !== GENERAL_BASELINE[key]);
+  const pending = changed.length > 0;
+
+  return (
+    <aside
+      className={pending ? 'sf-tile sf-tile-ink stg-pending' : 'sf-tile stg-pending'}
+      aria-live="polite"
+    >
+      <span className="sf-kicker sf-kicker-dot">{pending ? 'Unsaved' : 'In sync'}</span>
+      <span className="stg-pending-num">{changed.length}</span>
+      <span className="stg-pending-unit">
+        {changed.length === 1 ? 'field edited' : 'fields edited'}
+      </span>
+      {pending ? (
+        <ol className="stg-pending-list">
+          {changed.map((key, i) => (
+            <li key={key}>
+              <span className="sf-index">{String(i + 1).padStart(2, '0')}</span>
+              {FIELD_LABELS[key]}
+            </li>
+          ))}
+        </ol>
+      ) : (
+        <p className="stg-pending-empty">Everything matches the saved store profile.</p>
+      )}
+    </aside>
+  );
+}
+
 function GeneralTab() {
   const form = useForm({ defaultValues: GENERAL_DEFAULTS });
 
@@ -69,7 +156,7 @@ function GeneralTab() {
     <Form
       form={form}
       layout="horizontal"
-      labelWidth={220}
+      labelWidth={200}
       className="stg-form"
       onSubmit={() => {
         toast.success('Settings saved', {
@@ -77,97 +164,117 @@ function GeneralTab() {
         });
       }}
     >
-      <section className="stg-form-section">
-        <h3 className="stg-section-label">Store profile</h3>
-        <Form.Field
-          name="storeName"
-          label="Store name"
-          required
-          rule={{ required: 'Store name is required.' }}
-        >
-          <Input placeholder="Arden Studio" />
-        </Form.Field>
-        <Form.Field
-          name="supportEmail"
-          label="Support email"
-          required
-          rule={{ required: 'Support email is required.', email: 'Enter a valid email address.' }}
-          help="Shown on receipts and order updates."
-        >
-          <Input type="email" placeholder="care@arden.studio" />
-        </Form.Field>
-        <Form.Field name="currency" label="Currency">
-          <Select options={CURRENCY_OPTIONS} />
-        </Form.Field>
-        <Form.Field name="timezone" label="Timezone" help="Used for reports and the weekly digest.">
-          <Select options={TIMEZONE_OPTIONS} />
-        </Form.Field>
-      </section>
+      <div className="stg-general">
+        <div className="stg-general-main">
+          <section className="stg-form-section">
+            <SectionBand index="01" name="Store profile" hint="Public on the storefront" />
+            <Form.Field
+              name="storeName"
+              label="Store name"
+              required
+              rule={{ required: 'Store name is required.' }}
+            >
+              <Input placeholder="Arden Studio" />
+            </Form.Field>
+            <Form.Field
+              name="supportEmail"
+              label="Support email"
+              required
+              rule={{
+                required: 'Support email is required.',
+                email: 'Enter a valid email address.',
+              }}
+              help="Shown on receipts and order updates."
+            >
+              <Input type="email" placeholder="care@arden.studio" />
+            </Form.Field>
+            <Form.Field name="currency" label="Currency">
+              <Select options={CURRENCY_OPTIONS} />
+            </Form.Field>
+            <Form.Field
+              name="timezone"
+              label="Timezone"
+              help="Used for reports and the weekly digest."
+            >
+              <Select options={TIMEZONE_OPTIONS} />
+            </Form.Field>
+          </section>
 
-      <section className="stg-form-section">
-        <h3 className="stg-section-label">Inventory</h3>
-        <Form.Field
-          name="lowStockThreshold"
-          label="Low-stock alert threshold"
-          help="Pieces at or below this quantity get flagged across the console."
-        >
-          <Slider
-            min={5}
-            max={50}
-            step={1}
-            showValue
-            formatValue={(v) => `${v} units`}
-            className="stg-slider"
-          />
-        </Form.Field>
-      </section>
+          <section className="stg-form-section">
+            <SectionBand index="02" name="Inventory" hint="Console-wide flag" />
+            <Form.Field
+              name="lowStockThreshold"
+              label="Low-stock alert threshold"
+              help="Pieces at or below this quantity get flagged across the console."
+            >
+              <Slider
+                min={5}
+                max={50}
+                step={1}
+                showValue
+                formatValue={(v) => `${v} units`}
+                className="stg-slider"
+              />
+            </Form.Field>
+          </section>
 
-      <section className="stg-form-section">
-        <h3 className="stg-section-label">Notifications</h3>
-        <Form.Field
-          name="orderNotifications"
-          label="Order notifications"
-          help="Email the studio inbox as each order comes in."
-        >
-          <Switch />
-        </Form.Field>
-        <Form.Field
-          name="weeklyDigest"
-          label="Weekly digest"
-          help="A Monday summary of sales, traffic and low stock."
-        >
-          <Switch />
-        </Form.Field>
-        <Form.Field
-          name="publicReviews"
-          label="Public reviews"
-          help="Show verified customer reviews on product pages."
-        >
-          <Switch />
-        </Form.Field>
-      </section>
+          <section className="stg-form-section">
+            <SectionBand index="03" name="Notifications" hint="Studio inbox" />
+            <Form.Field
+              name="orderNotifications"
+              label="Order notifications"
+              help="Email the studio inbox as each order comes in."
+            >
+              <Switch />
+            </Form.Field>
+            <Form.Field
+              name="weeklyDigest"
+              label="Weekly digest"
+              help="A Monday summary of sales, traffic and low stock."
+            >
+              <Switch />
+            </Form.Field>
+            <Form.Field
+              name="publicReviews"
+              label="Public reviews"
+              help="Show verified customer reviews on product pages."
+            >
+              <Switch />
+            </Form.Field>
+          </section>
 
-      <footer className="stg-form-footer">
-        <Form.Reset
-          variant="ghost"
-          onClick={() => toast('Changes discarded', { id: 'settings-discard' })}
-        >
-          Discard
-        </Form.Reset>
-        <Form.Submit>Save changes</Form.Submit>
-      </footer>
+          <footer className="stg-form-footer">
+            <p className="stg-form-note">Saved changes reach the storefront right away.</p>
+            <Form.Reset
+              variant="ghost"
+              onClick={() => toast('Changes discarded', { id: 'settings-discard' })}
+            >
+              Discard
+            </Form.Reset>
+            <Form.Submit>Save changes</Form.Submit>
+          </footer>
+        </div>
+
+        <ChangeSummary />
+      </div>
     </Form>
   );
 }
 
 /* ------------------------------ Catalog ---------------------------------- */
 
-/** 店面目录树:四大分类 × 各自子线(与 data/products 的分类一致)。 */
-const CATALOG_TREE: TreeNode[] = [
+interface CatalogCategory {
+  key: string;
+  label: string;
+  lines: { key: string; title: string }[];
+}
+
+/** 店面目录:四大分类 × 各自子线(与 data/products 的分类一致)。 */
+const CATALOG_CATEGORIES: CatalogCategory[] = [
   {
     key: 'ceramics',
-    title: 'Ceramics',
-    children: [
+    label: 'Ceramics',
+    lines: [
       { key: 'ceramics-tableware', title: 'Tableware' },
       { key: 'ceramics-vases', title: 'Vases' },
       { key: 'ceramics-serveware', title: 'Serveware' },
@@ -175,8 +282,8 @@ const CATALOG_TREE: TreeNode[] = [
   },
   {
     key: 'lighting',
-    title: 'Lighting',
-    children: [
+    label: 'Lighting',
+    lines: [
       { key: 'lighting-table', title: 'Table lamps' },
       { key: 'lighting-floor', title: 'Floor lamps' },
       { key: 'lighting-wall', title: 'Wall sconces' },
@@ -184,28 +291,40 @@ const CATALOG_TREE: TreeNode[] = [
   },
   {
     key: 'textiles',
-    title: 'Textiles',
-    children: [
+    label: 'Textiles',
+    lines: [
       { key: 'textiles-throws', title: 'Throws' },
       { key: 'textiles-cushions', title: 'Cushions' },
     ],
   },
   {
     key: 'objects',
-    title: 'Objects',
-    children: [
+    label: 'Objects',
+    lines: [
       { key: 'objects-desk', title: 'Desk objects' },
       { key: 'objects-decor', title: 'Decor' },
     ],
   },
 ];
 
+/** 分类节点标题挂 data-cat:内部的色块直接吃 var(--cat),色 = 品类识别。 */
+const CATALOG_TREE: TreeNode[] = CATALOG_CATEGORIES.map((cat) => ({
+  key: cat.key,
+  title: (
+    <span className="stg-node" data-cat={cat.key}>
+      <i className="sf-dot sf-cat-dot stg-node-dot" aria-hidden="true" />
+      {cat.label}
+    </span>
+  ),
+  children: cat.lines.map((line) => ({ key: line.key, title: line.title })),
+}));
+
 function collectKeys(nodes: TreeNode[]): string[] {
   return nodes.flatMap((n) => [n.key, ...(n.children ? collectKeys(n.children) : [])]);
 }
 
 const ALL_CATALOG_KEYS = collectKeys(CATALOG_TREE);
-const LEAF_KEYS = new Set(CATALOG_TREE.flatMap((n) => (n.children ?? []).map((c) => c.key)));
+const LEAF_KEYS = new Set(CATALOG_CATEGORIES.flatMap((c) => c.lines.map((l) => l.key)));
 
 function CatalogTab() {
   const [visibleKeys, setVisibleKeys] = useState<string[]>(ALL_CATALOG_KEYS);
@@ -215,59 +334,86 @@ function CatalogTab() {
   const visibleLines = visibleKeys.filter((k) => LEAF_KEYS.has(k)).length;
 
   return (
-    <div className="stg-catalog">
-      <div className="stg-catalog-main">
-        <p className="stg-hint">
-          Untick a category or line to hide it from storefront navigation and search. Nothing is
-          deleted — pieces stay reachable from order history.
-        </p>
-        <Tree
-          data={CATALOG_TREE}
-          checkable
-          selectable={false}
-          defaultExpandAll
-          checkedKeys={visibleKeys}
-          onCheck={(keys) => {
-            setVisibleKeys(keys);
-            toast('Catalog visibility updated', { id: 'catalog-visibility' });
-          }}
-        />
-        <p className="stg-catalog-count">
-          {visibleLines} of {LEAF_KEYS.size} lines visible on the storefront
-        </p>
-      </div>
+    <div className="stg-tab">
+      <SectionBand index="01" name="Storefront visibility" hint="Navigation and search" />
 
-      <aside className="stg-catalog-side">
-        <Collapsible tone="neutral" className="stg-adv-rules">
-          <Collapsible.Trigger className="stg-adv-trigger">
-            Advanced catalog rules
-          </Collapsible.Trigger>
-          <Collapsible.Content>
-            <div className="stg-rule-row">
-              <span className="stg-rule-copy">
-                <span className="stg-rule-title">Hide sold-out pieces</span>
-                <span className="stg-rule-sub">They stay reachable by direct link.</span>
-              </span>
-              <Switch
-                checked={hideSoldOut}
-                onChange={(e) => setHideSoldOut(e.target.checked)}
-                aria-label="Hide sold-out pieces"
-              />
+      <div className="stg-catalog">
+        <div className="stg-catalog-main">
+          <p className="stg-hint">
+            Untick a category or line to hide it from storefront navigation and search. Nothing is
+            deleted — pieces stay reachable from order history.
+          </p>
+          <Tree
+            data={CATALOG_TREE}
+            checkable
+            selectable={false}
+            defaultExpandAll
+            size="sm"
+            checkedKeys={visibleKeys}
+            onCheck={(keys) => {
+              setVisibleKeys(keys);
+              toast('Catalog visibility updated', { id: 'catalog-visibility' });
+            }}
+          />
+        </div>
+
+        <aside className="stg-catalog-side">
+          {/* 超大数字 vs 极小注脚:一侧极简、一侧密集的密度反差 */}
+          <div className="sf-tile sf-tile-ink stg-count">
+            <span className="sf-kicker sf-kicker-dot">Live lines</span>
+            <span className="stg-count-num">{visibleLines}</span>
+            <span className="stg-count-unit">of {LEAF_KEYS.size} on the storefront</span>
+            <div className="stg-count-bars">
+              {CATALOG_CATEGORIES.map((cat) => {
+                const shown = cat.lines.filter((l) => visibleKeys.includes(l.key)).length;
+                return (
+                  <span
+                    key={cat.key}
+                    className="stg-count-bar"
+                    data-cat={cat.key}
+                    data-off={shown === 0 || undefined}
+                  >
+                    <i aria-hidden="true" />
+                    <span className="sf-index">
+                      {shown}/{cat.lines.length}
+                    </span>
+                  </span>
+                );
+              })}
             </div>
-            <div className="stg-rule-row">
-              <span className="stg-rule-copy">
-                <span className="stg-rule-title">“New” badge for 30 days</span>
-                <span className="stg-rule-sub">Applied automatically after publishing.</span>
-              </span>
-              <Switch
-                checked={newBadge}
-                onChange={(e) => setNewBadge(e.target.checked)}
-                aria-label="Show new badge for 30 days"
-              />
-            </div>
-          </Collapsible.Content>
-        </Collapsible>
-      </aside>
+          </div>
+
+          <Collapsible tone="neutral" className="stg-adv-rules">
+            <Collapsible.Trigger className="stg-adv-trigger">
+              Advanced catalog rules
+            </Collapsible.Trigger>
+            <Collapsible.Content>
+              <div className="stg-rule-row">
+                <span className="stg-rule-copy">
+                  <span className="stg-rule-title">Hide sold-out pieces</span>
+                  <span className="stg-rule-sub">They stay reachable by direct link.</span>
+                </span>
+                <Switch
+                  checked={hideSoldOut}
+                  onChange={(e) => setHideSoldOut(e.target.checked)}
+                  aria-label="Hide sold-out pieces"
+                />
+              </div>
+              <div className="stg-rule-row">
+                <span className="stg-rule-copy">
+                  <span className="stg-rule-title">“New” badge for 30 days</span>
+                  <span className="stg-rule-sub">Applied automatically after publishing.</span>
+                </span>
+                <Switch
+                  checked={newBadge}
+                  onChange={(e) => setNewBadge(e.target.checked)}
+                  aria-label="Show new badge for 30 days"
+                />
+              </div>
+            </Collapsible.Content>
+          </Collapsible>
+        </aside>
+      </div>
     </div>
   );
 }
@@ -290,6 +436,15 @@ const ROLE_OPTIONS: SelectOption[] = [
   { value: 'support', label: 'Support' },
 ];
 
+/** 角色说明:配色条一起构成表格里 Role 列的图例。 */
+const ROLE_ORDER: TeamRole[] = ['owner', 'manager', 'support'];
+
+const ROLE_BLURB: Record<TeamRole, string> = {
+  owner: 'Billing, team and every setting.',
+  manager: 'Catalog, orders and marketing.',
+  support: 'Orders and customers only.',
+};
+
 const INITIAL_TEAM: Teammate[] = [
   { id: 'ava', name: 'Ava Martin', email: 'ava@arden.studio', role: 'owner', status: 'active' },
   { id: 'noah', name: 'Noah Reyes', email: 'noah@arden.studio', role: 'manager', status: 'active' },
@@ -301,6 +456,8 @@ const INITIAL_TEAM: Teammate[] = [
     status: 'invited',
   },
 ];
+
+const SEAT_LIMIT = 5;
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -372,16 +529,20 @@ function TeamTab() {
     {
       key: 'role',
       header: 'Role',
-      width: 190,
+      width: 210,
+      // 角色 = 一根窄色条 + 可改的 Select,颜色与上方图例同一套编码
       render: (row) => (
-        <Select
-          options={ROLE_OPTIONS}
-          value={row.role}
-          size="sm"
-          disabled={row.role === 'owner'}
-          aria-label={`Role for ${row.name}`}
-          onChange={(next) => updateRole(row, next as TeamRole)}
-        />
+        <span className="stg-role-cell" data-role={row.role}>
+          <i className="stg-role-bar" aria-hidden="true" />
+          <Select
+            options={ROLE_OPTIONS}
+            value={row.role}
+            size="sm"
+            disabled={row.role === 'owner'}
+            aria-label={`Role for ${row.name}`}
+            onChange={(next) => updateRole(row, next as TeamRole)}
+          />
+        </span>
       ),
     },
     {
@@ -389,30 +550,58 @@ function TeamTab() {
       header: 'Status',
       width: 110,
       align: 'end',
-      render: (row) =>
-        row.status === 'active' ? (
-          <Tag tone="success" size="sm">
-            Active
-          </Tag>
-        ) : (
-          <Tag size="sm">Invited</Tag>
-        ),
+      render: (row) => (
+        <span className="ad-status stg-status" data-status={row.status}>
+          {row.status === 'active' ? 'Active' : 'Invited'}
+        </span>
+      ),
     },
   ];
 
   return (
-    <div className="stg-team">
-      <div className="ad-toolbar">
-        <p className="stg-hint">
-          Everyone with access to the Arden console. Roles decide what they can edit.
-        </p>
-        <div className="ad-toolbar-spacer" />
-        <Button variant="ghost" size="sm" onClick={() => setInviteOpen(true)}>
-          Invite teammate
-        </Button>
+    <div className="stg-tab">
+      <SectionBand index="01" name="Console access" hint="Roles decide what they can edit" />
+
+      <div className="stg-team-head">
+        {/* 极简:一个超大席位数 + 头像组 */}
+        <div className="sf-tile stg-seats">
+          <span className="sf-kicker sf-kicker-dot">Seats</span>
+          <span className="stg-seats-num">{team.length}</span>
+          <span className="stg-seats-unit">of {SEAT_LIMIT} on the Studio plan</span>
+          <AvatarGroup max={4} size="sm" spacing="normal" className="stg-seats-avatars">
+            {team.map((member) => (
+              <Avatar key={member.id} name={member.name} />
+            ))}
+          </AvatarGroup>
+        </div>
+
+        {/* 密集:角色图例 —— 也是表格 Role 列色条的解释 */}
+        <dl className="sf-tile stg-roles">
+          {ROLE_ORDER.map((role) => (
+            <div key={role} className="stg-role-row" data-role={role}>
+              <i className="stg-role-bar" aria-hidden="true" />
+              <dt>{roleLabel(role)}</dt>
+              <dd>{ROLE_BLURB[role]}</dd>
+              <span className="sf-index stg-role-count">
+                {team.filter((m) => m.role === role).length}
+              </span>
+            </div>
+          ))}
+          <div className="stg-role-invite">
+            <Button variant="ghost" size="sm" onClick={() => setInviteOpen(true)}>
+              Invite teammate
+            </Button>
+          </div>
+        </dl>
       </div>
 
-      <Table<Teammate> columns={columns} data={team} getRowKey={(r) => r.id} hoverable />
+      <Table<Teammate>
+        columns={columns}
+        data={team}
+        getRowKey={(r) => r.id}
+        hoverable
+        className="stg-team-table"
+      />
 
       <Dialog open={inviteOpen} onOpenChange={(open) => !open && closeInvite()} size="sm">
         <Dialog.Header>
@@ -494,24 +683,49 @@ async function resetDemoData() {
 function AdvancedTab() {
   return (
     <div className="stg-advanced">
-      <section className="stg-adv-section">
-        <h3 className="stg-section-label">API access</h3>
-        <p className="stg-hint">Server-side key for the demo Storefront API.</p>
-        <div className="stg-api-row">
-          <Code block size="sm" className="stg-api-code">
-            {API_KEY}
-          </Code>
-          <CopyButton value={API_KEY} variant="ghost" size="sm" aria-label="Copy API key" />
-        </div>
-        <p className="stg-hint stg-hint-warn">
-          This key can read and write every resource in the workspace. Rotate it immediately if it
-          ever leaks.
-        </p>
-      </section>
+      <div className="stg-adv-main">
+        <section className="stg-adv-section">
+          <SectionBand index="01" name="API access" hint="Storefront API" />
+          <div className="stg-api-head">
+            <span className="stg-api-label">Secret key</span>
+            <Tag size="sm" tone="warning" variant="outline">
+              live
+            </Tag>
+            <span className="sf-index">rotated 42 days ago</span>
+          </div>
+          <div className="stg-api-row">
+            <Code block size="sm" className="stg-api-code">
+              {API_KEY}
+            </Code>
+            <CopyButton value={API_KEY} variant="ghost" size="sm" aria-label="Copy API key" />
+          </div>
+          <p className="stg-hint stg-hint-warn">
+            This key can read and write every resource in the workspace. Rotate it immediately if it
+            ever leaks.
+          </p>
+        </section>
 
-      <section className="stg-adv-section">
-        <h3 className="stg-section-label">Invoice preview</h3>
-        <p className="stg-hint">How receipts and PDF invoices are branded for customers.</p>
+        <section className="stg-adv-section">
+          <SectionBand index="03" name="Danger zone" />
+          {/* 窄 danger 色条 + 常规深色文字,不做整块红 */}
+          <div className="stg-danger">
+            <i className="stg-danger-bar" aria-hidden="true" />
+            <div className="stg-danger-copy">
+              <span className="stg-danger-title">Reset demo data</span>
+              <p className="stg-hint">
+                Clears the cart and appearance preferences stored in this browser. The static demo
+                catalog is unaffected.
+              </p>
+            </div>
+            <Button variant="ghost" tone="danger" size="sm" onClick={resetDemoData}>
+              Reset data
+            </Button>
+          </div>
+        </section>
+      </div>
+
+      <section className="stg-adv-section stg-adv-side">
+        <SectionBand index="02" name="Invoice branding" />
         <Watermark
           content="Arden Demo"
           rotate={-22}
@@ -520,10 +734,17 @@ function AdvancedTab() {
           fontSize={13}
           className="stg-invoice-frame"
         >
+          {/* 发票 = 浅色拼贴块(无描边),四色条当信笺抬头 */}
           <article className="stg-invoice" aria-label="Sample invoice">
+            <div className="sf-spectrum stg-invoice-rule" aria-hidden="true">
+              <i />
+              <i />
+              <i />
+              <i />
+            </div>
             <header className="stg-invoice-head">
               <span className="stg-invoice-brand">Arden</span>
-              <span className="stg-invoice-no">Invoice · INV-1042</span>
+              <span className="stg-invoice-no">INV-1042</span>
             </header>
             <dl className="stg-invoice-meta">
               <div>
@@ -560,24 +781,23 @@ function AdvancedTab() {
           </article>
         </Watermark>
       </section>
-
-      <section className="stg-adv-section stg-danger">
-        <h3 className="stg-section-label">Danger zone</h3>
-        <div className="stg-danger-row">
-          <p className="stg-hint">
-            Clears the cart and appearance preferences stored in this browser. The static demo
-            catalog is unaffected.
-          </p>
-          <Button variant="ghost" tone="danger" onClick={resetDemoData}>
-            Reset demo data
-          </Button>
-        </div>
-      </section>
     </div>
   );
 }
 
 /* ------------------------------ 页面本体 ---------------------------------- */
+
+/** 工作区事实清单:全部从本页已有数据派生,不是凭空文案。 */
+const WORKSPACE_FACTS: { label: string; value: string }[] = [
+  { label: 'Plan', value: `Studio · ${SEAT_LIMIT} seats` },
+  {
+    label: 'Region',
+    value: TIMEZONE_OPTIONS.find((o) => o.value === GENERAL_DEFAULTS.timezone)?.label ?? '—',
+  },
+  { label: 'Currency', value: GENERAL_DEFAULTS.currency },
+  { label: 'Catalog lines', value: `${LEAF_KEYS.size} across 4 families` },
+  { label: 'Last saved', value: formatDate('2026-08-02') },
+];
 
 export function Settings() {
   const [tab, setTab] = useState('general');
@@ -590,6 +810,29 @@ export function Settings() {
           <p className="ad-page-sub">Store profile, catalog visibility, team access and API.</p>
         </div>
       </header>
+
+      {/* 工作区拼贴条:满色块承载店名,右侧是密集事实清单 —— 页面的结构件 */}
+      <div className="stg-masthead">
+        <section className="sf-tile sf-tile-solid stg-workspace">
+          <span className="sf-kicker sf-kicker-dot">Workspace</span>
+          <h2 className="sf-display sf-display-lg stg-workspace-name">
+            {GENERAL_DEFAULTS.storeName}
+          </h2>
+          <p className="stg-workspace-meta">
+            <span>arden.studio</span>
+            <span>Owner · Ava Martin</span>
+          </p>
+        </section>
+
+        <dl className="sf-tile stg-facts">
+          {WORKSPACE_FACTS.map((fact) => (
+            <div key={fact.label} className="stg-fact">
+              <dt>{fact.label}</dt>
+              <dd>{fact.value}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
 
       <section className="ad-card stg-tabs-card">
         <Tabs

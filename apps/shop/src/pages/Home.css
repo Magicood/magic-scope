@@ -1,283 +1,477 @@
 /* ============================================================================
- * Home —— 买家首页私有样式。只消费 --ms-* / --sf-* 变量与 .sf-/.pv- 原语,
- * 颜色一律 var + color-mix 派生;分隔靠留白与 var(--sf-hairline)。
+ * Home —— 买家首页私有样式(Chromatic Grid)。
+ *
+ * 只消费 shop.css 的 .sf-/.pv- 原语与 --ms- / --sf- / --cat- 变量:
+ *   · 网格一律**不等分**(1.72/1/1、1.25/1/1/.85、1/1.1);商品网格靠大卡/宽卡打破等分
+ *   · 圆角只用 var(--sf-r) / var(--sf-r-sm);块间距只用 var(--sf-gap)
+ *   · 分隔靠色块边界与 var(--sf-hairline),不给卡片描边
+ *   · 颜色全部 var + color-mix 派生,不写死色值
  * ========================================================================== */
 
+/* 全站没有 border-box 全局重置:凡是本页给了 min-height / 定宽的拼贴件,
+   都要自己切到 border-box,否则内边距会额外撑高一整圈(实测多出 66px) */
+.home-lead,
+.home-stat,
+.home-cat,
+.home-wall-figure,
 .home {
-  /* 页面级动效基调:距离 18px / 620ms,均经 --ms-motion-scale 门控(弱=打折,关=瞬时) */
+  /* 页面级动效基调:距离 18px / 600ms,均经 --ms-motion-scale 门控(弱=打折,关=瞬时) */
   --ms-reveal-distance: 18px;
-  --ms-reveal-duration: calc(620ms * var(--ms-motion-scale, 1));
-}
-
-/* ------------------------------- 1 · Hero -------------------------------- */
-
-.home-hero {
-  /* 顶部比标准节稍收一点:上面还有公告条 + 页头 */
-  padding-block-start: clamp(48px, 7vw, 104px);
-}
-
-.home-hero-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1.04fr) minmax(0, 0.96fr);
-  gap: clamp(40px, 6vw, 96px);
-  align-items: center;
-}
-
-.home-hero-copy .sf-eyebrow {
-  margin: 0 0 22px;
-}
-
-.home-hero-title {
-  margin-bottom: 26px;
-}
-
-/* text-lines 的行单元默认 inline-block,标题里强制成块级逐行排 */
-.home-hero-title [data-ms-reveal-line] {
-  display: block;
-}
-
-.home-hero-lede {
-  margin: 0 0 40px;
-}
-
-.home-hero-cta {
-  display: flex;
-  align-items: center;
-  gap: 28px;
-}
-
-/* Button asChild 渲染成 <a>,压掉浏览器默认下划线 */
-.home-hero-cta > a {
-  text-decoration: none;
-}
-
-/* 把按钮语义还给 <button>,外观还给 .sf-link */
-.home-link-btn {
-  border: 0;
-  background: none;
-  padding: 0 0 2px;
-  font: inherit;
-  font-size: 15px;
-  color: inherit;
-  cursor: pointer;
-}
-
-/* collage:大 portrait 靠右,小 square 负 margin 叠左下,bg 色环做“衬纸” */
-.home-hero-art {
-  position: relative;
-}
-
-.home-hero-main {
-  display: block;
-  width: 88%;
-  margin-inline-start: auto;
-}
-
-.home-hero-side {
-  position: relative;
-  z-index: 2;
-  display: block;
-  width: 46%;
-  margin-block-start: -26%;
-  border-radius: var(--sf-radius);
-  box-shadow:
-    0 0 0 10px var(--ms-color-bg),
-    0 32px 56px -44px color-mix(in oklab, var(--ms-color-fg), transparent 45%);
-}
-
-.home-hero-main:focus-visible,
-.home-hero-side:focus-visible,
-.home-cat:focus-visible,
-.home-card:focus-visible {
-  outline: 2px solid var(--ms-color-focus-ring);
-  outline-offset: 3px;
-  border-radius: var(--sf-radius);
-}
-
-/* ------------------------------ 2 · 分类带 ------------------------------- */
-
-.home-cats {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: clamp(14px, 1.8vw, 20px);
-}
-
-.home-cat {
+  --ms-reveal-duration: calc(600ms * var(--ms-motion-scale, 1));
+  padding-block: var(--sf-gap) clamp(56px, 7vw, 96px);
   display: flex;
   flex-direction: column;
+  /* 区块之间只有一个 gap —— 版面靠色块体量分节,不靠大段留白 */
+  gap: var(--sf-gap);
+}
+
+/* ========================== 1 · 首屏 bento 拼贴 ========================== */
+
+.home-bento {
+  /* 不等分:主色块 1.72 份,右侧两列各 1 份 */
+  grid-template-columns: 1.72fr 1fr 1fr;
+  grid-template-areas:
+    "lead shot stat1"
+    "lead shot stat2"
+    "ticker ticker ticker";
+}
+
+/* ------------------------------ lead 满色块 ------------------------------ */
+
+.home-lead {
+  grid-area: lead;
+  position: relative;
+  overflow: hidden;
   justify-content: space-between;
-  aspect-ratio: 1 / 1.16;
-  padding: clamp(18px, 2vw, 26px);
-  border-radius: var(--sf-radius);
-  text-decoration: none;
-  background: linear-gradient(165deg, var(--hc-tint) 0%, var(--hc-field) 70%);
-  transition:
-    transform var(--ms-duration-base) var(--ms-ease-standard),
-    box-shadow var(--ms-duration-base) var(--ms-ease-standard);
+  gap: clamp(20px, 3vw, 40px);
+  min-height: clamp(330px, 29vw, 418px);
+  /* 底边让出四色条的高度 */
+  padding-block-end: calc(var(--sf-pad) + 6px);
 }
 
-.home-cat:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 24px 44px -36px color-mix(in oklab, var(--hc-shade), transparent 25%);
+.home-lead-kicker {
+  margin: 0;
+  opacity: 0.62;
 }
 
-/* 文字色从商品暗部色向页面 ink 拉近,保证在浅色场上读得清 */
-.home-cat-name {
-  font-family: var(--sf-display);
-  font-size: clamp(20px, 2.1vw, 27px);
-  letter-spacing: -0.01em;
-  color: color-mix(in oklab, var(--hc-shade) 72%, var(--ms-color-fg) 28%);
+/* 两行主句 + 一行副句:副句同时降字号与透明度,标题内部自带尺度对比 */
+.home-lead-title {
+  font-size: clamp(30px, 3.5vw, 50px);
 }
 
-.home-cat-count {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: color-mix(in oklab, var(--hc-shade) 82%, var(--ms-color-fg) 18%);
-  opacity: 0.85;
+.home-lead-sub {
+  display: block;
+  margin-block-start: 0.3em;
+  font-size: 0.58em;
+  letter-spacing: -0.03em;
+  opacity: 0.5;
 }
 
-/* ------------------------- 3 · 通用节头 + 精选网格 ------------------------ */
-
-.home-section-head {
+.home-lead-foot {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 24px;
-  margin-bottom: clamp(32px, 4.5vw, 60px);
+  gap: clamp(18px, 3vw, 44px);
+  flex-wrap: wrap;
 }
 
-.home-section-head .sf-eyebrow {
-  margin: 0 0 16px;
+.home-lead-lede {
+  opacity: 0.74;
 }
 
-.home-section-head h2 {
-  margin: 0;
-}
-
-.home-head-link {
-  font-size: 14px;
+/* 白底药丸钮:不覆写库的选择器,只把 tone 槽位换成中性面色 */
+.home-lead-cta {
+  --ms-c: var(--ms-color-surface-raised);
+  --ms-c-hover: color-mix(in oklab, var(--ms-color-surface-raised), var(--ms-color-primary) 12%);
+  --ms-c-active: color-mix(in oklab, var(--ms-color-surface-raised), var(--ms-color-primary) 20%);
+  --ms-c-glow: transparent;
+  --ms-on-c: var(--ms-color-primary);
+  flex: none;
+  text-decoration: none;
   white-space: nowrap;
-  margin-bottom: 6px;
 }
 
-.home-grid-4 {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 32px 20px;
-}
-
-.home-card-media {
-  position: relative;
-}
-
-.home-card-badges {
+/* 四色条贴满色块底边 —— 品牌签名图形 */
+.home-lead-spectrum {
   position: absolute;
-  top: 12px;
-  left: 12px;
+  inset: auto 0 0 0;
+}
+
+/* 陶瓷段就是主色本身,压在主色块上会隐形 —— 提亮一档才读得出四段 */
+.home-lead-spectrum i:first-child {
+  background: color-mix(in oklab, var(--cat-ceramics), var(--ms-color-on-primary) 32%);
+}
+
+/* -------------------------------- shot 块 -------------------------------- */
+
+.home-shot {
+  grid-area: shot;
+  position: relative;
+  gap: 0;
+  padding: var(--sf-gap);
+  color: inherit;
+  text-decoration: none;
+}
+
+.home-shot-tagrow {
+  position: absolute;
   z-index: 1;
+  top: calc(var(--sf-gap) + 8px);
+  left: calc(var(--sf-gap) + 8px);
+}
+
+/* 品类色实底标签:颜色是识别码,不是装饰 */
+.home-shot .home-shot-tag {
+  background: var(--cat);
+  border-color: transparent;
+  color: var(--ms-color-on-primary);
+}
+
+/* 双写作用域抬权重:.pv-portrait 的 4/5 与本规则同权,不抬就压不住 */
+.home-shot .home-shot-pv {
+  flex: 1;
+  min-height: 150px;
+  aspect-ratio: auto;
+  border-radius: var(--sf-r-sm);
+}
+
+.home-shot-meta {
   display: flex;
-  gap: 6px;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 6px 4px;
 }
 
-/* ----------------------------- 4 · 宣言带 -------------------------------- */
-
-.home-approach {
-  background: var(--ms-color-surface-sunken);
-  border-radius: calc(var(--sf-radius) * 1.6);
-  padding: clamp(56px, 8vw, 108px) clamp(24px, 6vw, 96px);
-  text-align: center;
+.home-shot-name {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.025em;
 }
 
-.home-approach .sf-eyebrow {
-  margin: 0 0 24px;
+/* ------------------------------- stat 小块 ------------------------------- */
+
+.home-stat {
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 138px;
 }
 
-.home-approach-title {
+.home-stat-fill {
+  grid-area: stat1;
+}
+
+.home-stat-side {
+  grid-area: stat2;
+}
+
+.home-stat p {
   margin: 0;
 }
 
-/* mask-up 容器默认 inline-block,这里强制块级,两行各占一行、各自揭示 */
-.home-approach .home-approach-line {
+/* 库 Statistic 的数值:靠 --ms-statistic-color 换色,不深挖内部选择器上色 */
+.home-figure {
+  color: inherit;
+  --ms-statistic-color: currentColor;
+}
+
+.home-figure .ms-statistic__number {
+  font-size: clamp(34px, 3.5vw, 49px);
+  font-weight: 800;
+  letter-spacing: -0.055em;
+  line-height: 0.9;
+}
+
+.home-stat-fill .sf-kicker {
+  opacity: 0.78;
+}
+
+.home-stat-note {
+  font-size: 12px;
+  line-height: 1.5;
+  max-width: 24ch;
+  color: var(--ms-color-fg-muted);
+}
+
+/* 八根迷你柱:极小尺度,与上方大数字并置 */
+.home-spark {
+  display: flex;
+  align-items: flex-end;
+  align-self: flex-start;
+  gap: 5px;
+  width: min(100%, 168px);
+  height: 34px;
+}
+
+.home-spark i {
+  flex: 1;
+  background: currentColor;
+  opacity: 0.32;
+  border-radius: var(--sf-r-sm);
+}
+
+/* -------------------------------- ticker -------------------------------- */
+
+.home-ticker {
+  grid-area: ticker;
+}
+
+.home-ticker .sf-dot {
+  /* 墨色带上的品类点:亮度足够才读得出四种颜色 */
+  background: var(--cat);
+}
+
+/* ============================== 2 · 品类带 =============================== */
+
+.home-cats {
+  /* 四块**不等宽**:第一块最重,末块最轻 */
+  grid-template-columns: 1.25fr 1fr 1fr 0.85fr;
+}
+
+.home-cat {
+  min-height: 132px;
+  justify-content: space-between;
+  gap: 14px;
+  text-decoration: none;
+}
+
+.home-cat-index {
+  opacity: 0.7;
+}
+
+.home-cat-name {
   display: block;
 }
 
-.home-values {
+/* 各品类一句话长短不一,留满两行的高度,品类名才落在同一条线上 */
+.home-cat-note {
+  font-size: 12px;
+  line-height: 1.45;
+  min-height: 2.9em;
+  max-width: 26ch;
+  opacity: 0.78;
+}
+
+/* ---------------------------- 商品卡内文竖排 ----------------------------- */
+
+/* shop.css 的 .sf-product-meta 还留着旧版的「一行横排」定义(flex + baseline),
+   拼贴件的三段(品类行 / 名称 / 一句话+价格)必须竖排,在本页作用域内改回来 */
+/* 注意:旧定义里的 justify-content: space-between 在 grid 下会把唯一一条轨道
+   压成 max-content(价格于是贴着一句话),必须一并还原成铺满 */
+.home .sf-product-meta {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  margin-block-start: clamp(44px, 6vw, 76px);
+  grid-template-columns: minmax(0, 1fr);
+  justify-content: stretch;
+  align-items: stretch;
+  gap: 5px;
 }
 
-.home-value {
-  padding-inline: clamp(20px, 3vw, 48px);
+/* 带徽标的卡比不带的高一档,留出徽标行的高度,名称才在同一条线上 */
+.home .sf-product-tagrow {
+  min-height: 21px;
+  margin-bottom: 0;
 }
 
-/* 列间发丝线(非首列左侧一道) */
-.home-value + .home-value {
-  border-inline-start: 1px solid var(--sf-hairline);
+/* ============================= 3 · 精选货架 ============================== */
+
+.home-shelf {
+  grid-template-columns: minmax(0, 1fr);
 }
 
-.home-value-icon {
-  display: inline-flex;
+/* 节头也不等分:标题占大半,右侧一句小字 + 入口 */
+.home-shelf-head {
+  display: grid;
+  grid-template-columns: 1.55fr 1fr;
+  align-items: end;
+  gap: clamp(20px, 4vw, 64px);
+  padding: clamp(28px, 4vw, 52px) var(--sf-pad) 6px;
+}
+
+.home-shelf-head h2 {
+  margin: 0;
+  max-width: 16ch;
+}
+
+.home-shelf-aside {
+  display: grid;
+  gap: 12px;
+  justify-items: start;
+}
+
+.home-shelf-aside .sf-lede {
+  max-width: 38ch;
   color: var(--ms-color-fg-muted);
-  margin-bottom: 14px;
 }
 
-.home-value-title {
-  margin: 0 0 8px;
+.home-more {
+  font-size: 12.5px;
+  font-weight: 650;
+  letter-spacing: 0.02em;
+  color: var(--ms-color-fg);
+  text-decoration: none;
+  border-block-end: 1px solid var(--sf-hairline);
+  padding-block-end: 2px;
+}
+
+.home-more:hover {
+  border-block-end-color: currentColor;
+}
+
+/* 四列等宽,但 2×2 大卡与横向宽卡把等分打散 */
+.home-shelf-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-auto-rows: 1fr;
+  gap: var(--sf-gap);
+}
+
+/* 常规卡:视觉吃掉剩余高度,与大卡对齐到同一底边 */
+.home-shelf-grid .sf-product-card:not(.sf-product-card-wide) .pv {
+  flex: 1;
+  min-height: 148px;
+  aspect-ratio: auto;
+}
+
+.home-shelf-grid .sf-product-tagrow .ms-tag {
+  margin-inline-start: 2px;
+}
+
+/* ============================== 4 · 数字墙 ============================== */
+
+.home-wall {
+  /* 左极简 / 右密集 —— 密度反差靠不等分放大 */
+  grid-template-columns: 1fr 1.1fr;
+  padding-block-start: clamp(16px, 2.4vw, 30px);
+}
+
+.home-wall-figure {
+  justify-content: space-between;
+  gap: clamp(18px, 2.6vw, 34px);
+  min-height: 300px;
+}
+
+.home-wall-figure .sf-kicker {
+  opacity: 0.78;
+}
+
+.home-wall-numeral {
+  display: block;
+}
+
+.home-wall-rotator {
+  color: inherit;
+}
+
+.home-wall-note {
+  margin: 0;
+  max-width: 34ch;
+  opacity: 0.86;
+}
+
+/* 右侧密集清单 */
+.home-wall-facts {
+  gap: 6px;
+  padding-block: clamp(20px, 2.4vw, 28px);
+}
+
+.home-wall-facts-kicker {
+  margin: 0 0 6px;
+  padding-inline: 2px;
+  color: var(--ms-color-fg-muted);
+}
+
+.home-facts {
+  margin: 0;
+  padding-inline-start: 0;
+}
+
+.home-fact {
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 4px 16px;
+  padding-block: clamp(13px, 1.6vw, 18px);
+  padding-inline: 2px;
+}
+
+/* 行分隔只用发丝线,不给整块描边 */
+.home-fact + .home-fact {
+  border-block-start: 1px solid var(--sf-hairline);
+}
+
+.home-fact .sf-index {
+  padding-block-start: 3px;
+}
+
+.home-fact-body {
+  display: grid;
+  gap: 4px;
+}
+
+.home-fact-title {
   font-size: 14px;
-  font-weight: 560;
-  letter-spacing: -0.005em;
+  font-weight: 700;
+  letter-spacing: -0.02em;
 }
 
-.home-value-copy {
-  margin: 0 auto;
-  max-width: 30ch;
-  font-size: 13px;
-  line-height: 1.65;
+.home-fact-copy {
+  font-size: 12.5px;
+  line-height: 1.55;
+  max-width: 46ch;
   color: var(--ms-color-fg-muted);
   text-wrap: pretty;
 }
 
-/* --------------------------- 5 · Back in stock --------------------------- */
-
-/* 一屏 = 3 张卡;顶部留 6px headroom,hover 上浮不被 slide 裁切 */
-.home-restock-row {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 20px;
-  padding-block-start: 6px;
-  padding-inline: 2px;
+.home-fact-value {
+  font-size: clamp(17px, 1.8vw, 21px);
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
-/* ----------------------------- 6 · 收尾陈述 ------------------------------ */
+/* ============================ 5 · 满出血横滚 ============================ */
 
-.home-visit-inner {
-  text-align: center;
+.home-rail-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 24px;
+  padding: clamp(20px, 3vw, 36px) calc(var(--sf-gap) + var(--sf-pad)) 14px;
 }
 
-.home-visit .sf-eyebrow {
-  margin: 0 0 20px;
-}
-
-.home-visit h2 {
+.home-rail-head h2 {
   margin: 0;
 }
 
-.home-visit-address {
-  margin: 16px 0 0;
-  font-size: 14px;
+.home-rail-head .sf-kicker {
   color: var(--ms-color-fg-muted);
 }
 
-.home-visit-link {
-  display: inline-block;
-  margin-block-start: 24px;
-  font-size: 14px;
+/* 视口给出上下余量:.sf-lift 的 -3px 位移与自绘滚动条都不被裁 */
+.home-rail-viewport {
+  padding-block: 6px 18px;
 }
 
-/* --------------------------- 7 · 聊天浮钮入口 ----------------------------- */
+.home-rail-track {
+  display: flex;
+  gap: var(--sf-gap);
+  padding-inline: var(--sf-gap);
+}
+
+.home-rail-card {
+  flex: 0 0 226px;
+}
+
+.home-rail .home-rail-track .home-rail-card .pv {
+  aspect-ratio: 4 / 3;
+}
+
+.home-rail-card .sf-product-row small {
+  display: none;
+}
+
+/* ========================== 6 · 聊天浮钮入口 =========================== */
 
 /* 单个 FloatButton 不自带 fixed(库约定),由页面容器落位到右下角 */
 .home-chat {
@@ -295,7 +489,8 @@
 
 .home-chat-title {
   font-size: 14px;
-  font-weight: 560;
+  font-weight: 650;
+  letter-spacing: -0.015em;
 }
 
 .home-chat-copy {
@@ -308,69 +503,94 @@
 .home-chat-mail {
   font-size: 13px;
   justify-self: start;
+  color: var(--ms-color-primary);
 }
 
-/* -------------------------------- 响应式 --------------------------------- */
+/* ------------------------------ 聚焦可见性 ------------------------------- */
 
-@media (max-width: 960px) {
-  .home-hero-grid {
-    grid-template-columns: 1fr;
-    gap: 48px;
-  }
-
-  .home-hero-art {
-    max-width: 480px;
-  }
-
-  .home-grid-4 {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+.home-shot:focus-visible,
+.home-cat:focus-visible,
+.home-shelf-grid .sf-product-card:focus-visible,
+.home-rail-card:focus-visible {
+  outline: 2px solid var(--ms-color-focus-ring);
+  outline-offset: 2px;
+  border-radius: var(--sf-r);
 }
 
-@media (max-width: 760px) {
+/* -------------------------------- 响应式 -------------------------------- */
+
+@media (max-width: 1120px) {
+  .home-bento {
+    grid-template-columns: 1.4fr 1fr;
+    grid-template-areas:
+      "lead lead"
+      "shot stat1"
+      "shot stat2"
+      "ticker ticker";
+  }
+
+  .home-lead {
+    min-height: 0;
+  }
+
   .home-cats {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: 1.2fr 1fr;
   }
 
-  .home-values {
+  .home-shelf-head {
     grid-template-columns: 1fr;
-    gap: 32px;
+    gap: 20px;
   }
 
-  /* 竖排后列间线换成行间线 */
-  .home-value + .home-value {
-    border-inline-start: 0;
-    border-block-start: 1px solid var(--sf-hairline);
-    padding-block-start: 32px;
+  .home-shelf-head h2 {
+    max-width: 20ch;
   }
 
-  .home-section-head {
-    flex-wrap: wrap;
-    align-items: baseline;
+  .home-wall {
+    grid-template-columns: 1fr;
   }
 }
 
-@media (max-width: 560px) {
-  /* 迷你卡:轮播里 3 张并排太挤,收掉一句话、缩字号 */
-  .home-restock-row {
-    gap: 12px;
+@media (max-width: 900px) {
+  .home-shelf-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-rows: auto;
   }
 
-  .home-restock-row .sf-product-tagline {
-    display: none;
+  .home-shelf-grid .sf-product-card:not(.sf-product-card-wide) .pv {
+    aspect-ratio: 1;
+    flex: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .home-bento {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "lead"
+      "shot"
+      "stat1"
+      "stat2"
+      "ticker";
   }
 
-  .home-restock-row .sf-product-meta {
-    flex-direction: column;
-    gap: 2px;
+  .home-cats {
+    grid-template-columns: 1fr;
   }
 
-  .home-restock-row .sf-product-name,
-  .home-restock-row .sf-product-price {
-    font-size: 13px;
+  .home-cat {
+    min-height: 108px;
   }
 
-  .home-hero-cta {
-    gap: 20px;
+  .home-lead-foot {
+    align-items: stretch;
+  }
+
+  .home-fact {
+    grid-template-columns: 24px minmax(0, 1fr);
+  }
+
+  .home-fact-value {
+    grid-column: 2;
   }
 }

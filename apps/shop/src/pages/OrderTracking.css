@@ -1,53 +1,155 @@
 /* ============================================================================
- * OrderTracking —— 订单跟踪页私有样式(.ot-*)。
+ * OrderTracking —— 订单跟踪页私有样式(.ot-*),Chromatic Grid 方言。
  * 只消费 --ms-* / --sf-* 语义变量与 .sf-/.pv- 原语 + color-mix 派生;
- * 分隔一律发丝线或留白,不用硬边框。
+ * 分隔一律发丝线 / 留白 / 色块边界,不做描边卡片,不写死颜色。
  * ========================================================================== */
 
-/* ---------------------------------- 页头 --------------------------------- */
-
-.ot-head {
-  display: grid;
-  gap: 14px;
-  margin-block-end: clamp(36px, 5vw, 60px);
+.ot-page {
+  padding-block: var(--sf-gap) clamp(48px, 6vw, 84px);
 }
 
-.ot-head-row {
+/* 页面拼贴区:块与块之间只有 --sf-gap */
+.ot-shell {
+  display: grid;
+  gap: var(--sf-gap);
+}
+
+/* ============================ ① 状态满色块 ================================ */
+
+/* 状态色即信息编码:与后台订单表同一套映射(shipped→ceramics…)。
+ * 每档同时给出对应的反色 ink,保证任何主题家族下都读得清。 */
+.ot-hero {
+  --ot-accent: var(--ms-color-primary);
+  --ot-ink: var(--ms-color-on-primary);
+  display: grid;
+  gap: clamp(22px, 3.4vw, 40px);
+  padding: clamp(24px, 3vw, 38px) var(--sf-pad) var(--sf-pad);
+  border-radius: var(--sf-r);
+  background: var(--ot-accent);
+  color: var(--ot-ink);
+}
+
+.ot-hero[data-status="pending"] {
+  --ot-accent: var(--ms-color-warning);
+  --ot-ink: var(--ms-color-on-warning);
+}
+
+.ot-hero[data-status="paid"] {
+  --ot-accent: var(--cat-textiles);
+}
+
+.ot-hero[data-status="fulfilled"] {
+  --ot-accent: var(--cat-objects);
+}
+
+.ot-hero[data-status="shipped"] {
+  --ot-accent: var(--cat-ceramics);
+}
+
+.ot-hero[data-status="delivered"] {
+  --ot-accent: var(--ms-color-success);
+  --ot-ink: var(--ms-color-on-success);
+}
+
+.ot-hero[data-status="refunded"],
+.ot-hero[data-status="cancelled"] {
+  --ot-accent: var(--ms-color-danger);
+  --ot-ink: var(--ms-color-on-danger);
+}
+
+/* 不等分:编号栏 1.72fr,状态词 1fr —— 基线对齐,尺度差最大化 */
+.ot-hero-top {
+  display: grid;
+  grid-template-columns: 1.72fr 1fr;
+  gap: 20px clamp(20px, 3vw, 44px);
+  align-items: end;
+}
+
+.ot-hero-id {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+}
+
+/* 超大状态词:比订单号还大一档,是这一屏的视觉锚 */
+.ot-hero-word {
+  margin: 0;
+  justify-self: end;
+  text-align: right;
+  font-size: clamp(46px, 7.6vw, 96px);
+  font-weight: 800;
+  letter-spacing: -0.055em;
+  line-height: 0.84;
+}
+
+/* 底边一行:下单日期 + 履约进度色条 + 等宽计数(11px,与状态词形成尺度反差) */
+.ot-hero-foot {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 8px 16px;
+  gap: 12px 20px;
+  padding-block-start: 16px;
+  border-block-start: 1px solid color-mix(in oklab, currentColor, transparent 78%);
+  font-size: 12.5px;
 }
 
-.ot-placed {
+.ot-hero-placed {
   margin: 0;
-  font-size: 13px;
-  color: var(--ms-color-fg-subtle);
+  font-weight: 550;
+  opacity: 0.88;
 }
 
-/* --------------------------------- 双栏布局 -------------------------------- */
+.ot-track {
+  display: flex;
+  gap: 4px;
+  margin-inline-start: auto;
+}
 
-.ot-layout {
+.ot-track i {
+  width: clamp(18px, 3.4vw, 34px);
+  height: 5px;
+  border-radius: 2px;
+  background: color-mix(in oklab, currentColor, transparent 72%);
+}
+
+.ot-track i[data-done] {
+  background: currentColor;
+}
+
+.ot-hero-count {
+  opacity: 0.82;
+}
+
+/* ============================ ② 不等分双栏 ================================ */
+
+.ot-body {
   display: grid;
-  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
-  gap: clamp(36px, 5vw, 80px);
-  align-items: start;
+  grid-template-columns: 1.4fr 1fr;
+  gap: var(--sf-gap);
 }
 
-/* 桌面端摘要卡吸顶(避开 64px sticky 头 + 呼吸留白) */
-.ot-aside {
-  position: sticky;
-  top: 88px;
+.ot-col {
+  display: grid;
+  gap: var(--sf-gap);
+  min-width: 0;
 }
 
-@media (max-width: 900px) {
-  .ot-layout {
-    grid-template-columns: 1fr;
-  }
+/* 两栏的末块各自吃掉剩余高度 —— 行项多少、步骤长短都不留断尾白,底边永远齐平 */
+.ot-col-main {
+  grid-template-rows: auto minmax(0, 1fr);
+}
 
-  .ot-aside {
-    position: static;
-  }
+.ot-col-side {
+  grid-template-rows: auto auto minmax(0, 1fr);
+}
+
+/* 块内小节头:11px 眉标 + 右侧计量,块与块共用同一条语言 */
+.ot-tile-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-block-end: clamp(18px, 2.2vw, 24px);
 }
 
 /* --------------------------------- 时间线 --------------------------------- */
@@ -55,17 +157,21 @@
 /* 连线贯通:库把条目间距放在 li 的 padding-block-end 上,而连线的定位父级
  * (节点列)只随内容盒拉伸 —— 本页条目多为"标题 + 时间"一行,内容盒太矮,
  * 连线会塌成 0 高。把间距移进内容盒,节点列被拉满,连线自然贯通到下一节点。 */
+.ot-timeline {
+  --ms-tl-line: var(--sf-hairline);
+}
+
 .ot-timeline .ms-timeline__item {
   padding-block-end: 0;
 }
 
 .ot-timeline .ms-timeline__item:not(:last-child) .ms-timeline__content {
-  padding-block-end: 28px;
+  padding-block-end: 26px;
 }
 
 /* 未发生的节点:空心圆点 + 整条降调(与已完成的实心节点拉开) */
 .ot-step-upcoming .ms-timeline__dot {
-  background-color: var(--ms-color-bg);
+  background-color: var(--ms-color-surface-raised);
   border-color: color-mix(in oklab, var(--ms-color-fg-subtle), transparent 35%);
 }
 
@@ -80,29 +186,12 @@
 
 /* 预计送达附注(进行中的最后一站) */
 .ot-step-note {
-  margin: 4px 0 0;
+  margin: 5px 0 0;
   font-size: 13px;
   line-height: 1.55;
   color: var(--ms-color-fg-muted);
   max-width: 44ch;
   text-wrap: pretty;
-}
-
-/* ------------------------------ 小节标题(Items / Summary) ------------------------------ */
-
-.ot-subhead {
-  margin: clamp(36px, 5vw, 52px) 0 6px;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--ms-color-fg-subtle);
-}
-
-.ot-subhead-count {
-  margin-inline-start: 4px;
-  font-variant-numeric: tabular-nums;
-  color: color-mix(in oklab, var(--ms-color-fg-subtle), transparent 30%);
 }
 
 /* -------------------------------- 行项目清单 ------------------------------- */
@@ -111,14 +200,16 @@
   list-style: none;
   margin: 0;
   padding: 0;
+  display: grid;
 }
 
+/* 密集行:等宽序号 / 52px 视觉 / 名称 / 金额 —— 与左上时间线的疏形成反差 */
 .ot-line {
   display: grid;
-  grid-template-columns: 56px minmax(0, 1fr) auto;
-  gap: 16px;
+  grid-template-columns: 20px 52px minmax(0, 1fr) auto;
+  gap: 14px;
   align-items: center;
-  padding-block: 16px;
+  padding-block: 13px;
 }
 
 /* 行间分隔:发丝线 */
@@ -126,118 +217,143 @@
   border-block-start: 1px solid var(--sf-hairline);
 }
 
+.ot-line:first-child {
+  padding-block-start: 0;
+}
+
+.ot-line:last-child {
+  padding-block-end: 0;
+}
+
+.ot-line-idx {
+  font-variant-numeric: tabular-nums;
+}
+
 .ot-line-media {
   display: block;
-  width: 56px;
+  width: 52px;
 }
 
 .ot-line-media .pv {
-  border-radius: var(--sf-radius-sm);
+  border-radius: var(--sf-r-sm);
 }
 
 .ot-line-info {
   display: grid;
-  gap: 3px;
+  gap: 4px;
   justify-items: start;
+  min-width: 0;
 }
 
 .ot-line-name {
-  font-size: 15px;
-  font-weight: 550;
-  letter-spacing: -0.01em;
+  font-size: 14.5px;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  color: inherit;
+  text-decoration: none;
 }
 
+.ot-line-name:hover,
+.ot-line-name:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* 品类色点:行的品类识别(容器上的 data-cat 决定 --cat) */
 .ot-line-meta {
-  font-size: 13px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12.5px;
   color: var(--ms-color-fg-muted);
 }
 
 .ot-line-price {
-  font-size: 14px;
+  font-size: 13.5px;
+  font-weight: 650;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
 
-/* --------------------------------- 摘要卡 --------------------------------- */
+/* --------------------------------- 摘要块 --------------------------------- */
 
-.ot-card {
-  display: grid;
-  gap: 20px;
-  padding: clamp(24px, 3vw, 32px);
-  border-radius: var(--sf-radius);
-  background: var(--ms-color-surface-raised);
-  /* 无边框:极浅的双层投影让卡"浮"在纸面上 */
-  box-shadow:
-    0 1px 2px color-mix(in oklab, var(--ms-color-fg), transparent 94%),
-    0 20px 48px -24px color-mix(in oklab, var(--ms-color-fg), transparent 86%);
-}
-
-.ot-card-title {
-  margin: 0;
-}
-
-/* Descriptions 微调:标签小号大写、内容常规 —— 与卡内小节标题同一语言 */
-.ot-card .ms-descriptions__label {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
+/* Descriptions 微调:标签 11px 大写宽字距,与眉标同一语言 */
+.ot-summary .ms-descriptions__label {
+  font-size: 10.5px;
+  font-weight: 650;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--ms-color-fg-subtle);
 }
 
-.ot-card .ms-descriptions__content {
-  font-size: 14px;
+.ot-summary .ms-descriptions__content {
+  font-size: 13.5px;
+  font-weight: 550;
+  letter-spacing: -0.01em;
 }
 
-/* 金额三行:发丝线起头,Total 再加一道并加重 */
-.ot-totals {
+/* ------------------------------- 墨色金额块 ------------------------------- */
+
+/* 左超大数字 / 右密集细目:同一块里的疏密反差 */
+.ot-total-grid {
+  display: grid;
+  grid-template-columns: 1.45fr 1fr;
+  gap: 18px 20px;
+  align-items: end;
+}
+
+.ot-total-main {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+}
+
+/* .sf-numeral 的缩小版(双类名压过原语的 clamp 尺寸) */
+.ot-total .ot-total-num {
+  font-size: 32px;
+  line-height: 0.9;
+}
+
+.ot-breakdown {
   margin: 0;
   display: grid;
-  gap: 10px;
-  padding-block-start: 18px;
-  border-block-start: 1px solid var(--sf-hairline);
+  gap: 8px;
+  align-content: end;
 }
 
-.ot-total-row {
+.ot-break-row {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  gap: 16px;
-  font-size: 14px;
+  gap: 14px;
+  font-size: 12.5px;
 }
 
-.ot-total-row dt {
-  color: var(--ms-color-fg-muted);
+.ot-break-row dt {
+  opacity: 0.62;
 }
 
-.ot-total-row dd {
+.ot-break-row dd {
   margin: 0;
+  font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
 
-.ot-total-grand {
-  padding-block-start: 12px;
-  border-block-start: 1px solid var(--sf-hairline);
-  font-size: 15px;
-}
-
-.ot-total-grand dt {
-  color: var(--ms-color-fg);
-  font-weight: 550;
-}
-
-.ot-total-grand dd {
-  font-weight: 600;
-}
-
-/* --------------------------------- 支持区 --------------------------------- */
+/* --------------------------------- 支持块 --------------------------------- */
 
 .ot-support {
+  gap: 14px;
+}
+
+.ot-support-row {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  padding-block-start: 18px;
-  border-block-start: 1px solid var(--sf-hairline);
+}
+
+/* 主 CTA 沉到块底,与左栏末块底边对齐 */
+.ot-support .ms-divider {
+  margin-block-start: auto;
 }
 
 /* 帮助浮层:限宽 + 编辑式行距 */
@@ -255,4 +371,59 @@
   font-size: 13px;
   line-height: 1.55;
   color: var(--ms-color-fg-muted);
+}
+
+.ot-link {
+  color: var(--ms-color-link);
+  text-underline-offset: 2px;
+}
+
+/* --------------------------------- 兜底页 --------------------------------- */
+
+.ot-missing {
+  padding-block: clamp(48px, 8vw, 96px);
+}
+
+/* ------------------------------- 响应式收敛 ------------------------------- */
+
+@media (max-width: 960px) {
+  .ot-body {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .ot-hero-top {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .ot-hero-word {
+    justify-self: start;
+    text-align: left;
+  }
+
+  .ot-track {
+    margin-inline-start: 0;
+  }
+
+  .ot-line {
+    grid-template-columns: 20px 52px minmax(0, 1fr);
+    row-gap: 6px;
+  }
+
+  .ot-line-price {
+    grid-column: 3;
+    justify-self: start;
+  }
+
+  .ot-total-grid {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  /* 窄屏收成单列:行分组由 columns={2} 在 JS 侧定死,只能在 CSS 把行内网格压成一列 */
+  .ot-summary .ms-descriptions__row {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }

@@ -2,108 +2,115 @@ import {
   Button,
   Carousel,
   FloatButton,
+  List,
   Popover,
   Reveal,
   RevealGroup,
+  ScrollArea,
+  Statistic,
   Tag,
-  type TagTone,
 } from '@magic-scope/react';
-import type { ComponentPropsWithoutRef, CSSProperties } from 'react';
-import { ProductVisual, type VisualAspect } from '../components/ProductVisual';
+import type { ComponentPropsWithoutRef } from 'react';
+import { ProductVisual } from '../components/ProductVisual';
 import { categories, featuredProducts, products } from '../data/products';
-import type { Product, ProductBadge } from '../data/types';
+import type { CategoryId, Product, ProductBadge } from '../data/types';
 import { money } from '../lib/format';
 import { RouterLink } from '../lib/router';
 import './Home.css';
 
 /* ============================================================================
- * Home —— 买家首页(全站门面)。
- * 编排:Hero 进场(mount)→ 分类带 / 精选 / 宣言带滚动 reveal(view + stagger)
- * → Back in stock 轮播 → 收尾陈述带;右下角常驻 FloatButton + Popover 聊天入口。
- * 动效克制:距离 ≤ 22px、时长 500~700ms,全部经 --ms-motion-scale 门控。
+ * Home —— 买家首页(全站门面),版式语言 = Chromatic Grid。
+ *
+ * 页面不是「标题 + 等分卡片」一节节堆下去,而是由**不等分色块拼贴**成的版面:
+ *   1 首屏 bento(1.72fr / 1fr / 1fr,主色满色块压住左侧两行)
+ *   2 品类带(1.25 / 1 / 1 / .85,四个品类色满色块)
+ *   3 精选货架(4 列里混入 2×2 大卡与横向宽卡,打破等分)
+ *   4 数字墙(左超大数字 · 右密集清单 —— 密度反差)
+ *   5 满出血横滚(ScrollArea)
+ * 色块承担结构(标题 / 大数字 / 品类识别),不是装饰;尺度上超大与 11px 并置。
+ *
+ * 动效:首屏 mount 编排,下方各区 view + stagger;距离 ≤18px、时长 600ms,
+ * 全部经 --ms-motion-scale 门控(弱=打折,关=瞬时)。不用 parallax / scrub。
  * ========================================================================== */
 
-/* 延迟统一乘全局动效乘子:动效「弱/关」时延迟同步缩短/归零,不留呆等。 */
-const dly = (value: number) => `calc(${value}ms * var(--ms-motion-scale, 1))`;
-
-/* 徽标文案与色调:克制映射,不做大红大绿。 */
-const BADGE_META: Record<ProductBadge, { label: string; tone: TagTone }> = {
-  new: { label: 'New', tone: 'accent' },
-  bestseller: { label: 'Bestseller', tone: 'neutral' },
-  limited: { label: 'Limited', tone: 'warning' },
+/* 徽标文案。颜色不在这里分叉 —— 三种徽标一律墨色实心(.sf-badge),
+   颜色维度留给品类编码。 */
+const BADGE_LABEL: Record<ProductBadge, string> = {
+  new: 'New',
+  bestseller: 'Bestseller',
+  limited: 'Limited',
 };
 
-/* Hero collage 两件主角(featured 数据里取,缺失时该块自动不渲染)。 */
-const HERO_MAIN = products.find((p) => p.id === 'halo-lamp');
-const HERO_SIDE = products.find((p) => p.id === 'arc-bookend');
+const CATEGORY_LABEL = new Map<CategoryId, string>(categories.map((c) => [c.id, c.label]));
 
-/* 精选 4 款 + 轮播 6 款非精选(静态目录,模块级算一次)。 */
-const EDIT_PICKS = featuredProducts.slice(0, 4);
-const RESTOCK = products.filter((p) => !p.featured).slice(0, 6);
+/* ------------------------------ 版面选品(静态目录,模块级算一次) ------------------------------ */
 
-/* 分类卡:用该分类第一款商品的色场做低饱和底。 */
-const CATEGORY_CARDS = categories.flatMap((category) => {
-  const rep = products.find((p) => p.category === category.id);
-  if (!rep) return [];
-  const count = products.filter((p) => p.category === category.id).length;
-  return [{ category, rep, count }];
-});
+/** 首屏右上白块的主角。 */
+const SHOT = products.find((p) => p.id === 'halo-lamp');
 
-function chunk<T>(list: readonly T[], size: number): T[][] {
-  const out: T[][] = [];
-  for (let i = 0; i < list.length; i += size) out.push(list.slice(i, i + size));
-  return out;
-}
+/** 货架:大卡 / 两张常规 / 横向宽卡 —— 恰好四个品类各一件。 */
+const SHELF_LEAD = products.find((p) => p.id === 'duna-vase');
+const SHELF_WIDE = products.find((p) => p.id === 'arc-bookend');
+const SHELF_TAKEN = new Set(['duna-vase', 'halo-lamp', 'arc-bookend']);
+const SHELF_MID = featuredProducts.filter((p) => !SHELF_TAKEN.has(p.id));
+
+/** 满出血横滚:非精选的全部七款(要真的滚得动,才配得上「Scroll →」)。 */
+const RESTOCK = products.filter((p) => !p.featured);
+
+/** 品类带:编号 + 件数 + 该品类一句话。 */
+const CATEGORY_TILES = categories.map((category, i) => ({
+  category,
+  index: String(i + 1).padStart(2, '0'),
+  count: products.filter((p) => p.category === category.id).length,
+}));
+
+/* 跑马灯:每条前一个品类色点,四条重复两遍以无缝循环。 */
+const TICKER: { cat: CategoryId; text: string }[] = [
+  { cat: 'ceramics', text: 'Complimentary shipping over $150' },
+  { cat: 'lighting', text: 'Autumn lighting has landed' },
+  { cat: 'textiles', text: 'Repairs booked within 48 hours' },
+  { cat: 'objects', text: 'Studio open Thursdays, 10:00–18:00' },
+];
+
+/* 首屏小柱状图:八根不等高的迷你柱,读作「每月修复量」的轮廓。 */
+const SPARK = [0.38, 0.62, 0.47, 0.83, 0.66, 1, 0.55, 0.76];
+
+/* 数字墙右侧的密集清单 —— 四行,每行:编号 / 标题 / 两行说明 / 右侧数值。 */
+const FACTS = [
+  {
+    no: '01',
+    title: 'Made where it is sold',
+    copy: 'Thrown, wired and woven at the Mews. Nothing drop-shipped, nothing white-labelled, no third factory.',
+    value: '100%',
+  },
+  {
+    no: '02',
+    title: 'Mended in nine days',
+    copy: 'Chipped rim, frayed edge, dead driver — send it back and we mend it. No receipt, no warranty window.',
+    value: '9d',
+  },
+  {
+    no: '03',
+    title: 'Out of the door in two days',
+    copy: 'Orders leave East London within 48 hours, boxed in moulded pulp. No plastic film, no void fill.',
+    value: '48h',
+  },
+  {
+    no: '04',
+    title: 'Kept, not returned',
+    copy: 'Fewer than three in a hundred come back. We would rather you buy once and stop looking.',
+    value: '2.8%',
+  },
+];
+
+/* 数字墙左侧色块里的轮换短句(库 Carousel:fade + 自动播,无箭头无指示点)。 */
+const STUDIO_NOTES = [
+  'Fifty designs released since 2019. Thirty-eight retired since. Twelve still earn their shelf.',
+  'Nothing is added because a season asks for it. A piece ships when it stops being improvable.',
+  'The catalogue shrinks about as often as it grows. That is the whole idea.',
+];
 
 /* ------------------------------ 行内线性图标 ------------------------------ */
-/* 15px / stroke 1.2,与 SiteHeader 的图标同一套笔触语言。 */
-
-const BatchIcon = (
-  <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true">
-    <ellipse cx="7.5" cy="4.7" rx="5" ry="2.4" stroke="currentColor" strokeWidth="1.2" />
-    <path
-      d="M2.5 7.5c0 1.33 2.24 2.4 5 2.4s5-1.07 5-2.4M2.5 10.2c0 1.33 2.24 2.4 5 2.4s5-1.07 5-2.4"
-      stroke="currentColor"
-      strokeWidth="1.2"
-      strokeLinecap="round"
-    />
-  </svg>
-);
-
-const LeafIcon = (
-  <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true">
-    <path
-      d="M12.2 2.5c-5.5.3-8.7 3-8.7 6.7 0 1.8 1.3 3 3 3 3.7 0 6.2-3.3 6.5-8.8a.8.8 0 0 0-.8-.9Z"
-      stroke="currentColor"
-      strokeWidth="1.2"
-      strokeLinejoin="round"
-    />
-    <path
-      d="M4.1 11.5c1.8-2.8 3.9-5 6.4-6.7"
-      stroke="currentColor"
-      strokeWidth="1.2"
-      strokeLinecap="round"
-    />
-  </svg>
-);
-
-const RepairIcon = (
-  <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true">
-    <path
-      d="M12.2 7.5a4.7 4.7 0 1 1-1.5-3.45"
-      stroke="currentColor"
-      strokeWidth="1.2"
-      strokeLinecap="round"
-    />
-    <path
-      d="M12.5 2.4v2.3h-2.3"
-      stroke="currentColor"
-      strokeWidth="1.2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
 
 const ChatIcon = (
   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
@@ -117,42 +124,59 @@ const ChatIcon = (
   </svg>
 );
 
-/* ------------------------------- 商品卡片 -------------------------------- */
+/* ------------------------------- 商品拼贴件 ------------------------------- */
 
 /**
- * 商品卡 —— 视觉 + 徽标 + 名称/一句话/价格。
- * 透传 ...rest:RevealGroup 会经 cloneElement 注入 data-ms-reveal / style(--i),
+ * 货架 / 横滚共用的商品卡 —— 视觉 + 品类点 + 名称 / 一句话 / 价格。
+ * 透传 ...rest:RevealGroup 经 cloneElement 注入 data-ms-reveal / style(--i),
  * 必须一路落到 <a> 上,滚动 reveal 才生效。
  */
 function ProductCard({
   product,
-  aspect = 'portrait',
+  span = 'unit',
+  className,
   ...rest
-}: { product: Product; aspect?: VisualAspect } & Omit<ComponentPropsWithoutRef<'a'>, 'href'>) {
+}: { product: Product; span?: 'unit' | 'lead' | 'wide' } & Omit<
+  ComponentPropsWithoutRef<'a'>,
+  'href'
+>) {
+  const badge = product.badges?.[0];
   return (
-    <RouterLink to={`/products/${product.id}`} className="sf-product-card home-card" {...rest}>
-      <div className="home-card-media">
-        {product.badges && product.badges.length > 0 && (
-          <div className="home-card-badges">
-            {product.badges.map((badge) => (
-              <Tag key={badge} size="sm" variant="soft" tone={BADGE_META[badge].tone}>
-                {BADGE_META[badge].label}
-              </Tag>
-            ))}
-          </div>
-        )}
-        <ProductVisual product={product} aspect={aspect} />
-      </div>
+    // rest 先摊开(RevealGroup 注入的 data-ms-reveal / style 在里面),
+    // 再写自己的 className —— 外部传入的类名手动并进来,不能被覆盖掉
+    <RouterLink
+      {...rest}
+      to={`/products/${product.id}`}
+      data-cat={product.category}
+      className={[
+        'sf-product-card sf-lift',
+        span === 'lead' ? 'sf-product-card-lg' : '',
+        span === 'wide' ? 'sf-product-card-wide' : '',
+        className ?? '',
+      ]
+        .filter(Boolean)
+        .join(' ')}
+    >
+      <ProductVisual product={product} aspect={span === 'wide' ? 'square' : 'portrait'} />
       <div className="sf-product-meta">
-        <div>
-          <div className="sf-product-name">{product.name}</div>
-          <div className="sf-product-tagline">{product.tagline}</div>
-        </div>
-        <div className="sf-product-price">
-          {product.compareAt != null && (
-            <span className="sf-price-compare">{money(product.compareAt)}</span>
+        <div className="sf-product-tagrow">
+          <span className="sf-dot sf-cat-dot" />
+          <span className="sf-product-cat">{CATEGORY_LABEL.get(product.category)}</span>
+          {badge && (
+            <Tag size="sm" variant="solid" tone="neutral" className="sf-badge">
+              {BADGE_LABEL[badge]}
+            </Tag>
           )}
-          {money(product.price)}
+        </div>
+        <div className="sf-product-name">{product.name}</div>
+        <div className="sf-product-row">
+          <small>{product.tagline}</small>
+          <span className="sf-product-price">
+            {product.compareAt != null && (
+              <span className="sf-price-compare">{money(product.compareAt)}</span>
+            )}
+            {money(product.price)}
+          </span>
         </div>
       </div>
     </RouterLink>
@@ -162,225 +186,220 @@ function ProductCard({
 /* --------------------------------- 页面 ---------------------------------- */
 
 export function Home() {
-  /* hash 路由下 href="#approach" 会被当成路由切换(还会被滚回顶部),
-   * 页内锚点只能走 scrollIntoView;不传 behavior,交给 CSS scroll-behavior
-   * (smooth,reduced-motion 时自动 auto)。 */
-  const scrollToApproach = () => {
-    document.getElementById('approach')?.scrollIntoView();
-  };
-
   return (
     <div className="home">
-      {/* ============================ 1 · Hero ============================ */}
-      <section className="sf-section home-hero">
-        <div className="sf-container home-hero-grid">
-          <div className="home-hero-copy">
-            <Reveal trigger="mount" variant="fade" asChild>
-              <p className="sf-eyebrow">Home objects studio</p>
-            </Reveal>
-            <Reveal
-              trigger="mount"
-              variant="text-lines"
-              as="h1"
-              className="sf-display sf-display-xl home-hero-title"
-              delay={dly(90)}
-              stagger={120}
-            >
-              {'Objects for the\nhours at home.'}
-            </Reveal>
-            <Reveal trigger="mount" variant="up" distance={16} delay={dly(340)} asChild>
-              <p className="sf-lede home-hero-lede">
-                Ceramics, lighting and textiles — designed in-house, made slowly, kept for years.
-              </p>
-            </Reveal>
-            <Reveal trigger="mount" variant="up" distance={14} delay={dly(460)} asChild>
-              <div className="home-hero-cta">
-                <Button asChild size="lg">
-                  <RouterLink to="/products">Shop the collection</RouterLink>
-                </Button>
-                <button type="button" className="sf-link home-link-btn" onClick={scrollToApproach}>
-                  Our approach
-                </button>
-              </div>
-            </Reveal>
+      {/* ======================= 1 · 首屏 bento 拼贴 ======================= */}
+      {/* 整组一次 mount 观察:lead 无延迟先到,shot / stat / ticker 按 --i 错峰 */}
+      <RevealGroup
+        className="sf-tiles home-bento"
+        trigger="mount"
+        variant="up"
+        stagger={90}
+        as="section"
+      >
+        {/* lead:主色满色块,压住左侧两行 —— 版面的结构件 */}
+        <div className="sf-tile sf-tile-solid home-lead">
+          <p className="sf-kicker home-lead-kicker">Ceramics · Lighting · Textiles · Objects</p>
+          <h1 className="sf-display sf-display-xl home-lead-title">
+            Four rooms.
+            <br />
+            Four hundred decisions.
+            <br />
+            <span className="home-lead-sub">One shop that made them for you.</span>
+          </h1>
+          <div className="home-lead-foot">
+            <p className="sf-lede home-lead-lede">
+              Twelve pieces in the catalogue. Each one earns its shelf, or it goes.
+            </p>
+            <Button asChild size="lg" shape="pill" className="home-lead-cta">
+              <RouterLink to="/products?category=ceramics">Start with ceramics</RouterLink>
+            </Button>
           </div>
+          <span className="sf-spectrum home-lead-spectrum" aria-hidden="true">
+            <i />
+            <i />
+            <i />
+            <i />
+          </span>
+        </div>
 
-          {/* collage:大 portrait 压底,小 square 负 margin 叠上来 */}
-          <div className="home-hero-art">
-            {HERO_MAIN && (
-              <Reveal trigger="mount" variant="up" distance={22} delay={dly(240)} asChild>
-                <RouterLink
-                  to={`/products/${HERO_MAIN.id}`}
-                  className="home-hero-main"
-                  aria-label={`${HERO_MAIN.name} — view product`}
+        {/* shot:白块,整块可点进详情 */}
+        {SHOT && (
+          <RouterLink
+            to={`/products/${SHOT.id}`}
+            data-cat={SHOT.category}
+            className="sf-tile sf-lift home-shot"
+            aria-label={`${SHOT.name} — view product`}
+          >
+            <span className="home-shot-tagrow">
+              <Tag size="sm" variant="solid" className="home-shot-tag">
+                Restocked
+              </Tag>
+            </span>
+            <ProductVisual product={SHOT} aspect="portrait" className="home-shot-pv" />
+            <span className="home-shot-meta">
+              <span className="home-shot-name">{SHOT.name}</span>
+              <span className="sf-product-price">{money(SHOT.price)}</span>
+            </span>
+          </RouterLink>
+        )}
+
+        {/* stat1:墨色满色块 + 大数字 + 迷你柱。
+            这里刻意不用品类色 —— 讲的是维修数,与任何品类无关;首屏留「靛蓝 / 白 / 墨」
+            三段就够,四个品类色一字排开的主场留给下面的品类带,出场才有冲击。 */}
+        <div className="sf-tile sf-tile-ink home-stat home-stat-fill">
+          <p className="sf-kicker">Repaired, not replaced</p>
+          <Statistic value={1204} animateOnMount className="home-figure" />
+          <span className="home-spark" aria-hidden="true">
+            {SPARK.map((h) => (
+              <i key={h} style={{ height: `${Math.round(h * 100)}%` }} />
+            ))}
+          </span>
+        </div>
+
+        {/* stat2:白块,与左邻的满色块形成密度与色彩反差 */}
+        <div className="sf-tile home-stat home-stat-side">
+          <p className="sf-kicker">This week</p>
+          <Statistic value={6} animateOnMount className="home-figure" />
+          <p className="home-stat-note">new pieces off the wheel and onto the shelf</p>
+        </div>
+
+        {/* ticker:跨三列的墨色带,四条公告重复两遍无缝循环 */}
+        <div className="sf-ticker home-ticker">
+          <div className="sf-ticker-track">
+            {[0, 1].map((pass) =>
+              TICKER.map((item) => (
+                <span
+                  key={`${pass}-${item.cat}`}
+                  data-cat={item.cat}
+                  aria-hidden={pass === 1 || undefined}
                 >
-                  <ProductVisual product={HERO_MAIN} aspect="portrait" />
-                </RouterLink>
-              </Reveal>
-            )}
-            {HERO_SIDE && (
-              <Reveal trigger="mount" variant="up" distance={18} delay={dly(440)} asChild>
-                <RouterLink
-                  to={`/products/${HERO_SIDE.id}`}
-                  className="home-hero-side"
-                  aria-label={`${HERO_SIDE.name} — view product`}
-                >
-                  <ProductVisual product={HERO_SIDE} aspect="square" />
-                </RouterLink>
-              </Reveal>
+                  <i className="sf-dot sf-cat-dot" />
+                  {item.text}
+                </span>
+              )),
             )}
           </div>
         </div>
-      </section>
+      </RevealGroup>
 
-      {/* =========================== 2 · 分类带 =========================== */}
-      <section className="sf-section-tight">
+      {/* =========================== 2 · 品类带 =========================== */}
+      {/* RevealGroup 的 props 是封闭的(不透传 aria-*),语义外层单独包一层 nav */}
+      <nav aria-label="Shop by category">
         <RevealGroup
-          className="sf-container home-cats"
+          className="sf-tiles home-cats"
           variant="up"
           stagger={70}
-          margin="0px 0px -10% 0px"
+          margin="0px 0px -8% 0px"
         >
-          {/* reveal 注入落在包装 div 上:.home-cat 自己的 hover transition
-              简写会覆盖 reveal 过渡(同特异性、页面 CSS 后加载),必须解耦 */}
-          {CATEGORY_CARDS.map(({ category, rep, count }) => (
-            <div key={category.id}>
-              <RouterLink
-                to={`/products?category=${category.id}`}
-                className="home-cat"
-                style={
-                  {
-                    '--hc-field': rep.visual.field,
-                    '--hc-tint': rep.visual.tint,
-                    '--hc-shade': rep.visual.shade,
-                  } as CSSProperties
-                }
-              >
-                <span className="home-cat-name">{category.label}</span>
-                <span className="home-cat-count">
-                  {count} {count === 1 ? 'piece' : 'pieces'}
-                </span>
+          {CATEGORY_TILES.map(({ category, index, count }) => (
+            <RouterLink
+              key={category.id}
+              to={`/products?category=${category.id}`}
+              data-cat={category.id}
+              className="sf-tile sf-cat-fill sf-lift home-cat"
+            >
+              <span className="sf-kicker home-cat-index">
+                {index} · {count} pieces
+              </span>
+              <span className="sf-display sf-display-md home-cat-name">{category.label}</span>
+              <span className="home-cat-note">{category.blurb} →</span>
+            </RouterLink>
+          ))}
+        </RevealGroup>
+      </nav>
+
+      {/* ========================== 3 · 精选货架 ========================== */}
+      <section className="sf-tiles home-shelf">
+        <Reveal variant="up" distance={16} asChild>
+          <div className="home-shelf-head">
+            <h2 className="sf-display sf-display-lg">The pieces people keep coming back for.</h2>
+            <div className="home-shelf-aside">
+              <p className="sf-lede">
+                Four of the twelve move fastest. We restock them the week they run out, in the same
+                batch sizes as the first run.
+              </p>
+              <RouterLink to="/products" className="home-more">
+                View all twelve →
               </RouterLink>
             </div>
+          </div>
+        </Reveal>
+
+        <RevealGroup className="home-shelf-grid" variant="up" stagger={80}>
+          {SHELF_LEAD && <ProductCard product={SHELF_LEAD} span="lead" />}
+          {SHELF_MID.map((product) => (
+            <ProductCard key={product.id} product={product} />
           ))}
+          {SHELF_WIDE && <ProductCard product={SHELF_WIDE} span="wide" />}
         </RevealGroup>
       </section>
 
-      <div className="sf-container">
-        <hr className="sf-hairline" />
-      </div>
+      {/* =========================== 4 · 数字墙 =========================== */}
+      {/* 左极简(一个超大数字)· 右密集(四行清单)—— 相邻区块的密度反差 */}
+      <RevealGroup className="sf-tiles home-wall" variant="up" stagger={110} as="section">
+        <div className="sf-tile sf-cat-fill home-wall-figure" data-cat="objects">
+          <p className="sf-kicker">Since 2019</p>
+          <span className="sf-numeral home-wall-numeral">50</span>
+          {/* 轮换短句:fade + 自动播,无箭头无指示点,只作为版面上的一句话 */}
+          <Carousel
+            classNames={{ root: 'home-wall-rotator' }}
+            effect="fade"
+            arrows={false}
+            dots={false}
+            draggable={false}
+            autoplay={{ interval: 4600 }}
+            tone="neutral"
+            aria-label="Studio notes"
+          >
+            {STUDIO_NOTES.map((note) => (
+              <p key={note} className="sf-lede home-wall-note">
+                {note}
+              </p>
+            ))}
+          </Carousel>
+        </div>
 
-      {/* =========================== 3 · The edit ========================== */}
-      <section className="sf-section">
-        <div className="sf-container">
-          <Reveal variant="up" distance={16} asChild>
-            <div className="home-section-head">
-              <div>
-                <p className="sf-eyebrow">The edit</p>
-                <h2 className="sf-display sf-display-lg">The pieces we reach for.</h2>
-              </div>
-              <RouterLink to="/products" className="sf-link home-head-link">
-                View all
-              </RouterLink>
-            </div>
-          </Reveal>
-          <RevealGroup className="home-grid-4" variant="up" stagger={80}>
-            {EDIT_PICKS.map((product) => (
-              <ProductCard key={product.id} product={product} aspect="portrait" />
+        <div className="sf-tile home-wall-facts">
+          <p className="sf-kicker home-wall-facts-kicker">What that buys you</p>
+          <List marker="none" spacing="none" className="home-facts">
+            {FACTS.map((fact) => (
+              <List.Item key={fact.no} className="home-fact">
+                <span className="sf-index">{fact.no}</span>
+                <span className="home-fact-body">
+                  <span className="home-fact-title">{fact.title}</span>
+                  <span className="home-fact-copy">{fact.copy}</span>
+                </span>
+                <span className="home-fact-value">{fact.value}</span>
+              </List.Item>
+            ))}
+          </List>
+        </div>
+      </RevealGroup>
+
+      {/* ======================== 5 · 满出血横滚 ======================== */}
+      <section className="home-rail">
+        <Reveal variant="up" distance={16} asChild>
+          <div className="home-rail-head">
+            <h2 className="sf-display sf-display-md">Back in stock this week</h2>
+            <span className="sf-kicker">Scroll →</span>
+          </div>
+        </Reveal>
+        {/* 库 ScrollArea:原生滚动 + 自绘滚动条(不占布局宽) */}
+        <ScrollArea
+          orientation="horizontal"
+          type="hover"
+          classNames={{ viewport: 'home-rail-viewport' }}
+        >
+          <RevealGroup className="home-rail-track" variant="up" stagger={60} amount={0.05}>
+            {RESTOCK.map((product) => (
+              <ProductCard key={product.id} product={product} className="home-rail-card" />
             ))}
           </RevealGroup>
-        </div>
+        </ScrollArea>
       </section>
 
-      {/* ========================= 4 · 工作室宣言带 ========================= */}
-      <section id="approach" className="sf-section-tight">
-        <div className="sf-container">
-          <div className="home-approach">
-            <Reveal variant="fade" asChild>
-              <p className="sf-eyebrow">Our approach</p>
-            </Reveal>
-            {/* mask-up 默认渲染 div,heading 里只能放 phrasing 内容,故 as="span" + CSS 转块级 */}
-            <h2 className="sf-display sf-display-lg home-approach-title">
-              <Reveal variant="mask-up" as="span" className="home-approach-line">
-                Fewer, better objects.
-              </Reveal>
-              <Reveal variant="mask-up" as="span" delay={dly(140)} className="home-approach-line">
-                Kept for years, not seasons.
-              </Reveal>
-            </h2>
-            <RevealGroup className="home-values" variant="up" stagger={90}>
-              <div className="home-value">
-                <span className="home-value-icon">{BatchIcon}</span>
-                <h3 className="home-value-title">Small batches</h3>
-                <p className="home-value-copy">
-                  Each run is thrown, glazed and finished by the same pair of hands.
-                </p>
-              </div>
-              <div className="home-value">
-                <span className="home-value-icon">{LeafIcon}</span>
-                <h3 className="home-value-title">Natural materials</h3>
-                <p className="home-value-copy">
-                  Stoneware, linen, brass and oak — nothing that pretends to be something else.
-                </p>
-              </div>
-              <div className="home-value">
-                <span className="home-value-icon">{RepairIcon}</span>
-                <h3 className="home-value-title">Repairs for life</h3>
-                <p className="home-value-copy">
-                  If a piece breaks, we mend it. Every object carries a lifetime repair promise.
-                </p>
-              </div>
-            </RevealGroup>
-          </div>
-        </div>
-      </section>
-
-      {/* ======================== 5 · Back in stock ======================== */}
-      <section className="sf-section home-restock">
-        <div className="sf-container">
-          <Reveal variant="up" distance={16} asChild>
-            <div className="home-section-head">
-              <div>
-                <p className="sf-eyebrow">Restocked this week</p>
-                <h2 className="sf-display sf-display-lg">Back in stock.</h2>
-              </div>
-            </div>
-          </Reveal>
-          {/* 库 Carousel 按整屏翻页(slide = 一屏),所以 6 款按 3 张/屏分组成
-              2 屏横滑;箭头翻页 + 指针拖拽,不自动播,dots 关掉免遮商品文字。 */}
-          <Reveal variant="fade" delay={dly(120)}>
-            <Carousel
-              aria-label="Back in stock"
-              tone="neutral"
-              loop={false}
-              dots={false}
-              autoplay={false}
-            >
-              {chunk(RESTOCK, 3).map((row) => (
-                <div key={row.map((p) => p.id).join('-')} className="home-restock-row">
-                  {row.map((product) => (
-                    <ProductCard key={product.id} product={product} aspect="square" />
-                  ))}
-                </div>
-              ))}
-            </Carousel>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* ========================= 6 · 收尾陈述带 ========================= */}
-      <section className="sf-section-tight home-visit">
-        <Reveal variant="fade" className="sf-container home-visit-inner">
-          <p className="sf-eyebrow">Visit</p>
-          <h2 className="sf-display sf-display-md">The studio is open, Thursdays.</h2>
-          <p className="home-visit-address">14 Arden Mews, East London — 10:00 to 18:00.</p>
-          <a className="sf-link home-visit-link" href="mailto:hello@arden.studio">
-            Plan a visit
-          </a>
-        </Reveal>
-      </section>
-
-      {/* ================== 7 · 右下角聊天入口(全局浮钮) ================== */}
+      {/* ================== 6 · 右下角聊天入口(全局浮钮) ================== */}
       {/* 单个 FloatButton 自身不带固定定位(库约定),用页面级 fixed 容器落位。 */}
       <div className="home-chat">
         <Popover
@@ -391,7 +410,7 @@ export function Home() {
           <div className="home-chat-card">
             <strong className="home-chat-title">We reply within a day.</strong>
             <p className="home-chat-copy">Questions about a piece or an order — write anytime.</p>
-            <a className="sf-link home-chat-mail" href="mailto:hello@arden.studio">
+            <a className="home-chat-mail" href="mailto:hello@arden.studio">
               hello@arden.studio
             </a>
           </div>

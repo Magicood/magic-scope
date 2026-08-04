@@ -1,31 +1,21 @@
-import {
-  Badge,
-  Button,
-  Command,
-  Dropdown,
-  type DropdownItem,
-  Kbd,
-  Marquee,
-} from '@magic-scope/react';
+import { Badge, Button, Command, Dropdown, type DropdownItem, Kbd } from '@magic-scope/react';
 import { useEffect, useState } from 'react';
 import { categories, products } from '../data/products';
 import { money } from '../lib/format';
-import { navigate, RouterLink } from '../lib/router';
+import { navigate, pathnameOf, queryOf, RouterLink, useHashPath } from '../lib/router';
 import { useCart } from '../lib/store';
 import { AppearanceControl } from './AppearanceControl';
 import './SiteHeader.css';
 
 /* ============================================================================
- * SiteHeader —— 买家端页头:公告条(Marquee)+ sticky 主头部 + ⌘K 搜索(Command)。
- * 未滚动时透明融入页面;scrollY > 8 挂 data-scrolled,CSS 侧切毛玻璃半透明底。
+ * SiteHeader —— 买家端页头:白色 surface 条 + ⌘K 搜索(Command)。
+ *
+ * Chromatic Grid 的壳层规则:
+ *   · 导航项前挂品类色点(色彩=品类识别,不是装饰),当前项底色即该品类色的淡染;
+ *   · 右侧两枚 chip 一浅一深(搜索=浅底 / 购物车=墨黑实心),密度与明度都成反差;
+ *   · 公告跑马灯已移交首页首屏 bento,页头不再自带公告条。
+ * 滚动态只加一条发丝线,不做毛玻璃(白条本来就是不透明的结构件)。
  * ========================================================================== */
-
-/* 公告条文案 —— 三条克制的短句,循环滚动。 */
-const ANNOUNCEMENTS = [
-  'Complimentary shipping over $150',
-  'New lighting for autumn',
-  'Made slowly, kept for years',
-];
 
 /* 商品按分类分组(静态目录,模块级算一次即可)。 */
 const PRODUCT_GROUPS = categories
@@ -35,9 +25,9 @@ const PRODUCT_GROUPS = categories
   }))
   .filter((group) => group.items.length > 0);
 
-/* 移动端导航项(<=760px 时收进 Dropdown)。 */
+/* 移动端导航项(<=860px 时收进 Dropdown)。 */
 const MOBILE_NAV_ITEMS: DropdownItem[] = [
-  { label: 'Shop All', onSelect: () => navigate('/products') },
+  { label: 'Shop all', onSelect: () => navigate('/products') },
   { type: 'separator' },
   ...categories.map((c) => ({
     label: c.label,
@@ -122,8 +112,14 @@ const ConsoleIcon = (
 
 export function SiteHeader() {
   const cart = useCart();
+  const path = useHashPath();
   const [scrolled, setScrolled] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+
+  /* 当前所在栏目:列表页 + ?category 决定哪一项点亮(色点已给出品类身份)。 */
+  const pathname = pathnameOf(path);
+  const onListing = pathname === '/products';
+  const activeCategory = onListing ? queryOf(path).get('category') : null;
 
   /* 滚动态:scrollY > 8 挂 data-scrolled;passive 监听,卸载时 cleanup。 */
   useEffect(() => {
@@ -135,48 +131,57 @@ export function SiteHeader() {
 
   return (
     <>
-      {/* 公告条:随页面滚走,不参与 sticky */}
-      <div className="sh-announce">
-        <Marquee speed={30} gap={0} gradient gradientWidth="12%" aria-label="Store announcements">
-          {ANNOUNCEMENTS.map((text) => (
-            <span key={text} className="sh-announce-item">
-              {text}
-            </span>
-          ))}
-        </Marquee>
-      </div>
-
       <header className="sh" data-scrolled={scrolled || undefined}>
-        <div className="sf-container sh-inner">
+        <div className="sh-inner">
           <RouterLink to="/" className="sh-brand">
             Arden
           </RouterLink>
 
           <nav className="sh-nav" aria-label="Primary">
-            <RouterLink to="/products" className="sf-link sh-nav-link">
-              Shop All
+            {/* 全部:四色条即「四个品类」的图形化,与下面四个单色点同源 */}
+            <RouterLink
+              to="/products"
+              className="sh-nav-link"
+              data-active={(onListing && !activeCategory) || undefined}
+              aria-current={onListing && !activeCategory ? 'page' : undefined}
+            >
+              <span className="sf-spectrum sh-nav-spectrum" aria-hidden="true">
+                <i />
+                <i />
+                <i />
+                <i />
+              </span>
+              Shop all
             </RouterLink>
+
             {categories.map((c) => (
               <RouterLink
                 key={c.id}
                 to={`/products?category=${c.id}`}
-                className="sf-link sh-nav-link"
+                className="sh-nav-link"
+                data-cat={c.id}
+                data-active={activeCategory === c.id || undefined}
+                aria-current={activeCategory === c.id ? 'page' : undefined}
               >
+                <span className="sf-dot sf-cat-dot" aria-hidden="true" />
                 {c.label}
               </RouterLink>
             ))}
           </nav>
 
           <div className="sh-actions">
+            {/* 搜索 chip:浅底药丸 + ⌘K 键帽(键帽走 rightIcon 槽,不进省略号的 label) */}
             <Button
               variant="ghost"
               size="sm"
+              shape="pill"
+              className="sh-chip sh-search"
               leftIcon={SearchIcon}
-              aria-label="Search"
+              rightIcon={<Kbd keys="cmd+k" size="sm" className="sh-search-kbd" />}
               aria-keyshortcuts="Meta+K"
               onClick={() => setSearchOpen(true)}
             >
-              <Kbd keys="cmd+k" size="sm" className="sh-search-kbd" />
+              <span className="sh-chip-label">Search</span>
             </Button>
 
             <AppearanceControl align="end" />
@@ -184,13 +189,15 @@ export function SiteHeader() {
             {/* 角标模式:count<=0 时徽标自动不渲染,只留宿主按钮 */}
             <Badge standalone={false} count={cart.count} variant="solid" tone="primary" size="sm">
               <Button
-                variant="ghost"
+                variant="solid"
                 size="sm"
-                iconOnly
+                shape="pill"
+                className="sh-chip sh-cart"
+                leftIcon={BagIcon}
                 aria-label={cart.count > 0 ? `Open cart, ${cart.count} items` : 'Open cart'}
                 onClick={cart.openDrawer}
               >
-                {BagIcon}
+                <span className="sh-chip-label">Cart</span>
               </Button>
             </Badge>
 
@@ -227,6 +234,7 @@ export function SiteHeader() {
                   key={p.id}
                   value={p.id}
                   keywords={[category.label, p.tagline]}
+                  icon={<span className="sf-dot sf-cat-dot" data-cat={category.id} />}
                   shortcut={<span className="sh-cmd-price">{money(p.price)}</span>}
                   onSelect={() => navigate(`/products/${p.id}`)}
                 >

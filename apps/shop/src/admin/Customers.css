@@ -1,11 +1,289 @@
 /* ============================================================================
  * 后台客户页私有样式(.cst-*)—— 版面骨架走 admin.css 的 .ad-*,这里只补:
- * 搜索框宽度 / 表格单元 / HoverCard 档案卡 / 420px 抽屉档案版式。
- * 颜色一律派生自 --ms-* 语义变量,发丝线用 --sf-hairline,不写死颜色。
+ * 不等分 KPI(首块满色 + 分层配比条)/ 名册面板头 / 分层色条 / 数字块 /
+ * HoverCard 档案卡 / 420px 抽屉档案版式。
+ * 颜色一律派生自 --cat-* 与 --ms-* 语义变量,发丝线用 --sf-hairline,不写死颜色。
  * ========================================================================== */
 
+/* --------------------------- 分层色作用域(tier) --------------------------
+ * 挂 .cst-tone + data-tier 的容器内,--cst-tier 即该层的编码色。
+ * vip → objects(与主色相距最远,最跳)/ member → ceramics(主色)/ new → 中性。 */
+
+.cst-tone[data-tier="vip"] {
+  --cst-tier: var(--cat-objects);
+}
+
+.cst-tone[data-tier="member"] {
+  --cst-tier: var(--cat-ceramics);
+}
+
+.cst-tone[data-tier="new"] {
+  --cst-tier: color-mix(in oklab, var(--ms-color-fg), transparent 58%);
+}
+
+/* 分层标记:.ad-status 的色条变体(方点拉长成竖条,表格里更安静) */
+.cst-tier {
+  --ad-status-color: var(--cst-tier, var(--ms-color-fg-subtle));
+  font-weight: 600;
+}
+
+.cst-tier::before {
+  width: 4px;
+  height: 14px;
+  border-radius: 2px;
+}
+
+/* ------------------------------- KPI 行 ----------------------------------- */
+
+/* 三块不等分:超大主色块 + 两块常规 */
+.ad-kpis.cst-kpis {
+  grid-template-columns: 1.4fr 1fr 1fr;
+}
+
+/* 首块内部再拆:左超大数字 / 右密集配比清单 —— 密度反差 */
+.ad-kpi.cst-kpi-lead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 168px);
+  align-items: end;
+  gap: 22px;
+  padding: 18px 20px 20px;
+}
+
+/* Statistic 的根/标题/数字自带语义色,满色块里要跟着块自身的前景走 */
+.cst-kpis .ms-statistic {
+  color: inherit;
+}
+
+.cst-kpis .cst-kpi-k {
+  font-size: 10.5px;
+  font-weight: 650;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: inherit;
+  opacity: 0.7;
+}
+
+.cst-kpis .ms-statistic__number {
+  color: inherit;
+}
+
+.cst-kpis .cst-kpi-num {
+  font-size: clamp(52px, 5.2vw, 74px);
+  font-weight: 800;
+  letter-spacing: -0.06em;
+  line-height: 0.92;
+  font-variant-numeric: tabular-nums;
+  margin-top: 12px;
+}
+
+.cst-kpis .cst-kpi-num-sm {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  margin-top: 6px;
+}
+
+/* Statistic 的数字段自带尺寸档,让它跟随外层字号(不然 KPI 尺度对比拉不开) */
+.cst-kpis .cst-kpi-num .ms-statistic__number,
+.cst-kpis .cst-kpi-num-sm .ms-statistic__number {
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.cst-kpi-note {
+  margin: auto 0 0;
+  font-size: 12px;
+  color: var(--ms-color-fg-muted);
+}
+
+.cst-kpi-foot {
+  margin-top: auto;
+  display: grid;
+  gap: 9px;
+}
+
+.cst-kpi-foot .cst-kpi-note {
+  margin: 0;
+}
+
+/* 量感条:轨 + 填充,与配比条同语言 */
+.cst-meter {
+  position: relative;
+  display: block;
+  height: 4px;
+  border-radius: 2px;
+  background: color-mix(in oklab, var(--ms-color-fg), transparent 91%);
+}
+
+.cst-meter::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: var(--cst-meter-w, 0%);
+  border-radius: 2px;
+  background: var(--ms-color-fg);
+}
+
+/* 分层配比条:躺在主色块里,只用 on-primary 的不同浓度分级 */
+.cst-mix {
+  display: grid;
+  gap: 5px;
+  padding-bottom: 4px;
+}
+
+.cst-mix-row {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr) 22px;
+  align-items: center;
+  gap: 8px;
+  font-size: 10.5px;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.cst-mix-k {
+  opacity: 0.66;
+}
+
+.cst-mix-bar {
+  position: relative;
+  height: 5px;
+  border-radius: 2px;
+  background: color-mix(in oklab, var(--ms-color-on-primary), transparent 84%);
+}
+
+.cst-mix-bar::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: var(--cst-mix-w, 0%);
+  border-radius: 2px;
+  background: var(--ms-color-on-primary);
+}
+
+.cst-mix-row:nth-child(2) .cst-mix-bar::before {
+  background: color-mix(in oklab, var(--ms-color-on-primary), transparent 38%);
+}
+
+.cst-mix-row:nth-child(3) .cst-mix-bar::before {
+  background: color-mix(in oklab, var(--ms-color-on-primary), transparent 62%);
+}
+
+.cst-mix-n {
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+  font-size: 11.5px;
+}
+
+/* ------------------------------ 数字块(复用) ---------------------------- */
+
+/* 不等分两格:普通格 + 满墨格,抽屉与 HoverCard 共用 */
+.cst-figs {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 6px;
+}
+
+.cst-fig {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 12px 14px;
+  border-radius: var(--sf-r-sm);
+  background: color-mix(in oklab, var(--ms-color-fg), transparent 95%);
+}
+
+.cst-fig-ink {
+  background: var(--ms-color-fg);
+  color: var(--ms-color-bg);
+}
+
+.cst-fig-n {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.cst-fig-k {
+  font-size: 9.5px;
+  font-weight: 650;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.62;
+}
+
+.cst-figs-sm .cst-fig {
+  padding: 9px 11px;
+}
+
+.cst-figs-sm .cst-fig-n {
+  font-size: 19px;
+}
+
+/* ------------------------------ 名册面板 ---------------------------------- */
+
+.cst-table-card {
+  padding: 14px 12px 12px;
+}
+
+/* 面板头:左侧大号计数(尺度对比),右侧搜索 + 分层筛选 */
+.cst-table-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 14px;
+  padding: 0 6px 12px;
+  border-bottom: 1px solid var(--sf-hairline);
+  margin-bottom: 4px;
+}
+
+.cst-table-id {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.cst-table-kicker {
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ms-color-fg-subtle);
+}
+
+.cst-table-count {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 0.9;
+  font-variant-numeric: tabular-nums;
+}
+
+.cst-table-count small {
+  margin-left: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--ms-color-fg-subtle);
+}
+
+.cst-table-tools {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-bottom: 2px;
+}
+
 .cst-search {
-  width: min(280px, 100%);
+  width: min(260px, 100%);
 }
 
 /* ------------------------------- 表格单元 --------------------------------- */
@@ -18,7 +296,7 @@
 }
 
 .cst-customer-name {
-  font-weight: 500;
+  font-weight: 550;
   color: var(--ms-color-fg);
   white-space: nowrap;
   overflow: hidden;
@@ -31,10 +309,6 @@
 
 .cst-switch-cell {
   display: inline-flex;
-}
-
-.cst-table-card {
-  padding: 8px 12px 12px;
 }
 
 .cst-table-foot {
@@ -51,7 +325,7 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-  width: 248px;
+  width: 254px;
 }
 
 .cst-peek-head {
@@ -69,8 +343,9 @@
 }
 
 .cst-peek-name {
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 14.5px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
   color: var(--ms-color-fg);
 }
 
@@ -87,8 +362,6 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
-  padding-top: 10px;
-  border-top: 1px solid var(--sf-hairline);
 }
 
 .cst-peek-meta > div {
@@ -116,22 +389,53 @@
   --ms-drawer-inline: min(420px, 100vw);
 }
 
+/* 头部:tier 色窄条 + 编码行 + 大号姓名 */
 .cst-drawer-head {
   display: flex;
-  align-items: center;
-  gap: 12px;
+  flex-direction: column;
+  gap: 7px;
   min-width: 0;
+  padding-right: 28px;
+}
+
+.cst-drawer-bar {
+  width: 46px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--cst-tier, var(--ms-color-fg-subtle));
+}
+
+.cst-drawer-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.cst-drawer-tier {
+  color: var(--cst-tier, var(--ms-color-fg-muted));
+}
+
+.cst-drawer-id {
+  font-family: var(--sf-mono);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ms-color-fg-subtle);
 }
 
 .cst-drawer-name {
-  flex: 1;
-  min-width: 0;
-  font-size: 15px;
-  font-weight: 600;
+  display: block;
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  line-height: 1.04;
   color: var(--ms-color-fg);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow-wrap: anywhere;
 }
 
 .cst-profile {
@@ -148,9 +452,9 @@
 
 .cst-block-label {
   margin: 0;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--ms-color-fg-subtle);
 }
@@ -195,8 +499,8 @@
 }
 
 .cst-order-number {
-  font-size: 13px;
-  font-weight: 500;
+  font-family: var(--sf-mono);
+  font-size: 12px;
   font-variant-numeric: tabular-nums;
 }
 
@@ -206,4 +510,44 @@
   color: var(--ms-color-fg-muted);
   font-variant-numeric: tabular-nums;
   text-align: end;
+}
+
+/* ------------------------------ 响应式收敛 -------------------------------- */
+
+@media (max-width: 1180px) {
+  .ad-kpis.cst-kpis {
+    grid-template-columns: 1.35fr 1fr;
+  }
+
+  .ad-kpi.cst-kpi-lead {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 980px) {
+  .cst-table-head {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .cst-table-tools {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 760px) {
+  .ad-kpis.cst-kpis {
+    grid-template-columns: 1fr;
+  }
+
+  .ad-kpi.cst-kpi-lead {
+    grid-column: auto;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: stretch;
+    gap: 16px;
+  }
+
+  .cst-search {
+    width: 100%;
+  }
 }
