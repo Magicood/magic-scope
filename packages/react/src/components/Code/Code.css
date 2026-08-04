@@ -131,7 +131,11 @@
     transform var(--ms-dur-fast, 0.12s) var(--ms-ease-emphasized);
 }
 /* hover/focus 容器或按钮时浮现(指针设备靠悬停,键盘靠 focus-within,触屏常驻可见) */
-.ms-code--block:hover .ms-code__copy,
+@media (hover: hover) {
+  .ms-code--block:hover .ms-code__copy {
+    opacity: 1;
+  }
+}
 .ms-code--block:focus-within .ms-code__copy {
   opacity: 1;
 }

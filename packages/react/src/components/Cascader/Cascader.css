@@ -40,8 +40,10 @@
   inline-size: 100%;
 }
 
-.ms-cascader:hover:not(.ms-cascader--disabled) {
-  border-color: var(--ms-c-soft, var(--ms-color-border-strong, var(--ms-color-border)));
+@media (hover: hover) {
+  .ms-cascader:hover:not(.ms-cascader--disabled) {
+    border-color: var(--ms-c-soft, var(--ms-color-border-strong, var(--ms-color-border)));
+  }
 }
 
 .ms-cascader:focus-visible {
@@ -150,7 +152,20 @@
   color: var(--ms-color-fg-muted);
 }
 
-.ms-cascader__option:hover:not(.ms-cascader__option--disabled),
+@media (hover: hover) {
+  .ms-cascader__option:hover:not(.ms-cascader__option--disabled) {
+    background-color: var(
+      --ms-c-soft,
+      var(
+        --ms-color-surface-hover,
+        color-mix(in oklch, var(--ms-c, var(--ms-color-primary)) 12%, transparent)
+      )
+    );
+    color: var(--ms-c, var(--ms-color-primary));
+  }
+}
+
+/* 键盘/程序高亮(--active)不依赖悬停能力,守卫外保留 */
 .ms-cascader__option--active:not(.ms-cascader__option--disabled) {
   background-color: var(
     --ms-c-soft,

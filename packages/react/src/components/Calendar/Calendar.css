@@ -48,9 +48,11 @@
   cursor: pointer;
   transition: background var(--ms-dur-fast, 0.12s) var(--ms-ease-standard, ease);
 }
-.ms-cal__nav:hover {
-  background: var(--ms-color-surface-sunken);
-  color: var(--ms-color-fg);
+@media (hover: hover) {
+  .ms-cal__nav:hover {
+    background: var(--ms-color-surface-sunken);
+    color: var(--ms-color-fg);
+  }
 }
 .ms-cal__nav:focus-visible {
   outline: 2px solid var(--ms-color-focus-ring, var(--ms-c, var(--ms-color-primary)));
@@ -139,8 +141,10 @@
   overflow: hidden;
 }
 
-.ms-cal__cell:hover:not(:disabled):not(.ms-cal__cell--selected) {
-  background: var(--ms-color-surface-sunken);
+@media (hover: hover) {
+  .ms-cal__cell:hover:not(:disabled):not(.ms-cal__cell--selected) {
+    background: var(--ms-color-surface-sunken);
+  }
 }
 .ms-cal__cell:focus-visible {
   outline: 2px solid var(--ms-color-focus-ring, var(--ms-c, var(--ms-color-primary)));

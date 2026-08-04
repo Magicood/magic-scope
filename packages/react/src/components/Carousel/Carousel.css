@@ -99,10 +99,12 @@
 .ms-carousel__arrow--next {
   inset-inline-end: var(--ms-carousel-gap);
 }
-.ms-carousel__arrow:hover:not(:disabled) {
-  border-color: var(--ms-c);
-  color: var(--ms-c);
-  box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow);
+@media (hover: hover) {
+  .ms-carousel__arrow:hover:not(:disabled) {
+    border-color: var(--ms-c);
+    color: var(--ms-c);
+    box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow);
+  }
 }
 .ms-carousel__arrow:focus-visible {
   outline: 2px solid var(--ms-c);
@@ -179,8 +181,10 @@
     box-shadow var(--ms-dur-150, 150ms) var(--ms-ease-standard, ease),
     inline-size var(--ms-dur-150, 150ms) var(--ms-ease-standard, ease);
 }
-.ms-carousel__dot:hover {
-  background-color: color-mix(in oklch, var(--ms-c) 70%, transparent);
+@media (hover: hover) {
+  .ms-carousel__dot:hover {
+    background-color: color-mix(in oklch, var(--ms-c) 70%, transparent);
+  }
 }
 .ms-carousel__dot:focus-visible {
   outline: 2px solid var(--ms-c);

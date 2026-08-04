@@ -34,6 +34,7 @@ magic-scope 的设备适配是**一套代码 + 流式 token + 容器查询自适
 - 触控热区基线 **44px**(触屏 48px),全部由 `--ms-target-min` 驱动。
 - 放大热区只在 `@media (pointer: coarse)` 内发生——**桌面(精确指针)逐像素不变**。
 - 手机 sm 输入框字号在 `pointer: coarse` 下抬到 ≥16px,防 iOS 聚焦自动放大整页。
+- **hover 守卫(P1)**:装饰性 `:hover` 一律包 `@media (hover: hover)`,触屏(`hover: none`)无 sticky-hover;`hover` 与 `:focus-visible` 不合写(焦点样式全设备生效)。静态回归测试 `hover-guard.test.ts` 把关,功能性 hover(如 Marquee 悬停暂停)须登记该文件内 allowlist。
 
 ## 密度
 
@@ -57,16 +58,18 @@ magic-scope 的设备适配是**一套代码 + 流式 token + 容器查询自适
 
 | 组件 | 适配 |
 |---|---|
-| Dialog | 面板限高可滚(`--ms-viewport-h`)、内建关闭钮(触屏可达)、安全区内边距、打开时锁背景滚动 |
-| Popover / Select / Menu | 锚定回退链(贴边翻转)、`max-block-size` + 内部滚动、窄屏宽度上限、触屏放大热区 |
+| Dialog | 面板限高可滚(`--ms-viewport-h`)、内建关闭钮(触屏可达)、安全区内边距、打开时锁背景滚动;**P1:窄触屏(≤sm 且 coarse)非 `full` 变体转底部抽屉**(贴底满宽、仅上圆角、自底滑入) |
+| Popover / Select / Menu | 锚定回退链(贴边翻转)、`max-block-size` + 内部滚动、窄屏宽度上限、触屏放大热区;**P1:Select / Menu 窄触屏转底部抽屉**(覆盖锚定定位、限高内滚、避让 `--ms-safe-bottom`) |
 | Tooltip | 触屏改 tap-to-toggle(此前触屏完全唤不出)、非可聚焦 children 补 `tabindex` |
-| Table | 既有 `.ms-table-wrap` 横向滚动兜底、`min-inline-size: max-content` 防挤垮、长串 `overflow-wrap` |
+| Table | 既有 `.ms-table-wrap` 横向滚动兜底、`min-inline-size: max-content` 防挤垮、长串 `overflow-wrap`;**P1:窄容器(≤rune 28rem)卡片化重排**——每行一卡、td 以 `data-label`(字符串表头)前缀列名、表头 sr-only 保语义 |
 | Tabs | 标签横向滚动 + scroll-snap(防后段标签不可达)、当前标签 `scrollIntoView` |
 | Pagination | 页码 `flex-wrap` 防溢出、触屏热区达标 |
 | Button / Input / Textarea / Checkbox / Switch | 触屏热区抬到 44/48px、`min-block-size` 弹性、iOS 字号防缩放、Textarea 补 `box-sizing` |
-| Accordion / Breadcrumb | 触屏头部 / 链接热区、长内容 `overflow-wrap` |
+| Accordion / Breadcrumb | 触屏头部 / 链接热区、长内容 `overflow-wrap`;**P1:Breadcrumb 层级 >3 窄容器(≤rune)折叠为可展开省略号**(与 `maxItems` JS 折叠协同) |
 
-> sheet / 全屏变体、Table 卡片化、Breadcrumb 折叠、容器查询全面化属后续阶段(P1 / P2)。
+> 已知约束:容器查询组件(Table 卡片化 / Breadcrumb 折叠)需要**来自上下文的确定宽度**——置于 fit-content 包装(flex 内容定宽子项等)中时容器无外部宽度可依,重排不生效(Breadcrumb 已把容器化限定到 `--collapsible` 变体收窄影响面)。
+>
+> 容器查询全面化属后续阶段(P2)。
 
 ## 多框架对等
 

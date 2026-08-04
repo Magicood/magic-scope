@@ -52,9 +52,12 @@
   color: var(--ms-c, var(--ms-color-primary));
 }
 
-.ms-select:hover:not(:disabled) {
-  border-color: var(--ms-color-border-strong);
-  box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow, var(--ms-color-glow));
+/* 装饰性 hover 守卫:仅具备 hover 能力的指针生效,触屏(hover: none)不再粘滞 */
+@media (hover: hover) {
+  .ms-select:hover:not(:disabled) {
+    border-color: var(--ms-color-border-strong);
+    box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) -8px var(--ms-c-glow, var(--ms-color-glow));
+  }
 }
 
 .ms-select:focus-visible {
@@ -146,8 +149,10 @@
   opacity: 0.7;
   transition: opacity var(--ms-dur-fast) var(--ms-ease-standard);
 }
-.ms-select__tag-remove:hover {
-  opacity: 1;
+@media (hover: hover) {
+  .ms-select__tag-remove:hover {
+    opacity: 1;
+  }
 }
 
 /* —— 尺寸(逻辑属性 + 随密度缩放) —— */
@@ -408,6 +413,38 @@
   .ms-select__option {
     min-block-size: var(--ms-target-min);
     padding-block: var(--ms-space-3);
+  }
+}
+
+/* —— P1 窄触屏(≤sm 30rem 且 coarse 指针):下拉转底部抽屉(原生 select 的移动端惯例)——
+   覆盖锚定 / 降级定位为贴底满宽 sheet、仅上圆角、自底滑入,根治窄屏锚定浮层出界与密集误点。
+   置于两个 @supports 定位块之后:同层同特异性,窄触屏时后者胜出。
+   仅触屏生效:桌面窄窗口(精确指针)与宽屏维持锚定下拉,逐像素不变。 */
+@media (max-width: 30rem) and (pointer: coarse) {
+  .ms-select__list {
+    position: fixed;
+    position-area: none;
+    position-try-fallbacks: none;
+    inset: auto 0 0 0;
+    margin: 0;
+    inline-size: 100%;
+    min-inline-size: 0;
+    max-inline-size: 100%;
+    max-block-size: min(60svh, calc(var(--ms-viewport-h) - var(--ms-space-10)));
+    border-block-end: none;
+    border-radius: var(--ms-radius-lg) var(--ms-radius-lg) 0 0;
+    /* 收起态落于屏下,入场自底上滑 */
+    transform: translateY(100%);
+  }
+  .ms-select__list:popover-open,
+  .ms-select__list[data-open] {
+    transform: translateY(0);
+  }
+  @starting-style {
+    .ms-select__list:popover-open,
+    .ms-select__list[data-open] {
+      transform: translateY(100%);
+    }
   }
 }
 

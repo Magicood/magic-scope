@@ -119,8 +119,10 @@
   transition: background-color var(--ms-dur-fast) var(--ms-ease-standard);
 }
 
-.ms-transfer__item:hover:not(.ms-transfer__item--disabled) {
-  background-color: var(--ms-color-surface-raised);
+@media (hover: hover) {
+  .ms-transfer__item:hover:not(.ms-transfer__item--disabled) {
+    background-color: var(--ms-color-surface-raised);
+  }
 }
 
 .ms-transfer__item--checked {
@@ -194,10 +196,12 @@
     transform var(--ms-dur-fast) var(--ms-ease-standard);
 }
 
-.ms-transfer__op-button:hover:not(:disabled) {
-  border-color: var(--ms-color-primary);
-  color: var(--ms-color-primary);
-  background-color: var(--ms-color-surface-raised);
+@media (hover: hover) {
+  .ms-transfer__op-button:hover:not(:disabled) {
+    border-color: var(--ms-color-primary);
+    color: var(--ms-color-primary);
+    background-color: var(--ms-color-surface-raised);
+  }
 }
 
 .ms-transfer__op-button:active:not(:disabled) {

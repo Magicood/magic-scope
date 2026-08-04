@@ -48,14 +48,16 @@
   background-color: var(--ms-c-soft);
   color: var(--ms-c);
 }
-.ms-tag--soft:hover {
-  background-image: linear-gradient(
-    160deg,
-    color-mix(in oklch, var(--ms-c) 32%, transparent),
-    color-mix(in oklch, var(--ms-c) 18%, transparent)
-  );
-  box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) -6px
-    color-mix(in oklch, var(--ms-c-glow) 75%, transparent);
+@media (hover: hover) {
+  .ms-tag--soft:hover {
+    background-image: linear-gradient(
+      160deg,
+      color-mix(in oklch, var(--ms-c) 32%, transparent),
+      color-mix(in oklch, var(--ms-c) 18%, transparent)
+    );
+    box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) -6px
+      color-mix(in oklch, var(--ms-c-glow) 75%, transparent);
+  }
 }
 
 /* —— variant: solid 实底(发光),tone 主色 + on-c 前景 —— */
@@ -63,10 +65,12 @@
   background-color: var(--ms-c);
   color: var(--ms-on-c);
 }
-.ms-tag--solid:hover {
-  background-color: var(--ms-c-hover);
-  box-shadow: 0 0 calc(10px * var(--ms-fx-glow, 1)) -6px
-    color-mix(in oklch, var(--ms-c-glow) 92%, transparent);
+@media (hover: hover) {
+  .ms-tag--solid:hover {
+    background-color: var(--ms-c-hover);
+    box-shadow: 0 0 calc(10px * var(--ms-fx-glow, 1)) -6px
+      color-mix(in oklch, var(--ms-c-glow) 92%, transparent);
+  }
 }
 
 /* —— variant: outline 描边,透明底 + tone 边与字 —— */
@@ -75,16 +79,20 @@
   border-color: color-mix(in oklch, var(--ms-c) 60%, transparent);
   color: var(--ms-c);
 }
-.ms-tag--outline:hover {
-  border-color: var(--ms-c);
-  background-color: color-mix(in oklch, var(--ms-c) 8%, transparent);
-  box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) -6px
-    color-mix(in oklch, var(--ms-c-glow) 65%, transparent);
+@media (hover: hover) {
+  .ms-tag--outline:hover {
+    border-color: var(--ms-c);
+    background-color: color-mix(in oklch, var(--ms-c) 8%, transparent);
+    box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) -6px
+      color-mix(in oklch, var(--ms-c-glow) 65%, transparent);
+  }
 }
 
-/* hover 克制的悬浮微抬(装饰位移,motion-scale 调制) */
-.ms-tag:hover {
-  transform: translateY(calc(-1px * var(--ms-motion-scale, 1)));
+@media (hover: hover) {
+  /* hover 克制的悬浮微抬(装饰位移,motion-scale 调制) */
+  .ms-tag:hover {
+    transform: translateY(calc(-1px * var(--ms-motion-scale, 1)));
+  }
 }
 
 /* closable 时让出右侧内边距给移除按钮 */
@@ -175,11 +183,13 @@
   font-size: 0.8125rem;
 }
 
-.ms-tag__close:hover {
-  background-color: color-mix(in oklch, currentcolor 24%, transparent);
-  /* hover 时按钮自身泛起 tone 微光(收敛) */
-  box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) -4px
-    color-mix(in oklch, var(--ms-c-glow) 70%, transparent);
+@media (hover: hover) {
+  .ms-tag__close:hover {
+    background-color: color-mix(in oklch, currentcolor 24%, transparent);
+    /* hover 时按钮自身泛起 tone 微光(收敛) */
+    box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) -4px
+      color-mix(in oklch, var(--ms-c-glow) 70%, transparent);
+  }
 }
 
 /* 按下时克制回弹,位移量受 motion-scale 调制 */

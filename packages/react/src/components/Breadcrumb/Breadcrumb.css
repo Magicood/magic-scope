@@ -6,6 +6,16 @@
   max-inline-size: 100%;
 }
 
+/* 容器查询锚:仅折叠可用时(层级 >3,见 Breadcrumb.tsx)建立容器,
+   窄容器折叠对父容器而非视口自适应(对齐 Timeline/Grid 的变体级容器先例)。
+   inline-size containment 后宽度不能再由内容决定,须显式占满父宽;
+   已知约束:置于 fit-content 包装(如 flex 内容定宽子项)中时容器无外部宽度可依,
+   折叠不生效且宽度塌陷——容器查询组件需要来自上下文的确定宽度。 */
+.ms-breadcrumb--collapsible {
+  container-type: inline-size;
+  inline-size: 100%;
+}
+
 /* 横向排布,允许换行,各项之间留出与分隔符匹配的呼吸感 */
 .ms-breadcrumb__list {
   display: flex;
@@ -51,12 +61,15 @@
     box-shadow var(--ms-dur-base) var(--ms-ease-standard);
 }
 
-.ms-breadcrumb__link:hover {
-  color: var(--ms-c-hover);
-  background-color: var(--ms-c-soft);
-  /* hover 微光收敛:模糊半径乘 --ms-fx-glow,可被总闸关断 */
-  box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) -6px
-    color-mix(in oklch, var(--ms-c-glow) 70%, transparent);
+/* 装饰性 hover 守卫:仅具备 hover 能力的指针生效,触屏(hover: none)不再粘滞 */
+@media (hover: hover) {
+  .ms-breadcrumb__link:hover {
+    color: var(--ms-c-hover);
+    background-color: var(--ms-c-soft);
+    /* hover 微光收敛:模糊半径乘 --ms-fx-glow,可被总闸关断 */
+    box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) -6px
+      color-mix(in oklch, var(--ms-c-glow) 70%, transparent);
+  }
 }
 
 .ms-breadcrumb__link:active {
@@ -118,11 +131,13 @@
     box-shadow var(--ms-dur-base) var(--ms-ease-standard);
 }
 
-.ms-breadcrumb__ellipsis:hover {
-  color: var(--ms-c-hover);
-  background-color: var(--ms-c-soft);
-  box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) -6px
-    color-mix(in oklch, var(--ms-c-glow) 70%, transparent);
+@media (hover: hover) {
+  .ms-breadcrumb__ellipsis:hover {
+    color: var(--ms-c-hover);
+    background-color: var(--ms-c-soft);
+    box-shadow: 0 0 calc(8px * var(--ms-fx-glow, 1)) -6px
+      color-mix(in oklch, var(--ms-c-glow) 70%, transparent);
+  }
 }
 
 .ms-breadcrumb__ellipsis:focus-visible {
@@ -176,4 +191,25 @@
   box-shadow:
     0 0 0 2px var(--ms-color-bg),
     0 0 0 4px var(--ms-color-focus-ring);
+}
+
+/* —— P1 窄容器折叠 ——
+   层级 >3 且未展开时(nav 带 --collapsible,见 Breadcrumb.tsx),窄容器(≤rune 28rem)
+   把中间层级折叠为可展开的省略号,只留首项 + … + 当前项;宽容器渲染逐像素不变。 */
+
+/* 窄容器折叠占位:默认(宽容器)隐藏,仅窄容器显形 */
+.ms-breadcrumb__item--collapse {
+  display: none;
+}
+
+@container (max-inline-size: 28rem) {
+  /* 隐藏全部中间层级(含 maxItems 的 JS 省略项,由折叠占位统一接替),只留首项与当前项 */
+  .ms-breadcrumb--collapsible
+  .ms-breadcrumb__item:not(:first-child):not(:last-child):not(.ms-breadcrumb__item--collapse) {
+    display: none;
+  }
+
+  .ms-breadcrumb--collapsible .ms-breadcrumb__item--collapse {
+    display: inline-flex;
+  }
 }
