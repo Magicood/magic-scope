@@ -32,7 +32,7 @@
 | `closeIcon` | `ReactNode` | — | 自定义关闭图标(覆盖默认 ✕ 图标)。 |
 | `classNames` | `DrawerClassNames` | — | 各部件细粒度 className。 |
 | `asChild` | `boolean` | — | 把 panel 渲染为子元素(合并样式 / props 到子元素,Radix Slot 风格)。 |
-| `...props` | `ComponentPropsWithoutRef<'dialog'>` | — | 透传原生 dialog 属性(className / style / aria-* / 事件等)。 |
+| `...props` | `ComponentPropsWithoutRef<'dialog'>` | — | 透传原生 dialog 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
 

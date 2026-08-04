@@ -6,9 +6,9 @@
 
 ## 说明
 
-自研、零依赖,消费 @magic-scope/tokens 的 --ms-* 变量。
+自研、零依赖,消费 @magic-scope/tokens 的 --ms-&#42; 变量。
 
-行内默认 `&lt;code&gt;` 随正文流式;block 切到 `&lt;pre&gt;&lt;code&gt;`,保留空白、横向滚动并支持 tabSize。
+行内默认 `<code>` 随正文流式;block 切到 `<pre><code>`,保留空白、横向滚动并支持 tabSize。
 
 变体 solid / soft / outline / ghost × tone 走全库 tone resolver(只读 6 槽位,零硬编码配色);size 走流式字阶随密度缩放;mono 等宽字体可关。
 
@@ -22,10 +22,10 @@
 
 | 参数 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
-| `block` | `boolean` | `false` | 块级渲染:`&lt;pre&gt;&lt;code&gt;` + 保留空白(white-space:pre)+ 横向滚动(overflow-x:auto)。<br>默认 false → 行内 `&lt;code&gt;`(随正文流式)。 |
+| `block` | `boolean` | `false` | 块级渲染:`<pre><code>` + 保留空白(white-space:pre)+ 横向滚动(overflow-x:auto)。<br>默认 false → 行内 `<code>`(随正文流式)。 |
 | `variant` | `"solid" \| "soft" \| "outline" \| "ghost"` | `soft` | 视觉变体:实底 / 柔色 / 描边 / 幽灵。默认 soft(行内/块级都克制不抢眼)。 |
 | `tone` | `"primary" \| "accent" \| "success" \| "warning" \| "danger" \| "info" \| "neutral"` | `neutral` | 语义色调,经全库 tone resolver 派生配色(只读 6 槽位,不写死配色)。默认 neutral。 |
-| `size` | `"sm" \| "md" \| "lg"` | `md` | 尺寸档(走 --ms-type-step-* 字阶,随 data-ms-density 缩放)。默认 md。 |
+| `size` | `"sm" \| "md" \| "lg"` | `md` | 尺寸档(走 --ms-type-step-&#42; 字阶,随 data-ms-density 缩放)。默认 md。 |
 | `mono` | `boolean` | `true` | 等宽字体(--ms-font-mono)。默认 true;设 false 走继承字体(罕见,如展示比例字体代码)。 |
 | `tabSize` | `number` | — | Tab 缩进列数(仅块级有意义,映射到 tab-size)。<br>兼容:tab-size 全主流浏览器支持;行内代码通常无制表符,不渲染该属性。 |
 | `lineNumbers` | `boolean` | `false` | 行号(仅块级):为每个换行渲染计数槽。需要内容是纯文本/简单结构(按 \n 切行)。<br>兼容:基于 CSS counter,不参与选区复制(复制仍得纯代码)。 |
@@ -35,7 +35,7 @@
 | `glow` | `boolean \| "strong" \| "soft"` | — | 发光(text-shadow,受全局 --ms-fx-glow 调制;data-ms-fx=off 时消失)。视觉点缀。 |
 | `asChild` | `boolean` | `false` | 渲染为唯一子元素并合并样式/props(Slot 模式;仅非块级、非 copyable 场景)。 |
 | `classNames` | `{ code?: string; copy?: string; } \| undefined` | — | 关键子部件 className 映射。 |
-| `...props` | `ComponentPropsWithoutRef<'code'>` | — | 透传原生 code 属性(className / style / aria-* / 事件等)。 |
+| `...props` | `ComponentPropsWithoutRef<'code'>` | — | 透传原生 code 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
 

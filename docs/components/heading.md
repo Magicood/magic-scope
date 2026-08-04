@@ -36,9 +36,9 @@ level 定语义标签(h1–h6,可访问性大纲),variant 定视觉档(display/t
 | `breakWord` | `boolean` | — | 长串/URL 强制断行(overflow-wrap:anywhere),防超长无空格内容撑破。 |
 | `gradient` | `boolean \| "tone" \| "aurora"` | — | 渐变文字:true/'tone' 用 tone 槽位渐变;'aurora' 加渐变流动动画(受 motion 档调制)。<br>兼容:基于 background-clip:text,不支持环境自动回退实色。 |
 | `glow` | `boolean \| "strong" \| "soft"` | — | 发光文字(text-shadow,受全局 --ms-fx-glow 调制,data-ms-fx=off 时消失)。 |
-| `anchor` | `string \| boolean` | — | permalink 锚点(给文档/Prose 用):<br>- `true` → 由标题文本派生可读 slug 作为 id;<br>- 字符串 → 作为显式 id(作者指定 slug)。<br>显式 `id`(原生属性)始终优先。开启后 hover/聚焦标题出现可点 `#` 链接(指向 `#&lt;id&gt;`),<br>键盘可达、读屏可读(aria-label「&lt;文本&gt; 永久链接」)。 |
+| `anchor` | `string \| boolean` | — | permalink 锚点(给文档/Prose 用):<br>- `true` → 由标题文本派生可读 slug 作为 id;<br>- 字符串 → 作为显式 id(作者指定 slug)。<br>显式 `id`(原生属性)始终优先。开启后 hover/聚焦标题出现可点 `#` 链接(指向 `#<id>`),<br>键盘可达、读屏可读(aria-label「&lt;文本&gt; 永久链接」)。 |
 | `classNames` | `HeadingClassNames` | — | 关键子部件 className 注入口。 |
-| `...props` | `ComponentPropsWithoutRef<'h2'>` | — | 透传原生 h2 属性(className / style / aria-* / 事件等)。 |
+| `...props` | `ComponentPropsWithoutRef<'h2'>` | — | 透传原生 h2 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
 
@@ -53,5 +53,5 @@ level 定语义标签(h1–h6,可访问性大纲),variant 定视觉档(display/t
 | 标签 | `heading` `title` `typography` `h1-h6` `semantic` `variant` `anchor` `permalink` `prose` `polymorphic` `gradient` `glow` `balance` `magic` |
 
 ::: details 需求原文 / 设计意图
-生产级 typography 标题组件。要求:level(1-6) 定语义 hN 标签;variant 视觉档(display/title/subtitle/overline/caption,MUI 式视觉与语义解耦);复用 Text 的 family(display=Cinzel 魔法标题)/tone/weight/align/truncate/lineClamp/wrap(默认 balance 标题均衡)/gradient/glow;新增 anchor(boolean\|string)——hover 出现 # permalink 锚点(给文档/Prose 用,带 id + 可点 # 链接,a11y)。内部复用 typography.css token 与 ms-text 同款类。对标旗舰 Button/Input/Text 的留口范式(forwardRef/...rest 透传/as/asChild/classNames/composeEventHandlers)。
+生产级 typography 标题组件。要求:level(1-6) 定语义 hN 标签;variant 视觉档(display/title/subtitle/overline/caption,MUI 式视觉与语义解耦);复用 Text 的 family(display=Cinzel 魔法标题)/tone/weight/align/truncate/lineClamp/wrap(默认 balance 标题均衡)/gradient/glow;新增 anchor(boolean|string)——hover 出现 # permalink 锚点(给文档/Prose 用,带 id + 可点 # 链接,a11y)。内部复用 typography.css token 与 ms-text 同款类。对标旗舰 Button/Input/Text 的留口范式(forwardRef/...rest 透传/as/asChild/classNames/composeEventHandlers)。
 :::

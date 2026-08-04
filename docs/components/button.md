@@ -6,7 +6,7 @@
 
 ## 说明
 
-自研、零依赖,消费 @magic-scope/tokens 的 --ms-* 变量。
+自研、零依赖,消费 @magic-scope/tokens 的 --ms-&#42; 变量。
 
 完整覆盖 hover / active / focus-visible / disabled 状态与平滑过渡;solid 变体带可调发光(受顶栏「光影」开关控制)。
 
@@ -33,7 +33,7 @@
 | `fullWidth` | `boolean` | `false` | 块级铺满容器。 |
 | `glow` | `"off" \| "auto" \| "hover" \| "always"` | `auto` | 发光强度(实例级,覆盖全局 fx):auto 由变体决定 / off / hover 仅悬停 / always 常亮。 |
 | `asChild` | `boolean` | `false` | 渲染为子元素(如 &lt;a&gt; / 路由 Link)并保留按钮样式(Radix Slot 风格;由子元素自带内容)。 |
-| `...props` | `ComponentPropsWithoutRef<'button'>` | — | 透传原生 button 属性(className / style / aria-* / 事件等)。 |
+| `...props` | `ComponentPropsWithoutRef<'button'>` | — | 透传原生 button 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
 
@@ -48,5 +48,5 @@
 | 标签 | `button` `button-group` `action` `form` `tone` `loading` `icon` `as-child` |
 
 ::: details 需求原文 / 设计意图
-magic-scope 首个示例组件:验证 @magic-scope/tokens(--ms-* 变量与主题引擎)与收录流水线端到端打通。自研、零依赖,完整覆盖 hover/active/focus-visible/disabled 状态与平滑过渡,solid 变体带发光,尊重 prefers-reduced-motion。
+magic-scope 首个示例组件:验证 @magic-scope/tokens(--ms-&#42; 变量与主题引擎)与收录流水线端到端打通。自研、零依赖,完整覆盖 hover/active/focus-visible/disabled 状态与平滑过渡,solid 变体带发光,尊重 prefers-reduced-motion。
 :::

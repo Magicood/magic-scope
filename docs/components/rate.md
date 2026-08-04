@@ -6,7 +6,7 @@
 
 ## 说明
 
-自研、零依赖,消费 @magic-scope/tokens 的 --ms-* 变量。
+自研、零依赖,消费 @magic-scope/tokens 的 --ms-&#42; 变量。
 
 受控 value / 非受控 defaultValue + onChange 双通道;allowHalf 半星(指针半区 + 键盘 0.5 步进)、allowClear 再点清零、character 自定义图标(共用或逐星 render-prop)、只读 / 禁用、hover 预览高亮、每星 tooltip、showText 评分文案。
 
@@ -34,7 +34,7 @@
 | `aria-label` | `string` | — | 无障碍名称(无可见 label 时建议提供)。 |
 | `aria-labelledby` | `string` | — | 关联可见 label 的 id。 |
 | `className` | `string` | — | 附加根类名。 |
-| `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-* / 事件等)。 |
+| `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
 

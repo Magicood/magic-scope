@@ -6,7 +6,7 @@
 
 ## 说明
 
-自研、零依赖,消费 @magic-scope/tokens 的 --ms-* 变量。
+自研、零依赖,消费 @magic-scope/tokens 的 --ms-&#42; 变量。
 
 有 src 渲染 &lt;img&gt;(object-fit:cover 填充);无 src 时取 name 首字母(大写、最多 2 字)居中作占位,底色为 primary 与 surface 混色、文字 primary。圆形走 radius-full,方形走 radius-md。role="img" + aria-label=name 提供无障碍标签。
 
@@ -36,7 +36,7 @@
 | `fallback` | `ReactNode` | — | 自定义占位内容(覆盖首字母):图标 / emoji 等任意 ReactNode。 |
 | `imgProps` | `ImgHTMLAttributes<HTMLImageElement>` | — | 透传给内部 &lt;img&gt; 的原生属性(loading/decoding/srcSet/sizes/referrerPolicy 等)。 |
 | `asChild` | `boolean` | `false` | 渲染为子元素(如 &lt;a&gt; / 路由 Link)并保留头像样式与内容(Radix Slot 风格)。 |
-| `...props` | `ComponentPropsWithoutRef<'span'>` | — | 透传原生 span 属性(className / style / aria-* / 事件等)。 |
+| `...props` | `ComponentPropsWithoutRef<'span'>` | — | 透传原生 span 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
 
@@ -51,5 +51,5 @@
 | 标签 | `avatar` `data-display` `user` `image` `initials` `profile` `status` `presence` `group` `stacked` `tone` `fallback` |
 
 ::: details 需求原文 / 设计意图
-头像组件,展示用户图片或姓名首字母占位。补强到生产级深度:接全库 tone 槽位(只读 6 槽位,零硬编码配色)、name 哈希确定性配色、img 加载失败回退、状态点(presence,可脉冲)、光环/边框、circle/rounded/square 三形状、尺寸预设与 number 像素尺寸(随密度缩放)、实例级 glow、fallback 槽位、imgProps 透传、asChild 多态、AvatarGroup 重叠堆叠+余量占位。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-* 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion 与 data-ms-motion/fx 总闸。
+头像组件,展示用户图片或姓名首字母占位。补强到生产级深度:接全库 tone 槽位(只读 6 槽位,零硬编码配色)、name 哈希确定性配色、img 加载失败回退、状态点(presence,可脉冲)、光环/边框、circle/rounded/square 三形状、尺寸预设与 number 像素尺寸(随密度缩放)、实例级 glow、fallback 槽位、imgProps 透传、asChild 多态、AvatarGroup 重叠堆叠+余量占位。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-&#42; 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion 与 data-ms-motion/fx 总闸。
 :::

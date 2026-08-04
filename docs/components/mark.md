@@ -6,7 +6,7 @@
 
 ## 说明
 
-自研、零依赖,把「在纯文本里按搜索词找命中片段」拆成可独立单测、可跨框架复用的纯函数(logic.ts):多词各自全局匹配后做区间并集与重叠合并,绝不产生嵌套包裹;搜索词里的正则元字符按字面量转义处理,用户输入 . * ( ) 等也不报错。
+自研、零依赖,把「在纯文本里按搜索词找命中片段」拆成可独立单测、可跨框架复用的纯函数(logic.ts):多词各自全局匹配后做区间并集与重叠合并,绝不产生嵌套包裹;搜索词里的正则元字符按字面量转义处理,用户输入 . &#42; ( ) 等也不报错。
 
 命中片段用原生 &lt;mark&gt; 元素保证无障碍语义(辅助技术识别为「高亮 / 相关」文本),覆盖 UA 默认黄底黑字、改走全库 tone 槽位(--ms-c / --ms-c-glow)随主题换肤联动。支持区分大小写、整词匹配;空搜索词与超长无空格串都安全降级、不撑破布局;多态 as 容器与 classNames(root / hit)细粒度槽位留口。
 
@@ -26,7 +26,7 @@
 | `style` | `CSSProperties` | — | 容器内联样式。 |
 | `classNames` | `MarkClassNames` | — | 细粒度类名槽位。 |
 | `id` | `string` | — | id 透传到容器。 |
-| `...props` | `ComponentPropsWithoutRef<'span'>` | — | 透传原生 span 属性(className / style / aria-* / 事件等)。 |
+| `...props` | `ComponentPropsWithoutRef<'span'>` | — | 透传原生 span 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
 

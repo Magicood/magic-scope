@@ -6,7 +6,7 @@
 
 ## 说明
 
-自研、零依赖,消费 @magic-scope/tokens 的 --ms-* 变量。
+自研、零依赖,消费 @magic-scope/tokens 的 --ms-&#42; 变量。
 
 &lt;nav aria-label="pagination"&gt; 内含上一页 / 页码 / 下一页:当前页 primary 实底 + aria-current,其余 ghost;页数超出可展示槽位时用省略号占位折叠;首尾页禁用对应方向键。键盘可达,focus-visible 显示发光环。受控 page,翻页走 onPageChange。
 
@@ -32,15 +32,15 @@
 | `pageSize` | `number` | — | 每页条数。传入即受控;不传则使用 pageSizeOptions&#91;0] 作非受控默认。 |
 | `pageSizeOptions` | `number[]` | `[10, 20, 50, 100]` | 每页条数候选,提供时渲染 page size 选择器。默认 &#91;10, 20, 50, 100]。 |
 | `showSizeChanger` | `boolean` | — | 是否显示每页条数选择器(需 totalItems 才有意义)。默认在提供 pageSizeOptions 且有 totalItems 时显示。 |
-| `showTotal` | `((total: number, range: [number, number]) => ReactNode)` | — | 显示总数/区间文案。`(total, range) =&gt; ReactNode`,range 为当前页覆盖的 &#91;start, end]。 |
+| `showTotal` | `((total: number, range: [number, number]) => ReactNode)` | — | 显示总数/区间文案。`(total, range) => ReactNode`,range 为当前页覆盖的 &#91;start, end]。 |
 | `showQuickJumper` | `boolean` | `false` | 显示快速跳页输入框。 |
 | `prevIcon` | `ReactNode` | — | 上一页图标(替换默认 CSS 箭头)。 |
 | `nextIcon` | `ReactNode` | — | 下一页图标。 |
-| `renderItem` | `((item: PaginationRenderItem) => ReactNode)` | — | 自定义渲染单个分页项(页码 / 箭头 / 省略号)。返回的节点替换默认内容,<br>仍由组件包裹 `&lt;li&gt;` 与按钮容器并接管点击。返回 `null` 用默认渲染。 |
-| `itemRender` | `((page: number, type: PaginationItemType, originalElement: ReactNode) => ReactNode)` | — | 包装页码项为自定义元素(如 `&lt;a href&gt;`)。优先级高于内部按钮:<br>返回的元素由你负责承载内容,组件仍会 compose 其 onClick 触发翻页。 |
+| `renderItem` | `((item: PaginationRenderItem) => ReactNode)` | — | 自定义渲染单个分页项(页码 / 箭头 / 省略号)。返回的节点替换默认内容,<br>仍由组件包裹 `<li>` 与按钮容器并接管点击。返回 `null` 用默认渲染。 |
+| `itemRender` | `((page: number, type: PaginationItemType, originalElement: ReactNode) => ReactNode)` | — | 包装页码项为自定义元素(如 `<a href>`)。优先级高于内部按钮:<br>返回的元素由你负责承载内容,组件仍会 compose 其 onClick 触发翻页。 |
 | `className` | `string` | — | 组件根 nav 自身 className。 |
 | `classNames` | `PaginationClassNames` | — | 细分槽位 className。 |
-| `...props` | `ComponentPropsWithoutRef<'nav'>` | — | 透传原生 nav 属性(className / style / aria-* / 事件等)。 |
+| `...props` | `ComponentPropsWithoutRef<'nav'>` | — | 透传原生 nav 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
 

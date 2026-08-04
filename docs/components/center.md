@@ -25,7 +25,7 @@ axis / gap / padding / minBlockSize 均支持「单值或断点对象」响应�
 | `gap` | `Responsive<SpaceValue>` | — | 子项间距(多个子节点时)。数字 = 间距档(映射 `--ms-space-*`,档位 0/1/2/3/4/6/8),<br>字符串 = 任意 CSS 长度(逃生舱)。支持断点对象,如 `{ base: 2, md: 4 }`。 |
 | `padding` | `Responsive<SpaceValue>` | — | 内边距(逻辑属性 `padding`,RTL 友好)。同 `gap` 取值规则。支持断点对象。 |
 | `minBlockSize` | `Responsive<SizeValue>` | — | 撑起最小高度(逻辑属性 `min-block-size`)。数字按 px,字符串原样<br>(如 `'100dvh'` / `'var(--ms-viewport-h)'`)。支持断点对象。常用于整屏垂直居中。 |
-| `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-* / 事件等)。 |
+| `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
 

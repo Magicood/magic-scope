@@ -34,7 +34,7 @@ role=toolbar + roving tabindex 的复合动作容器,聚合按钮 / 链接 / 分
 | `value` | `string \| string[] \| null` | — | 受控值(single 传 string\|null,multiple 传 string&#91;])。 |
 | `defaultValue` | `string \| string[] \| null` | — | 非受控初始值。 |
 | `allowDeselect` | `boolean` | `false` | single 模式下点击已选项是否允许取消(回到无选中)。默认 false。 |
-| `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-* / 事件等)。 |
+| `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
 

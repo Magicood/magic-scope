@@ -25,7 +25,7 @@ bordered 表格态、size 三档随密度缩放、colon 冒号、tone 七色语�
 | `span` | `number` | — | 跨列数(占用多少逻辑列;默认 1)。超过本行剩余列会被收窄到剩余宽度。 |
 | `className` | `string` | — | 该项的内容部件附加 className。 |
 | `labelClassName` | `string` | — | 该项标签部件附加 className。 |
-| `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-* / 事件等)。 |
+| `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
 

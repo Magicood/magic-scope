@@ -37,7 +37,7 @@
 | `inputAriaLabel` | `string` | — | 展示态 input 的可访问名(aria-label)。默认取 i18n select.placeholder。 |
 | `renderPreview` | `((props: EditablePreviewRenderProps) => ReactNode)` | — | 自定义展示态渲染(替换默认展示态)。 |
 | `renderEdit` | `((props: EditableEditRenderProps) => ReactNode)` | — | 自定义编辑态渲染(替换默认 input / textarea)。 |
-| `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-* / 事件等)。 |
+| `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
 

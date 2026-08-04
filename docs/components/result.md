@@ -6,7 +6,7 @@
 
 ## 说明
 
-自研、零依赖,消费 @magic-scope/tokens 的 --ms-* 变量。
+自研、零依赖,消费 @magic-scope/tokens 的 --ms-&#42; 变量。
 
 status 七态派生默认图标与 tone 柔底发光圆,HTTP 异常另给默认标题;tone 可显式覆盖配色,size 随 data-ms-density 缩放。title / subtitle / extra / children 四槽位各带细粒度 classNames;icon 传 ReactNode 覆盖、传 false 关闭整区;多态 as 改根标签、asChild 合并到子元素。
 
@@ -26,7 +26,7 @@ status 七态派生默认图标与 tone 柔底发光圆,HTTP 异常另给默认�
 | `classNames` | `ResultClassNames` | — | 各部件细粒度 className。 |
 | `as` | `ElementType` | — | 多态:改变根元素标签(如 'section' / 'main')。默认 'div'。与 asChild 互斥。 |
 | `asChild` | `boolean` | `false` | 渲染为子元素(把样式 / props 合并到子元素,Radix Slot 风格;由子元素自带内容)。<br>与子部件槽位互斥(此模式下不渲染内部图标/标题等结构)。 |
-| `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-* / 事件等)。 |
+| `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
 

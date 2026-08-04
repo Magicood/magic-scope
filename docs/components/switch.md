@@ -6,11 +6,11 @@
 
 ## 说明
 
-自研、零依赖,消费 @magic-scope/tokens 的 --ms-* 变量。
+自研、零依赖,消费 @magic-scope/tokens 的 --ms-&#42; 变量。
 
 视觉隐藏原生 checkbox 但保留其语义与可达性:完整覆盖 hover / focus-visible(发光环) / disabled 状态与平滑过渡,并尊重 prefers-reduced-motion。触控设备隐形扩竖直命中区到 --ms-target-min。
 
-受控(checked + onChange)或非受控(defaultChecked)皆可,透传全部原生 checkbox 属性(name / value / required / aria-* 等)。
+受控(checked + onChange)或非受控(defaultChecked)皆可,透传全部原生 checkbox 属性(name / value / required / aria-&#42; 等)。
 
 ## 静态预览
 
@@ -33,7 +33,7 @@
 | `labelClassName` | `string` | — | 根 label 的额外类名(同 className,语义化别名)。 |
 | `trackClassName` | `string` | — | 轨道部件类名留口。 |
 | `thumbClassName` | `string` | — | 滑块部件类名留口。 |
-| `...props` | `ComponentPropsWithoutRef<'input'>` | — | 透传原生 input 属性(className / style / aria-* / 事件等)。 |
+| `...props` | `ComponentPropsWithoutRef<'input'>` | — | 透传原生 input 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
 
@@ -48,5 +48,5 @@
 | 标签 | `switch` `toggle` `form` `checkbox` `tone` `size` `loading` `icon` |
 
 ::: details 需求原文 / 设计意图
-开关:基于 input&#91;type=checkbox] 的视觉隐藏切换控件,checked 时轨道染主色、滑块右移并发光,完整 hover/focus-visible(发光环)/disabled 状态(逻辑属性,RTL 友好,尊重 reduced-motion)。工程要求(magic-scope 通用基础组件):自研、消费 tokens 的 --ms-* 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion。
+开关:基于 input&#91;type=checkbox] 的视觉隐藏切换控件,checked 时轨道染主色、滑块右移并发光,完整 hover/focus-visible(发光环)/disabled 状态(逻辑属性,RTL 友好,尊重 reduced-motion)。工程要求(magic-scope 通用基础组件):自研、消费 tokens 的 --ms-&#42; 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion。
 :::

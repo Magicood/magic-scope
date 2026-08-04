@@ -6,7 +6,7 @@
 
 ## 说明
 
-自研、零依赖,消费 @magic-scope/tokens 的 --ms-* 变量。
+自研、零依赖,消费 @magic-scope/tokens 的 --ms-&#42; 变量。
 
 样式与 Input 一致:surface 底 + border,focus-visible 染 primary 并起发光环(受顶栏「光影」开关控制),invalid 染 danger 并设 aria-invalid,disabled 半透明。仅允许垂直拖拽改高(resize: vertical),尊重 reduced-motion。透传原生 textarea 属性(value / onChange / rows / placeholder / maxLength 等)。
 
@@ -30,7 +30,7 @@
 | `footer` | `ReactNode` | — | 底部追加内容(渲染在 count 同一行的起始侧,如帮助文字 / 工具按钮)。 |
 | `className` | `string` | — | 根容器 className。 |
 | `classNames` | `TextareaClassNames` | — | 各关键子部件 className(细粒度留口)。 |
-| `...props` | `ComponentPropsWithoutRef<'textarea'>` | — | 透传原生 textarea 属性(className / style / aria-* / 事件等)。 |
+| `...props` | `ComponentPropsWithoutRef<'textarea'>` | — | 透传原生 textarea 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
 
@@ -50,5 +50,5 @@
 | 标签 | `textarea` `form` `input` `multiline` `field` `validation` `autosize` `char-count` `tone` `glow` `submit-shortcut` |
 
 ::: details 需求原文 / 设计意图
-多行文本输入框,从最小版补强到生产级深度,对标旗舰 Button/Input/Text。支持 sm/md/lg 尺寸(随 --ms-density-scale 缩放)、tone 色调发光环(读 --ms-c/--ms-c-glow 槽位,invalid 强制 danger)、showCount 字数计数(配合 maxLength,超限染 danger)、autosize 自动调高(布尔或 {minRows,maxRows})、footer 底部槽、onPressEnter/onSubmitShortcut 提交快捷键(IME 安全)、classNames 细粒度留口。内部 onChange/onKeyDown 用 composeEventHandlers 合并用户处理器,...rest 透传所有原生属性与事件。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-* 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion 与 data-ms-motion/data-ms-fx 关断。autosize 与键盘判定逻辑抽成框架无关纯函数(logic.ts),便于平移 core。
+多行文本输入框,从最小版补强到生产级深度,对标旗舰 Button/Input/Text。支持 sm/md/lg 尺寸(随 --ms-density-scale 缩放)、tone 色调发光环(读 --ms-c/--ms-c-glow 槽位,invalid 强制 danger)、showCount 字数计数(配合 maxLength,超限染 danger)、autosize 自动调高(布尔或 {minRows,maxRows})、footer 底部槽、onPressEnter/onSubmitShortcut 提交快捷键(IME 安全)、classNames 细粒度留口。内部 onChange/onKeyDown 用 composeEventHandlers 合并用户处理器,...rest 透传所有原生属性与事件。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-&#42; 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion 与 data-ms-motion/data-ms-fx 关断。autosize 与键盘判定逻辑抽成框架无关纯函数(logic.ts),便于平移 core。
 :::

@@ -6,7 +6,7 @@
 
 ## 说明
 
-自研、零依赖,消费 @magic-scope/tokens 的 --ms-* 变量。
+自研、零依赖,消费 @magic-scope/tokens 的 --ms-&#42; 变量。
 
 tone 用 color-mix 调出 18% 柔和底 + tone 文字,紧凑内边距适合密集场景。
 
@@ -30,11 +30,11 @@ closable 时在末尾渲染移除按钮,hover 加深、focus-visible 显示发�
 | `closable` | `boolean` | `false` | 是否可关闭:为真时在末尾渲染移除按钮。 |
 | `icon` | `ReactNode` | — | 前缀槽:图标 / 头像(`.ms-tag__icon`)。 |
 | `closeIcon` | `ReactNode` | — | 自定义关闭图标(替代默认的 ×)。 |
-| `closeButtonProps` | `Omit<DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>, "ref">` | — | 透传给关闭按钮的原生属性(如 data-* / title);其 onClick 会与内部隔离逻辑 compose。 |
+| `closeButtonProps` | `Omit<DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>, "ref">` | — | 透传给关闭按钮的原生属性(如 data-&#42; / title);其 onClick 会与内部隔离逻辑 compose。 |
 | `checkable` | `boolean` | `false` | 可选标签(filter chip):为真时根可聚焦、可用 Enter/Space 激活,并暴露 `aria-pressed`。<br>配合 `selected` 表示选中态(选中时切到 tone 实底)。 |
 | `selected` | `boolean` | `false` | 选中态(配合 `checkable`):tone 实底高亮,`aria-pressed=true`。 |
 | `asChild` | `boolean` | `false` | 渲染为子元素(如 &lt;a&gt; / 路由 Link)并保留标签样式(Radix Slot 风格;由子元素自带内容)。 |
-| `...props` | `ComponentPropsWithoutRef<'span'>` | — | 透传原生 span 属性(className / style / aria-* / 事件等)。 |
+| `...props` | `ComponentPropsWithoutRef<'span'>` | — | 透传原生 span 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
 
@@ -53,5 +53,5 @@ closable 时在末尾渲染移除按钮,hover 加深、focus-visible 显示发�
 | 标签 | `tag` `chip` `label` `data-display` `tone` `variant` `soft` `solid` `outline` `size` `closable` `removable` `icon` `avatar` `checkable` `selectable` `filter-chip` `aria-pressed` `asChild` `i18n` |
 
 ::: details 需求原文 / 设计意图
-语义色调标签,soft 底配 tone 文字,可选末尾的可关闭移除按钮(hover 加深、focus 发光环)。工程要求(magic-scope 通用基础组件):自研、消费 tokens 的 --ms-* 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion。
+语义色调标签,soft 底配 tone 文字,可选末尾的可关闭移除按钮(hover 加深、focus 发光环)。工程要求(magic-scope 通用基础组件):自研、消费 tokens 的 --ms-&#42; 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion。
 :::

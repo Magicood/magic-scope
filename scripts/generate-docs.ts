@@ -154,22 +154,48 @@ const NATIVE_EL: Record<string, string> = {
   kbd: 'HTMLElement',
 };
 
-// —— markdown 表格单元的安全转义 ——
-// 说明列:纯文本 → 转义 HTML 与表格管道符,换行转 <br>;「{{」会触发 Vue 插值,
-// 「[x, y](像素)」这类原文会被误解析成 markdown 链接,均一并压制。
-const escText = (s: string): string =>
+// —— 安全转义(分段感知)——
+// 作者在描述里会写行内代码(`code`):code span 由 markdown-it 自带 HTML 转义且免 Vue 编译,
+// 必须原样保留(在里面塞实体会被二次转义外显,如 `string[]` 曾变成 string&#91;])。
+// 仅对 code span 之外的段落做压制:
+//   & < >         → HTML 实体(防被当原生标签插进 DOM)
+//   {{            → &#123;&#123;(防 Vue 插值;拆成「{ {」会把原文改样)
+//   [             → &#91;(防「[x, y](像素)」被误解析成 markdown 链接)
+//   * _           → &#42; &#95;(防 --ms-xxx-* 成对出现时被当强调符吞掉)
+const escSegmented = (s: string, outside: (seg: string) => string, code: (seg: string) => string) =>
   s
+    .split(/(`[^`]*`)/)
+    .map((seg, i) => (i % 2 === 1 ? code(seg) : outside(seg)))
+    .join('');
+const escEntities = (seg: string): string =>
+  seg
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
-    .replace(/\{\{/g, '{ {')
-    .replace(/\|/g, '\\|')
+    .replace(/\{\{/g, '&#123;&#123;')
     .replace(/\[/g, '&#91;')
-    .replace(/\n/g, '<br>');
-// 类型 / 默认值列:包进行内代码(VitePress 对行内代码免 Vue 编译),仅需转义管道符。
+    .replace(/\*/g, '&#42;')
+    .replace(/_/g, '&#95;');
+// 表格单元:段外再转义管道符、换行转 <br>;code span 内只需转义管道符(表格切列先于 code 解析)。
+const escText = (s: string): string =>
+  escSegmented(
+    s,
+    (seg) => escEntities(seg).replace(/\|/g, '\\|').replace(/\n/g, '<br>'),
+    (seg) => seg.replace(/\|/g, '\\|').replace(/\n/g, ' '),
+  );
+// 正文段落:同表格单元,但无需管道符/换行处理(换行由调用方按段落拆分)。
+const escProse = (s: string): string => escSegmented(s, escEntities, (seg) => seg);
+// 类型 / 默认值列:整体包进行内代码,仅需转义管道符。
+// 内容自带反引号(模板字面量类型,如 `data-${string}`)会撕裂 code span:
+// 用比内容最长反引号串更长的围栏 + 前后空格包裹(CommonMark 规则),保 span 完整。
 const escCode = (s: string): string => {
   const t = s.replace(/\s+/g, ' ').trim();
-  return t === '' || t === '—' ? '—' : `\`${t.replace(/\|/g, '\\|')}\``;
+  if (t === '' || t === '—') return '—';
+  const body = t.replace(/\|/g, '\\|');
+  const runs = body.match(/`+/g);
+  if (!runs) return `\`${body}\``;
+  const fence = '`'.repeat(Math.max(...runs.map((m) => m.length)) + 1);
+  return `${fence} ${body} ${fence}`;
 };
 
 const isEvent = (name: string): boolean => /^on[A-Z]/.test(name);
@@ -224,7 +250,7 @@ function componentPage(meta: ComponentMeta, entry: ManifestEntry, hasPreview: bo
     `# ${meta.name} ${STATUS_BADGE[entry.status]} <Badge type="info" text="v${entry.version}" />`,
   );
   out.push('');
-  out.push(escText(meta.summary));
+  out.push(escProse(meta.summary));
   out.push('');
   out.push(
     `> **[在展示站中打开 ${meta.name}](${SHOWCASE_URL}#/${meta.id})** —— 交互 demo + 参数旋钮 + 真实源码,主题 / 密度 / 动效一键切换。`,
@@ -233,7 +259,7 @@ function componentPage(meta: ComponentMeta, entry: ManifestEntry, hasPreview: bo
   if (meta.description) {
     out.push('', '## 说明', '');
     for (const para of meta.description.split('\n')) {
-      if (para.trim()) out.push(escText(para).replace(/<br>/g, ' '), '');
+      if (para.trim()) out.push(escProse(para), '');
     }
   }
 
@@ -267,7 +293,7 @@ function componentPage(meta: ComponentMeta, entry: ManifestEntry, hasPreview: bo
   if (entry.source.notes) {
     out.push('## 兼容性备注', '');
     out.push('透明披露的已知边界与契约(来自 `component.json` 的 `source.notes`):', '');
-    out.push(escText(entry.source.notes).replace(/<br>/g, ' '), '');
+    out.push(escProse(entry.source.notes.replace(/\n/g, ' ')), '');
   }
 
   out.push('## 溯源', '');
@@ -283,7 +309,7 @@ function componentPage(meta: ComponentMeta, entry: ManifestEntry, hasPreview: bo
   srcRows.push(`| 标签 | ${entry.tags.map((t) => `\`${t}\``).join(' ')} |`);
   out.push(srcRows.join('\n'), '');
   out.push('::: details 需求原文 / 设计意图');
-  out.push(escText(entry.source.requirements).replace(/<br>/g, ' '));
+  out.push(escProse(entry.source.requirements.replace(/\n/g, ' ')));
   out.push(':::', '');
 
   return `${out.join('\n').trimEnd()}\n`;
@@ -342,8 +368,30 @@ metas.sort((a, b) => {
   if (byCat !== 0) return byCat;
   const byOrder = orderIndex(a.id) - orderIndex(b.id);
   if (byOrder !== 0) return byOrder;
-  return a.name.localeCompare(b.name);
+  // 码点序而非 localeCompare:产物已提交 + CI 逐字节比对,排序不能依赖宿主 ICU/locale。
+  return a.name < b.name ? -1 : a.name > b.name ? 1 : 0;
 });
+
+// 分类必须落在 catalog 的合法集合里:拼错分类的组件会从总览与侧栏双双静默消失(页面成孤儿)。
+const validCats = new Set(categories.map((c) => c.id));
+const badCats = metas.filter((m) => !validCats.has(m.category));
+if (badCats.length > 0) {
+  throw new Error(
+    `以下组件的 meta.category 不在 catalog.ts 的分类集合中:${badCats.map((m) => `${m.id}(${m.category})`).join(', ')}`,
+  );
+}
+
+// previews/ 部件必须一一对应组件 id:孤儿部件(组件改名/删除、文件名拼错)会静默丢失预览。
+const previewIdSet = new Set(metas.map((m) => m.id));
+const orphanPreviews = readdirSync(PREVIEWS)
+  .filter((f) => f.endsWith('.md'))
+  .map((f) => f.replace('.md', ''))
+  .filter((id) => !previewIdSet.has(id));
+if (orphanPreviews.length > 0) {
+  throw new Error(
+    `docs/previews/ 存在不对应任何组件 id 的孤儿部件:${orphanPreviews.join(', ')}(组件改名/删除请同步处理部件)`,
+  );
+}
 
 // 三源对齐校验:meta 与 manifest 必须一一对应,缺谁都算真相源断裂。
 const metaIds = new Set(metas.map((m) => m.id));

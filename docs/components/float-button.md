@@ -8,7 +8,7 @@
 
 自研、零依赖,固定定位的悬浮操作入口。单钮支持 circle/square 形状、default/primary 类型与全库 7 色调 tone(只读 6 槽位、零硬编码配色与发光);可带 icon、方形内 description 文字(超长截断不撑破)、数字/小红点 badge(超 overflowCount 截为 N+)。
 
-传 href 即渲染为 &lt;a&gt;(导航语义,_blank 自动补 rel),否则渲染 &lt;button&gt;;传 tooltip 自动用 Tooltip 包裹(hover/focus 弹出)。配套 FloatButton.Group 堆叠/可展开菜单:click/hover 触发,子项沿 direction 错峰弹出,受控/非受控双通道,触发钮 aria-expanded/aria-controls 关联、收起态 inert 移出 tab 序、Esc 收起,错峰入场在 reduced-motion / data-ms-motion=off 下优雅降级。
+传 href 即渲染为 &lt;a&gt;(导航语义,&#95;blank 自动补 rel),否则渲染 &lt;button&gt;;传 tooltip 自动用 Tooltip 包裹(hover/focus 弹出)。配套 FloatButton.Group 堆叠/可展开菜单:click/hover 触发,子项沿 direction 错峰弹出,受控/非受控双通道,触发钮 aria-expanded/aria-controls 关联、收起态 inert 移出 tab 序、Esc 收起,错峰入场在 reduced-motion / data-ms-motion=off 下优雅降级。
 
 ## 参数 Props
 
@@ -24,7 +24,7 @@
 | `type` | `"primary" \| "default"` | `primary` | 类型:默认中性面 / 主色实底发光。默认 default。 |
 | `tone` | `"primary" \| "accent" \| "success" \| "warning" \| "danger" \| "info" \| "neutral"` | `primary` | 语义色调,经全库 tone resolver 派生配色与 glow。默认 primary。 |
 | `badge` | `FloatButtonBadge` | — | 角标:数字(&gt;0 显示,超 overflowCount 截为 `N+`)或 `{ dot: true }` 小红点。 |
-| `href` | `string` | — | 传入即渲染为 `&lt;a href&gt;`(导航语义),否则渲染 `&lt;button&gt;`。 |
+| `href` | `string` | — | 传入即渲染为 `<a href>`(导航语义),否则渲染 `<button>`。 |
 | `target` | `string` | — | 链接打开方式(仅 href 时生效);`_blank` 自动补 rel 安全属性。 |
 | `classNames` | `FloatButtonClassNames` | — | 各部件细粒度 className 槽位。 |
 | `className` | `string` | — | 透传到根元素的额外 className。 |

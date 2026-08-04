@@ -6,7 +6,7 @@
 
 ## 说明
 
-自研、零依赖,消费 @magic-scope/tokens 的 --ms-* 变量。
+自研、零依赖,消费 @magic-scope/tokens 的 --ms-&#42; 变量。
 
 size 提供 sm/md/lg/xl/full 五档(对齐视口断点)或任意自定义长度;fluid 一键满宽。始终 margin-inline:auto 水平居中,内边距用 CSS 逻辑属性(padding-inline / padding-block)RTL 友好,并叠加安全区避刘海裁切。padding / paddingBlock 支持 space token 档与断点对象做响应式;不传 padding 时走流式 clamp 随视口平滑收放。centered 整屏垂直居中。留口:as / asChild 多态、forwardRef 到根、...rest 透传原生属性。
 
@@ -18,13 +18,13 @@ size 提供 sm/md/lg/xl/full 五档(对齐视口断点)或任意自定义长度;
 | --- | --- | --- | --- |
 | `size` | `ContainerSize` | `lg` | 最大行内尺寸档:sm(30rem)/ md(48rem)/ lg(64rem)/ xl(80rem)/ full(不限宽),<br>或任意自定义 CSS 长度(如 '72ch' / '900px')。档位对齐<br>@magic-scope /tokens 的视口断点。默认 lg。 |
 | `fluid` | `boolean` | `false` | 满宽:不限制 max-inline-size(等价 size="full")。与 size 同传时 fluid 优先。默认 false。 |
-| `padding` | `Responsive<SpaceToken>` | — | 水平内边距(padding-inline,RTL 友好)。接受 space token 档(0..16,映射 --ms-space-*,<br>随密度缩放)或任意 CSS 长度;支持断点对象 `{ base, sm, md, lg, xl }` 做响应式。<br>默认走流式 clamp(随视口收放,无需逐档配置)。 |
+| `padding` | `Responsive<SpaceToken>` | — | 水平内边距(padding-inline,RTL 友好)。接受 space token 档(0..16,映射 --ms-space-&#42;,<br>随密度缩放)或任意 CSS 长度;支持断点对象 `{ base, sm, md, lg, xl }` 做响应式。<br>默认走流式 clamp(随视口收放,无需逐档配置)。 |
 | `paddingBlock` | `Responsive<SpaceToken>` | — | 垂直内边距(padding-block)。同 padding 接受 token 档 / CSS 长度 / 断点对象。默认 0。 |
 | `centered` | `boolean` | `false` | 垂直居中:容器撑到至少一屏高(min-block-size: 视口高),内容在交叉轴居中。<br>用于落地页 / 空状态等需要内容垂直居中的整屏场景。默认 false。 |
 | `as` | `ElementType` | — | 多态渲染标签(语义场景如 section / main / article)。默认 div。 |
 | `asChild` | `boolean` | `false` | 渲染为唯一子元素并合并样式/props(Slot 模式;子元素自带内容)。 |
 | `children` | `ReactNode` | — | 内容(asChild 时为承载样式的唯一子元素)。 |
-| `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-* / 事件等)。 |
+| `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
 

@@ -36,7 +36,7 @@ RadioGroup 用 context 把 name / 选中值 / 尺寸 / 禁用下发给组内 Rad
 | `disabled` | `boolean` | — | 整组禁用。 |
 | `orientation` | `"horizontal" \| "vertical"` | `vertical` | 排布方向,同时映射到 aria-orientation。默认 vertical。 |
 | `options` | `RadioOption[]` | — | 数据驱动:用 options 数组渲染选项,与 children 二选一(同时传则 options 优先,children 追加在后)。<br>label 缺省回退到 value。 |
-| `...props` | `ComponentPropsWithoutRef<'input'>` | — | 透传原生 input 属性(className / style / aria-* / 事件等)。 |
+| `...props` | `ComponentPropsWithoutRef<'input'>` | — | 透传原生 input 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
 
