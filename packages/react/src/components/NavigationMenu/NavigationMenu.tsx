@@ -1062,7 +1062,8 @@ NavigationMenuContent.displayName = 'NavigationMenu.Content';
 
 /* ——————————————————— 子组件:Viewport(共享浮层容器) ——————————————————— */
 
-export interface NavigationMenuViewportProps extends ComponentPropsWithoutRef<'div'> {
+export interface NavigationMenuViewportProps
+  extends Omit<ComponentPropsWithoutRef<'div'>, 'onPointerEnter' | 'onPointerLeave'> {
   /** 对齐方式。 */
   align?: NavigationMenuViewportAlign;
 }
@@ -1082,6 +1083,18 @@ const NavigationMenuViewport = forwardRef<HTMLDivElement, NavigationMenuViewport
         className={['ms-navmenu__viewport', ctx.classNames?.viewport, className]
           .filter(Boolean)
           .join(' ')}
+        // 浮层同为 hover 热区:指针从触发器移进 panel(途经间隙)会先触发 Item 的
+        // pointerleave 起 closeDelay 计时,进入这里必须取消,否则悬停 panel 超过宽限期即误关。
+        onPointerEnter={(e: ReactPointerEvent<HTMLDivElement>) => {
+          if (e.pointerType === 'mouse' || e.pointerType === 'pen') {
+            ctx.cancelHover();
+          }
+        }}
+        onPointerLeave={(e: ReactPointerEvent<HTMLDivElement>) => {
+          if (e.pointerType === 'mouse' || e.pointerType === 'pen') {
+            ctx.hoverClose();
+          }
+        }}
         {...props}
       >
         <div className="ms-navmenu__viewport-inner">{children}</div>

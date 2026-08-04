@@ -159,20 +159,23 @@ export const Affix = forwardRef<AffixHandle, AffixProps>(
       });
     }, [measure]);
 
-    // 订阅 target 的 scroll + window 的 resize;target / offset 变化时解绑重订阅并首次 sync。
+    // 订阅滚动 + resize;target / offset 变化时解绑重订阅并首次 sync。
+    // 吸附态是 position:fixed(视口坐标):不止 getTarget 容器,**任何**祖先滚动(尤其 window)
+    // 都会让容器的视口位置变化、令已算出的 fixed 坐标过期 —— 曾致「容器内吸附后页面一滚,
+    // 内容钉在屏幕上跟着视口走」。scroll 不冒泡,但 window 捕获段能收到含 window 与任意
+    // 嵌套容器在内的所有滚动,故统一在捕获段监听、每次滚动都重测。
     useEffect(() => {
       const target = resolveTarget();
       if (!target) {
         return;
       }
       measure();
-      target.addEventListener('scroll', scheduleMeasure, { passive: true });
-      // 容器非 window 时其滚动已由上行覆盖;视口尺寸变化统一监听 window.resize。
-      const win = typeof window !== 'undefined' ? window : null;
-      win?.addEventListener('resize', scheduleMeasure, { passive: true });
+      const win = window;
+      win.addEventListener('scroll', scheduleMeasure, { passive: true, capture: true });
+      win.addEventListener('resize', scheduleMeasure, { passive: true });
       return () => {
-        target.removeEventListener('scroll', scheduleMeasure);
-        win?.removeEventListener('resize', scheduleMeasure);
+        win.removeEventListener('scroll', scheduleMeasure, { capture: true });
+        win.removeEventListener('resize', scheduleMeasure);
         if (rafRef.current !== null) {
           cancelAnimationFrame(rafRef.current);
           rafRef.current = null;

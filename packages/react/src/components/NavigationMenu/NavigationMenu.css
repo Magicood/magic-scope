@@ -185,41 +185,12 @@
   box-shadow: 0 24px 64px -24px rgb(0 0 0 / 0.32);
 }
 
-/* —— 锚定位:支持 anchor-name 时,Viewport 锚到 <nav> 的底边 —— */
-@supports (anchor-name: --x) {
-  .ms-navmenu {
-    anchor-name: --ms-navmenu-anchor;
-  }
-  .ms-navmenu__viewport {
-    position: absolute;
-    position-anchor: --ms-navmenu-anchor;
-    position-area: block-end span-inline-end;
-    inset: auto;
-    margin-block-start: var(--ms-navmenu-offset, var(--ms-space-2));
-    position-try-fallbacks: flip-block;
-  }
-  .ms-navmenu[data-ms-viewport-align="center"] .ms-navmenu__viewport {
-    position-area: block-end;
-    translate: none;
-  }
-  .ms-navmenu[data-ms-viewport-align="end"] .ms-navmenu__viewport {
-    position-area: block-end span-inline-start;
-  }
-}
-
-/* —— 降级:不支持锚定位 → fixed 居顶,避免浮层错位 —— */
-@supports not (anchor-name: --x) {
-  .ms-navmenu__viewport {
-    position: fixed;
-    inset-block-start: calc(16vh + var(--ms-safe-top, 0px));
-    inset-inline: 0;
-    margin-inline: auto;
-    margin-block-start: 0;
-    translate: none;
-    inline-size: max-content;
-    max-inline-size: calc(100dvw - var(--ms-space-4) * 2);
-  }
-}
+/* —— Viewport 定位说明:不用 CSS Anchor Positioning ——
+ * Viewport 是 .ms-navmenu(position:relative)的直接子元素,基座的
+ * `absolute + inset-block-start:100%` 在所有浏览器都精确贴到导航条下沿;
+ * 而锚定位对「自己的祖先」锚点不生效(anchor 不可是被定位元素的祖先),
+ * 曾致 viewport 落回静态位置、盖住触发器下半段,与 hover 热区形成
+ * 「开 → 盖住光标 → pointerleave → 延时关 → 光标又落回触发器 → 再开」的持续闪烁振荡。 */
 
 /* —— 就地 panel(viewport=false、纯复合用法,或复合 + 默认 viewport=true 时的兜底) ——
  * 基类直接带定位 + 卡片样式,保证「复合用法 + 默认 viewport=true」也开箱可用(不再依赖
