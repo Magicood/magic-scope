@@ -1,0 +1,333 @@
+/* ============================================================================
+ * Orders 页私有样式(.od-*)—— 只消费 --ms-* / --sf-* 变量与 .ad-* 骨架原语。
+ * 表格卡采用 Linear 式"卡内分层":工具条 / 批量条 / 表格 / 分页脚,发丝线分隔。
+ * ========================================================================== */
+
+/* ------------------------------ 状态快切 ---------------------------------- */
+
+.od-segments {
+  align-self: flex-start;
+}
+
+.od-seg-opt {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.od-seg-count {
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ms-color-fg-subtle);
+}
+
+/* ------------------------------ 表格卡 ------------------------------------ */
+
+.od-table-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.od-toolbar {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--sf-hairline);
+}
+
+.od-search {
+  width: min(280px, 100%);
+}
+
+/* Select 的 className 落在 trigger 上,库默认 100% 撑满,这里收成固定宽 */
+.od-status-select {
+  width: 180px;
+  flex: none;
+}
+
+/* 选中批量条:soft primary 底 + 轻浮入,替代硬弹窗 */
+.od-bulkbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  background: color-mix(in oklab, var(--ms-color-primary), transparent 93%);
+  border-bottom: 1px solid var(--sf-hairline);
+  animation: od-bulk-in var(--ms-duration-fast, 160ms) var(--ms-ease-standard, ease) both;
+}
+
+.od-bulk-count {
+  font-size: 12.5px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--ms-color-fg);
+}
+
+@keyframes od-bulk-in {
+  from {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .od-bulkbar {
+    animation: none;
+  }
+}
+
+/* ------------------------------ 表格单元 ---------------------------------- */
+
+.od-number {
+  font-weight: 550;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+}
+
+.od-num {
+  font-variant-numeric: tabular-nums;
+}
+
+.od-date {
+  font-size: 12.5px;
+  color: var(--ms-color-fg-muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* 客户名:hover 显示点状下划线,暗示可悬浮预览 */
+.od-customer {
+  text-decoration-line: underline;
+  text-decoration-style: dotted;
+  text-decoration-color: transparent;
+  text-underline-offset: 3px;
+  transition: text-decoration-color var(--ms-duration-fast) var(--ms-ease-standard);
+  cursor: default;
+}
+
+.od-customer:hover,
+.od-customer:focus-visible {
+  text-decoration-color: color-mix(in oklab, var(--ms-color-fg), transparent 55%);
+}
+
+/* 客户悬浮卡内容 */
+.od-customer-card {
+  width: 268px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.od-customer-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.od-customer-idty {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+  flex: 1;
+}
+
+.od-customer-idty strong {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.od-customer-idty span {
+  font-size: 11.5px;
+  color: var(--ms-color-fg-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.od-customer-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 0;
+  padding-top: 10px;
+  border-top: 1px solid var(--sf-hairline);
+}
+
+.od-customer-stats dt {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ms-color-fg-subtle);
+}
+
+.od-customer-stats dd {
+  margin: 2px 0 0;
+  font-size: 12.5px;
+  font-weight: 550;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------ 分页脚 ------------------------------------ */
+
+.od-table-foot {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px 16px;
+  border-top: 1px solid var(--sf-hairline);
+}
+
+/* ------------------------------ 详情抽屉 ---------------------------------- */
+
+/* 规格:480px 侧抽屉(覆盖库的 size 档位变量) */
+.ms-drawer.od-drawer {
+  --ms-drawer-inline: min(480px, 100vw);
+}
+
+.od-drawer-head {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  flex: 1;
+}
+
+.od-drawer-titlerow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.od-drawer-number {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+}
+
+.od-drawer-spacer {
+  flex: 1;
+}
+
+.od-drawer-sub {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--ms-color-fg-muted);
+}
+
+.od-drawer-body {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  padding-block: 4px 12px;
+}
+
+.od-section-title {
+  margin: 0 0 10px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ms-color-fg-subtle);
+}
+
+/* 行项列表:mini 色块 + 名称×qty + 行小计 */
+.od-lines {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.od-lines li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-block: 9px;
+}
+
+.od-lines li + li {
+  border-top: 1px solid var(--sf-hairline);
+}
+
+.od-swatch {
+  width: 16px;
+  height: 16px;
+  flex: none;
+  border-radius: 5px;
+  background: var(--od-swatch);
+  box-shadow: inset 0 0 0 1px var(--sf-hairline);
+}
+
+.od-line-name {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+  flex: 1;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.od-line-name small {
+  font-size: 11.5px;
+  font-weight: 400;
+  color: var(--ms-color-fg-muted);
+}
+
+/* 金额小结 */
+.od-totals {
+  margin: 10px 0 0;
+  padding-top: 10px;
+  border-top: 1px solid var(--sf-hairline);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.od-totals > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.od-totals dt {
+  font-size: 12.5px;
+  color: var(--ms-color-fg-muted);
+}
+
+.od-totals dd {
+  margin: 0;
+  font-size: 12.5px;
+  font-variant-numeric: tabular-nums;
+}
+
+.od-totals .od-grand dt {
+  font-weight: 600;
+  color: var(--ms-color-fg);
+}
+
+.od-totals .od-grand dd {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* 时间线:抽屉内走紧凑密度 */
+.od-timeline {
+  font-size: 12.5px;
+}
+
+.od-timeline .ms-timeline__item {
+  padding-block-end: var(--ms-space-4);
+}
+
+.od-note-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+}

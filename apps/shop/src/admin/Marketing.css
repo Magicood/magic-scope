@@ -1,0 +1,243 @@
+/* ============================================================================
+ * Marketing 页私有样式(mk-*)。
+ * 只消费 --ms-* / --sf-* 语义变量 + color-mix 派生;分隔一律发丝线或留白;
+ * 覆盖库内默认值时只在自有类名上做,不深挖 .ms-* 内部结构。
+ * ========================================================================== */
+
+/* 页面根:.ad-content 是 width:100% + padding,content-box 下会超出主列 56px,
+ * 这里仅对本页收敛(壳级修复归 admin.css,不在本文件越界) */
+.mk-page {
+  box-sizing: border-box;
+}
+
+/* 本页双栏:右列要容纳双列 Transfer,比默认 320px 更宽(断点与 .ad-split 对齐) */
+.mk-split {
+  grid-template-columns: minmax(0, 1fr) 412px;
+}
+
+@media (max-width: 1080px) {
+  .mk-split {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 右列两卡纵向堆叠,间距与 .ad-split 的 gap 一致 */
+.mk-side {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* ------------------------------ 卡头通用 ---------------------------------- */
+
+.mk-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-block-end: 14px;
+}
+
+.mk-card-sub {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: var(--ms-color-fg-subtle);
+}
+
+/* ------------------------------ 活动月历 ---------------------------------- */
+
+/* 活动打点:kind → 语义色(图例与格内共用同一变量) */
+.mk-event[data-kind="launch"],
+.mk-legend-item[data-kind="launch"] {
+  --mk-event-color: var(--ms-color-primary);
+}
+
+.mk-event[data-kind="newsletter"],
+.mk-legend-item[data-kind="newsletter"] {
+  --mk-event-color: var(--ms-color-accent);
+}
+
+.mk-event[data-kind="vip"],
+.mk-legend-item[data-kind="vip"] {
+  --mk-event-color: var(--ms-color-info);
+}
+
+/* 格内事件条:圆点 + 截断文字,底色为语义色的极淡派生(窄格,尺寸从紧) */
+.mk-event {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-inline-size: 0;
+  margin: 3px 2px 0;
+  padding: 2px 5px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: inherit;
+  background: color-mix(in oklab, var(--mk-event-color), transparent 88%);
+}
+
+.mk-event-dot {
+  flex: none;
+  inline-size: 6px;
+  block-size: 6px;
+  border-radius: 50%;
+  background: var(--mk-event-color, var(--ms-color-primary));
+}
+
+.mk-event-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 窄屏格子放不下文字时只留圆点 */
+@media (max-width: 760px) {
+  .mk-event {
+    justify-content: center;
+    padding-inline: 0;
+    background: none;
+  }
+
+  .mk-event-label {
+    display: none;
+  }
+}
+
+/* 图例小字 */
+.mk-legend {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-block-start: 14px;
+  padding-block-start: 12px;
+  border-block-start: 1px solid var(--sf-hairline);
+  font-size: 11.5px;
+  color: var(--ms-color-fg-muted);
+}
+
+.mk-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ------------------------------ 受众搭建 ---------------------------------- */
+
+/* Transfer 每项:名称 + 人数两行堆叠(面板窄,单行放不下;节点由 render 注入) */
+.mk-seg {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-inline-size: 0;
+  inline-size: 100%;
+}
+
+.mk-seg-name {
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12.5px;
+  line-height: 1.35;
+}
+
+.mk-seg-count {
+  font-size: 10.5px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ms-color-fg-subtle);
+}
+
+/* 预估触达:统计数字 + approx. 脚注 */
+.mk-reach {
+  margin-block-start: 14px;
+  padding-block-start: 12px;
+  border-block-start: 1px solid var(--sf-hairline);
+}
+
+.mk-reach-note {
+  margin: 6px 0 0;
+  font-size: 11.5px;
+  color: var(--ms-color-fg-subtle);
+}
+
+/* ------------------------------ 进行中活动 -------------------------------- */
+
+.mk-campaign-list {
+  margin: 0;
+  padding-inline-start: 0;
+}
+
+.mk-campaign {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-block: 12px;
+}
+
+.mk-campaign:first-child {
+  padding-block-start: 0;
+}
+
+.mk-campaign:last-child {
+  padding-block-end: 0;
+}
+
+.mk-campaign + .mk-campaign {
+  border-block-start: 1px solid var(--sf-hairline);
+}
+
+.mk-campaign-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.mk-campaign-name {
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 550;
+}
+
+.mk-campaign-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.mk-campaign-sent {
+  font-size: 11.5px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ms-color-fg-muted);
+}
+
+/* ------------------------------ 公告撰写器 -------------------------------- */
+
+.mk-composer-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mk-composer-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.mk-composer-spacer {
+  flex: 1;
+}
+
+.mk-composer-note {
+  font-size: 11.5px;
+  color: var(--ms-color-fg-subtle);
+}

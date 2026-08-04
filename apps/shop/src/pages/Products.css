@@ -1,0 +1,417 @@
+/* ============================================================================
+ * Products 商品列表页(.pl-*)—— 左 240px 粘性筛选栏 + 右商品区。
+ * 只消费 --ms-* 语义变量与 .sf-/.pv- 原语;线条一律 var(--sf-hairline) 或留白。
+ * ========================================================================== */
+
+/* ------------------------------- 页头 ------------------------------------ */
+
+.pl-head {
+  padding-block: clamp(44px, 6vw, 76px) clamp(28px, 4vw, 44px);
+  display: grid;
+  gap: 18px;
+  justify-items: start;
+}
+
+.pl-head-sub {
+  display: grid;
+  gap: 10px;
+}
+
+.pl-head-sub .sf-lede {
+  margin: 0;
+}
+
+/* 结果计数小字:与眉标同族的小号大写,弱存在感 */
+.pl-count {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ms-color-fg-subtle);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------- 双栏布局 --------------------------------- */
+
+.pl-layout {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  gap: clamp(36px, 5vw, 64px);
+  align-items: start;
+  padding-bottom: clamp(72px, 9vw, 128px);
+}
+
+/* 商品区:翻页 scrollIntoView 时让出 sticky 头 */
+.pl-main {
+  scroll-margin-top: 92px;
+  min-width: 0;
+}
+
+/* ------------------------------- 筛选栏 ---------------------------------- */
+
+.pl-filters {
+  position: sticky;
+  top: 96px;
+  display: grid;
+  gap: 22px;
+}
+
+.pl-facet {
+  display: grid;
+  gap: 14px;
+  justify-items: start;
+}
+
+.pl-facet-title {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ms-color-fg-subtle);
+}
+
+/* 分类旁的数量:轻到几乎消失,但扫一眼就有数 */
+.pl-facet-count {
+  margin-left: 8px;
+  font-size: 11.5px;
+  color: var(--ms-color-fg-subtle);
+  font-variant-numeric: tabular-nums;
+}
+
+.pl-facet > * {
+  max-width: 100%;
+}
+
+.pl-facet-value {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--ms-color-fg-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.pl-facet-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pl-clear {
+  justify-self: start;
+}
+
+/* ------------------------------- 工具行 ---------------------------------- */
+
+.pl-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: clamp(20px, 3vw, 30px);
+}
+
+.pl-toolbar-sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pl-toolbar-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ms-color-fg-subtle);
+}
+
+/* 排序触发器给个稳定宽度,换选项不跳版 */
+.pl-sort-trigger {
+  min-inline-size: 172px;
+}
+
+/* 视图切换段内的可见文案隐藏,仅留 15px 图标(读屏仍可读) */
+.pl-vh {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------- 网格视图 --------------------------------- */
+
+.pl-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(28px, 3.4vw, 40px) 24px;
+}
+
+.pl-card-media {
+  position: relative;
+}
+
+.pl-card-badges {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  display: flex;
+  gap: 6px;
+  z-index: 1;
+}
+
+/* ------------------------------- 列表视图 --------------------------------- */
+
+.pl-list {
+  display: grid;
+}
+
+.pl-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 160px minmax(0, 1fr) auto;
+  gap: clamp(18px, 2.6vw, 28px);
+  align-items: center;
+  padding-block: 22px;
+}
+
+/* 行间发丝线(inset 阴影代替边框) */
+.pl-row + .pl-row {
+  box-shadow: inset 0 1px 0 var(--sf-hairline);
+}
+
+.pl-row-media {
+  width: 160px;
+}
+
+.pl-row-media .pv {
+  border-radius: var(--sf-radius-sm);
+  transition: transform calc(var(--ms-duration-base) * 2) var(--ms-ease-emphasized);
+}
+
+.pl-row:hover .pl-row-media .pv {
+  transform: translateY(-3px);
+}
+
+.pl-row-body {
+  display: grid;
+  gap: 6px;
+  justify-items: start;
+}
+
+/* 名称即 stretched-link:伪元素铺满整行,整行可点进详情 */
+.pl-row-name {
+  color: inherit;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 550;
+  letter-spacing: -0.01em;
+}
+
+.pl-row-name::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.pl-row-name:focus-visible {
+  outline: none;
+}
+
+.pl-row:has(.pl-row-name:focus-visible) {
+  outline: 2px solid var(--ms-color-ring);
+  outline-offset: 4px;
+  border-radius: var(--sf-radius-sm);
+}
+
+.pl-row-tagline {
+  margin: 0;
+  font-size: 13.5px;
+  color: var(--ms-color-fg-muted);
+}
+
+.pl-row-detail {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--ms-color-fg-subtle);
+}
+
+.pl-row-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.pl-row-reviews {
+  font-size: 12px;
+  color: var(--ms-color-fg-subtle);
+  font-variant-numeric: tabular-nums;
+}
+
+/* 右列(价格 + 加购)浮在 stretched-link 之上,保持可点 */
+.pl-row-side {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.pl-row-price {
+  margin: 0;
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* ------------------------------- 骨架屏 ---------------------------------- */
+
+.pl-skel-card {
+  display: grid;
+  gap: 12px;
+}
+
+.pl-skel-card .pl-skel-media {
+  block-size: auto;
+  aspect-ratio: 4 / 5;
+  border-radius: var(--sf-radius);
+}
+
+.pl-skel-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 2px;
+}
+
+.pl-skel-row .pl-skel-row-media {
+  inline-size: 160px;
+  block-size: auto;
+  aspect-ratio: 1;
+  border-radius: var(--sf-radius-sm);
+}
+
+.pl-skel-lines {
+  display: grid;
+  gap: 10px;
+}
+
+.pl-skel-side {
+  display: grid;
+  gap: 10px;
+  justify-items: end;
+}
+
+/* ------------------------------- 空态 / 分页 ------------------------------ */
+
+.pl-empty {
+  display: grid;
+  justify-items: center;
+  padding-block: clamp(48px, 8vw, 96px);
+}
+
+.pl-pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: clamp(36px, 5vw, 56px);
+}
+
+/* ------------------------------- 结果淡入 --------------------------------- */
+
+.pl-fade-in {
+  animation: pl-fade-in 480ms var(--ms-ease-standard) both;
+}
+
+@keyframes pl-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pl-fade-in {
+    animation: none;
+  }
+}
+
+:root[data-ms-motion="off"] .pl-fade-in {
+  animation: none;
+}
+
+/* ------------------------------- 响应式 ---------------------------------- */
+
+@media (max-width: 1060px) {
+  .pl-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .pl-layout {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+
+  /* 窄屏筛选栏:不再粘性,两列铺开、发丝线退场靠留白 */
+  .pl-filters {
+    position: static;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px 32px;
+  }
+
+  .pl-filters .sf-hairline {
+    display: none;
+  }
+
+  .pl-clear {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 640px) {
+  .pl-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .pl-filters {
+    grid-template-columns: 1fr;
+  }
+
+  .pl-row {
+    grid-template-columns: 108px minmax(0, 1fr);
+  }
+
+  .pl-row-media {
+    width: 108px;
+    align-self: start;
+  }
+
+  .pl-row-side {
+    grid-column: 2;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .pl-skel-row .pl-skel-row-media {
+    inline-size: 108px;
+  }
+
+  .pl-skel-side {
+    grid-column: 2;
+  }
+}

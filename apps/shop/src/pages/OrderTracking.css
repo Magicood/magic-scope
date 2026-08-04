@@ -1,0 +1,258 @@
+/* ============================================================================
+ * OrderTracking —— 订单跟踪页私有样式(.ot-*)。
+ * 只消费 --ms-* / --sf-* 语义变量与 .sf-/.pv- 原语 + color-mix 派生;
+ * 分隔一律发丝线或留白,不用硬边框。
+ * ========================================================================== */
+
+/* ---------------------------------- 页头 --------------------------------- */
+
+.ot-head {
+  display: grid;
+  gap: 14px;
+  margin-block-end: clamp(36px, 5vw, 60px);
+}
+
+.ot-head-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+}
+
+.ot-placed {
+  margin: 0;
+  font-size: 13px;
+  color: var(--ms-color-fg-subtle);
+}
+
+/* --------------------------------- 双栏布局 -------------------------------- */
+
+.ot-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: clamp(36px, 5vw, 80px);
+  align-items: start;
+}
+
+/* 桌面端摘要卡吸顶(避开 64px sticky 头 + 呼吸留白) */
+.ot-aside {
+  position: sticky;
+  top: 88px;
+}
+
+@media (max-width: 900px) {
+  .ot-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .ot-aside {
+    position: static;
+  }
+}
+
+/* --------------------------------- 时间线 --------------------------------- */
+
+/* 连线贯通:库把条目间距放在 li 的 padding-block-end 上,而连线的定位父级
+ * (节点列)只随内容盒拉伸 —— 本页条目多为"标题 + 时间"一行,内容盒太矮,
+ * 连线会塌成 0 高。把间距移进内容盒,节点列被拉满,连线自然贯通到下一节点。 */
+.ot-timeline .ms-timeline__item {
+  padding-block-end: 0;
+}
+
+.ot-timeline .ms-timeline__item:not(:last-child) .ms-timeline__content {
+  padding-block-end: 28px;
+}
+
+/* 未发生的节点:空心圆点 + 整条降调(与已完成的实心节点拉开) */
+.ot-step-upcoming .ms-timeline__dot {
+  background-color: var(--ms-color-bg);
+  border-color: color-mix(in oklab, var(--ms-color-fg-subtle), transparent 35%);
+}
+
+.ot-step-upcoming .ms-timeline__title {
+  color: var(--ms-color-fg-muted);
+  font-weight: 480;
+}
+
+.ot-step-upcoming .ms-timeline__time {
+  color: var(--ms-color-fg-subtle);
+}
+
+/* 预计送达附注(进行中的最后一站) */
+.ot-step-note {
+  margin: 4px 0 0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ms-color-fg-muted);
+  max-width: 44ch;
+  text-wrap: pretty;
+}
+
+/* ------------------------------ 小节标题(Items / Summary) ------------------------------ */
+
+.ot-subhead {
+  margin: clamp(36px, 5vw, 52px) 0 6px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ms-color-fg-subtle);
+}
+
+.ot-subhead-count {
+  margin-inline-start: 4px;
+  font-variant-numeric: tabular-nums;
+  color: color-mix(in oklab, var(--ms-color-fg-subtle), transparent 30%);
+}
+
+/* -------------------------------- 行项目清单 ------------------------------- */
+
+.ot-items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.ot-line {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr) auto;
+  gap: 16px;
+  align-items: center;
+  padding-block: 16px;
+}
+
+/* 行间分隔:发丝线 */
+.ot-line + .ot-line {
+  border-block-start: 1px solid var(--sf-hairline);
+}
+
+.ot-line-media {
+  display: block;
+  width: 56px;
+}
+
+.ot-line-media .pv {
+  border-radius: var(--sf-radius-sm);
+}
+
+.ot-line-info {
+  display: grid;
+  gap: 3px;
+  justify-items: start;
+}
+
+.ot-line-name {
+  font-size: 15px;
+  font-weight: 550;
+  letter-spacing: -0.01em;
+}
+
+.ot-line-meta {
+  font-size: 13px;
+  color: var(--ms-color-fg-muted);
+}
+
+.ot-line-price {
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* --------------------------------- 摘要卡 --------------------------------- */
+
+.ot-card {
+  display: grid;
+  gap: 20px;
+  padding: clamp(24px, 3vw, 32px);
+  border-radius: var(--sf-radius);
+  background: var(--ms-color-surface-raised);
+  /* 无边框:极浅的双层投影让卡"浮"在纸面上 */
+  box-shadow:
+    0 1px 2px color-mix(in oklab, var(--ms-color-fg), transparent 94%),
+    0 20px 48px -24px color-mix(in oklab, var(--ms-color-fg), transparent 86%);
+}
+
+.ot-card-title {
+  margin: 0;
+}
+
+/* Descriptions 微调:标签小号大写、内容常规 —— 与卡内小节标题同一语言 */
+.ot-card .ms-descriptions__label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ms-color-fg-subtle);
+}
+
+.ot-card .ms-descriptions__content {
+  font-size: 14px;
+}
+
+/* 金额三行:发丝线起头,Total 再加一道并加重 */
+.ot-totals {
+  margin: 0;
+  display: grid;
+  gap: 10px;
+  padding-block-start: 18px;
+  border-block-start: 1px solid var(--sf-hairline);
+}
+
+.ot-total-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: 14px;
+}
+
+.ot-total-row dt {
+  color: var(--ms-color-fg-muted);
+}
+
+.ot-total-row dd {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.ot-total-grand {
+  padding-block-start: 12px;
+  border-block-start: 1px solid var(--sf-hairline);
+  font-size: 15px;
+}
+
+.ot-total-grand dt {
+  color: var(--ms-color-fg);
+  font-weight: 550;
+}
+
+.ot-total-grand dd {
+  font-weight: 600;
+}
+
+/* --------------------------------- 支持区 --------------------------------- */
+
+.ot-support {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-block-start: 18px;
+  border-block-start: 1px solid var(--sf-hairline);
+}
+
+/* 帮助浮层:限宽 + 编辑式行距 */
+.ot-help-panel {
+  max-width: 300px;
+}
+
+.ot-help {
+  display: grid;
+  gap: 8px;
+}
+
+.ot-help p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ms-color-fg-muted);
+}

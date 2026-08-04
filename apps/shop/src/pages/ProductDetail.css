@@ -1,0 +1,407 @@
+/* ============================================================================
+ * ProductDetail —— 商品详情页私有样式(.pd-*)。
+ * 只消费 --ms-* 语义变量、shop.css 的 .sf-/.pv- 原语与 color-mix 派生;
+ * 分隔一律发丝线或留白,不用硬边框。
+ * ========================================================================== */
+
+.pd {
+  padding-block: clamp(28px, 4vw, 52px) clamp(72px, 10vw, 128px);
+  /* 页内 reveal 统一手感:约 620ms(保留动效弱/关乘子)、位移 16px */
+  --ms-reveal-duration: calc(620ms * var(--ms-motion-scale, 1));
+  --ms-reveal-distance: 16px;
+}
+
+.pd-breadcrumb {
+  margin-bottom: clamp(24px, 3.5vw, 44px);
+}
+
+.pd-notfound {
+  display: grid;
+  place-items: center;
+}
+
+/* ------------------------------- 主区双栏 -------------------------------- */
+
+.pd-main {
+  display: grid;
+  grid-template-columns: minmax(0, 11fr) minmax(0, 9fr);
+  gap: clamp(32px, 5vw, 72px);
+  align-items: start;
+}
+
+@media (max-width: 920px) {
+  .pd-main {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ------------------------- 左:画廊与裁切缩略 ---------------------------- */
+
+.pd-thumbs {
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  align-items: start;
+}
+
+.pd-thumb {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  border-radius: var(--sf-radius-sm);
+  opacity: 0.72;
+  transition: opacity var(--ms-duration-base) var(--ms-ease-standard);
+}
+
+.pd-thumb:hover,
+.pd-thumb[aria-pressed="true"] {
+  opacity: 1;
+}
+
+.pd-thumb:focus-visible {
+  outline: 2px solid var(--ms-color-focus-ring);
+  outline-offset: 3px;
+}
+
+/* 缩略框:裁切交给 AspectRatio,圆角与选中描边在框上 */
+.pd-thumb-frame {
+  border-radius: var(--sf-radius-sm);
+  overflow: hidden;
+  transition: box-shadow var(--ms-duration-base) var(--ms-ease-standard);
+}
+
+.pd-thumb[aria-pressed="true"] .pd-thumb-frame {
+  box-shadow:
+    0 0 0 2px var(--ms-color-bg),
+    0 0 0 3.5px color-mix(in oklab, var(--ms-color-fg), transparent 25%);
+}
+
+/* 缩略图里的商品视觉放弃固有比例,完全由 AspectRatio 决定裁切 */
+.pd-thumb .pv {
+  height: 100%;
+  aspect-ratio: auto;
+  border-radius: 0;
+}
+
+/* ---------------------------- 右:信息列 --------------------------------- */
+
+.pd-info {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  min-width: 0;
+}
+
+.pd-title {
+  margin-top: 14px;
+}
+
+.pd-tagline {
+  margin: 10px 0 0;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ms-color-fg-muted);
+  text-wrap: pretty;
+}
+
+.pd-rating {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pd-rating-note {
+  font-size: 13px;
+  color: var(--ms-color-fg-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.pd-price-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.pd-price {
+  font-size: 24px;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+}
+
+.pd-compare {
+  font-size: 15px;
+}
+
+/* 色板选择 */
+.pd-option-label {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ms-color-fg-subtle);
+}
+
+.pd-option-value {
+  margin-left: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ms-color-fg);
+}
+
+.pd-swatches {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+/* 26px 圆点:swatch 填充,选中环形描边(bg 间隙 + fg 外圈) */
+.pd-swatch {
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  background: var(--swatch);
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--ms-color-fg), transparent 84%);
+  transition:
+    transform var(--ms-duration-fast) var(--ms-ease-standard),
+    box-shadow var(--ms-duration-fast) var(--ms-ease-standard);
+}
+
+.pd-swatch:hover {
+  transform: scale(1.08);
+}
+
+.pd-swatch[aria-pressed="true"] {
+  box-shadow:
+    0 0 0 2px var(--ms-color-bg),
+    0 0 0 3.5px color-mix(in oklab, var(--ms-color-fg), transparent 20%),
+    inset 0 0 0 1px color-mix(in oklab, var(--ms-color-fg), transparent 84%);
+}
+
+.pd-swatch:focus-visible {
+  outline: 2px solid var(--ms-color-focus-ring);
+  outline-offset: 2px;
+}
+
+/* 数量 + 加购 */
+.pd-buy {
+  display: flex;
+  gap: 12px;
+  align-items: stretch;
+}
+
+.pd-buy-qty {
+  flex: 0 0 auto;
+}
+
+.pd-add {
+  flex: 1;
+  min-width: 0;
+}
+
+/* 库存 / 运费 / 分享 */
+.pd-meta {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.pd-shipnote {
+  font-size: 13px;
+  color: var(--ms-color-fg-muted);
+  text-decoration-line: underline;
+  text-decoration-style: dotted;
+  text-decoration-color: color-mix(in oklab, var(--ms-color-fg-muted), transparent 35%);
+  text-underline-offset: 4px;
+  cursor: help;
+}
+
+.pd-share {
+  margin-left: auto;
+}
+
+.pd-accordion {
+  margin-top: 4px;
+}
+
+.pd-acc-list {
+  margin: 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ms-color-fg-muted);
+}
+
+.pd-acc-copy {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--ms-color-fg-muted);
+  max-width: 52ch;
+  text-wrap: pretty;
+}
+
+/* ------------------------------ 下方 Tabs -------------------------------- */
+
+.pd-below {
+  margin-top: clamp(56px, 8vw, 104px);
+}
+
+.pd-tab-panel {
+  padding-top: clamp(24px, 3vw, 36px);
+}
+
+/* Description:衬线导语 + 舒展正文 */
+.pd-desc-lead {
+  margin: 0;
+  font-family: var(--sf-display);
+  font-weight: 460;
+  font-size: clamp(20px, 2.2vw, 26px);
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  max-width: 34ch;
+  text-wrap: balance;
+}
+
+.pd-desc {
+  margin: 14px 0 0;
+  font-size: 16.5px;
+  line-height: 1.8;
+  color: var(--ms-color-fg-muted);
+  max-width: 62ch;
+  text-wrap: pretty;
+}
+
+/* Reviews:汇总行 + 发丝线分隔的评论列表 */
+.pd-review-summary {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.pd-review-score {
+  font-family: var(--sf-display);
+  font-size: clamp(40px, 5vw, 56px);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.pd-review-summary-note {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: var(--ms-color-fg-muted);
+}
+
+.pd-review-list {
+  list-style: none;
+  margin: clamp(20px, 3vw, 32px) 0 0;
+  padding: 0;
+}
+
+.pd-review {
+  display: flex;
+  gap: 14px;
+  padding-block: 22px;
+}
+
+.pd-review + .pd-review {
+  border-top: 1px solid var(--sf-hairline);
+}
+
+.pd-review-body {
+  min-width: 0;
+}
+
+.pd-review-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.pd-review-name {
+  font-size: 14px;
+  font-weight: 550;
+}
+
+.pd-review-text {
+  margin: 8px 0 6px;
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: var(--ms-color-fg-muted);
+  max-width: 60ch;
+  text-wrap: pretty;
+}
+
+.pd-review-date {
+  font-size: 12.5px;
+  color: var(--ms-color-fg-subtle);
+}
+
+/* ------------------------------ 同类推荐 --------------------------------- */
+
+.pd-related {
+  margin-top: clamp(64px, 9vw, 120px);
+}
+
+.pd-related-head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: clamp(24px, 4vw, 40px);
+}
+
+.pd-related-title {
+  margin-top: 14px;
+}
+
+.pd-related-all {
+  font-size: 14px;
+  color: var(--ms-color-fg-muted);
+  white-space: nowrap;
+}
+
+.pd-related-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(16px, 2.5vw, 28px);
+}
+
+@media (max-width: 920px) {
+  .pd-related-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ------------------------------- 小屏微调 -------------------------------- */
+
+@media (max-width: 560px) {
+  .pd-buy {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .pd-share {
+    margin-left: 0;
+  }
+
+  .pd-review-summary {
+    gap: 14px;
+  }
+}

@@ -1,0 +1,376 @@
+/* ============================================================================
+ * Home —— 买家首页私有样式。只消费 --ms-* / --sf-* 变量与 .sf-/.pv- 原语,
+ * 颜色一律 var + color-mix 派生;分隔靠留白与 var(--sf-hairline)。
+ * ========================================================================== */
+
+.home {
+  /* 页面级动效基调:距离 18px / 620ms,均经 --ms-motion-scale 门控(弱=打折,关=瞬时) */
+  --ms-reveal-distance: 18px;
+  --ms-reveal-duration: calc(620ms * var(--ms-motion-scale, 1));
+}
+
+/* ------------------------------- 1 · Hero -------------------------------- */
+
+.home-hero {
+  /* 顶部比标准节稍收一点:上面还有公告条 + 页头 */
+  padding-block-start: clamp(48px, 7vw, 104px);
+}
+
+.home-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.04fr) minmax(0, 0.96fr);
+  gap: clamp(40px, 6vw, 96px);
+  align-items: center;
+}
+
+.home-hero-copy .sf-eyebrow {
+  margin: 0 0 22px;
+}
+
+.home-hero-title {
+  margin-bottom: 26px;
+}
+
+/* text-lines 的行单元默认 inline-block,标题里强制成块级逐行排 */
+.home-hero-title [data-ms-reveal-line] {
+  display: block;
+}
+
+.home-hero-lede {
+  margin: 0 0 40px;
+}
+
+.home-hero-cta {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+/* Button asChild 渲染成 <a>,压掉浏览器默认下划线 */
+.home-hero-cta > a {
+  text-decoration: none;
+}
+
+/* 把按钮语义还给 <button>,外观还给 .sf-link */
+.home-link-btn {
+  border: 0;
+  background: none;
+  padding: 0 0 2px;
+  font: inherit;
+  font-size: 15px;
+  color: inherit;
+  cursor: pointer;
+}
+
+/* collage:大 portrait 靠右,小 square 负 margin 叠左下,bg 色环做“衬纸” */
+.home-hero-art {
+  position: relative;
+}
+
+.home-hero-main {
+  display: block;
+  width: 88%;
+  margin-inline-start: auto;
+}
+
+.home-hero-side {
+  position: relative;
+  z-index: 2;
+  display: block;
+  width: 46%;
+  margin-block-start: -26%;
+  border-radius: var(--sf-radius);
+  box-shadow:
+    0 0 0 10px var(--ms-color-bg),
+    0 32px 56px -44px color-mix(in oklab, var(--ms-color-fg), transparent 45%);
+}
+
+.home-hero-main:focus-visible,
+.home-hero-side:focus-visible,
+.home-cat:focus-visible,
+.home-card:focus-visible {
+  outline: 2px solid var(--ms-color-focus-ring);
+  outline-offset: 3px;
+  border-radius: var(--sf-radius);
+}
+
+/* ------------------------------ 2 · 分类带 ------------------------------- */
+
+.home-cats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(14px, 1.8vw, 20px);
+}
+
+.home-cat {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  aspect-ratio: 1 / 1.16;
+  padding: clamp(18px, 2vw, 26px);
+  border-radius: var(--sf-radius);
+  text-decoration: none;
+  background: linear-gradient(165deg, var(--hc-tint) 0%, var(--hc-field) 70%);
+  transition:
+    transform var(--ms-duration-base) var(--ms-ease-standard),
+    box-shadow var(--ms-duration-base) var(--ms-ease-standard);
+}
+
+.home-cat:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 24px 44px -36px color-mix(in oklab, var(--hc-shade), transparent 25%);
+}
+
+/* 文字色从商品暗部色向页面 ink 拉近,保证在浅色场上读得清 */
+.home-cat-name {
+  font-family: var(--sf-display);
+  font-size: clamp(20px, 2.1vw, 27px);
+  letter-spacing: -0.01em;
+  color: color-mix(in oklab, var(--hc-shade) 72%, var(--ms-color-fg) 28%);
+}
+
+.home-cat-count {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--hc-shade) 82%, var(--ms-color-fg) 18%);
+  opacity: 0.85;
+}
+
+/* ------------------------- 3 · 通用节头 + 精选网格 ------------------------ */
+
+.home-section-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: clamp(32px, 4.5vw, 60px);
+}
+
+.home-section-head .sf-eyebrow {
+  margin: 0 0 16px;
+}
+
+.home-section-head h2 {
+  margin: 0;
+}
+
+.home-head-link {
+  font-size: 14px;
+  white-space: nowrap;
+  margin-bottom: 6px;
+}
+
+.home-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 32px 20px;
+}
+
+.home-card-media {
+  position: relative;
+}
+
+.home-card-badges {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 1;
+  display: flex;
+  gap: 6px;
+}
+
+/* ----------------------------- 4 · 宣言带 -------------------------------- */
+
+.home-approach {
+  background: var(--ms-color-surface-sunken);
+  border-radius: calc(var(--sf-radius) * 1.6);
+  padding: clamp(56px, 8vw, 108px) clamp(24px, 6vw, 96px);
+  text-align: center;
+}
+
+.home-approach .sf-eyebrow {
+  margin: 0 0 24px;
+}
+
+.home-approach-title {
+  margin: 0;
+}
+
+/* mask-up 容器默认 inline-block,这里强制块级,两行各占一行、各自揭示 */
+.home-approach .home-approach-line {
+  display: block;
+}
+
+.home-values {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-block-start: clamp(44px, 6vw, 76px);
+}
+
+.home-value {
+  padding-inline: clamp(20px, 3vw, 48px);
+}
+
+/* 列间发丝线(非首列左侧一道) */
+.home-value + .home-value {
+  border-inline-start: 1px solid var(--sf-hairline);
+}
+
+.home-value-icon {
+  display: inline-flex;
+  color: var(--ms-color-fg-muted);
+  margin-bottom: 14px;
+}
+
+.home-value-title {
+  margin: 0 0 8px;
+  font-size: 14px;
+  font-weight: 560;
+  letter-spacing: -0.005em;
+}
+
+.home-value-copy {
+  margin: 0 auto;
+  max-width: 30ch;
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--ms-color-fg-muted);
+  text-wrap: pretty;
+}
+
+/* --------------------------- 5 · Back in stock --------------------------- */
+
+/* 一屏 = 3 张卡;顶部留 6px headroom,hover 上浮不被 slide 裁切 */
+.home-restock-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  padding-block-start: 6px;
+  padding-inline: 2px;
+}
+
+/* ----------------------------- 6 · 收尾陈述 ------------------------------ */
+
+.home-visit-inner {
+  text-align: center;
+}
+
+.home-visit .sf-eyebrow {
+  margin: 0 0 20px;
+}
+
+.home-visit h2 {
+  margin: 0;
+}
+
+.home-visit-address {
+  margin: 16px 0 0;
+  font-size: 14px;
+  color: var(--ms-color-fg-muted);
+}
+
+.home-visit-link {
+  display: inline-block;
+  margin-block-start: 24px;
+  font-size: 14px;
+}
+
+/* --------------------------- 7 · 聊天浮钮入口 ----------------------------- */
+
+/* 单个 FloatButton 不自带 fixed(库约定),由页面容器落位到右下角 */
+.home-chat {
+  position: fixed;
+  right: clamp(16px, 3vw, 28px);
+  bottom: clamp(16px, 3vw, 28px);
+  z-index: 60;
+}
+
+.home-chat-card {
+  display: grid;
+  gap: 8px;
+  width: min(248px, 72vw);
+}
+
+.home-chat-title {
+  font-size: 14px;
+  font-weight: 560;
+}
+
+.home-chat-copy {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--ms-color-fg-muted);
+}
+
+.home-chat-mail {
+  font-size: 13px;
+  justify-self: start;
+}
+
+/* -------------------------------- 响应式 --------------------------------- */
+
+@media (max-width: 960px) {
+  .home-hero-grid {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+
+  .home-hero-art {
+    max-width: 480px;
+  }
+
+  .home-grid-4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .home-cats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .home-values {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  /* 竖排后列间线换成行间线 */
+  .home-value + .home-value {
+    border-inline-start: 0;
+    border-block-start: 1px solid var(--sf-hairline);
+    padding-block-start: 32px;
+  }
+
+  .home-section-head {
+    flex-wrap: wrap;
+    align-items: baseline;
+  }
+}
+
+@media (max-width: 560px) {
+  /* 迷你卡:轮播里 3 张并排太挤,收掉一句话、缩字号 */
+  .home-restock-row {
+    gap: 12px;
+  }
+
+  .home-restock-row .sf-product-tagline {
+    display: none;
+  }
+
+  .home-restock-row .sf-product-meta {
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .home-restock-row .sf-product-name,
+  .home-restock-row .sf-product-price {
+    font-size: 13px;
+  }
+
+  .home-hero-cta {
+    gap: 20px;
+  }
+}
