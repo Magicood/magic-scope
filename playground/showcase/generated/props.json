@@ -5570,21 +5570,7 @@
       "default": "—",
       "description": "",
       "required": false,
-      "native": true,
-      "params": [
-        {
-          "name": "item",
-          "description": "被点击的本项数据"
-        },
-        {
-          "name": "index",
-          "description": "该项在原始 items 中的下标"
-        },
-        {
-          "name": "event",
-          "description": "原生鼠标点击事件(可 preventDefault 拦截默认跳转)"
-        }
-      ]
+      "native": true
     },
     {
       "name": "onContextMenu",
@@ -11347,8 +11333,8 @@
       "native": false,
       "params": [
         {
-          "name": "event",
-          "description": "内部 input 的原生 change 事件。"
+          "name": "value",
+          "description": "新的选中 value 数组(组内被勾选的各 Checkbox 的 value 集合)。"
         }
       ]
     },
@@ -13188,7 +13174,7 @@
       "name": "forceMount",
       "type": "boolean",
       "default": "false",
-      "description": "历史兼容保留:Content 已**始终常驻挂载**(见根 forceMount 说明),本属性不再影响是否渲染。\n保留仅为不破坏既有实例级 API。默认继承根设置。",
+      "description": "已废弃:Content 始终挂载,本属性已无效果。 历史兼容保留:Content 已**始终常驻挂载**(见根 forceMount 说明),本属性不再影响是否渲染。\n保留仅为不破坏既有实例级 API。默认继承根设置。",
       "required": false,
       "native": false
     },
@@ -13310,13 +13296,7 @@
       "default": "—",
       "description": "",
       "required": false,
-      "native": true,
-      "params": [
-        {
-          "name": "event",
-          "description": "触发按钮的原生键盘事件。"
-        }
-      ]
+      "native": true
     },
     {
       "name": "onKeyPress",
@@ -13340,13 +13320,7 @@
       "default": "—",
       "description": "",
       "required": false,
-      "native": true,
-      "params": [
-        {
-          "name": "event",
-          "description": "该次点击的原生鼠标事件。"
-        }
-      ]
+      "native": true
     },
     {
       "name": "onContextMenu",
@@ -13626,7 +13600,7 @@
       "name": "forceMount",
       "type": "boolean",
       "default": "false",
-      "description": "历史兼容保留:Content 现在**始终常驻挂载**(对齐 Accordion,见组件 JSDoc),收起态靠 CSS visibility + inert 隐藏,\n故本属性已无实际开关作用(收起内容恒在 DOM,SEO 可抓 / 锚点可跳 / 双向动画完整 / 子树 state 不丢)。\n保留仅为不破坏既有 API;后续若引入 SSR 懒挂载等能力再复用此口。默认 false。",
+      "description": "已废弃:Content 始终挂载,本属性已无效果,无需再传。 历史兼容保留:Content 现在**始终常驻挂载**(对齐 Accordion,见组件 JSDoc),收起态靠 CSS visibility + inert 隐藏,\n故本属性已无实际开关作用(收起内容恒在 DOM,SEO 可抓 / 锚点可跳 / 双向动画完整 / 子树 state 不丢)。\n保留仅为不破坏既有 API;后续若引入 SSR 懒挂载等能力再复用此口。默认 false。",
       "required": false,
       "native": false
     },
@@ -13762,13 +13736,7 @@
       "default": "—",
       "description": "",
       "required": false,
-      "native": true,
-      "params": [
-        {
-          "name": "event",
-          "description": "触发按钮的原生键盘事件。"
-        }
-      ]
+      "native": true
     },
     {
       "name": "onKeyPress",
@@ -13792,13 +13760,7 @@
       "default": "—",
       "description": "",
       "required": false,
-      "native": true,
-      "params": [
-        {
-          "name": "event",
-          "description": "该次点击的原生鼠标事件。"
-        }
-      ]
+      "native": true
     },
     {
       "name": "onContextMenu",
@@ -14854,13 +14816,7 @@
       "default": "—",
       "description": "",
       "required": false,
-      "native": true,
-      "params": [
-        {
-          "name": "value",
-          "description": "本项的 value。"
-        }
-      ]
+      "native": true
     },
     {
       "name": "onTouchCancel",
@@ -15262,13 +15218,7 @@
       "default": "—",
       "description": "",
       "required": false,
-      "native": true,
-      "params": [
-        {
-          "name": "value",
-          "description": "本项的 value。"
-        }
-      ]
+      "native": true
     },
     {
       "name": "onTouchCancel",
@@ -15670,13 +15620,7 @@
       "default": "—",
       "description": "",
       "required": false,
-      "native": true,
-      "params": [
-        {
-          "name": "value",
-          "description": "本项的 value。"
-        }
-      ]
+      "native": true
     },
     {
       "name": "onTouchCancel",
@@ -16510,13 +16454,7 @@
       "default": "—",
       "description": "",
       "required": false,
-      "native": true,
-      "params": [
-        {
-          "name": "value",
-          "description": "本项的 value。"
-        }
-      ]
+      "native": true
     },
     {
       "name": "onTouchCancel",
@@ -16910,13 +16848,7 @@
       "default": "—",
       "description": "",
       "required": false,
-      "native": true,
-      "params": [
-        {
-          "name": "value",
-          "description": "本项的 value。"
-        }
-      ]
+      "native": true
     },
     {
       "name": "onTouchCancel",
@@ -17110,7 +17042,7 @@
       "params": [
         {
           "name": "value",
-          "description": "本项的 value。"
+          "description": "被选中项的 value。"
         }
       ]
     },
@@ -17588,7 +17520,7 @@
       "params": [
         {
           "name": "value",
-          "description": "本项的 value。"
+          "description": "被选中项的 value。"
         }
       ]
     },
@@ -36538,17 +36470,7 @@
       "default": "—",
       "description": "",
       "required": false,
-      "native": true,
-      "params": [
-        {
-          "name": "item",
-          "description": "被选中的菜单项数据。"
-        },
-        {
-          "name": "index",
-          "description": "该项在「可聚焦序列」里的序号。"
-        }
-      ]
+      "native": true
     },
     {
       "name": "onTouchCancel",
@@ -37360,17 +37282,7 @@
       "default": "—",
       "description": "",
       "required": false,
-      "native": true,
-      "params": [
-        {
-          "name": "item",
-          "description": "被选中的菜单项数据。"
-        },
-        {
-          "name": "index",
-          "description": "该项在「可聚焦序列」里的序号。"
-        }
-      ]
+      "native": true
     },
     {
       "name": "onTouchCancel",
@@ -38812,13 +38724,7 @@
       "default": "—",
       "description": "",
       "required": false,
-      "native": true,
-      "params": [
-        {
-          "name": "event",
-          "description": "该次点击事件,可 `preventDefault()` 阻断内部关闭与导航后处理。"
-        }
-      ]
+      "native": true
     },
     {
       "name": "onTouchCancel",
@@ -39220,13 +39126,7 @@
       "default": "—",
       "description": "",
       "required": false,
-      "native": true,
-      "params": [
-        {
-          "name": "event",
-          "description": "该次点击事件,可 `preventDefault()` 阻断内部关闭与导航后处理。"
-        }
-      ]
+      "native": true
     },
     {
       "name": "onTouchCancel",
@@ -39628,13 +39528,7 @@
       "default": "—",
       "description": "",
       "required": false,
-      "native": true,
-      "params": [
-        {
-          "name": "event",
-          "description": "该次点击事件,可 `preventDefault()` 阻断内部关闭与导航后处理。"
-        }
-      ]
+      "native": true
     },
     {
       "name": "onTouchCancel",
@@ -40052,13 +39946,7 @@
       "default": "—",
       "description": "",
       "required": false,
-      "native": true,
-      "params": [
-        {
-          "name": "event",
-          "description": "该次点击事件,可 `preventDefault()` 阻断内部关闭与导航后处理。"
-        }
-      ]
+      "native": true
     },
     {
       "name": "onTouchCancel",
@@ -40452,13 +40340,7 @@
       "default": "—",
       "description": "",
       "required": false,
-      "native": true,
-      "params": [
-        {
-          "name": "event",
-          "description": "该次点击事件,可 `preventDefault()` 阻断内部关闭与导航后处理。"
-        }
-      ]
+      "native": true
     },
     {
       "name": "onTouchCancel",
@@ -40868,13 +40750,7 @@
       "default": "—",
       "description": "",
       "required": false,
-      "native": true,
-      "params": [
-        {
-          "name": "event",
-          "description": "该次点击事件,可 `preventDefault()` 阻断内部关闭与导航后处理。"
-        }
-      ]
+      "native": true
     },
     {
       "name": "onTouchCancel",
@@ -41276,13 +41152,7 @@
       "default": "—",
       "description": "",
       "required": false,
-      "native": true,
-      "params": [
-        {
-          "name": "event",
-          "description": "该次点击事件,可 `preventDefault()` 阻断内部关闭与导航后处理。"
-        }
-      ]
+      "native": true
     },
     {
       "name": "onTouchCancel",
@@ -43638,7 +43508,7 @@
       "name": "variant",
       "type": "\"danger\" | \"default\"",
       "default": "default",
-      "description": "",
+      "description": "已废弃:用 `tone=\"danger\"` 替代。保留作向后兼容:danger 时确认按钮染危险色。 当未显式传 `tone` 时,`variant=\"danger\"` 仍会把 tone 收敛为 danger。",
       "required": false,
       "native": false
     },
@@ -46204,13 +46074,7 @@
       "default": "—",
       "description": "",
       "required": false,
-      "native": true,
-      "params": [
-        {
-          "name": "event",
-          "description": "当前被选 Radio 的 input 触发的原生 change 事件。"
-        }
-      ]
+      "native": true
     },
     {
       "name": "onBeforeInput",
@@ -48616,17 +48480,7 @@
       "default": "—",
       "description": "",
       "required": false,
-      "native": true,
-      "params": [
-        {
-          "name": "value",
-          "description": "选中后的新值。"
-        },
-        {
-          "name": "item",
-          "description": "选中项对应的完整 SegmentedOption(含 label / icon / disabled 等)。"
-        }
-      ]
+      "native": true
     },
     {
       "name": "onBeforeInput",
@@ -55222,17 +55076,7 @@
       "default": "—",
       "description": "",
       "required": false,
-      "native": true,
-      "params": [
-        {
-          "name": "keys",
-          "description": "变更后全量已选行的 key 列表"
-        },
-        {
-          "name": "rows",
-          "description": "这些 key 在当前数据中对应的行对象数组"
-        }
-      ]
+      "native": true
     },
     {
       "name": "onBeforeInput",
@@ -59956,13 +59800,7 @@
       "default": "—",
       "description": "",
       "required": false,
-      "native": true,
-      "params": [
-        {
-          "name": "id",
-          "description": "被点击的 toast id"
-        }
-      ]
+      "native": true
     },
     {
       "name": "onContextMenu",
@@ -66532,13 +66370,7 @@
       "type": "() => void | Promise<void>",
       "default": "—",
       "description": "点击确认时触发(与 Promise 双轨;不 await 也能挂回调)。返回 Promise 时进入异步态:\n确认按钮 loading + 禁用,resolve 才关闭,reject 保持打开便于重试。",
-      "required": false,
-      "params": [
-        {
-          "name": "value",
-          "description": "确认时输入框的当前值(已通过校验)。"
-        }
-      ]
+      "required": false
     },
     {
       "name": "onCancel",
@@ -66615,13 +66447,7 @@
       "type": "() => void | Promise<void>",
       "default": "—",
       "description": "点击确认时触发;返回 Promise 时进入异步态。",
-      "required": false,
-      "params": [
-        {
-          "name": "value",
-          "description": "确认时输入框的当前值(已通过校验)。"
-        }
-      ]
+      "required": false
     },
     {
       "name": "confirmLoading",

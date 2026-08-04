@@ -8,43 +8,15 @@ import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { withCompilerOptions } from 'react-docgen-typescript';
 import ts from 'typescript';
+import { cleanDescription, extractParamDocs, type PropRow } from './lib/props-doc';
 
 const COMPONENTS_DIR = 'packages/react/src/components';
 const OUT = 'playground/showcase/generated/props.json';
-
-/** 事件回调的逐个参数说明(抽自源码 @param;无 @param 则为空)。 */
-export interface EventParamDoc {
-  name: string;
-  description: string;
-}
-
-export interface PropRow {
-  name: string;
-  type: string;
-  default: string;
-  description: string;
-  required: boolean;
-  /** 是否继承自原生元素(透传事件 / 属性);组件自有为 false。 */
-  native?: boolean;
-  /** 仅事件 prop:逐参 @param 说明(按参数名对应回调签名里的参数)。 */
-  params?: EventParamDoc[];
-}
 
 // 有意义的标准交互事件白名单(继承自原生元素的也要列进「事件 Events」表;
 // 排除 media / image / animation / transition / *Capture 等对交互组件无关或重复的)。
 const KEEP_NATIVE_EVENT =
   /^on(Click|DoubleClick|Mouse(Down|Up|Enter|Leave|Move|Over|Out)|ContextMenu|Key(Down|Up|Press)|Focus|Blur|Pointer(Down|Up|Move|Enter|Leave|Over|Out|Cancel)|Touch(Start|Move|End|Cancel)|Wheel|Scroll|Change|Input|BeforeInput|Submit|Reset|Invalid|Select|Copy|Cut|Paste|Composition(Start|Update|End)|Drag(Start|End|Enter|Leave|Over)?|Drop)$/;
-
-// react-docgen 会把 @param/@returns 等 JSDoc 块级标签原文折进 description。
-// 事件参数已由 @param 单独抽取并渲染,这里把说明截到第一个块级标签为止,只留摘要,避免重复。
-function cleanDescription(raw: string): string {
-  return raw
-    .replace(
-      /\s*@(param|returns?|example|see|deprecated|remarks|default|defaultValue|template|typeParam|throws)\b[\s\S]*$/i,
-      '',
-    )
-    .trim();
-}
 
 const parser = withCompilerOptions(
   { jsx: 4 /* react-jsx */, esModuleInterop: true, skipLibCheck: true },
@@ -70,9 +42,12 @@ const parser = withCompilerOptions(
 );
 
 // 收集每个组件目录的主源文件(<Dir>/<Dir>.tsx)。
+// 显式 .sort():readdir 顺序由文件系统决定(APFS 与 ext4 不一致),而 props.json 是已提交产物、
+// CI 在 ubuntu 上用 check:props 与本地 macOS 生成的结果逐字节比对——键序必须与遍历环境无关。
 const dirs = readdirSync(COMPONENTS_DIR, { withFileTypes: true })
   .filter((d) => d.isDirectory())
-  .map((d) => d.name);
+  .map((d) => d.name)
+  .sort();
 
 const files: string[] = [];
 const mainDirs: string[] = [];
@@ -95,59 +70,8 @@ const program = ts.createProgram(files, {
 });
 const checker = program.getTypeChecker();
 
-// 抽「事件 prop 的 @param」:file → propName → EventParamDoc[]。
-// react-docgen 只给 description(JSDoc 首段),逐参 @param 用编译器 API 单独取。
-function extractParamDocs(filePaths: string[]): Record<string, Record<string, EventParamDoc[]>> {
-  const byFile: Record<string, Record<string, EventParamDoc[]>> = {};
-  for (const file of filePaths) {
-    const sf = program.getSourceFile(file);
-    if (!sf) continue;
-    const map: Record<string, EventParamDoc[]> = {};
-    const visit = (node: ts.Node) => {
-      if (
-        (ts.isPropertySignature(node) || ts.isMethodSignature(node)) &&
-        node.name &&
-        ts.isIdentifier(node.name) &&
-        /^on[A-Z]/.test(node.name.text)
-      ) {
-        const sym = checker.getSymbolAtLocation(node.name);
-        const tags = sym?.getJsDocTags(checker) ?? [];
-        const params: EventParamDoc[] = [];
-        for (const tag of tags) {
-          if (tag.name !== 'param' || !tag.text) continue;
-          const namePart = tag.text.find((p) => p.kind === 'parameterName');
-          let pname: string;
-          let desc: string;
-          if (namePart) {
-            pname = namePart.text;
-            desc = tag.text
-              .filter((p) => p !== namePart)
-              .map((p) => p.text)
-              .join('')
-              .trim();
-          } else {
-            const full = ts.displayPartsToString(tag.text).trim();
-            const m = /^(\S+)\s+([\s\S]*)$/.exec(full);
-            pname = m ? m[1] : full;
-            desc = m ? m[2] : '';
-          }
-          desc = desc
-            .replace(/^[\s\-:]+/, '')
-            .replace(/\s+/g, ' ')
-            .trim();
-          if (pname) params.push({ name: pname, description: desc });
-        }
-        if (params.length) map[node.name.text] = params;
-      }
-      ts.forEachChild(node, visit);
-    };
-    ts.forEachChild(sf, visit);
-    if (Object.keys(map).length) byFile[file] = map;
-  }
-  return byFile;
-}
-
-const paramDocs = extractParamDocs(files);
+// 事件 @param:三层索引 file → 声明接口 → propName(实现与「为何必须按接口分桶」见 lib/props-doc.ts)。
+const paramDocs = extractParamDocs(program, checker, files);
 
 const docs = parser.parse(files);
 
@@ -174,11 +98,15 @@ for (const doc of docs) {
       name: p.name,
       type: typeStr.replace(/\s+/g, ' ').trim(),
       default: p.defaultValue?.value != null ? String(p.defaultValue.value) : '—',
-      description: cleanDescription((p.description ?? '').trim()),
+      description: cleanDescription((p.description ?? '').trim(), !native),
       required: Boolean(p.required),
       native,
     };
-    if (/^on[A-Z]/.test(p.name) && fileParams[p.name]) row.params = fileParams[p.name];
+    // @param 按「声明该 prop 的接口」取:react-docgen 对接口成员给 parent.name,
+    // 对 type 字面量成员给 undefined(对应 '' 桶);原生透传 prop 的 parent 在 node_modules,
+    // 本文件不存在同名桶,自然拿不到 params —— Breadcrumb 根 onClick 被冠上 BreadcrumbItem 三参即此类。
+    const params = fileParams[p.parent?.name ?? '']?.[p.name];
+    if (/^on[A-Z]/.test(p.name) && params) row.params = params;
     return row;
   });
   if (rows.length === 0) continue;
@@ -202,9 +130,16 @@ function extractOptionInterfaces(filePaths: string[]): Record<string, PropRow[]>
       for (const member of node.members) {
         if (!ts.isPropertySignature(member) || !member.name) continue;
         const sym = checker.getSymbolAtLocation(member.name);
-        const description = sym
-          ? cleanDescription(ts.displayPartsToString(sym.getDocumentationComment(checker)).trim())
+        // getDocumentationComment 天然不含块级标签,@deprecated 正文须从 tags 单独取回,
+        // 再拼回原始形态交给 cleanDescription 统一标注(与 docgen 分支同一套口径)。
+        const depTag = sym
+          ?.getJsDocTags(checker)
+          .find((tag) => tag.name === 'deprecated' && tag.text?.length);
+        const rawDoc = sym
+          ? ts.displayPartsToString(sym.getDocumentationComment(checker)).trim() +
+            (depTag ? `\n@deprecated ${ts.displayPartsToString(depTag.text)}` : '')
           : '';
+        const description = cleanDescription(rawDoc);
         const name = member.name.getText(sf);
         const row: PropRow = {
           name,
@@ -213,7 +148,9 @@ function extractOptionInterfaces(filePaths: string[]): Record<string, PropRow[]>
           description,
           required: !member.questionToken,
         };
-        if (/^on[A-Z]/.test(name) && fileParams[name]) row.params = fileParams[name];
+        // 同样按声明接口取(node 即本接口),避免同文件多个 *Options 的同名 onConfirm 串味。
+        const params = fileParams[node.name.text]?.[name];
+        if (/^on[A-Z]/.test(name) && params) row.params = params;
         rows.push(row);
       }
       if (rows.length) result[node.name.text] = rows;

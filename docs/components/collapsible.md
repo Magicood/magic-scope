@@ -21,7 +21,7 @@
 | `open` | `boolean` | — | 受控:是否展开。传入即进入受控模式(配合 onOpenChange)。 |
 | `defaultOpen` | `boolean` | `false` | 非受控初始展开态。默认 false。 |
 | `disabled` | `boolean` | `false` | 整体禁用:trigger 不可点击、不可聚焦,且不响应键盘切换。 |
-| `forceMount` | `boolean` | `false` | 历史兼容保留:Content 现在&#42;&#42;始终常驻挂载&#42;&#42;(对齐 Accordion,见组件 JSDoc),收起态靠 CSS visibility + inert 隐藏,<br>故本属性已无实际开关作用(收起内容恒在 DOM,SEO 可抓 / 锚点可跳 / 双向动画完整 / 子树 state 不丢)。<br>保留仅为不破坏既有 API;后续若引入 SSR 懒挂载等能力再复用此口。默认 false。 |
+| `forceMount` | `boolean` | `false` | 已废弃:Content 始终挂载,本属性已无效果,无需再传。 历史兼容保留:Content 现在&#42;&#42;始终常驻挂载&#42;&#42;(对齐 Accordion,见组件 JSDoc),收起态靠 CSS visibility + inert 隐藏,<br>故本属性已无实际开关作用(收起内容恒在 DOM,SEO 可抓 / 锚点可跳 / 双向动画完整 / 子树 state 不丢)。<br>保留仅为不破坏既有 API;后续若引入 SSR 懒挂载等能力再复用此口。默认 false。 |
 | `tone` | `"primary" \| "accent" \| "success" \| "warning" \| "danger" \| "info" \| "neutral"` | `primary` | 语义色调:根加 ms-tone-${tone},trigger hover/open/focus 配色读 6 槽位。默认 primary。 |
 
 ## 事件 Events
