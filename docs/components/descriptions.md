@@ -18,6 +18,18 @@ bordered 表格态、size 三档随密度缩放、colon 冒号、tone 七色语�
 
 | 参数 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
+| `items` | `DescriptionsItem[]` | — | 描述项数据(也可改用 Descriptions.Item 复合子组件;两者择一,items 优先)。 |
+| `columns` | `ResponsiveColumns` | — | 列数:<br>- `number` → 固定逻辑列数(默认 3);<br>- 断点对象 → 各断点列数(如 `{ base: 1, md: 2, lg: 3 }`),随屏收窄,<br>  靠每断点一个 CSS 变量 + Descriptions.css 静态<br>@media 级联(条件里 var() 不生效)。 |
+| `bordered` | `boolean` | — | 带边框表格态(单元描边 + 标签底色)。默认 false。 |
+| `size` | `"sm" \| "md" \| "lg"` | — | 尺寸(随密度缩放间距与字号)。默认 md。 |
+| `layout` | `"horizontal" \| "vertical"` | — | 排布:horizontal(标签内容同行)默认 / vertical(标签在上、内容在下)。 |
+| `colon` | `boolean` | — | 标签后是否带冒号(horizontal 态生效)。默认 true。 |
+| `tone` | `"primary" \| "accent" \| "success" \| "warning" \| "danger" \| "info" \| "neutral"` | — | 语义色调:派生标签底色 / 描边强调 / 发光。默认 neutral。 |
+| `title` | `ReactNode` | — | 标题(ReactNode 槽,放在头部左侧)。 |
+| `extra` | `ReactNode` | — | 头部右侧附加内容(操作 / 状态 ReactNode 槽)。 |
+| `classNames` | `DescriptionsClassNames` | — | 部件级 className。 |
+| `emptyText` | `ReactNode` | — | 空数据时的占位文案(默认走 i18n empty.description)。 |
+| `as` | `"div" \| "article" \| "aside" \| "dl" \| "section"` | — | 多态:渲染为指定标签(默认 div)。 |
 | `children` | `ReactNode` | — | 项内容(value 的 JSX 形态;value/children 二者择一,value 优先)。 |
 | `key` | `string \| number` | — | 唯一键(列表渲染用;缺省回退索引)。 |
 | `label` | `ReactNode` | — | 项标签(键)。 |

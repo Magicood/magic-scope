@@ -29,7 +29,7 @@ danger 变体把确认按钮染危险色;点外 / Esc 关闭等同取消(触发 
 | `confirmText` | `ReactNode` | — | 确认按钮文案。默认走 i18n popconfirm.confirm(「确定」)。 |
 | `cancelText` | `ReactNode` | — | 取消按钮文案。默认走 i18n popconfirm.cancel(「取消」)。 |
 | `tone` | `"primary" \| "accent" \| "success" \| "warning" \| "danger" \| "info" \| "neutral"` | — | 语义色调,派生确认按钮配色与浮层发光。默认 primary。 |
-| `variant` | `"danger" \| "default"` | `default` |  |
+| `variant` | `"danger" \| "default"` | `default` | 已废弃:用 `tone="danger"` 替代。保留作向后兼容:danger 时确认按钮染危险色。 当未显式传 `tone` 时,`variant="danger"` 仍会把 tone 收敛为 danger。 |
 | `confirmLoading` | `boolean` | — | 受控:确认按钮是否处于 loading(异步确认期间内部也会自动置 loading)。 |
 | `placement` | `"left" \| "right" \| "bottom" \| "top" \| "top-end" \| "top-start" \| "bottom-end" \| "bottom-start" \| "left-start" \| "left-end" \| "right-start" \| "right-end"` | `top` | 气泡相对 trigger 的方位。默认 top。 |
 | `open` | `boolean` | — | 受控:是否打开。传入即进入受控模式。 |
