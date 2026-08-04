@@ -1,6 +1,6 @@
 {
   "name": "@magic-scope/demo-shop",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": true,
   "type": "module",
   "description": "Arden — 双面电商实战样板:买家端精品店面(/)+ 商家控制台(/admin),用一个真实产品把 @magic-scope/react 的组件真刀真枪用起来",
