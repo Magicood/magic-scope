@@ -1,5 +1,12 @@
 # @magic-scope/demo-vela
 
+## 0.0.2
+
+### Patch Changes
+
+- Updated dependencies [80e06ff]
+  - @magic-scope/react@0.2.1
+
 ## 0.0.1
 
 ### Patch Changes
