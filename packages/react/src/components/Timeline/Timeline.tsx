@@ -69,6 +69,8 @@ export const Timeline = forwardRef<HTMLOListElement, TimelineProps>(
           <li className="ms-timeline__item ms-timeline__item--pending">
             <div className="ms-timeline__node" aria-hidden="true">
               <span className="ms-timeline__dot ms-timeline__dot--pulse" />
+              {/* reverse 时 pending 在视觉最顶,需要由它自己画出通往下一条的连线 */}
+              <span className="ms-timeline__line" aria-hidden="true" />
             </div>
             <div className="ms-timeline__content">
               <div className="ms-timeline__body">
