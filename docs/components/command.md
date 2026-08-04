@@ -41,7 +41,7 @@ a11y 走 combobox + listbox + option 组合角色。复合 Command / Command.Inp
 | 事件 | 签名 | 说明 |
 | --- | --- | --- |
 | `onValueChange` | `(value: string) => void` | 查询串变化回调(受控 / 非受控双通道都会触发)。<br>· `value` — 变化后的查询串。 |
-| `onSelect` | `(value: string) => void` | 任一项被选中时的统一回调(集中埋点 / 分发)。<br>· `value` — 本项的 value。 |
+| `onSelect` | `(value: string) => void` | 任一项被选中时的统一回调(集中埋点 / 分发)。<br>· `value` — 被选中项的 value。 |
 | `onOpenChange` | `(open: boolean) => void` | 开合变化回调(Esc / 点遮罩 / mod+k 切换)。<br>· `open` — 变化后的目标显隐:true 打开,false 关闭。 |
 
 ## 溯源

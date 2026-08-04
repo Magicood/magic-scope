@@ -409,13 +409,12 @@ if (missingInManifest.length > 0 || missingInMeta.length > 0) {
 }
 // 主接口缺失守卫:按主键(propsName ?? name)判断,不被合成的 spread 行 / alsoProps 子键掩盖
 // (曾有 12 个主组件被 react-docgen 静默丢弃,页面只剩 ...props 行却零告警)。
-// TODO(extract-props 修复后):升级为硬错误。
 const missingMainProps = metas
   .filter((m) => (PROPS[m.propsName ?? m.name] ?? []).length === 0)
   .map((m) => m.id);
 if (missingMainProps.length > 0) {
-  console.warn(
-    `  ⚠ ${missingMainProps.length} 个组件在 props.json 中查不到主接口,参数表失真(待修 extract-props):\n    ${missingMainProps.join(', ')}`,
+  throw new Error(
+    `${missingMainProps.length} 个组件在 props.json 中查不到主接口,参数表会失真:${missingMainProps.join(', ')}(先跑 pnpm gen:props;仍缺则是 extract-props 归属回归)`,
   );
 }
 // alsoProps 键缺失同样不许静默(如 Splitter.Panel 不在 props.json,Panel 全部参数无声消失)。
@@ -423,8 +422,8 @@ const missingAlso = metas.flatMap((m) =>
   (m.alsoProps ?? []).filter((a) => !PROPS[a]?.length).map((a) => `${m.id} → ${a}`),
 );
 if (missingAlso.length > 0) {
-  console.warn(
-    `  ⚠ ${missingAlso.length} 个 alsoProps 键在 props.json 中缺失:${missingAlso.join('; ')}`,
+  throw new Error(
+    `${missingAlso.length} 个 alsoProps 键在 props.json 中缺失:${missingAlso.join('; ')}(键名须与 props.json 的 displayName 完全一致)`,
   );
 }
 
