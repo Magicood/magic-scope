@@ -11,7 +11,9 @@ const DB = generated as Record<string, PropRow[]>;
 export function getProps(name: string, also: string[] = [], spread?: string): PropRow[] {
   const merged: PropRow[] = [...(DB[name] ?? [])];
   for (const a of also) {
-    merged.push(...(DB[a] ?? []));
+    // 必填与否是对「所属组件」的断言:并进父表后就不成立了(Menu 甚至不接受 children,
+    // 却会因为并入 Menu.Trigger 而显示 `children *`)。来源已写在说明里,这里只清掉必填标记。
+    merged.push(...(DB[a] ?? []).map((r) => (r.required ? { ...r, required: false } : r)));
   }
   // 多接口合并会有重名(如 ConfirmOptions/PromptOptions 都有 title),按名去重保留首个。
   const seen = new Set<string>();

@@ -112,8 +112,9 @@ for (const doc of docs) {
     return row;
   });
   if (rows.length === 0) {
-    // 带点的 displayName 只可能来自 `X.displayName = 'Menu.Trigger'` 这类子组件赋值
-    // (类型别名 / 接口走 componentNameResolver 拿自身名,不含点),所以 0 行必是抽取事故而非「本就无参」。
+    // 只记候选,判定交给下方守卫②:一是同名符号可能产出多条 doc(见上方 componentNameResolver
+    // 注释),另一条有行则键仍完整;二是带点还不足以说明是人工声明的子组件(react-docgen 会给
+    // 静态成员自动合成带点名),得比对源码里的 displayName 赋值才能定性。
     if (doc.displayName.includes('.')) droppedNamespaced.push(doc.displayName);
     continue;
   }
@@ -170,19 +171,7 @@ for (const [name, rows] of Object.entries(extractOptionInterfaces(files))) {
   out[name] = rows;
 }
 
-// —— 守卫①:命名空间子组件不得抽出 0 行 ——
-// 抽出 0 行整条 doc 会被丢,props.json 里连键都没有,展示站 / docs 那一段参数无声消失
-// (Menu.Trigger 曾如此:唯一自有 prop 是无 JSDoc 的 children,被 react-docgen 的
-// skipChildrenPropWithoutDoc 在自定义 propFilter 之前剔掉,又没有原生事件兜底)。
-// 复发时的修法:给该子组件补一个带 JSDoc 的导出 props 接口(见 MenuTriggerProps)。
-if (droppedNamespaced.length) {
-  console.error(
-    `✖ 以下命名空间子组件抽出 0 行 props,已被整条丢弃(props.json 里将无此键):${droppedNamespaced.join(', ')}\n  多半是唯一的自有 prop 是无 JSDoc 的 children——给它补文档注释即可。`,
-  );
-  process.exit(1);
-}
-
-// —— 守卫②:每个组件目录必须产出「与目录同名的主 displayName」且 props 非空,否则报错 ——
+// —— 守卫①:每个组件目录必须产出「与目录同名的主 displayName」且 props 非空,否则报错 ——
 // react-docgen 在多种导出形态下会静默丢主组件(见上方 componentNameResolver 注释;
 // `as` 断言导出 + displayName 挂在局部名上是另一触发形态),丢了页面只剩 ...props 合成行,
 // 却仍声称「自动抽取、永不漂移」。这里硬性拦截,任何形态的复发都会让 gen/check 直接失败。
@@ -198,6 +187,29 @@ const missingMain = mainDirs.filter((dir) => {
 if (missingMain.length) {
   console.error(
     `✖ 以下组件目录未产出主组件 displayName(被 react-docgen 静默丢弃,须排查导出形态):${missingMain.join(', ')}`,
+  );
+  process.exit(1);
+}
+
+// —— 守卫②:显式声明了 displayName 的命名空间子组件,不得抽出 0 行 ——
+// 抽出 0 行整条 doc 会被丢,props.json 里连键都没有,展示站 / docs 那一段参数无声消失
+// (Menu.Trigger 曾如此:唯一自有 prop 是无 JSDoc 的 children,被 react-docgen 的
+// skipChildrenPropWithoutDoc 在自定义 propFilter 之前剔掉,又没有原生事件兜底)。
+//
+// 判据必须是「源码里确有 `X.displayName = 'A.B'` 赋值」,不能只看 displayName 带点:
+// react-docgen 会给挂在导出组件上的静态成员**自动**合成 `导出名.成员名`(parser.js 的
+// static sub-components 分支),那类没人显式声明、0 行也可能是合理的,拿来报错就是误伤。
+const declaredDisplayNames = new Set(
+  files.flatMap((f) =>
+    [...readFileSync(f, 'utf8').matchAll(/\.displayName\s*=\s*['"]([^'"]+)['"]/g)].map((m) => m[1]),
+  ),
+);
+const lostNamespaced = droppedNamespaced.filter(
+  (name) => declaredDisplayNames.has(name) && !out[name]?.length,
+);
+if (lostNamespaced.length) {
+  console.error(
+    `✖ 以下命名空间子组件抽出 0 行 props,已被整条丢弃(props.json 里将无此键):${lostNamespaced.join(', ')}\n  多半是唯一的自有 prop 是无 JSDoc 的 children——给它补文档注释即可。`,
   );
   process.exit(1);
 }

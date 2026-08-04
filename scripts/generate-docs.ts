@@ -118,7 +118,9 @@ function loadCatalog(): {
 function getRows(meta: ComponentMeta): PropRow[] {
   const merged = [...(PROPS[meta.propsName ?? meta.name] ?? [])];
   for (const a of meta.alsoProps ?? []) {
-    merged.push(...(PROPS[a] ?? []));
+    // 必填与否是对「所属组件」的断言:并进父表后就不成立了(Menu 甚至不接受 children,
+    // 却会因为并入 Menu.Trigger 而显示 `children *`)。来源已写在说明里,这里只清掉必填标记。
+    merged.push(...(PROPS[a] ?? []).map((r) => (r.required ? { ...r, required: false } : r)));
   }
   const seen = new Set<string>();
   const rows: PropRow[] = [];

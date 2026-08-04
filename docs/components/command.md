@@ -32,7 +32,7 @@ a11y 走 combobox + listbox + option 组合角色。复合 Command / Command.Inp
 | `keywords` | `readonly string[]` | — | 额外匹配关键词(命中算入过滤,不参与 label 高亮)。 |
 | `disabled` | `boolean` | `false` | 是否禁用(渲染但不可选、键盘跳过)。 |
 | `shortcut` | `ReactNode` | — | 右侧附属内容(如快捷键 / 标签)。 |
-| `open` * | `boolean` | — | 是否打开(受控)。 |
+| `open` | `boolean` | — | 是否打开(受控)。 |
 | `hotkey` | `boolean` | `false` | 监听 mod+k(⌘K / Ctrl+K)全局切换打开。默认 false(由调用方自行控制 open)。 |
 | `dialogProps` | `Omit<DialogProps, "children" \| "onClose" \| "open" \| "onOpenChange">` | — | 透传给底层 Dialog 的属性(size / placement / classNames 等)。 |
 

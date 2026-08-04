@@ -38,7 +38,7 @@
 | `shortcut` | `ReactNode \| readonly string[]` | — | Menu.Item:快捷键提示。 |
 | `asChild` | `boolean` | `false` | Menu.Item:渲染为子元素(如链接),而非默认的 button。 |
 | `label` | `ReactNode` | — | Menu.Group:分组标题。 |
-| `children` * | `ReactElement<unknown, string \| JSXElementConstructor<any>>` | — | Menu.Trigger 的唯一子元素(触发器本体);外部 ref 会 compose 到它身上,故须能接收 ref。 |
+| `children` | `ReactElement<unknown, string \| JSXElementConstructor<any>>` | — | Menu.Trigger 的唯一子元素(触发器本体);外部 ref 会 compose 到它身上,故须能接收 ref。 |
 
 ## 事件 Events
 

@@ -1,9 +1,19 @@
 // @vitest-environment jsdom
 import '@testing-library/jest-dom/vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
-import { createRef } from 'react';
+import { createRef, type Ref } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { Menu } from './Menu';
+
+// element.ref 的废弃告警按「子元素类型名」去重,用 <button> 会被本文件前面的用例先吃掉,
+// 观察不到回归。这个探针组件名全库唯一,保证告警在本用例里一定能打出来。
+function RefProbeTrigger({ ref }: { ref?: Ref<HTMLButtonElement> }) {
+  return (
+    <button type="button" ref={ref}>
+      ref 探针
+    </button>
+  );
+}
 
 describe('Menu', () => {
   const items = [
@@ -294,7 +304,7 @@ describe('Menu', () => {
   it('Menu.Trigger 透明转发子元素,并把外部 ref 与子元素自身 ref 一并 compose', () => {
     const outer = createRef<HTMLButtonElement>();
     const inner = createRef<HTMLButtonElement>();
-    render(
+    const { container } = render(
       <Menu.Trigger ref={outer}>
         <button type="button" ref={inner}>
           操作
@@ -302,8 +312,31 @@ describe('Menu', () => {
       </Menu.Trigger>,
     );
     const btn = screen.getByRole('button', { name: '操作' });
-    // 不额外包一层 DOM:渲染出的就是子元素本身。
+    // 不额外包一层 DOM:渲染出的就是子元素本身(只断言 ref 相等挡不住外面再套一层)。
+    expect(container.firstChild).toBe(btn);
     expect(outer.current).toBe(btn);
     expect(inner.current).toBe(btn);
+  });
+
+  // 读子元素 ref 必须走 props.ref,不能碰 React 19 已废弃的 element.ref。
+  // 只断言 ref 挂上是不够的:React 19 里 element.ref 是个返回 props.ref 的 getter,
+  // 两条通道结果一样,唯一可观察的差别就是读废弃通道会打告警。
+  it('Menu.Trigger 读子元素 ref 不走 React 19 已废弃的 element.ref 通道', () => {
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    try {
+      const outer = createRef<HTMLButtonElement>();
+      const inner = createRef<HTMLButtonElement>();
+      render(
+        <Menu.Trigger ref={outer}>
+          <RefProbeTrigger ref={inner} />
+        </Menu.Trigger>,
+      );
+      const btn = screen.getByRole('button', { name: 'ref 探针' });
+      expect(outer.current).toBe(btn);
+      expect(inner.current).toBe(btn);
+      expect(spy.mock.calls.flat().filter((a) => String(a).includes('element.ref'))).toEqual([]);
+    } finally {
+      spy.mockRestore();
+    }
   });
 });
