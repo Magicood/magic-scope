@@ -264,6 +264,7 @@
   border-radius: var(--ms-radius-sm);
   background: none;
   color: var(--ms-color-fg-muted, color-mix(in srgb, currentColor 60%, transparent));
+  font: inherit;
   font-size: 0.95rem;
   line-height: 1;
   cursor: pointer;

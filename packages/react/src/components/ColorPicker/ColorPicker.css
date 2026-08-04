@@ -31,6 +31,8 @@
   border: var(--ms-hairline, 1px) solid var(--ms-color-border);
   border-radius: var(--ms-radius-md);
   background: var(--ms-color-surface-raised);
+  color: inherit;
+  font: inherit;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
@@ -232,6 +234,7 @@
   background: var(--ms-color-surface-raised);
   color: var(--ms-color-fg);
   cursor: pointer;
+  font: inherit;
   font-size: 1rem;
   line-height: 1;
   transition: border-color var(--ms-dur-fast) var(--ms-ease-standard);
@@ -270,6 +273,7 @@
   border: none;
   background: var(--ms-color-surface-raised);
   color: var(--ms-color-fg-muted);
+  font: inherit;
   font-size: 0.6875rem;
   font-weight: 600;
   cursor: pointer;
@@ -327,6 +331,8 @@
   padding: 0;
   border: var(--ms-hairline, 1px) solid var(--ms-color-border);
   border-radius: var(--ms-radius-sm);
+  color: inherit;
+  font: inherit;
   cursor: pointer;
   transition: transform var(--ms-dur-fast) var(--ms-ease-emphasized);
 }

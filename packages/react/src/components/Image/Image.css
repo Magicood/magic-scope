@@ -230,6 +230,7 @@
   border-radius: var(--ms-radius-full, 9999px);
   background: transparent;
   color: var(--ms-color-fg-muted);
+  font: inherit;
   cursor: pointer;
   transition:
     color var(--ms-dur-fast, 120ms) var(--ms-ease-standard, ease),

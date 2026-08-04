@@ -85,6 +85,7 @@
   border-radius: var(--ms-radius-full, 9999px);
   background-color: color-mix(in oklch, var(--ms-color-bg) 78%, transparent);
   color: var(--ms-color-fg);
+  font: inherit;
   cursor: pointer;
   backdrop-filter: blur(4px);
   transform: translateY(-50%);
@@ -175,6 +176,8 @@
   border: none;
   border-radius: var(--ms-radius-full, 9999px);
   background-color: color-mix(in oklch, var(--ms-color-fg) 35%, transparent);
+  color: inherit;
+  font: inherit;
   cursor: pointer;
   transition:
     background-color var(--ms-dur-150, 150ms) var(--ms-ease-standard, ease),

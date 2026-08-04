@@ -73,6 +73,7 @@
   background: none;
   border: none;
   color: var(--ms-color-fg-muted);
+  font: inherit;
   cursor: pointer;
 }
 .ms-tree__toggle--leaf {
