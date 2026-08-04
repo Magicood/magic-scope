@@ -217,7 +217,6 @@ describe('Toolbar', () => {
   it('Button asChild 渲染为子元素 <a> 并保留工具栏样式 / 进焦点序', () => {
     render(
       <Toolbar aria-label="t">
-        {/* biome-ignore lint/a11y/useValidAnchor: 测试用 href */}
         <Toolbar.Button asChild>
           <a href="#go">跳转</a>
         </Toolbar.Button>

@@ -83,7 +83,7 @@ export interface SelectProps
   disabled?: boolean;
   /** 加载态:listbox 显示加载文案、trigger 不可展开内容。 */
   loading?: boolean;
-  /** 多选模式:trigger 显示 tag,select.removeTag/selected 文案。 */
+  /** 多选模式:trigger 逐条显示 tag,每个 tag 的移除按钮走 select.removeTag 文案。 */
   multiple?: boolean;
   /** 可搜索:listbox 顶部内联搜索框,按 query 过滤。 */
   searchable?: boolean;

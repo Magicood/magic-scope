@@ -166,14 +166,6 @@ export const Pagination = forwardRef<HTMLElement, PaginationProps>(
     ref,
   ) => {
     const t = useMessages();
-    // 待登记的新 i18n key(pagination.sizeLabel / pageSize / jump):字典里暂无,
-    // 用兜底中文 + 走 resolver(主会话补进 messages.ts 后,override 机制即自动生效,无需改这里)。
-    // 类型上 t() 仅接受已登记 MessageKey,这里对未登记 key 局部放宽,resolver 自身能优雅回退兜底。
-    const tx = t as unknown as (
-      key: string,
-      vars?: Record<string, string | number>,
-      fallback?: string,
-    ) => string;
     const jumperId = useId();
 
     // 每页条数:受控(传 pageSize)或非受控(默认取候选首项)。
@@ -375,7 +367,7 @@ export const Pagination = forwardRef<HTMLElement, PaginationProps>(
         <div className="ms-pagination__options">
           <select
             className="ms-pagination__size-select"
-            aria-label={tx('pagination.sizeLabel', undefined, '每页条数')}
+            aria-label={t('pagination.sizeLabel')}
             value={pageSize}
             onChange={(e: ChangeEvent<HTMLSelectElement>) =>
               changePageSize(Number.parseInt(e.target.value, 10))
@@ -383,7 +375,7 @@ export const Pagination = forwardRef<HTMLElement, PaginationProps>(
           >
             {pageSizeOptions.map((opt) => (
               <option key={opt} value={opt}>
-                {tx('pagination.pageSize', { size: opt }, `${opt} / 页`)}
+                {t('pagination.pageSize', { size: opt })}
               </option>
             ))}
           </select>
@@ -400,7 +392,7 @@ export const Pagination = forwardRef<HTMLElement, PaginationProps>(
     const quickJumper = showQuickJumper ? (
       <div className="ms-pagination__jumper">
         <label className="ms-pagination__jumper-label" htmlFor={jumperId}>
-          {tx('pagination.jump', undefined, '跳至')}
+          {t('pagination.jump')}
         </label>
         <input
           id={jumperId}

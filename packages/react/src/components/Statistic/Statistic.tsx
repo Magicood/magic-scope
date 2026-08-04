@@ -1,5 +1,6 @@
 import type { CSSProperties, ElementType, ReactNode } from 'react';
 import { forwardRef, useLayoutEffect, useRef, useState } from 'react';
+import { useMessages } from '../../i18n';
 import { easeOutCubic, formatStatistic, interpolate } from './logic';
 
 export type StatisticSize = 'sm' | 'md' | 'lg';
@@ -121,6 +122,7 @@ export const Statistic = forwardRef<HTMLElement, StatisticProps>(
     },
     ref,
   ) => {
+    const t = useMessages();
     const Root = (as ?? 'div') as ElementType;
 
     // —— animateOnMount:仅对数值有效。从 0 用 rAF 滚到目标;reduced-motion / motion=off 直接落终值 ——
@@ -200,7 +202,8 @@ export const Statistic = forwardRef<HTMLElement, StatisticProps>(
     const suffixText =
       typeof suffix === 'string' || typeof suffix === 'number' ? String(suffix) : '';
     const titleText = typeof title === 'string' || typeof title === 'number' ? String(title) : '';
-    const trendText = trend === 'up' ? '上升' : trend === 'down' ? '下降' : '';
+    const trendText =
+      trend === 'up' ? t('statistic.trendUp') : trend === 'down' ? t('statistic.trendDown') : '';
     const numberPart = `${prefixText}${formatted.display}${suffixText}`.trim();
     const autoLabel = [titleText, trendText, numberPart].filter(Boolean).join(' ');
     const ariaLabel = ariaLabelProp ?? (autoLabel === '' ? undefined : autoLabel);

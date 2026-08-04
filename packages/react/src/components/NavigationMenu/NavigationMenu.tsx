@@ -20,6 +20,7 @@ import {
   useRef,
   useState,
 } from 'react';
+import { useMessages } from '../../i18n';
 import { composeEventHandlers, composeRefs, mergeAsChildProps } from '../../utils/compose';
 import {
   edgeEnabledIndex,
@@ -159,7 +160,7 @@ export interface NavigationMenuProps
   viewportAlign?: NavigationMenuViewportAlign;
   /** panel 与触发器行的间距(px)。默认 8。 */
   offset?: number;
-  /** 外层 <nav> 的可访问名(屏读「导航地标」标签)。默认 '主导航'。 */
+  /** 外层 <nav> 的可访问名(屏读「导航地标」标签)。不传则走字典 navigationMenu.nav(默认「主导航」)。 */
   'aria-label'?: string | undefined;
   /**
    * Esc 关闭 panel 前回调,可 `preventDefault()` 拦截阻止关闭。
@@ -322,7 +323,7 @@ const NavigationMenuBase = forwardRef<HTMLElement, NavigationMenuProps>(
       viewport = true,
       viewportAlign = 'start',
       offset = 8,
-      'aria-label': ariaLabel = '主导航',
+      'aria-label': ariaLabel,
       onEscapeKeyDown,
       className,
       classNames,
@@ -330,6 +331,7 @@ const NavigationMenuBase = forwardRef<HTMLElement, NavigationMenuProps>(
     },
     ref,
   ) => {
+    const t = useMessages();
     const reactId = useId();
     const idBase = `ms-navmenu-${reactId.replace(/[^a-zA-Z0-9_-]/g, '')}`;
 
@@ -723,7 +725,7 @@ const NavigationMenuBase = forwardRef<HTMLElement, NavigationMenuProps>(
       <NavMenuContext.Provider value={ctx}>
         <nav
           ref={setRootRef}
-          aria-label={ariaLabel}
+          aria-label={ariaLabel ?? t('navigationMenu.nav')}
           data-ms-viewport-align={viewport ? viewportAlign : undefined}
           className={rootClass}
           style={rootStyle}

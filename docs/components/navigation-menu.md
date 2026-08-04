@@ -29,7 +29,7 @@
 | `viewport` | `boolean` | `true` | 是否用共享 Viewport(单一浮层容器,尺寸 / 位置随 active panel 平滑过渡,Radix 风格)。<br>默认 true。关掉则每个 panel 各自就地展开(更易做超宽 mega-menu 满宽布局)。 |
 | `viewportAlign` | `"center" \| "end" \| "start"` | `start` | Viewport 相对触发器行的对齐。默认 start。 |
 | `offset` | `number` | `8` | panel 与触发器行的间距(px)。默认 8。 |
-| `aria-label` | `string` | `主导航` | 外层 &lt;nav&gt; 的可访问名(屏读「导航地标」标签)。默认 '主导航'。 |
+| `aria-label` | `string` | — | 外层 &lt;nav&gt; 的可访问名(屏读「导航地标」标签)。不传则走字典 navigationMenu.nav(默认「主导航」)。 |
 | `className` | `string` | — | 外层附加 className(作用于 &lt;nav&gt;)。 |
 | `classNames` | `NavigationMenuClassNames` | — | 各部件细粒度 className 槽位。 |
 | `disabled` | `boolean` | — | 是否禁用。 |

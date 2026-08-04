@@ -307,7 +307,6 @@ const ToolbarRoot = forwardRef<HTMLDivElement, ToolbarProps>(
 
     return (
       <ToolbarContext.Provider value={ctx}>
-        {/* biome-ignore lint/a11y/noStaticElementInteractions: 根 role=toolbar 即交互角色,onKeyDown 是 WAI-ARIA toolbar 模式要求的方向键 roving 委托 */}
         <div
           ref={composeRefs(ref, rootRef)}
           role="toolbar"
@@ -457,7 +456,6 @@ export const ToolbarLink = forwardRef<HTMLAnchorElement, ToolbarLinkProps>(
     }
 
     return (
-      // biome-ignore lint/a11y/useValidAnchor: href 由使用方经 ...props 传入(留口),Toolbar.Link 只补 roving 与样式
       // biome-ignore lint/a11y/noStaticElementInteractions: <a> 是天然可交互链接;onFocus 仅用于 roving 焦点登记,非把静态元素变交互
       <a
         ref={composeRefs(ref, roving.setNode as Ref<HTMLAnchorElement>)}
@@ -601,7 +599,6 @@ export const ToolbarToggleGroup = forwardRef<HTMLDivElement, ToolbarToggleGroupP
 
     return (
       <ToggleGroupContext.Provider value={ctx}>
-        {/* biome-ignore lint/a11y/useSemanticElements: 单选切换组是 WAI-ARIA radiogroup,多选是控件 group;均非表单 fieldset */}
         {/* biome-ignore lint/a11y/useAriaPropsSupportedByRole: biome 把 div 当 static 故误报;运行时 role=radiogroup/group 均支持 aria-label */}
         <div
           ref={ref}

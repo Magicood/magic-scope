@@ -293,7 +293,7 @@ export const PinInput = forwardRef<HTMLDivElement, PinInputProps>(
         {cells.map((char, index) => {
           // 位置固定、不重排,index 作 key 安全。
           const cellKey = `cell-${index}`;
-          const cellLabel = `${groupLabel} 第 ${index + 1} 位`;
+          const cellLabel = t('pinInput.cell', { label: groupLabel, index: index + 1 });
           return (
             <input
               key={cellKey}
