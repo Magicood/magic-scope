@@ -29,20 +29,33 @@
   /* 发丝线:只用于表格与清单的行分隔,不用于卡片描边 */
   --sf-hairline: color-mix(in oklab, var(--ms-color-border), transparent 30%);
 
-  /* ---- 品类色:主色在 OKLCH 色相轮上等距旋转派生 ----
-     换任何主题家族,四色跟着转,彼此区分度不变 —— 主题引擎「核心驱动可变」的实证。 */
-  --cat-ceramics: var(--ms-color-primary);
-  --cat-lighting: oklch(from var(--ms-color-primary) l c calc(h + 208));
-  --cat-textiles: oklch(from var(--ms-color-primary) calc(l - 0.06) c calc(h + 116));
-  --cat-objects: oklch(from var(--ms-color-primary) l c calc(h + 292));
+  /* ---- 品类色:品牌四色,手工调校 ----
+     教训:曾试过「主色在 OKLCH 色相轮上等距旋转」派生四色以炫耀主题引擎,
+     结果是色相轮上等距 ≠ 视觉上和谐(蓝转 208° 得军绿、转 116° 得暗红,
+     四色摆一起像上世纪配色)。品牌默认皮肤必须是挑过的色,不能交给公式。
+     跟随主题的能力放到下面的 :not([data-ms-theme="arden"]) 里,两者不冲突。 */
+  --cat-ceramics: #2e48d6; /* 靛蓝 */
+  --cat-lighting: #e2531d; /* 朱红 —— 灯光的颜色 */
+  --cat-textiles: #4d6b2f; /* 橄榄 */
+  --cat-objects: #9b2b52; /* 酒红 */
 }
 
-/* 不支持相对颜色语法时退回主题语义色,保证功能与可读性 */
-@supports not (color: oklch(from red l c h)) {
-  :root {
-    --cat-lighting: var(--ms-color-accent);
-    --cat-textiles: var(--ms-color-success);
-    --cat-objects: var(--ms-color-danger);
+/* 暗色端整体提亮一档并降一点彩度,保证深底上的对比与不刺眼 */
+:root[data-ms-scheme="dark"] {
+  --cat-ceramics: #6b85ff;
+  --cat-lighting: #ff7a45;
+  --cat-textiles: #8fb464;
+  --cat-objects: #e0699a;
+}
+
+/* 换到别的主题家族时,四色才由该主题主色派生 —— 主题引擎「核心驱动可变」在此展示,
+   而品牌自己的默认皮肤仍是上面挑好的四色。 */
+@supports (color: oklch(from red l c h)) {
+  :root:not([data-ms-theme="arden"]) {
+    --cat-ceramics: var(--ms-color-primary);
+    --cat-lighting: oklch(from var(--ms-color-primary) l c calc(h + 32));
+    --cat-textiles: oklch(from var(--ms-color-primary) calc(l - 0.04) c calc(h + 168));
+    --cat-objects: oklch(from var(--ms-color-primary) l c calc(h + 300));
   }
 }
 
@@ -54,6 +67,15 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* 全局 border-box —— 拼贴系统里每个块都同时有 min-height/flex-basis 与内边距,
+   content-box 会让内边距额外撑出一圈(实测首屏多出 66px、横滚卡 226→246)。
+   放在 app 自己的样式里,不进组件库的 reset 层。 */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 ::selection {
   background: var(--ms-color-selection);
   color: var(--ms-color-on-selection);
@@ -61,17 +83,19 @@ body {
 
 /* ============================== 版面原语 ================================== */
 
-.sf-container {
+/* 版心:全站唯一一条内容起始线。拼贴语言里色块要贴边,所以内边距就是块间距
+   ——.sf-container 与 .sf-tiles 必须同宽同边距,否则页面之间内容线会跳。 */
+.sf-container,
+.sf-tiles {
   max-width: var(--sf-container);
   margin-inline: auto;
-  padding-inline: var(--sf-gutter);
+  padding-inline: var(--sf-gap);
 }
 
 /* 拼贴区:块与块之间只有 --sf-gap,靠色块自身体量分节,不靠大段留白 */
 .sf-tiles {
   display: grid;
   gap: var(--sf-gap);
-  padding-inline: var(--sf-gap);
 }
 
 /* 通用块:任何一块拼贴内容的基座 */
@@ -243,9 +267,24 @@ body {
   --cat: var(--cat-objects);
 }
 
+/* 品类满色块:前景由该品类色自动派生 —— 不写死 #fff。
+   contrast-color() 可用时交给浏览器算;否则按明度阈值在近白/近黑之间二选一,
+   保证任何主题(含暗色下被提亮的品类色)上的文字都够对比。 */
 .sf-cat-fill {
   background: var(--cat);
-  color: #fff;
+  color: oklch(from var(--cat) clamp(0, (0.62 - l) * 1000, 1) 0.02 h);
+}
+
+@supports (color: contrast-color(red)) {
+  .sf-cat-fill {
+    color: contrast-color(var(--cat));
+  }
+}
+
+@supports not (color: oklch(from red l c h)) {
+  .sf-cat-fill {
+    color: #fff;
+  }
 }
 
 .sf-cat-dot {
@@ -337,17 +376,37 @@ body {
   --pv-form-h: 62%;
   --pv-form-b: 13%;
   --pv-floor-w: 46%;
+
+  /* ---- 配色由所属品类色(--cat,来自 data-cat)派生 ----
+     色场是品类色的极浅版,器物本体是品类色本身;于是每张商品图都属于这套色彩系统,
+     且换主题时跟着走。--pv-seed(商品自带色)只用来给同品类的商品之间做细微区分。 */
+  --pv-cat: var(--cat, var(--ms-color-primary));
+  --pv-field: color-mix(in oklab, var(--pv-cat), var(--ms-color-surface-raised) 88%);
+  --pv-tint: color-mix(in oklab, var(--pv-cat), var(--ms-color-surface-raised) 78%);
+  --pv-body: color-mix(in oklab, var(--pv-cat), var(--pv-seed, var(--pv-cat)) 22%);
+  --pv-shade: color-mix(in oklab, var(--pv-cat), black 34%);
+
   position: relative;
   overflow: hidden;
   isolation: isolate;
-  border-radius: var(--sf-radius);
+  border-radius: var(--sf-r);
   background:
     radial-gradient(
       120% 85% at 18% -4%,
-      color-mix(in oklab, white, transparent 52%) 0%,
+      color-mix(in oklab, var(--ms-color-surface-raised), transparent 40%) 0%,
       transparent 56%
     ),
     linear-gradient(168deg, var(--pv-tint) 0%, var(--pv-field) 64%);
+}
+
+/* 灯具:本体是光源,要接近暖白而不是品类色的浅版
+   (朱红混纯白会得到粉色,灯看着像粉球)。往暖白混,只在暗部留品类色的染。 */
+.pv[data-luminous] {
+  --pv-lume: #fff4e2;
+  --pv-body: color-mix(in oklab, var(--pv-cat), var(--pv-lume) 84%);
+  --pv-shade: color-mix(in oklab, var(--pv-cat), var(--pv-lume) 34%);
+  --pv-field: color-mix(in oklab, var(--pv-cat), var(--ms-color-surface-raised) 91%);
+  --pv-tint: color-mix(in oklab, var(--pv-lume), var(--ms-color-surface-raised) 40%);
 }
 
 .pv-portrait {

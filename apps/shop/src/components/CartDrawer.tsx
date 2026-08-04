@@ -1,5 +1,5 @@
 import { Button, Drawer, Empty, NumberInput, Popconfirm, toast } from '@magic-scope/react';
-import { getProduct } from '../data/products';
+import { categories, getProduct } from '../data/products';
 import { money } from '../lib/format';
 import { navigate, RouterLink } from '../lib/router';
 import { type CartLineDetail, useCart } from '../lib/store';
@@ -8,12 +8,18 @@ import './CartDrawer.css';
 
 /* ============================================================================
  * CartDrawer —— 购物车抽屉(右侧滑出,全站常驻,由 store 的 drawerOpen 驱动)。
- * 空车走 Empty + 去逛逛;行项 = 56px 商品小视觉 + 名称/色号/单价 + 数量步进
- * + Popconfirm 移除;底栏汇总 Subtotal / 运费提示 / 全宽 Checkout CTA。
+ * 空车走 Empty + 去逛逛;行项 = 56px 商品小视觉(--sf-r-sm 圆角)+ 品类色点
+ * + 名称/色号/单价 + 数量步进 + Popconfirm 移除;
+ * 底栏汇总 Subtotal / 运费提示 / 墨色药丸全宽 Checkout CTA。
  * ========================================================================== */
 
 /* 免运费门槛(美元)—— 与运费提示文案对应。 */
 const FREE_SHIPPING_THRESHOLD = 150;
+
+/* 品类 id → 展示名(无色号的商品退回显示品类)。 */
+const CATEGORY_LABEL: Record<string, string> = Object.fromEntries(
+  categories.map((c) => [c.id, c.label]),
+);
 
 export function CartDrawer() {
   const { detailed, subtotal, drawerOpen, closeDrawer } = useCart();
@@ -60,6 +66,7 @@ export function CartDrawer() {
                 <Button
                   size="lg"
                   fullWidth
+                  shape="pill"
                   className="cart-checkout"
                   onClick={() => goto('/checkout')}
                 >
@@ -101,7 +108,7 @@ function CartLine({ line }: { line: CartLineDetail }) {
   const removeLabel = line.colorwayLabel ? `${line.name} · ${line.colorwayLabel}` : line.name;
 
   return (
-    <li className="cart-line">
+    <li className="cart-line" data-cat={product?.category}>
       {/* 56px 小视觉:复用 ProductVisual 保持全站视觉语言;装饰性链接,
           键盘焦点交给名称链接(tabIndex=-1 + aria-hidden 去重) */}
       <RouterLink
@@ -119,12 +126,14 @@ function CartLine({ line }: { line: CartLineDetail }) {
       </RouterLink>
 
       <div className="cart-line-info">
-        <RouterLink to={href} className="cart-line-name sf-link" onClick={closeDrawer}>
+        <RouterLink to={href} className="cart-line-name" onClick={closeDrawer}>
           {line.name}
         </RouterLink>
-        {line.colorwayLabel ? (
-          <span className="cart-line-colorway">{line.colorwayLabel}</span>
-        ) : null}
+        {/* 色号行前挂品类色点:与页头导航、页脚底行同一套色彩编码 */}
+        <span className="cart-line-sub">
+          <i className="sf-dot sf-cat-dot" aria-hidden="true" />
+          {line.colorwayLabel || (product ? CATEGORY_LABEL[product.category] : null)}
+        </span>
         <span className="cart-line-price">{money(line.unitPrice)}</span>
       </div>
 

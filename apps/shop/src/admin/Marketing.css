@@ -1,103 +1,216 @@
 /* ============================================================================
  * Marketing 页私有样式(mk-*)。
- * 只消费 --ms-* / --sf-* 语义变量 + color-mix 派生;分隔一律发丝线或留白;
- * 覆盖库内默认值时只在自有类名上做,不深挖 .ms-* 内部结构。
+ * 只消费 --ms-* / --sf-* / --cat-* 语义变量 + color-mix 派生;分隔一律发丝线、
+ * 留白或色块自身边界;覆盖库内默认值时只在自有类名上做,不深挖 .ms-* 内部结构。
+ *
+ * 版式骨架:三块满出血色块承担结构 —— 月历卡左侧的满高墨色脊柱、受众卡底的主色块、
+ * 进行中卡底的墨块。脊柱靠卡片 overflow 收口,两块卡底色块靠负外边距吃掉 .ad-card 内边距。
  * ========================================================================== */
 
 /* 页面根:.ad-content 是 width:100% + padding,content-box 下会超出主列 56px,
  * 这里仅对本页收敛(壳级修复归 admin.css,不在本文件越界) */
-.mk-page {
-  box-sizing: border-box;
-}
 
-/* 本页双栏:右列要容纳双列 Transfer,比默认 320px 更宽(断点与 .ad-split 对齐) */
-.mk-split {
-  grid-template-columns: minmax(0, 1fr) 412px;
-}
-
-@media (max-width: 1080px) {
-  .mk-split {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* 右列两卡纵向堆叠,间距与 .ad-split 的 gap 一致 */
+/* 双栏列宽直接沿用 .ad-split 的 1.85fr / 1fr;两列各自按内容取高(月历随列宽伸缩、
+ * 右列内容固定),不互相拉伸 —— 拼贴版面容许块高不齐,但卡内不留白洞。 */
 .mk-side {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: var(--sf-gap);
+  min-inline-size: 0;
 }
 
-/* ------------------------------ 卡头通用 ---------------------------------- */
+/* ------------------------- 卡头:极小索引 + 标题 --------------------------- */
 
-.mk-card-head {
+.mk-head {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
+  align-items: baseline;
+  gap: 10px;
   margin-block-end: 14px;
 }
 
-.mk-card-sub {
-  margin: 2px 0 0;
+.mk-title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+}
+
+.mk-title-lg {
+  font-size: 22px;
+}
+
+.mk-sub {
+  margin: 3px 0 0;
   font-size: 12px;
   color: var(--ms-color-fg-subtle);
 }
 
-/* ------------------------------ 活动月历 ---------------------------------- */
+/* =============================== 01 活动月历 ============================== */
 
-/* 活动打点:kind → 语义色(图例与格内共用同一变量) */
-.mk-event[data-kind="launch"],
-.mk-legend-item[data-kind="launch"] {
-  --mk-event-color: var(--ms-color-primary);
+/* 卡片本体拆成「墨色脊柱 + 月历」不等分两列;卡片自己收口圆角,脊柱直接满高出血 */
+.mk-cal-card {
+  display: grid;
+  /* 脊柱随卡宽收放,窄屏把宽度让给月历格子 */
+  grid-template-columns: clamp(190px, 30%, 236px) minmax(0, 1fr);
+  padding: 0;
+  overflow: hidden;
 }
 
-.mk-event[data-kind="newsletter"],
-.mk-legend-item[data-kind="newsletter"] {
-  --mk-event-color: var(--ms-color-accent);
+/* 脊柱:上索引 + 超大数字(疏),下图例(密),密度反差在同一块色块内完成 */
+.mk-cal-spine {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 26px;
+  padding: 17px 18px 19px;
+  background: var(--ms-color-fg);
+  color: var(--ms-color-bg);
 }
 
-.mk-event[data-kind="vip"],
-.mk-legend-item[data-kind="vip"] {
-  --mk-event-color: var(--ms-color-info);
+.mk-cal-id {
+  display: flex;
+  align-items: center;
+  gap: 9px;
 }
 
-/* 格内事件条:圆点 + 截断文字,底色为语义色的极淡派生(窄格,尺寸从紧) */
+.mk-cal-spine .sf-index {
+  color: inherit;
+}
+
+.mk-cal-spine .sf-kicker {
+  opacity: 0.68;
+}
+
+.mk-cal-figure {
+  display: flex;
+  align-items: flex-end;
+  gap: 13px;
+}
+
+.mk-cal-n {
+  font-size: clamp(56px, 5.6vw, 76px);
+  font-weight: 800;
+  letter-spacing: -0.06em;
+  line-height: 0.8;
+  font-variant-numeric: tabular-nums;
+}
+
+.mk-cal-n-lab {
+  padding-block-end: 3px;
+  font-size: 10.5px;
+  font-weight: 650;
+  letter-spacing: 0.14em;
+  line-height: 1.55;
+  text-transform: uppercase;
+  opacity: 0.62;
+}
+
+/* 图例:密集三条压在脊柱底部,色点即活动的品类色(墨底上提亮一档保证可辨) */
+.mk-legend {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  min-inline-size: 0;
+}
+
+.mk-legend-item {
+  display: grid;
+  gap: 3px;
+  min-inline-size: 0;
+  padding-block: 12px;
+}
+
+.mk-legend-item + .mk-legend-item {
+  border-block-start: 1px solid color-mix(in oklab, var(--ms-color-bg), transparent 86%);
+}
+
+.mk-legend-item:last-child {
+  padding-block-end: 0;
+}
+
+.mk-legend-key {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mk-legend-item .mk-legend-dot {
+  inline-size: 7px;
+  block-size: 7px;
+  background: color-mix(in oklab, var(--cat), white 22%);
+}
+
+.mk-legend-item .sf-index {
+  color: inherit;
+  opacity: 0.5;
+}
+
+.mk-legend-label {
+  min-inline-size: 0;
+  font-size: 12.5px;
+  line-height: 1.35;
+  opacity: 0.9;
+}
+
+/* 月历侧:白底、疏,和左侧墨色密集脊柱形成反差 */
+.mk-cal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-inline-size: 0;
+  padding: 14px 18px 16px;
+  /* 供下面的格宽换算用;宽度来自 grid 轨道,不会塌 */
+  container-type: inline-size;
+}
+
+/* 格子放大到「大卡」该有的体量,但上限永远由本列可用宽换算而来(留 46px 安全量),
+ * 任何断点都不会让格子的 min-inline-size 撑爆表格 */
+.mk-cal-body .mk-calendar {
+  --ms-cal-cell: min(4.4rem, calc((100cqw - 46px) / 7));
+}
+
+.mk-cal-foot {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-block-start: 12px;
+  border-block-start: 1px solid var(--sf-hairline);
+  font-size: 11.5px;
+  color: var(--ms-color-fg-subtle);
+}
+
+/* 月历格内的活动标记:品类色实心块(.sf-cat-fill 供色),极小全大写字 */
 .mk-event {
   display: flex;
   align-items: center;
-  gap: 4px;
+  justify-content: center;
   min-inline-size: 0;
-  margin: 3px 2px 0;
-  padding: 2px 5px;
-  border-radius: 999px;
-  font-size: 10px;
-  font-weight: 500;
-  line-height: 1.4;
-  color: inherit;
-  background: color-mix(in oklab, var(--mk-event-color), transparent 88%);
-}
-
-.mk-event-dot {
-  flex: none;
-  inline-size: 6px;
-  block-size: 6px;
-  border-radius: 50%;
-  background: var(--mk-event-color, var(--ms-color-primary));
+  margin: 5px 2px 0;
+  padding: 2px 3px;
+  border-radius: var(--sf-r-sm);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  line-height: 1.6;
+  text-transform: uppercase;
 }
 
 .mk-event-label {
+  min-inline-size: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-/* 窄屏格子放不下文字时只留圆点 */
-@media (max-width: 760px) {
+/* 格子放不下文字时(按本列实际可用宽判断,不看视口)收成一条色带 */
+@container (max-width: 470px) {
   .mk-event {
-    justify-content: center;
-    padding-inline: 0;
-    background: none;
+    inline-size: 64%;
+    block-size: 6px;
+    margin-inline: auto;
+    padding: 0;
+    border-radius: 3px;
   }
 
   .mk-event-label {
@@ -105,26 +218,7 @@
   }
 }
 
-/* 图例小字 */
-.mk-legend {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 8px 16px;
-  margin-block-start: 14px;
-  padding-block-start: 12px;
-  border-block-start: 1px solid var(--sf-hairline);
-  font-size: 11.5px;
-  color: var(--ms-color-fg-muted);
-}
-
-.mk-legend-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
-/* ------------------------------ 受众搭建 ---------------------------------- */
+/* =============================== 02 受众 ================================= */
 
 /* Transfer 每项:名称 + 人数两行堆叠(面板窄,单行放不下;节点由 render 注入) */
 .mk-seg {
@@ -150,94 +244,213 @@
   color: var(--ms-color-fg-subtle);
 }
 
-/* 预估触达:统计数字 + approx. 脚注 */
+/* 满出血主色块:预估触达的超大数字压住卡片底边 —— 色块承担结构 */
 .mk-reach {
-  margin-block-start: 14px;
-  padding-block-start: 12px;
-  border-block-start: 1px solid var(--sf-hairline);
+  margin: 16px -18px -16px;
+  padding: 14px 18px 16px;
+  border-radius: 0 0 var(--sf-r) var(--sf-r);
+  background: var(--ms-color-primary);
+  color: var(--ms-color-on-primary);
+}
+
+.mk-reach .mk-reach-title {
+  font-size: 10.5px;
+  font-weight: 650;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: inherit;
+  opacity: 0.7;
+}
+
+.mk-reach .mk-reach-value {
+  font-size: clamp(34px, 3.4vw, 46px);
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 0.94;
+  font-variant-numeric: tabular-nums;
+  color: inherit;
 }
 
 .mk-reach-note {
-  margin: 6px 0 0;
-  font-size: 11.5px;
-  color: var(--ms-color-fg-subtle);
+  margin: 7px 0 0;
+  font-size: 11px;
+  line-height: 1.5;
+  color: inherit;
+  opacity: 0.62;
 }
 
-/* ------------------------------ 进行中活动 -------------------------------- */
+/* ============================= 03 进行中的活动 ============================ */
+
+.mk-live {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
 
 .mk-campaign-list {
-  margin: 0;
+  margin: 0 0 14px;
   padding-inline-start: 0;
 }
 
-.mk-campaign {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding-block: 12px;
+/* 行语言与后台 .ad-attn 一致:左侧品类色条编码身份,右侧大数值报进度 */
+.mk-campaign-list .mk-campaign {
+  display: grid;
+  grid-template-columns: 3px minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 12px;
+  row-gap: 9px;
+  padding-block: 11px;
 }
 
-.mk-campaign:first-child {
-  padding-block-start: 0;
+.mk-campaign-list .mk-campaign:first-child {
+  padding-block-start: 2px;
 }
 
-.mk-campaign:last-child {
-  padding-block-end: 0;
-}
-
-.mk-campaign + .mk-campaign {
+.mk-campaign-list .mk-campaign + .mk-campaign {
   border-block-start: 1px solid var(--sf-hairline);
 }
 
-.mk-campaign-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
+.mk-campaign-rule {
+  grid-column: 1;
+  grid-row: 1 / -1;
+  align-self: stretch;
+  min-block-size: 20px;
+  border-radius: 2px;
+  background: var(--cat);
 }
 
 .mk-campaign-name {
+  grid-column: 2;
+  grid-row: 1;
   min-inline-size: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   font-size: 13px;
-  font-weight: 550;
+  font-weight: 600;
+  letter-spacing: -0.012em;
 }
 
-.mk-campaign-foot {
+.mk-campaign-pct {
+  grid-column: 3;
+  grid-row: 1;
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 0.9;
+  font-variant-numeric: tabular-nums;
+}
+
+.mk-campaign-pct i,
+.mk-live-avg i {
+  margin-inline-start: 1px;
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 650;
+  opacity: 0.45;
+}
+
+.mk-campaign-meter {
+  grid-column: 2;
+  grid-row: 2;
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 10px;
+  min-inline-size: 0;
 }
 
-.mk-campaign-sent {
-  font-size: 11.5px;
+.mk-campaign-progress {
+  flex: 1;
+  min-inline-size: 0;
+}
+
+.mk-campaign-act {
+  grid-column: 3;
+  grid-row: 2;
+  display: flex;
+  align-items: center;
+}
+
+/* 满出血墨块收尾:把右列压到与月历卡同一条底线,同时给一个聚合数 */
+.mk-live-foot {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin: auto -18px -16px;
+  padding: 12px 18px 13px;
+  border-radius: 0 0 var(--sf-r) var(--sf-r);
+  background: var(--ms-color-fg);
+  color: var(--ms-color-bg);
+}
+
+.mk-live-foot .sf-kicker {
+  opacity: 0.62;
+}
+
+.mk-live-avg {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 1;
   font-variant-numeric: tabular-nums;
-  color: var(--ms-color-fg-muted);
 }
 
-/* ------------------------------ 公告撰写器 -------------------------------- */
+/* ============================== 04 公告撰写器 ============================= */
 
 .mk-composer-fields {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-}
-
-.mk-composer-row {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
   gap: 10px;
 }
 
-.mk-composer-spacer {
-  flex: 1;
+/* 控件一行排开:除弹性占位外一律按内容宽度,不被 flex 拉伸;发丝线把它与正文分层 */
+.mk-composer-row {
+  margin-block-start: 2px;
+  padding-block-start: 12px;
+  border-block-start: 1px solid var(--sf-hairline);
+}
+
+.mk-composer-row > * {
+  flex: 0 0 auto;
+}
+
+.mk-composer-row > .mk-composer-spacer {
+  flex: 1 1 auto;
+  min-inline-size: 4px;
+}
+
+/* TimePicker 根默认 inline-size:100%,在行内需要收成固定宽 */
+.mk-composer-row .mk-field-time {
+  inline-size: 158px;
 }
 
 .mk-composer-note {
   font-size: 11.5px;
   color: var(--ms-color-fg-subtle);
+}
+
+/* ------------------------------ 响应式收敛 -------------------------------- */
+
+@media (max-width: 820px) {
+  /* 窄屏:脊柱转为卡片顶部的横向色块,数字与图例并排 */
+  .mk-cal-card {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .mk-cal-spine {
+    flex-direction: row;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 22px;
+  }
+
+  .mk-legend {
+    flex: 1;
+    min-inline-size: 220px;
+  }
+
+  .mk-legend-item {
+    padding-block: 9px;
+  }
 }

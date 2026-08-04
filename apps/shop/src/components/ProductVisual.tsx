@@ -732,11 +732,15 @@ export function ProductVisual({
   const scene = SCENES[motif];
   const luminous = product.category === 'lighting';
 
+  /**
+   * 配色不再取商品数据里写死的色值(那套暖米色是给旧设计定的,放进 Chromatic Grid
+   * 里像另一个网站的图),改为**由所属品类色派生**:色场是品类色的极浅版、器物本体
+   * 是品类色本身。于是商品图天然属于这套色彩系统,且换主题时跟着走。
+   * 具体的 color-mix 配比在 shop.css 的 .pv[data-cat] 里,这里只负责挂 data-cat。
+   */
   const style = {
-    '--pv-field': visual.field,
-    '--pv-tint': visual.tint,
-    '--pv-body': visual.body,
-    '--pv-shade': visual.shade,
+    // shape 仍决定器物的形体比例;颜色交给 CSS 按品类派生
+    '--pv-seed': visual.body,
   } as CSSProperties;
 
   return (
@@ -744,6 +748,7 @@ export function ProductVisual({
       className={['pv', `pv-${aspect}`, className].filter(Boolean).join(' ')}
       style={style}
       data-motif={motif}
+      data-cat={product.category}
       data-luminous={luminous || undefined}
       role="img"
       aria-label={`${product.name} — ${product.tagline}`}

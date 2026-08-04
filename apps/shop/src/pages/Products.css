@@ -1,87 +1,208 @@
 /* ============================================================================
- * Products 商品列表页(.pl-*)—— 左 240px 粘性筛选栏 + 右商品区。
- * 只消费 --ms-* 语义变量与 .sf-/.pv- 原语;线条一律 var(--sf-hairline) 或留白。
+ * Products 商品列表页(.pl-*)—— Chromatic Grid 版式。
+ *
+ * 三块拼贴:页头(1.6fr 满色块 / 1fr 白色数字块)· 左 220px 筛选块 · 右商品网格。
+ * 只消费 --ms-* 语义变量与 .sf-/.pv- 原语;块间距一律 var(--sf-gap),圆角只有
+ * var(--sf-r) / var(--sf-r-sm);分隔靠 var(--sf-hairline) 或色块自身边界,不描边。
+ * 需要压过 .sf-tile 等原语时用「元素/后代复合选择器」提高特异性,不用 !important。
  * ========================================================================== */
 
-/* ------------------------------- 页头 ------------------------------------ */
+.pl-page {
+  padding-block: var(--sf-gap) clamp(56px, 7vw, 96px);
+}
 
+/* ============================== 页头拼贴 ================================== */
+
+/* 不等分:左边扛标题的满色块比右边的数字块宽 60% */
 .pl-head {
-  padding-block: clamp(44px, 6vw, 76px) clamp(28px, 4vw, 44px);
   display: grid;
-  gap: 18px;
-  justify-items: start;
+  grid-template-columns: 1.6fr minmax(0, 1fr);
+  gap: var(--sf-gap);
+  margin-bottom: var(--sf-gap);
 }
 
-.pl-head-sub {
-  display: grid;
-  gap: 10px;
+/* 左满色块:内容压在底部,顶部大片留白 —— 版面的重心与呼吸都在这一块上 */
+.pl-head .pl-head-hero {
+  position: relative;
+  overflow: hidden;
+  justify-content: flex-end;
+  gap: 13px;
+  min-block-size: clamp(196px, 23vw, 268px);
+  padding: clamp(24px, 3.2vw, 40px);
+  padding-bottom: clamp(30px, 3.6vw, 46px);
 }
 
-.pl-head-sub .sf-lede {
+.pl-head-kicker {
+  opacity: 0.76;
+}
+
+/* 标题比 .sf-display-lg 再放大一档,和右块 56px 的数字咬住同一个尺度层级 */
+.pl-head .pl-head-title {
+  font-size: clamp(30px, 3.7vw, 48px);
+}
+
+.pl-head .pl-head-lede {
+  max-inline-size: 36ch;
+  opacity: 0.86;
+}
+
+/* 四色条贴满色块底边:品牌签名图形,也是「四个家族」的信息编码。
+   段间留 2px 底色缝 —— 满色块本身就是四色之一时,同色那段也还读得出来。 */
+.pl-head-spectrum {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 6px;
+  gap: 2px;
+  background: var(--ms-color-bg);
+}
+
+/* 右白块:超大数字 + 发丝线 + 密集摘要 —— 与左块的疏形成密度反差 */
+.pl-head .pl-head-count {
+  gap: 0;
+  padding: clamp(20px, 2.3vw, 30px);
+}
+
+.pl-count-block {
+  display: grid;
+  gap: 9px;
+}
+
+/* .sf-numeral 的默认档太大(最高 132px),这里收到 56px 一档 */
+.pl-head .pl-count-num {
   margin: 0;
+  font-size: clamp(40px, 4.4vw, 58px);
 }
 
-/* 结果计数小字:与眉标同族的小号大写,弱存在感 */
-.pl-count {
+.pl-count-unit {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
   margin: 0;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 650;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--ms-color-fg-subtle);
-  font-variant-numeric: tabular-nums;
+  color: var(--ms-color-fg-muted);
 }
 
-/* ------------------------------- 双栏布局 --------------------------------- */
+/* 家族配比条:段宽 = 该品类在当前结果里的件数,四色即图例 */
+.pl-split {
+  display: flex;
+  gap: 2px;
+  block-size: 9px;
+  margin-top: 15px;
+}
+
+.pl-split i {
+  flex-basis: 0;
+  min-inline-size: 9px;
+  border-radius: var(--sf-r-sm);
+}
+
+/* 摘要压到块底:上面的数字与下面的清单之间那段空白就是密度落差 */
+.pl-count-rule {
+  margin-top: auto;
+}
+
+.pl-summary {
+  display: grid;
+  gap: 7px;
+  margin: 14px 0 0;
+}
+
+.pl-summary-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.pl-summary-row dd {
+  margin: 0;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: -0.012em;
+  text-align: end;
+}
+
+/* ============================== 双栏布局 ================================== */
 
 .pl-layout {
   display: grid;
-  grid-template-columns: 240px minmax(0, 1fr);
-  gap: clamp(36px, 5vw, 64px);
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: var(--sf-gap);
   align-items: start;
-  padding-bottom: clamp(72px, 9vw, 128px);
 }
 
 /* 商品区:翻页 scrollIntoView 时让出 sticky 头 */
 .pl-main {
   scroll-margin-top: 92px;
-  min-width: 0;
+  min-inline-size: 0;
 }
 
-/* ------------------------------- 筛选栏 ---------------------------------- */
+/* 列表行的视觉块圆角,与网格卡内的 9px 对齐。
+   刻意提前到网格规则之前声明,避免与下面 (0,4,0) 的 .pv 规则特异性倒挂。 */
+.pl-row-media .pv {
+  border-radius: 9px;
+}
 
-.pl-filters {
+/* ============================== 筛选拼贴块 ================================ */
+
+aside.pl-filters {
   position: sticky;
   top: 96px;
-  display: grid;
-  gap: 22px;
+  gap: 15px;
+  padding: 18px 16px 20px;
 }
 
 .pl-facet {
   display: grid;
-  gap: 14px;
+  gap: 12px;
   justify-items: start;
+}
+
+.pl-facet > * {
+  max-inline-size: 100%;
 }
 
 .pl-facet-title {
   margin: 0;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 650;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--ms-color-fg-subtle);
 }
 
-/* 分类旁的数量:轻到几乎消失,但扫一眼就有数 */
-.pl-facet-count {
-  margin-left: 8px;
-  font-size: 11.5px;
-  color: var(--ms-color-fg-subtle);
-  font-variant-numeric: tabular-nums;
+/* 分类项撑满整行,数量才能贴到右缘 */
+.pl-facet .ms-checkbox {
+  display: flex;
+  inline-size: 100%;
 }
 
-.pl-facet > * {
-  max-width: 100%;
+.pl-facet .ms-checkbox__content {
+  flex: 1;
+  min-inline-size: 0;
+}
+
+/* 每项前挂品类色点:筛选栏本身就是四色图例 */
+.pl-cat {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pl-cat-label {
+  flex: 1;
+  font-size: 13.5px;
+  letter-spacing: -0.01em;
+}
+
+.pl-facet-count {
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ms-color-fg-subtle);
 }
 
 .pl-facet-value {
@@ -94,32 +215,40 @@
 .pl-facet-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 7px;
 }
 
 .pl-clear {
   justify-self: start;
 }
 
-/* ------------------------------- 工具行 ---------------------------------- */
+/* ================================ 工具行 ================================== */
 
 .pl-toolbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  margin-bottom: clamp(20px, 3vw, 30px);
+  flex-wrap: wrap;
+  margin-bottom: var(--sf-gap);
+  padding-inline: 2px;
 }
 
-.pl-toolbar-sort {
+.pl-toolbar-range {
+  margin: 0;
+  letter-spacing: 0.06em;
+}
+
+.pl-toolbar-controls {
   display: inline-flex;
   align-items: center;
   gap: 10px;
+  margin-inline-start: auto;
 }
 
 .pl-toolbar-label {
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 650;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--ms-color-fg-subtle);
@@ -143,12 +272,15 @@
   border: 0;
 }
 
-/* ------------------------------- 网格视图 --------------------------------- */
+/* ================================ 网格视图 ================================ */
 
+/* 4 等列是底板,节奏靠 .sf-product-card-lg / -wide 的混排打破;
+   dense 让窄屏降列后照样把空格回填,不出半行空洞 */
 .pl-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(28px, 3.4vw, 40px) 24px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-auto-flow: row dense;
+  gap: var(--sf-gap);
 }
 
 .pl-card-media {
@@ -157,59 +289,125 @@
 
 .pl-card-badges {
   position: absolute;
-  top: 12px;
-  left: 12px;
+  top: 10px;
+  left: 10px;
   display: flex;
   gap: 6px;
   z-index: 1;
 }
 
-/* ------------------------------- 列表视图 --------------------------------- */
+/* shop.css 里 .sf-product-meta 是「名称 / 价格左右分置」的横排,
+   本页的卡片信息分三层(品类行 / 名称+价格 / 卖点),这里改回竖排。 */
+.pl-grid .sf-product-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 0;
+}
+
+/* 序号推到顶行右缘:11px 等宽小字 vs 22px 卡名,卡内也有尺度对比 */
+.pl-card-index {
+  margin-inline-start: auto;
+}
+
+/* 卡名占满剩余宽度,价格永不换行 */
+.pl-grid .sf-product-name {
+  flex: 1;
+  min-inline-size: 0;
+}
+
+.pl-card-tagline {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  margin-top: 5px;
+  font-size: 12.5px;
+  line-height: 1.42;
+  color: var(--ms-color-fg-muted);
+}
+
+/* 大卡:视觉吃掉剩余高度(.pl-card-media 是中间层,得一起放行) */
+.pl-grid .sf-product-card-lg .pl-card-media {
+  display: flex;
+  flex: 1;
+}
+
+.pl-grid .sf-product-card-lg .pl-card-media .pv {
+  flex: 1;
+  aspect-ratio: auto;
+  min-block-size: 258px;
+}
+
+.pl-grid .sf-product-card-lg .pl-card-tagline {
+  font-size: 14px;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+}
+
+/* 宽卡:图左信息右(shop.css 的 40% 是给 .pv 的,这里落到中间层上) */
+.pl-grid .sf-product-card-wide .pl-card-media {
+  inline-size: 42%;
+  flex: none;
+}
+
+.pl-grid .sf-product-card-wide .pl-card-media .pv {
+  inline-size: 100%;
+}
+
+.pl-grid .sf-product-card-wide .sf-product-meta {
+  flex: 1;
+  min-inline-size: 0;
+}
+
+/* 卡片 hover 就一个位移:整卡不动,视觉块抬 3px + 器物轻微推近(shop.css 定义) */
+.pl-grid .sf-product-card:hover .pv,
+.pl-grid .sf-product-card:focus-visible .pv {
+  transform: translateY(-3px);
+}
+
+/* ================================ 列表视图 ================================ */
 
 .pl-list {
   display: grid;
+  gap: var(--sf-gap);
 }
 
+/* 行即宽卡:白色拼贴件,列宽 240 / 弹性 / 176 —— 不等分 */
 .pl-row {
   position: relative;
   display: grid;
-  grid-template-columns: 160px minmax(0, 1fr) auto;
-  gap: clamp(18px, 2.6vw, 28px);
+  grid-template-columns: 240px minmax(0, 1fr) 176px;
+  gap: clamp(16px, 2.2vw, 26px);
   align-items: center;
-  padding-block: 22px;
-}
-
-/* 行间发丝线(inset 阴影代替边框) */
-.pl-row + .pl-row {
-  box-shadow: inset 0 1px 0 var(--sf-hairline);
-}
-
-.pl-row-media {
-  width: 160px;
-}
-
-.pl-row-media .pv {
-  border-radius: var(--sf-radius-sm);
-  transition: transform calc(var(--ms-duration-base) * 2) var(--ms-ease-emphasized);
-}
-
-.pl-row:hover .pl-row-media .pv {
-  transform: translateY(-3px);
+  padding: var(--sf-gap);
+  background: var(--ms-color-surface-raised);
+  border-radius: var(--sf-r);
 }
 
 .pl-row-body {
   display: grid;
-  gap: 6px;
+  gap: 5px;
   justify-items: start;
+}
+
+.pl-row-body .sf-product-tagrow {
+  margin-bottom: 2px;
+}
+
+.pl-row-index {
+  margin-inline-start: 4px;
 }
 
 /* 名称即 stretched-link:伪元素铺满整行,整行可点进详情 */
 .pl-row-name {
   color: inherit;
   text-decoration: none;
-  font-size: 16px;
-  font-weight: 550;
-  letter-spacing: -0.01em;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
 }
 
 .pl-row-name::after {
@@ -224,8 +422,8 @@
 
 .pl-row:has(.pl-row-name:focus-visible) {
   outline: 2px solid var(--ms-color-ring);
-  outline-offset: 4px;
-  border-radius: var(--sf-radius-sm);
+  outline-offset: 3px;
+  border-radius: var(--sf-r);
 }
 
 .pl-row-tagline {
@@ -261,40 +459,55 @@
   flex-direction: column;
   align-items: flex-end;
   gap: 10px;
+  padding-inline-end: 6px;
 }
 
 .pl-row-price {
   margin: 0;
-  font-size: 15px;
+  font-size: 17px;
+  font-weight: 700;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
 
-/* ------------------------------- 骨架屏 ---------------------------------- */
-
-.pl-skel-card {
-  display: grid;
-  gap: 12px;
-}
+/* ================================= 骨架屏 ================================= */
 
 .pl-skel-card .pl-skel-media {
+  inline-size: 100%;
   block-size: auto;
-  aspect-ratio: 4 / 5;
-  border-radius: var(--sf-radius);
+  aspect-ratio: 1;
+  border-radius: 9px;
+}
+
+.pl-grid .pl-skel-card.sf-product-card-lg .pl-skel-media {
+  flex: 1;
+  aspect-ratio: auto;
+  min-block-size: 258px;
+}
+
+.pl-grid .pl-skel-card.sf-product-card-wide .pl-skel-media {
+  inline-size: 42%;
+  flex: none;
+  align-self: stretch;
+  aspect-ratio: auto;
 }
 
 .pl-skel-meta {
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
-  padding-top: 2px;
+  display: grid;
+  gap: 9px;
+  padding: 12px 6px 4px;
+}
+
+.pl-grid .pl-skel-card.sf-product-card-wide .pl-skel-meta {
+  flex: 1;
+  min-inline-size: 0;
 }
 
 .pl-skel-row .pl-skel-row-media {
-  inline-size: 160px;
+  inline-size: 100%;
   block-size: auto;
-  aspect-ratio: 1;
-  border-radius: var(--sf-radius-sm);
+  aspect-ratio: 8 / 5;
+  border-radius: 9px;
 }
 
 .pl-skel-lines {
@@ -308,21 +521,27 @@
   justify-items: end;
 }
 
-/* ------------------------------- 空态 / 分页 ------------------------------ */
+/* ============================== 空态 / 分页 =============================== */
 
+/* 空态也是一块白拼贴,不让它掉进裸底色里 */
 .pl-empty {
   display: grid;
   justify-items: center;
-  padding-block: clamp(48px, 8vw, 96px);
+  padding-block: clamp(48px, 8vw, 92px);
+  background: var(--ms-color-surface-raised);
+  border-radius: var(--sf-r);
 }
 
 .pl-pagination {
   display: flex;
   justify-content: center;
-  margin-top: clamp(36px, 5vw, 56px);
+  margin-top: var(--sf-gap);
+  padding: 11px;
+  background: var(--ms-color-surface-raised);
+  border-radius: var(--sf-r);
 }
 
-/* ------------------------------- 结果淡入 --------------------------------- */
+/* ================================ 结果淡入 ================================ */
 
 .pl-fade-in {
   animation: pl-fade-in 480ms var(--ms-ease-standard) both;
@@ -350,53 +569,60 @@
   animation: none;
 }
 
-/* ------------------------------- 响应式 ---------------------------------- */
+/* ================================= 响应式 ================================= */
 
-@media (max-width: 1060px) {
+@media (max-width: 1180px) {
   .pl-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .pl-row {
+    grid-template-columns: 200px minmax(0, 1fr) 160px;
   }
 }
 
 @media (max-width: 900px) {
+  .pl-head {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   .pl-layout {
-    grid-template-columns: 1fr;
-    gap: 36px;
+    grid-template-columns: minmax(0, 1fr);
   }
 
-  /* 窄屏筛选栏:不再粘性,两列铺开、发丝线退场靠留白 */
-  .pl-filters {
-    position: static;
+  .pl-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 24px 32px;
   }
 
-  .pl-filters .sf-hairline {
+  /* 窄屏下 shop.css 把宽卡竖过来了,视觉块要跟着铺满,别留半张空白 */
+  .pl-grid .sf-product-card-wide .pl-card-media {
+    inline-size: 100%;
+  }
+
+  .pl-grid .pl-skel-card.sf-product-card-wide .pl-skel-media {
+    inline-size: 100%;
+    aspect-ratio: 1;
+    align-self: auto;
+  }
+
+  /* 窄屏筛选栏:不再粘性,分组两列铺开 */
+  aside.pl-filters {
+    position: static;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px 26px;
+  }
+
+  aside.pl-filters .sf-hairline {
     display: none;
   }
 
   .pl-clear {
     grid-column: 1 / -1;
   }
-}
-
-@media (max-width: 640px) {
-  .pl-grid {
-    grid-template-columns: 1fr;
-    gap: 32px;
-  }
-
-  .pl-filters {
-    grid-template-columns: 1fr;
-  }
 
   .pl-row {
-    grid-template-columns: 108px minmax(0, 1fr);
-  }
-
-  .pl-row-media {
-    width: 108px;
-    align-self: start;
+    grid-template-columns: 168px minmax(0, 1fr);
   }
 
   .pl-row-side {
@@ -404,14 +630,25 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    width: 100%;
-  }
-
-  .pl-skel-row .pl-skel-row-media {
-    inline-size: 108px;
+    inline-size: 100%;
   }
 
   .pl-skel-side {
     grid-column: 2;
+  }
+}
+
+@media (max-width: 640px) {
+  .pl-toolbar-controls {
+    inline-size: 100%;
+    justify-content: space-between;
+  }
+
+  aside.pl-filters {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pl-row {
+    grid-template-columns: 112px minmax(0, 1fr);
   }
 }

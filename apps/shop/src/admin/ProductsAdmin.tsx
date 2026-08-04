@@ -3,6 +3,7 @@ import {
   Cascader,
   type CascaderOption,
   ColorPicker,
+  Divider,
   Drawer,
   Dropdown,
   Editable,
@@ -22,19 +23,25 @@ import {
   Upload,
   type UploadFile,
   useForm,
+  useWatch,
 } from '@magic-scope/react';
 import { type CSSProperties, useState } from 'react';
 import { categories, products } from '../data/products';
-import type { CategoryId, ProductVisualSpec } from '../data/types';
+import type { CategoryId, ProductBadge, ProductVisualSpec } from '../data/types';
 import './ProductsAdmin.css';
 
 /* ============================================================================
  * ProductsAdmin —— 后台商品页:目录总表(行内改价 / 上下架 / 归档)+ 新建商品抽屉。
  * 表格持有 products 的本地副本,所有改动只落在组件 state(demo 语义,不回写数据源);
  * 新建走库的 Form 子系统(rule 校验),提交同样只是 toast,列表不变。
+ *
+ * 版式(Chromatic Grid 控制台方言):
+ *   页头 → 不等分双块「超大计数(极简)/ 品类账本(密集)」→ 工具条 → 主表。
+ * 品类色是这一页的信息骨架:账本条形、缩略色块、分类列色点全部由 data-cat 派生,
+ * 选中某一品类时该行直接翻成满色块(.sf-cat-fill),色块即当前筛选态。
  * ========================================================================== */
 
-/** 低库存阈值:低于该值追加 warning 标记,工具条可只看低库存。 */
+/** 低库存阈值:低于该值追加 warning 色条,工具条可只看低库存。 */
 const LOW_STOCK = 15;
 
 /** 新建表单的原生 form id:提交按钮在 Drawer footer(表单外),靠 form 属性关联。 */
@@ -51,6 +58,8 @@ interface ProductRow {
   stock: number;
   rating: number;
   visual: ProductVisualSpec;
+  /** 首个营销标(new / bestseller / limited);无则 null。 */
+  badge: ProductBadge | null;
   /** 上架开关(本地态);关闭时该行内容退隐。 */
   active: boolean;
 }
@@ -65,6 +74,7 @@ function buildRows(): ProductRow[] {
     stock: p.stock,
     rating: p.rating,
     visual: p.visual,
+    badge: p.badges?.[0] ?? null,
     active: true,
   }));
 }
@@ -78,6 +88,12 @@ const categoryOptions: SelectOption[] = [
   { value: 'all', label: 'All categories' },
   ...categories.map((c) => ({ value: c.id, label: c.label })),
 ];
+
+const BADGE_LABEL: Record<ProductBadge, string> = {
+  new: 'New',
+  bestseller: 'Best',
+  limited: 'Limited',
+};
 
 /** 新建抽屉的两级分类树(静态;顶层与目录四大类一致)。 */
 const CATEGORY_TREE: CascaderOption[] = [
@@ -178,6 +194,21 @@ export function ProductsAdmin() {
     return true;
   });
 
+  /** 品类账本:SKU 数 / 均价 / 在库件数(件数决定条形宽度,四类天然不等长)。 */
+  const ledger = categories.map((c) => {
+    const list = rows.filter((r) => r.category === c.id);
+    const total = list.reduce((sum, r) => sum + r.price, 0);
+    return {
+      id: c.id,
+      label: c.label,
+      count: list.length,
+      avg: list.length ? Math.round(total / list.length) : 0,
+      units: list.reduce((sum, r) => sum + r.stock, 0),
+    };
+  });
+  const maxUnits = ledger.reduce((max, item) => Math.max(max, item.units), 0) || 1;
+  const lowCount = rows.filter((row) => row.stock < LOW_STOCK).length;
+
   const patchRow = (id: string, patch: Partial<ProductRow>) => {
     setRows((prev) => prev.map((row) => (row.id === id ? { ...row, ...patch } : row)));
   };
@@ -206,14 +237,18 @@ export function ProductsAdmin() {
     {
       key: 'visual',
       header: <span className="pa-sr-only">Preview</span>,
-      width: 56,
+      width: 68,
       cellClassName: dimIfOff,
       render: (row) => (
+        // 缩略块:底色 = 品类色,内部剪影 = 该商品自己的形体色,呼应买家端 ProductVisual
         <span
-          className="pa-swatch"
-          style={{ '--pa-field': row.visual.field, '--pa-body': row.visual.body } as CSSProperties}
+          className="pa-thumb"
+          data-cat={row.category}
+          style={{ '--pa-body': row.visual.body } as CSSProperties}
           aria-hidden="true"
-        />
+        >
+          <i className="pa-thumb-form" data-shape={row.visual.shape} />
+        </span>
       ),
     },
     {
@@ -223,7 +258,14 @@ export function ProductsAdmin() {
       cellClassName: dimIfOff,
       render: (row) => (
         <span className="pa-product">
-          <span className="pa-product-name">{row.name}</span>
+          <span className="pa-product-line">
+            <span className="pa-product-name">{row.name}</span>
+            {row.badge && (
+              <Tag size="sm" tone="neutral" className="pa-badge">
+                {BADGE_LABEL[row.badge]}
+              </Tag>
+            )}
+          </span>
           <span className="pa-product-tagline">{row.tagline}</span>
         </span>
       ),
@@ -231,9 +273,14 @@ export function ProductsAdmin() {
     {
       key: 'category',
       header: 'Category',
-      width: 118,
+      width: 130,
       cellClassName: dimIfOff,
-      render: (row) => <Tag size="sm">{categoryLabelOf(row.category)}</Tag>,
+      render: (row) => (
+        <span className="pa-cat" data-cat={row.category}>
+          <i className="sf-dot sf-cat-dot" />
+          {categoryLabelOf(row.category)}
+        </span>
+      ),
     },
     {
       key: 'price',
@@ -260,19 +307,21 @@ export function ProductsAdmin() {
       key: 'stock',
       header: 'Stock',
       align: 'end',
-      width: 112,
+      width: 104,
       sortable: true,
       cellClassName: dimIfOff,
-      render: (row) => (
-        <span className="pa-stock">
-          {row.stock < LOW_STOCK && (
-            <Tag size="sm" tone="warning">
-              Low
-            </Tag>
-          )}
-          <span className="pa-num">{row.stock}</span>
-        </span>
-      ),
+      render: (row) => {
+        const low = row.stock < LOW_STOCK;
+        return (
+          // 色条槽位常驻:低库存才着 warning 色,数字列因此始终对齐
+          <span className="pa-stock">
+            <span className="pa-num">{row.stock}</span>
+            <span className="pa-low" data-on={low || undefined}>
+              {low && <span className="pa-sr-only">Low stock</span>}
+            </span>
+          </span>
+        );
+      },
     },
     {
       key: 'rating',
@@ -346,13 +395,12 @@ export function ProductsAdmin() {
   ];
 
   return (
-    <div className="ad-content">
+    <div className="ad-content pa-page">
       <header className="ad-page-header">
         <div>
+          <span className="sf-kicker pa-eyebrow">Catalog</span>
           <h1 className="ad-page-title">Products</h1>
-          <p className="ad-page-sub">
-            {rows.length} products · {categories.length} categories
-          </p>
+          <p className="ad-page-sub">Prices, stock and shopfront visibility.</p>
         </div>
         <div className="ad-page-actions">
           <Button size="sm" leftIcon={iconPlus} onClick={() => setDrawerOpen(true)}>
@@ -361,7 +409,59 @@ export function ProductsAdmin() {
         </div>
       </header>
 
-      <div className="ad-toolbar">
+      {/* 不等分双块:左边一个超大数字(极简),右边一份密集账本(密度反差) */}
+      <section className="pa-masthead">
+        <div className="sf-tile sf-tile-ink pa-count">
+          <span className="sf-kicker">In view</span>
+          <p className="sf-numeral pa-count-n">{visible.length}</p>
+          <p className="pa-count-note">of {rows.length} published</p>
+          <span className="ad-status pa-count-low">
+            {lowCount} under {LOW_STOCK} units
+          </span>
+          <span className="sf-spectrum pa-count-edge">
+            <i />
+            <i />
+            <i />
+            <i />
+          </span>
+        </div>
+
+        <div className="sf-tile pa-ledger">
+          <div className="pa-ledger-head">
+            <span className="sf-kicker">By category</span>
+            <span className="sf-index">SKU / AVG PRICE / UNITS IN STOCK</span>
+          </div>
+          <div className="pa-ledger-rows">
+            {ledger.map((item, index) => {
+              const on = categoryFilter === item.id;
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  data-cat={item.id}
+                  aria-pressed={on}
+                  className={on ? 'pa-led sf-cat-fill' : 'pa-led'}
+                  onClick={() => setCategoryFilter(on ? 'all' : item.id)}
+                >
+                  <span className="sf-index pa-led-i">{String(index + 1).padStart(2, '0')}</span>
+                  <span className="pa-led-name">{item.label}</span>
+                  <span className="pa-led-track">
+                    <span
+                      className="pa-led-bar"
+                      style={{ inlineSize: `${Math.round((item.units / maxUnits) * 100)}%` }}
+                    />
+                  </span>
+                  <span className="pa-led-sku">{item.count} SKU</span>
+                  <span className="pa-led-avg">${item.avg} avg</span>
+                  <span className="pa-led-units">{item.units}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      <div className="ad-card ad-toolbar pa-toolbar">
         <Input
           className="pa-search"
           size="sm"
@@ -391,8 +491,10 @@ export function ProductsAdmin() {
         <Table<ProductRow>
           columns={columns}
           data={visible}
+          size="sm"
           hoverable
           getRowKey={(row) => row.id}
+          classNames={{ wrap: 'pa-table', th: 'pa-th', row: 'pa-tr', td: 'pa-td' }}
           empty={<p className="pa-empty">No products match the current filters.</p>}
         />
       </div>
@@ -421,6 +523,43 @@ const NEW_PRODUCT_DEFAULTS: NewProductValues = {
   price: null,
   tags: [],
   colorway: DEFAULT_SWATCH,
+};
+
+const CATEGORY_IDS: readonly string[] = categories.map((c) => c.id);
+
+/** 表单节标题:小号眉标坐在发丝线上,给密集表单分段。 */
+const FormSection = ({ index, label }: { index: string; label: string }) => (
+  <Divider spacing="none" textAlign="start" className="pa-form-rule">
+    <span className="sf-kicker">
+      <span className="sf-index">{index}</span>
+      {label}
+    </span>
+  </Divider>
+);
+
+/** 草稿预览:订阅名称 / 分类 / 色板,把「品类色 + 色板色」当场画出来。 */
+const DraftPreview = () => {
+  const name = useWatch('name');
+  const path = useWatch('category');
+  const swatch = useWatch('colorway');
+
+  const head = Array.isArray(path) && typeof path[0] === 'string' ? path[0] : '';
+  const cat = CATEGORY_IDS.includes(head) ? head : undefined;
+  const leaf = Array.isArray(path) && typeof path[1] === 'string' ? path[1] : '';
+  const color = typeof swatch === 'string' ? swatch : DEFAULT_SWATCH;
+  const title = typeof name === 'string' && name.trim() ? name.trim() : 'Untitled product';
+
+  return (
+    <div className="pa-draft" data-cat={cat}>
+      <span className="pa-thumb pa-draft-thumb" style={{ '--pa-body': color } as CSSProperties}>
+        <i className="pa-thumb-form" data-shape="arch" />
+      </span>
+      <span className="pa-draft-text">
+        <span className="pa-draft-name">{title}</span>
+        <span className="pa-draft-path">{leaf ? `${head} / ${leaf}` : 'No category yet'}</span>
+      </span>
+    </div>
+  );
 };
 
 function NewProductDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
@@ -461,6 +600,10 @@ function NewProductDrawer({ open, onClose }: { open: boolean; onClose: () => voi
       }
     >
       <Form form={form} id={NEW_PRODUCT_FORM_ID} onSubmit={handleCreate} className="pa-form">
+        <DraftPreview />
+
+        <FormSection index="01" label="Identity" />
+
         <Form.Field
           name="name"
           label="Name"
@@ -482,6 +625,8 @@ function NewProductDrawer({ open, onClose }: { open: boolean; onClose: () => voi
             showCount
           />
         </Form.Field>
+
+        <FormSection index="02" label="Placement" />
 
         {/* Cascader 未登记 Form 适配器,按契约走 render-prop 接 field */}
         <Form.Field
@@ -539,8 +684,10 @@ function NewProductDrawer({ open, onClose }: { open: boolean; onClose: () => voi
           )}
         </Form.Field>
 
+        <FormSection index="03" label="Imagery" />
+
         <div className="pa-upload-block">
-          <span className="pa-upload-label">Imagery</span>
+          <span className="pa-upload-label">Images</span>
           <Upload
             multiple
             accept="image/*"
