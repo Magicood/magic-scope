@@ -20,8 +20,8 @@
 | --- | --- | --- | --- |
 | `as` | `ElementType` | — | 多态根标签(默认 span)。需要块级语义或落在特定标签里时改用 div/label/h2 等。 |
 | `asChild` | `boolean` | `false` | 渲染为唯一子元素并把样式/props 合并上去(Radix Slot 模式;如包裹路由 Link / 自带交互元素)。<br>与 as 互斥:asChild 为真时忽略 as,直接复用子元素作为渲染根。 |
-| `focusable` | `boolean` | `false` | skip-link 模式:聚焦时临时还原可见(`:focus` / `:focus-within` 解除裁剪)。<br>用于「跳到主内容」等键盘可达但视觉隐藏的锚点 —— 平时隐身,Tab 聚焦时浮现。<br>注意:开启后该元素须自身可聚焦(如 `&lt;a href&gt;` 或带 tabIndex),否则 `:focus` 永不命中。 |
-| `...props` | `ComponentPropsWithoutRef<'span'>` | — | 透传原生 span 属性(className / style / aria-* / 事件等)。 |
+| `focusable` | `boolean` | `false` | skip-link 模式:聚焦时临时还原可见(`:focus` / `:focus-within` 解除裁剪)。<br>用于「跳到主内容」等键盘可达但视觉隐藏的锚点 —— 平时隐身,Tab 聚焦时浮现。<br>注意:开启后该元素须自身可聚焦(如 `<a href>` 或带 tabIndex),否则 `:focus` 永不命中。 |
+| `...props` | `ComponentPropsWithoutRef<'span'>` | — | 透传原生 span 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
 

@@ -6,7 +6,7 @@
 
 ## 说明
 
-自研、零依赖,消费 @magic-scope/tokens 的 --ms-* 变量。
+自研、零依赖,消费 @magic-scope/tokens 的 --ms-&#42; 变量。
 
 role="alert" 会向辅助技术主动播报内容;按变体用 color-mix 渲染柔和底色与起始边强调条,适合表单校验、操作结果、风险警示等场景。正文 overflow-wrap: anywhere,超长内容换行收在边界内。
 
@@ -30,7 +30,7 @@ role="alert" 会向辅助技术主动播报内容;按变体用 color-mix 渲染�
 | `role` | `AriaRole` | — | role 覆盖。默认按语义分流:danger/warning → "alert"(打断式播报),<br>info/success → "status"(礼貌播报)。 |
 | `classNames` | `AlertClassNames` | — | 各部件细粒度 className。 |
 | `asChild` | `boolean` | `false` | 渲染为子元素(合并样式 / props 到子元素,Radix Slot 风格)。与子部件槽位互斥。 |
-| `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-* / 事件等)。 |
+| `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
 
@@ -49,5 +49,5 @@ role="alert" 会向辅助技术主动播报内容;按变体用 color-mix 渲染�
 | 标签 | `alert` `feedback` `notification` `banner` `message` `status` `dismissible` `tone` `icon` `a11y` |
 
 ::: details 需求原文 / 设计意图
-语义化提示框,按 info/success/warning/danger 渲染柔和底色与起始边强调条,role="alert" 向辅助技术播报。工程要求(magic-scope 通用基础组件):自研、消费 tokens 的 --ms-* 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion。
+语义化提示框,按 info/success/warning/danger 渲染柔和底色与起始边强调条,role="alert" 向辅助技术播报。工程要求(magic-scope 通用基础组件):自研、消费 tokens 的 --ms-&#42; 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion。
 :::

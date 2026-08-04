@@ -6,7 +6,7 @@
 
 ## 说明
 
-自研、零依赖,消费 @magic-scope/tokens 的 --ms-* 变量。
+自研、零依赖,消费 @magic-scope/tokens 的 --ms-&#42; 变量。
 
 role="progressbar",aria-valuemin=0 / aria-valuemax=100;确定态设 aria-valuenow 并按 value% 平滑驱动填充宽度,不确定态(indeterminate 或缺省 value)让一段发光填充段左右往返流动。value 自动夹到 0-100,非法值回退 0,填充永不溢出轨道。尊重 reduced-motion(放慢往返,保留语义)。
 
@@ -34,7 +34,7 @@ role="progressbar",aria-valuemin=0 / aria-valuemax=100;确定态设 aria-valueno
 | `label` | `ReactNode` | — | 自定义 label 槽位(ReactNode):覆盖 showValue 的纯百分比,可放任意内容。<br>线性显示在条旁,环形显示在环心。传入即生效(无需 showValue)。 |
 | `glow` | `"off"` | — | 实例级发光强度:off 关闭装饰发光(覆盖全局 --ms-fx-glow);默认随全局。 |
 | `classNames` | `ProgressClassNames` | — | 子部件 className 精修(track / fill / buffer / label)。 |
-| `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-* / 事件等)。 |
+| `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
 
@@ -49,5 +49,5 @@ role="progressbar",aria-valuemin=0 / aria-valuemax=100;确定态设 aria-valueno
 | 标签 | `progress` `progressbar` `feedback` `loading` `indicator` `indeterminate` `status` `circular` `linear` `striped` `buffer` `spinner` `tone` |
 
 ::: details 需求原文 / 设计意图
-发光的进度组件,role=progressbar。补强到生产级深度:linear/circular 两形态、tone 语义色(6 槽位)、size 随密度缩放、striped+animated 条纹、buffer 缓冲段、showValue/label 槽位、确定态/不确定态流动、classNames 子部件精修、实例级 glow。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-* 变量,完整状态与过渡、发光,动效受 data-ms-motion / prefers-reduced-motion 一键降级。
+发光的进度组件,role=progressbar。补强到生产级深度:linear/circular 两形态、tone 语义色(6 槽位)、size 随密度缩放、striped+animated 条纹、buffer 缓冲段、showValue/label 槽位、确定态/不确定态流动、classNames 子部件精修、实例级 glow。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-&#42; 变量,完整状态与过渡、发光,动效受 data-ms-motion / prefers-reduced-motion 一键降级。
 :::

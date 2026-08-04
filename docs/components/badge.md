@@ -6,9 +6,9 @@
 
 ## 说明
 
-自研、零依赖,消费 @magic-scope/tokens 的 --ms-* 变量。
+自研、零依赖,消费 @magic-scope/tokens 的 --ms-&#42; 变量。
 
-小字号、圆角 full、紧凑内边距;solid 实底配 on-* 文字,soft 用 color-mix 柔和底,outline 走描边。neutral 色调走中性的 fg-muted / border。透传全部原生 &lt;span&gt; 属性。
+小字号、圆角 full、紧凑内边距;solid 实底配 on-&#42; 文字,soft 用 color-mix 柔和底,outline 走描边。neutral 色调走中性的 fg-muted / border。透传全部原生 &lt;span&gt; 属性。
 
 ## 静态预览
 
@@ -35,7 +35,7 @@
 | `placement` | `"top-end" \| "top-start" \| "bottom-end" \| "bottom-start"` | `top-end` | 角标定位(仅 standalone=false 生效)。默认 top-end。 |
 | `asChild` | `boolean` | `false` | 渲染为子元素并保留徽标样式(Radix Slot 风格;仅 standalone 时生效)。 |
 | `children` | `ReactNode` | — | 徽标内容。 |
-| `...props` | `ComponentPropsWithoutRef<'span'>` | — | 透传原生 span 属性(className / style / aria-* / 事件等)。 |
+| `...props` | `ComponentPropsWithoutRef<'span'>` | — | 透传原生 span 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
 
@@ -50,5 +50,5 @@
 | 标签 | `badge` `tag` `label` `chip` `status` `count` `dot` `notification` `indicator` `data-display` `pill` |
 
 ::: details 需求原文 / 设计意图
-状态 / 计数 / 角标徽标(旗舰深度):四变体(solid/soft/outline/glow)× 七语义色调,接全库 tone resolver(只读 6 槽位 --ms-c / --ms-c-hover / --ms-c-active / --ms-on-c / --ms-c-soft / --ms-c-glow,零硬编码配色)。圆点 dot(可 pulse)、数字徽标(count + max 默认 99 + showZero,圆角 full)、角标 overlap(standalone=false 用 children 包裹宿主、top/bottom × start/end 四角定位)、size(sm/md 随 --ms-density-scale 缩放)、icon ReactNode 槽位、asChild 多态。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-* 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion 与 data-ms-motion/data-ms-fx 总闸。数字推导逻辑抽离为框架无关纯函数(logic.ts)便于平移 core。
+状态 / 计数 / 角标徽标(旗舰深度):四变体(solid/soft/outline/glow)× 七语义色调,接全库 tone resolver(只读 6 槽位 --ms-c / --ms-c-hover / --ms-c-active / --ms-on-c / --ms-c-soft / --ms-c-glow,零硬编码配色)。圆点 dot(可 pulse)、数字徽标(count + max 默认 99 + showZero,圆角 full)、角标 overlap(standalone=false 用 children 包裹宿主、top/bottom × start/end 四角定位)、size(sm/md 随 --ms-density-scale 缩放)、icon ReactNode 槽位、asChild 多态。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-&#42; 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion 与 data-ms-motion/data-ms-fx 总闸。数字推导逻辑抽离为框架无关纯函数(logic.ts)便于平移 core。
 :::

@@ -6,7 +6,7 @@
 
 ## 说明
 
-自研、零依赖,消费 @magic-scope/tokens 的 --ms-* 变量。
+自研、零依赖,消费 @magic-scope/tokens 的 --ms-&#42; 变量。
 
 surface-raised 底色叠加一道移动微光(linear-gradient + background-position),提示内容正在加载。
 
@@ -33,7 +33,7 @@ surface-raised 底色叠加一道移动微光(linear-gradient + background-posit
 | `height` | `string \| number` | — | 便捷高度:number 视作 px,字符串原样写入 block-size。映射到根元素 block-size。 |
 | `loading` | `boolean` | — | 内容感知:为 true 时显示骨架占位;为 false 时直接渲染 children(真实内容)。<br>配合 children 使用,实现「加载中显骨架 / 加载完显内容」的开关而无需调用方写条件分支。<br>不传时:有 children 即视为内容已就绪(loading 默认 false)。 |
 | `asChild` | `boolean` | `false` | 渲染为子元素并保留骨架样式(Radix Slot 风格;由子元素自带内容)。 |
-| `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-* / 事件等)。 |
+| `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
 
@@ -48,5 +48,5 @@ surface-raised 底色叠加一道移动微光(linear-gradient + background-posit
 | 标签 | `skeleton` `loading` `placeholder` `shimmer` `pulse` `wave` `content-aware` `feedback` `react` |
 
 ::: details 需求原文 / 设计意图
-加载占位,surface-raised 底叠加渐变高亮。补强到生产级深度:四档动画受 motion 档调控(off 停静态 / subtle 放慢)、多行文本骨架末行收窄、便捷 width/height、内容感知 loading 切换真实内容、SkeletonText/SkeletonGroup 组合与头像+标题+正文预制模板、asChild 多态。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-* 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion。
+加载占位,surface-raised 底叠加渐变高亮。补强到生产级深度:四档动画受 motion 档调控(off 停静态 / subtle 放慢)、多行文本骨架末行收窄、便捷 width/height、内容感知 loading 切换真实内容、SkeletonText/SkeletonGroup 组合与头像+标题+正文预制模板、asChild 多态。magic-scope 通用基础组件:自研、消费 tokens 的 --ms-&#42; 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion。
 :::

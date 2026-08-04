@@ -29,7 +29,7 @@
 | `as` | `ElementType` | — | 多态根标签(默认 'form')。与 asChild 互斥。 |
 | `asChild` | `boolean` | `false` | 渲染为子元素(Radix Slot;把 form 行为合并到子)。 |
 | `ref` | `Ref<HTMLFormElement>` | — |  |
-| `...props` | `ComponentPropsWithoutRef<'form'>` | — | 透传原生 form 属性(className / style / aria-* / 事件等)。 |
+| `...props` | `ComponentPropsWithoutRef<'form'>` | — | 透传原生 form 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
 

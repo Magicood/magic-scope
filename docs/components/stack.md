@@ -8,7 +8,7 @@
 
 flex 实现的有主张布局原语:direction / gap / align / justify / wrap 均可传「断点对象」做响应式;
 
-另有 divider 子项间插、recursive 交替方向、inline 行内、多态 as 与 asChild Slot。自研零依赖,消费 @magic-scope/tokens 的 --ms-space-* 间距 token。
+另有 divider 子项间插、recursive 交替方向、inline 行内、多态 as 与 asChild Slot。自研零依赖,消费 @magic-scope/tokens 的 --ms-space-&#42; 间距 token。
 
 ## 参数 Props
 
@@ -16,7 +16,7 @@ flex 实现的有主张布局原语:direction / gap / align / justify / wrap 均
 
 | 参数 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
-| `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-* / 事件等)。 |
+| `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
 
@@ -31,5 +31,5 @@ flex 实现的有主张布局原语:direction / gap / align / justify / wrap 均
 | 标签 | `layout` `stack` `flex` `vstack` `hstack` `spacing` `responsive` `divider` `polymorphic` `rtl` |
 
 ::: details 需求原文 / 设计意图
-原创布局原语。定位:有主张的一维堆叠(对标 Radix Flex / Chakra Stack / MUI Stack 的纵横堆叠),作为本库 layout 分类首个落地组件,沉淀「断点对象 → CSS 变量 + 静态 @media 级联」的响应式范式供 Flex/Grid 平移。需求要点:direction(vertical 默认 \| horizontal,响应式)、gap(token 档,响应式)、align(start/center/end/stretch/baseline)、justify、wrap、inline;divider 子项间插;recursive 子 Stack 自动反向;flex 实现;多态 as 默认 div + asChild。布局组件为结构性,无 tone/发光,但要多态、响应式、间距 token 化、RTL 友好(逻辑属性 + gap)。
+原创布局原语。定位:有主张的一维堆叠(对标 Radix Flex / Chakra Stack / MUI Stack 的纵横堆叠),作为本库 layout 分类首个落地组件,沉淀「断点对象 → CSS 变量 + 静态 @media 级联」的响应式范式供 Flex/Grid 平移。需求要点:direction(vertical 默认 | horizontal,响应式)、gap(token 档,响应式)、align(start/center/end/stretch/baseline)、justify、wrap、inline;divider 子项间插;recursive 子 Stack 自动反向;flex 实现;多态 as 默认 div + asChild。布局组件为结构性,无 tone/发光,但要多态、响应式、间距 token 化、RTL 友好(逻辑属性 + gap)。
 :::

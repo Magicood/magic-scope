@@ -19,6 +19,7 @@
     "size": "tsx scripts/check-size.ts",
     "gen:docs-tokens": "tsx scripts/gen-docs-tokens.ts",
     "gen:docs": "tsx scripts/generate-docs.ts",
+    "check:docs-render": "tsx scripts/check-docs-render.ts",
     "docs:dev": "pnpm gen:docs-tokens && pnpm gen:docs && vitepress dev docs",
     "docs:build": "pnpm gen:docs-tokens && pnpm gen:docs && vitepress build docs",
     "changeset": "changeset",

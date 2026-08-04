@@ -6,7 +6,7 @@
 
 ## 说明
 
-自研、零依赖,消费 @magic-scope/tokens 的 --ms-* 变量。
+自研、零依赖,消费 @magic-scope/tokens 的 --ms-&#42; 变量。
 
 label 包视觉隐藏的原生 input + 视觉方块(checked 画对勾、indeterminate 画横杠)+ 可选文字,可访问性与键盘可达性来自原生。
 
@@ -34,8 +34,8 @@ label 包视觉隐藏的原生 input + 视觉方块(checked 画对勾、indeterm
 | `defaultChecked` | `boolean` | — | 非受控初始选中态(独立使用时)。 |
 | `disabled` | `boolean` | — | 禁用;默认继承所在 CheckboxGroup。 |
 | `labelClassName` | `string` | — | 仅作用于根 label 的额外类名(与 className 叠加,className 也在根)。 |
-| `inputProps` | `Omit<DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>, "ref">` | — | 透传给内部 input 的属性(如 name/required/form/aria-*),与组件内部的 input 行为合并。 |
-| `...props` | `ComponentPropsWithoutRef<'input'>` | — | 透传原生 input 属性(className / style / aria-* / 事件等)。 |
+| `inputProps` | `Omit<DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>, "ref">` | — | 透传给内部 input 的属性(如 name/required/form/aria-&#42;),与组件内部的 input 行为合并。 |
+| `...props` | `ComponentPropsWithoutRef<'input'>` | — | 透传原生 input 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
 
@@ -55,5 +55,5 @@ label 包视觉隐藏的原生 input + 视觉方块(checked 画对勾、indeterm
 | 标签 | `checkbox` `checkbox-group` `form` `input` `toggle` `selection` `multi-select` `indeterminate` `tone` `accessible` |
 
 ::: details 需求原文 / 设计意图
-基于原生 input&#91;type=checkbox] 的复选框,选中时方块染主色并以对勾呈现,带发光聚焦环。工程要求(magic-scope 通用基础组件):自研、消费 tokens 的 --ms-* 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion。
+基于原生 input&#91;type=checkbox] 的复选框,选中时方块染主色并以对勾呈现,带发光聚焦环。工程要求(magic-scope 通用基础组件):自研、消费 tokens 的 --ms-&#42; 变量,完整状态与过渡、发光,尊重 prefers-reduced-motion。
 :::

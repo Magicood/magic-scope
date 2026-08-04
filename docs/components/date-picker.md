@@ -48,7 +48,7 @@ tone 聚焦发光环、invalid→danger 并设 aria-invalid,便于嵌进 Form。
 | `classNames` | `DatePickerClassNames` | — | 各部件 className。 |
 | `className` | `string` | — | 根 className。 |
 | `as` | `ElementType` | — | 多态根标签(默认 'div')。 |
-| `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-* / 事件等)。 |
+| `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
 

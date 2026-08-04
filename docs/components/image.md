@@ -6,7 +6,7 @@
 
 ## 说明
 
-自研、零依赖,消费 @magic-scope/tokens 的 --ms-* 变量。
+自研、零依赖,消费 @magic-scope/tokens 的 --ms-&#42; 变量。
 
 用原生 loading=lazy 做进视口懒加载,加载中给脉冲骨架避免布局跳动;主图加载失败时沿 fallbackSrc 链逐级降级,全部失败再落到错误占位态。支持 width/height、object-fit(cover/contain/fill/none/scale-down)与圆角档(含 full 圆形)。开启 preview 后图片可点击/回车放大进全屏灯箱,带缩放/旋转/还原/关闭工具栏,键盘 Esc 关、+/- 缩放、r 旋转、0 还原,开合支持受控。变换状态机与来源回退解析抽成零依赖纯函数,便于单测与跨框架平移。
 
@@ -22,7 +22,7 @@
 | `width` | `string \| number` | — | 宽(数值按 px,或任意 CSS 长度串)。 |
 | `height` | `string \| number` | — | 高(数值按 px,或任意 CSS 长度串)。 |
 | `fit` | `"none" \| "fill" \| "cover" \| "contain" \| "scale-down"` | `cover` | 填充方式(object-fit)。默认 cover。<br>备注:object-fit 仅对 &lt;img&gt; 这类替换元素生效。 |
-| `rounded` | `"none" \| "sm" \| "md" \| "lg" \| "xl" \| "full"` | `none` | 圆角档(走 --ms-radius-*);full=圆形(适合头像式裁切)。默认 none。 |
+| `rounded` | `"none" \| "sm" \| "md" \| "lg" \| "xl" \| "full"` | `none` | 圆角档(走 --ms-radius-&#42;);full=圆形(适合头像式裁切)。默认 none。 |
 | `lazy` | `boolean` | `true` | 懒加载。默认 true → loading="lazy"(浏览器原生,进视口才取图);<br>false → loading="eager"。原生不支持的旧引擎自动忽略该属性、照常加载(渐进增强)。 |
 | `decoding` | `"auto" \| "sync" \| "async"` | `async` | 解码提示(透传 decoding,默认 async 不阻塞渲染)。 |
 | `preview` | `boolean` | `false` | 是否启用点击预览灯箱。默认 false。<br>开启后图片可点击/回车放大到全屏遮罩,带缩放/旋转/还原工具栏。 |
@@ -32,7 +32,7 @@
 | `toolbarLabels` | `{ zoomIn?: string; zoomOut?: string; rotate?: string \| undefined; reset?: string \| undefined; close?: string \| undefined; } \| undefined` | — | 灯箱工具按钮的 aria-label 覆盖;不传则走字典<br>image.zoomIn / zoomOut / rotate / reset / close。 |
 | `className` | `string` | — | 组件根 className(&lt;figure&gt; 包裹层)。 |
 | `classNames` | `{ root?: string; img?: string; skeleton?: string \| undefined; error?: string \| undefined; preview?: string \| undefined; previewImg?: string \| undefined; toolbar?: string \| undefined; } \| undefined` | — | 分槽 className:根 / img / 骨架 / 错误态 / 灯箱遮罩 / 灯箱大图 / 工具栏。 |
-| `...props` | `ComponentPropsWithoutRef<'img'>` | — | 透传原生 img 属性(className / style / aria-* / 事件等)。 |
+| `...props` | `ComponentPropsWithoutRef<'img'>` | — | 透传原生 img 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
 

@@ -6,7 +6,7 @@
 
 ## 说明
 
-自研、零依赖,消费 @magic-scope/tokens 的 --ms-* 变量。
+自研、零依赖,消费 @magic-scope/tokens 的 --ms-&#42; 变量。
 
 结构为 &lt;nav aria-label="breadcrumb"&gt; → &lt;ol&gt; → &lt;li&gt;:非当前项有 href 渲染 &lt;a&gt;(link 色 + hover 微光),无 href 渲染静态文本,当前项渲染 &lt;span aria-current="page"&gt;(fg 色、不可点)。
 

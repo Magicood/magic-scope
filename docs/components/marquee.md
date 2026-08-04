@@ -34,7 +34,7 @@ reduced-motion / data-ms-motion=off 下停滚静态展示;克隆份对 AT 隐藏
 | `aria-label` | `string` | — | 整体无障碍标签(描述这条跑马灯的内容主题)。 |
 | `classNames` | `MarqueeClassNames` | — | 细粒度 className 槽位(root / track / group)。 |
 | `className` | `string` | — | 根容器额外类名。 |
-| `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-* / 事件等)。 |
+| `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
 

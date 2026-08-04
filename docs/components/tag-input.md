@@ -36,7 +36,7 @@
 | `renderTag` | `((context: RenderTagContext) => ReactNode)` | — | 自定义渲染每个标签(留口:完全接管标签外观;不传走内置芯片)。<br>组件已负责列表项 key,无需在返回节点上自写 key。<br>想让 ←/→/Backspace 标签键盘导航在自绘模式下也生效,需把 `context.ref` 挂到你的可聚焦元素上<br>(不挂则该标签不参与键盘导航 —— 这是 renderTag 模式下的已知契约)。 |
 | `classNames` | `TagInputClassNames` | — | 子部件类名插槽。 |
 | `inputProps` | `Omit<Omit<DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>, "ref">, "ref" \| ... 5 more ... \| "placeholder">` | — | 内层文本输入框的额外属性透传(如 name / inputMode / autoComplete);其受控值 / onChange 由组件接管。 |
-| `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-* / 事件等)。 |
+| `...props` | `ComponentPropsWithoutRef<'div'>` | — | 透传原生 div 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
 
@@ -52,7 +52,7 @@
 
 透明披露的已知边界与契约(来自 `component.json` 的 `source.notes`):
 
-复用全库 tone resolver 与 --ms-* token,观感对齐 Tag(soft)与 Input(聚焦发光环);i18n 复用既有 key(tag.remove / input.clear),本组件不新增文案 key。兼容性边界(透明备注):(1) 回车提交守卫 IME 组合态(nativeEvent.isComposing / keyCode===229),复用 Textarea 同范式,CJK 选词确认的 Enter 不误提交。(2) 键入触发分隔符:单字符走 keydown 即时命中;多字符分隔符(如 '::')keydown 命中不了(键盘事件 key 永远单字符),改由 onChange 检测 draft 末尾后缀切分,行为与单字符一致;粘贴路径对单/多字符一视同仁。(3) renderTag 自绘模式:列表项 key 由组件负责(用户无需自写);← / → / Backspace 标签键盘导航需用户把 RenderTagContext.ref 挂到自绘的可聚焦元素上才生效,未挂则该标签不参与键盘导航(已知契约)。(4) 粘贴被全部去重/超限拒掉(无净新增)时保留输入框已有草稿,不吞用户正在编辑的文本。
+复用全库 tone resolver 与 --ms-&#42; token,观感对齐 Tag(soft)与 Input(聚焦发光环);i18n 复用既有 key(tag.remove / input.clear),本组件不新增文案 key。兼容性边界(透明备注):(1) 回车提交守卫 IME 组合态(nativeEvent.isComposing / keyCode===229),复用 Textarea 同范式,CJK 选词确认的 Enter 不误提交。(2) 键入触发分隔符:单字符走 keydown 即时命中;多字符分隔符(如 '::')keydown 命中不了(键盘事件 key 永远单字符),改由 onChange 检测 draft 末尾后缀切分,行为与单字符一致;粘贴路径对单/多字符一视同仁。(3) renderTag 自绘模式:列表项 key 由组件负责(用户无需自写);← / → / Backspace 标签键盘导航需用户把 RenderTagContext.ref 挂到自绘的可聚焦元素上才生效,未挂则该标签不参与键盘导航(已知契约)。(4) 粘贴被全部去重/超限拒掉(无净新增)时保留输入框已有草稿,不吞用户正在编辑的文本。
 
 ## 溯源
 

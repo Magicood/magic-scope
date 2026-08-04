@@ -8,7 +8,7 @@
 
 基于原生 &lt;dialog&gt; + showModal()(焦点陷阱、Esc、top-layer),portal 到 body 并锁背景滚动。
 
-confirm() 返回 Promise&lt;boolean&gt;、alert() 返回 Promise&lt;void&gt;、prompt() 返回 Promise&lt;string \| null&gt;,可直接 await。
+confirm() 返回 Promise&lt;boolean&gt;、alert() 返回 Promise&lt;void&gt;、prompt() 返回 Promise&lt;string | null&gt;,可直接 await。
 
 danger 变体会把确认按钮染危险色、默认焦点落在取消以防误触销毁性操作;prompt 默认焦点落在输入框并全选。
 
@@ -29,7 +29,7 @@ danger 变体会把确认按钮染危险色、默认焦点落在取消以防误�
 | `title` | `ReactNode` | — | 标题(可选)。 |
 | `confirmText` | `ReactNode` | — | 确认按钮文案。默认走 i18n alertDialog.confirm。 |
 | `cancelText` | `ReactNode` | — | 取消按钮文案。默认走 i18n alertDialog.cancel。 |
-| `variant` | `AlertDialogTone` | — | 语义色调。danger 时确认按钮染危险色、默认焦点落在取消(防误触销毁性操作)。<br>扩成完整 tone(default/danger/warning/success/info),面板挂 ms-tone-*。 |
+| `variant` | `AlertDialogTone` | — | 语义色调。danger 时确认按钮染危险色、默认焦点落在取消(防误触销毁性操作)。<br>扩成完整 tone(default/danger/warning/success/info),面板挂 ms-tone-&#42;。 |
 | `icon` | `ReactNode` | — | 警示图标槽位(ReactNode),渲染在标题/消息起始处,危险弹窗常用。 |
 | `confirmLoading` | `boolean` | — | 受控 loading:为 true 时确认按钮 loading + 禁用(异步 onConfirm 期间内部也会自动置位)。 |
 | `placeholder` | `string` | — | 输入框占位符。 |

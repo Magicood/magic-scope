@@ -161,4 +161,4 @@
 | 组件 | 简介 |
 | --- | --- |
 | [Popconfirm](/components/popconfirm) | 锚定在元素旁的轻量确认气泡,内建确认 / 取消按钮流,常用于内联删除确认。 |
-| [ConfigProvider](/components/config-provider) | 全局配置上下文:一处统一设置全库设计开关(密度 / 动效 / 发光 / 色调),经 data-ms-* 沿 CSS 级联下发。 |
+| [ConfigProvider](/components/config-provider) | 全局配置上下文:一处统一设置全库设计开关(密度 / 动效 / 发光 / 色调),经 data-ms-&#42; 沿 CSS 级联下发。 |
