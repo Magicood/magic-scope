@@ -1,10 +1,10 @@
 name: Deploy Pages
 
-# 多站一体部署到 GitHub Pages:
+# 四站一体部署到 GitHub Pages:
 #   /            展示站(playground/showcase,94 组件 + 主题画廊)
 #   /docs/       VitePress 文档站
 #   /vela/       Vela SaaS 营销样板站(apps/demo)
-# 注:apps/shop 用户判定未达标待重做,重做合格前不部署
+#   /shop/       Arden 双面电商样板站(apps/shop:买家店面 + /admin 商家控制台)
 on:
   push:
     branches: [main]
@@ -51,13 +51,17 @@ jobs:
       - name: Build Vela (apps/demo)
         run: pnpm -C apps/demo exec vite build --base=/magic-scope/vela/
 
+      - name: Build Arden (apps/shop)
+        run: pnpm -C apps/shop exec vite build --base=/magic-scope/shop/
+
       - name: Assemble site
         run: |
           mkdir -p _site
           cp -r playground/showcase/dist/* _site/
-          mkdir -p _site/docs _site/vela
+          mkdir -p _site/docs _site/vela _site/shop
           cp -r docs/.vitepress/dist/* _site/docs/
           cp -r apps/demo/dist/* _site/vela/
+          cp -r apps/shop/dist/* _site/shop/
 
       - uses: actions/upload-pages-artifact@v3
         with:
