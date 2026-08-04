@@ -57,16 +57,21 @@ jobs:
       - name: docs 红线 (生成物与 meta/props/manifest 同步且已提交)
         run: |
           pnpm gen:docs
-          git diff --exit-code -- docs
-          UNTRACKED=$(git status --porcelain -- docs)
-          if [ -n "$UNTRACKED" ]; then
-            echo "::error::docs 生成物未提交(运行 pnpm gen:docs 后提交):"
-            echo "$UNTRACKED"
+          # 不能直接 git diff --exit-code:默认 shell 带 -e,diff 一红 step 即死,下面的修复指引永远打不出来
+          if ! git diff --quiet -- docs || [ -n "$(git status --porcelain -- docs)" ]; then
+            echo "::error::docs 生成物与真相源不同步 —— 改了组件 meta / props / manifest 的分支,请本地运行 pnpm gen:docs 并提交 docs/ 变更:"
+            git --no-pager diff --stat -- docs
+            git status --porcelain -- docs
             exit 1
           fi
 
-      - name: docs 构建 (VitePress,含死链校验)
+      - name: docs 构建 (VitePress,含死链校验;用生产 base,提前暴露子路径问题)
         run: pnpm docs:build
+        env:
+          DOCS_BASE: /magic-scope/docs/
+
+      - name: docs 渲染红线 (结构完整 + 无转义/强调符渲染瑕疵)
+        run: pnpm check:docs-render
 
       - name: 包发布质量 (publint)
         run: |
