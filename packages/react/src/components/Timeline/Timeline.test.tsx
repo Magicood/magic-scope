@@ -1,5 +1,7 @@
 // @vitest-environment jsdom
 import '@testing-library/jest-dom/vitest';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { Timeline, TimelineItem } from './Timeline';
@@ -111,6 +113,16 @@ describe('Timeline + TimelineItem', () => {
     expect(container.querySelectorAll('.ms-timeline__line')).toHaveLength(2);
   });
 
+  it('pending 末节点也带连线元素(reverse 时它是视觉首项,连线归它自己画)', () => {
+    const { container } = render(
+      <Timeline reverse pending="加载更多…">
+        <TimelineItem title="a" />
+      </Timeline>,
+    );
+    const pending = container.querySelector('.ms-timeline__item--pending');
+    expect(pending?.querySelector('.ms-timeline__node > .ms-timeline__line')).toBeInTheDocument();
+  });
+
   it('pending 追加进行中末节点(呼吸圆点);false 不渲染', () => {
     const { container, rerender } = render(
       <Timeline pending="加载更多…">
@@ -214,5 +226,22 @@ describe('Timeline + TimelineItem', () => {
     expect(ol).toHaveAttribute('data-testid', 'tl');
     fireEvent.mouseEnter(ol);
     expect(onMouseEnter).toHaveBeenCalledTimes(1);
+  });
+});
+
+/* —— 连线贯通的 CSS 静态红线 ——
+ * 连线是纯布局产物,jsdom 不排版也不解析 CSS,只能靠静态扫源文件守住已经踩过的两个坑。 */
+describe('Timeline 连线契约(静态扫 CSS)', () => {
+  const css = readFileSync(join(import.meta.dirname, 'Timeline.css'), 'utf8');
+
+  it('条目间距不得写回 .ms-timeline__item —— 写在 li 上节点列就撑不满,连线断在间距处', () => {
+    const itemBlock = css.match(/^\.ms-timeline__item\s*\{([^}]*)\}/m)?.[1] ?? '';
+    expect(itemBlock).not.toMatch(/padding-block/);
+    expect(css).toMatch(/\.ms-timeline__content\s*\{[^}]*padding-block-end/);
+  });
+
+  it('连线显隐必须按 reverse 成对 —— column-reverse 下 DOM 末项才是视觉首项', () => {
+    expect(css).toMatch(/\.ms-timeline:not\(\.ms-timeline--reverse\)[^{]*:not\(:last-child\)/);
+    expect(css).toMatch(/\.ms-timeline--reverse[^{]*:not\(:first-child\)/);
   });
 });

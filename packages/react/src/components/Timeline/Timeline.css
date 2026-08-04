@@ -1,5 +1,7 @@
 /* —— 容器:语义化 <ol>,清列表默认样式 —— */
 .ms-timeline {
+  /* 条目间距(留给用户的定制口:改这一个变量即可调整全线疏密) */
+  --ms-tl-gap: var(--ms-space-6);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -14,51 +16,58 @@
   flex-direction: column-reverse;
 }
 
-/* —— 一条:[节点列] [内容];末项去掉底部留白 —— */
+/* —— 一条:[节点列] [内容] ——
+ * 条目间距**必须**做在内容列(.ms-timeline__content)的 padding 上,不能做在 li 上:
+ * 节点列是连线的定位上下文,作为 flex 子项只 stretch 到 li 的「内容盒」,穿不过 li 的 padding。
+ * 间距一旦写在 li 上,连线就只画到内容盒底 —— 条目矮时高度直接为 0(整条时间线看不见连线)。 */
 .ms-timeline__item {
   display: flex;
   gap: var(--ms-space-4);
-  padding-block-end: var(--ms-space-6);
   min-inline-size: 0;
 }
-/* 反向时由 flex 顺序处理留白:首个视觉项(= DOM 末项)不留底白 */
-.ms-timeline:not(.ms-timeline--reverse) .ms-timeline__item:last-child {
-  padding-block-end: 0;
-}
-.ms-timeline--reverse .ms-timeline__item:first-child {
-  padding-block-end: 0;
-}
 
-/* —— 节点列:容纳圆点 / 图标,并由 ::before 画到下一节点的连线 —— */
+/* —— 节点列:纵向排 [圆点 / 图标] + [连线],高度覆盖整条(含条目间距)—— */
 .ms-timeline__node {
   position: relative;
   flex: 0 0 auto;
   display: flex;
-  align-items: flex-start;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
   inline-size: 1.5rem;
   padding-block-start: 0.125rem;
 }
 /* 连线:真实 <span class="ms-timeline__line"> 元素(暴露给用户作 className 钩子定制),
- * 从本节点下方延伸到条目底部(= 下一条节点顶部);末项 / pending 前一条不画。
+ * 作为节点列里的伸缩子项吃掉圆点 / 图标下方的全部剩余高度,一直连到下一条节点。
+ * 不用绝对定位 + 魔法偏移量:高度自适应节点尺寸(圆点 18px / 图标 24px 都不用改数),
+ * 也不会因为某个模式下节点列塌高而被算成负值(负高度会被钳成 0 = 整条线消失)。
  * 连线色读 --ms-tl-line(默认边框色);实线 = 纯色,虚线 = 重复渐变。 */
 .ms-timeline__line {
   display: none;
-}
-.ms-timeline__item:not(:last-child) .ms-timeline__line {
-  display: block;
-  position: absolute;
-  inset-block: 1.375rem 0;
-  inset-inline-start: 50%;
-  inline-size: max(1px, 0.0625rem);
-  translate: -50% 0;
+  flex: 1 1 auto;
+  inline-size: var(--ms-hairline, 1px);
+  min-block-size: 0;
+  margin-block-start: 0.125rem;
   background: var(--ms-tl-line, var(--ms-color-border));
+  pointer-events: none;
+}
+/* 画不画:正序除末项外都画;reverse 用 column-reverse 翻转视觉顺序,
+ * 此时 DOM 末项才是视觉首项 —— 归属整体反过来,改为除首项(视觉末项)外都画。 */
+.ms-timeline:not(.ms-timeline--reverse) > .ms-timeline__item:not(:last-child)
+  > .ms-timeline__node
+  > .ms-timeline__line,
+.ms-timeline--reverse
+  > .ms-timeline__item:not(:first-child)
+  > .ms-timeline__node
+  > .ms-timeline__line {
+  display: block;
 }
 /* 虚线:Timeline 级 .ms-timeline--dashed 或单条 .ms-timeline__item--dashed;
- * 单条 .ms-timeline__item--solid 可在 dashed Timeline 内强制实线 */
-.ms-timeline--dashed .ms-timeline__item:not(:last-child):not(.ms-timeline__item--solid)
-  .ms-timeline__line,
-.ms-timeline__item--dashed:not(:last-child) .ms-timeline__line {
+ * 单条 .ms-timeline__item--solid 可在 dashed Timeline 内强制实线。
+ * 一律用子组合器,避免嵌套 Timeline 时外层规则串味到内层连线。 */
+.ms-timeline--dashed > .ms-timeline__item:not(.ms-timeline__item--solid)
+  > .ms-timeline__node
+  > .ms-timeline__line,
+.ms-timeline__item--dashed > .ms-timeline__node > .ms-timeline__line {
   background:
     linear-gradient(
       to bottom,
@@ -70,6 +79,7 @@
 
 /* —— 圆点:tone 强调色 + surface 描边(静息不发光,克制优雅) —— */
 .ms-timeline__dot {
+  flex: 0 0 auto;
   inline-size: 0.875rem;
   block-size: 0.875rem;
   border-radius: var(--ms-radius-full);
@@ -80,6 +90,7 @@
 /* —— 图标节点:替代圆点,圆形底承载图标 —— */
 .ms-timeline__icon {
   display: inline-flex;
+  flex: 0 0 auto;
   align-items: center;
   justify-content: center;
   inline-size: 1.5rem;
@@ -102,11 +113,16 @@
   --ms-tl-soft: var(--ms-c-soft);
 }
 
-/* —— 内容 —— */
+/* —— 内容:条目间距挂在这里(见上方 .ms-timeline__item 的说明),视觉末项不留底白 —— */
 .ms-timeline__content {
   flex: 1 1 auto;
   min-inline-size: 0;
   padding-block-start: 0.0625rem;
+  padding-block-end: var(--ms-tl-gap);
+}
+.ms-timeline:not(.ms-timeline--reverse) > .ms-timeline__item:last-child > .ms-timeline__content,
+.ms-timeline--reverse > .ms-timeline__item:first-child > .ms-timeline__content {
+  padding-block-end: 0;
 }
 .ms-timeline__header {
   display: flex;
@@ -154,21 +170,22 @@
   inline-size: 100%;
 }
 @container (min-width: 32rem) {
+  /* 节点列脱流浮在整条上方居中:inset-block 必须显式给 0,否则块轴高度塌成圆点高度,
+   * 连线(inset-block: 起点 0)算出来是负值 → 高度 0,交替模式全程看不到轴。
+   * 它是 aria-hidden 的装饰层且盖住整条,必须 pointer-events: none 放行内容区的点击 / 选中。 */
   .ms-timeline--alternate .ms-timeline__node {
     position: absolute;
     inset-inline: 0;
+    inset-block: 0;
     inline-size: 100%;
+    pointer-events: none;
   }
-  .ms-timeline--alternate .ms-timeline__node > .ms-timeline__dot,
-  .ms-timeline--alternate .ms-timeline__node > .ms-timeline__icon {
-    position: relative;
-    inset-inline-start: 50%;
-    translate: -50% 0;
-  }
-  .ms-timeline--alternate .ms-timeline__item:not(:last-child) .ms-timeline__line {
-    inset-inline-start: 50%;
-  }
+  /* 节点列已是整条宽度且 justify-content: center,圆点 / 图标天然落在中轴,
+   * 不能再叠 50% 位移(会把节点推到最右边)。 */
+  /* 内容列锁死在中轴的一侧:基础规则的 flex-grow 会把它撑满整行,只给 inline-size 拦不住,
+   * 长正文会横过中轴压到轴线上 —— 必须连 flex 一起改写。 */
   .ms-timeline--alternate .ms-timeline__content {
+    flex: 0 0 calc(50% - 1.5rem);
     inline-size: calc(50% - 1.5rem);
   }
   /* 奇数(视觉左)、偶数(视觉右) */
@@ -194,11 +211,16 @@
   color: var(--ms-color-fg-subtle);
   font-style: italic;
 }
-/* pending 之前那条的连线转虚线(进行中的视觉暗示) */
+/* 通往 pending 的那段连线转虚线(进行中的视觉暗示)。
+ * 正序:pending 在最下,虚线是它前一条画的;reverse:pending 在最上,虚线是它自己画的。 */
 .ms-timeline__item--pending {
   --ms-tl-accent: var(--ms-color-fg-subtle);
 }
-.ms-timeline__item:has(+ .ms-timeline__item--pending) .ms-timeline__line {
+.ms-timeline:not(.ms-timeline--reverse)
+  > .ms-timeline__item:has(+ .ms-timeline__item--pending)
+  > .ms-timeline__node
+  > .ms-timeline__line,
+.ms-timeline--reverse > .ms-timeline__item--pending > .ms-timeline__node > .ms-timeline__line {
   background:
     linear-gradient(
       to bottom,
