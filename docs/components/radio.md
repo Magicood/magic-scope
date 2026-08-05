@@ -42,6 +42,7 @@ RadioGroup 用 context 把 name / 选中值 / 尺寸 / 禁用下发给组内 Rad
 
 | 事件 | 签名 | 说明 |
 | --- | --- | --- |
+| `onChange` | `(event: ChangeEvent<HTMLInputElement, Element>) => void` | 原生风格的 change 回调(透传到当前被选 Radio 的 input)。与 onValueChange 可同时使用。<br>· `event` — 当前被选 Radio 的 input 触发的原生 change 事件。 |
 | `onValueChange` | `(value: string, event: ChangeEvent<HTMLInputElement, Element>) => void` | 选中变化回调(旧的「只取 value」调用方完全兼容)。<br>· `value` — 被选中项的 value。<br>· `event` — 触发本次选中的原生 change 事件(来自被选 Radio 的 input)。 |
 
 此外透传原生 `<input>` 的全部标准事件(onClick / onFocus / onKeyDown …),与自有事件按 compose 合并、互不覆盖。

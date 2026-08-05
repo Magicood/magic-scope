@@ -40,6 +40,10 @@ compose 了 Timeline(语义化 &lt;ol&gt;)+ TimelineItem(单条节点)两件。
 
 ## 事件 Events
 
+| 事件 | 签名 | 说明 |
+| --- | --- | --- |
+| `onSelect` | `() => void` | 选中语义回调(点击 / 键盘 Enter·Space 触发)。提供即视为交互式。 |
+
 此外透传原生 `<ol>` 的全部标准事件(onClick / onFocus / onKeyDown …),与自有事件按 compose 合并、互不覆盖。
 
 ## 溯源

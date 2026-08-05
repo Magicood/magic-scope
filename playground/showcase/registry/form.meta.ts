@@ -6,7 +6,7 @@ export const meta: ComponentMeta = {
   category: 'forms',
   summary: '表单子系统 + 零依赖校验引擎,订阅式切片 store 让打字只重渲单字段。',
   description:
-    '自研、headless 引擎落在纯 TS(零 React,为将来抽 @magic-scope/core 留口):字段值与校验态进订阅式切片 store,大表单打字时表单根与兄弟字段零 re-render(细粒度 path 切片 + useSyncExternalStore)。\n校验双轨可叠加——内建 rules(零依赖、可 i18n)+ Standard Schema v1(不 import zod,zod/valibot/arktype 原生兼容);异步校验自带防抖与竞态取消。\n用显式适配器表把库内 10 个 value/onChange 形态不一的控件(Checkbox 用 checked、Slider/Rate 用数值、Select ref→button…)优雅注入,Field 自动连好 a11y(label↔control、aria-invalid/describedby/required、提交聚焦首错),校验失败态复用全库 tone 发光、错误文案 role=alert 滑入不抖布局。\n配合 useForm(命令式 FieldPath 类型安全)与 Form.Field/Submit/Reset/List/ErrorSummary 子部件使用。',
+    '自研、headless 引擎落在纯 TS(零 React,为将来抽 @magic-scope/core 留口):字段值与校验态进订阅式切片 store,大表单打字时表单根与兄弟字段零 re-render(细粒度 path 切片 + useSyncExternalStore)。\n校验双轨可叠加——内建 rules(零依赖、可 i18n)+ Standard Schema v1(不 import zod,zod/valibot/arktype 原生兼容);异步校验自带防抖与竞态取消。\n用显式适配器表把库内 10 个 value/onChange 形态不一的控件(Checkbox 用 checked、Slider/Rate 用数值、Select ref→button…)优雅注入,Field 自动连好 a11y(label↔control、aria-invalid/describedby/required、提交聚焦首错),校验失败态复用全库 tone 发光、错误文案 role=alert 滑入不抖布局。\n配合 useForm(命令式 FieldPath 类型安全)与 Form.Field/Submit/Reset/List/ErrorSummary 子部件使用。\nForm.List 取 name(数组字段路径)+ render-prop children(api),api 给出稳定 id 的 fields 列表与 append / remove / move;与 Form.Field 的同名参数含义不同,下表按 Field 口径列出。',
   controls: [
     {
       type: 'select',
@@ -39,4 +39,6 @@ export const meta: ComponentMeta = {
     },
   ],
   spread: 'form',
+  // 子部件的参数并进本表(说明里带 `Form.X:` 归属前缀;抽取自 Field.tsx / Form.parts.tsx)。
+  alsoProps: ['Form.Field', 'Form.Submit', 'Form.Reset', 'Form.List', 'Form.ErrorSummary'],
 };

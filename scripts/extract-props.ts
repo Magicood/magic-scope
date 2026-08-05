@@ -4,10 +4,11 @@
  * 用法:tsx scripts/extract-props.ts [--check]
  *   --check:只校验,不写盘(给 CI 用,检测 props.json 是否与源码漂移)。
  */
-import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { readFileSync, writeFileSync } from 'node:fs';
+import { relative } from 'node:path';
 import { withCompilerOptions } from 'react-docgen-typescript';
 import ts from 'typescript';
+import { collectComponentFiles } from './lib/component-sources';
 import { cleanDescription, extractParamDocs, type PropRow } from './lib/props-doc';
 
 const COMPONENTS_DIR = 'packages/react/src/components';
@@ -41,26 +42,9 @@ const parser = withCompilerOptions(
   },
 );
 
-// 收集每个组件目录的主源文件(<Dir>/<Dir>.tsx)。
-// 显式 .sort():readdir 顺序由文件系统决定(APFS 与 ext4 不一致),而 props.json 是已提交产物、
-// CI 在 ubuntu 上用 check:props 与本地 macOS 生成的结果逐字节比对——键序必须与遍历环境无关。
-const dirs = readdirSync(COMPONENTS_DIR, { withFileTypes: true })
-  .filter((d) => d.isDirectory())
-  .map((d) => d.name)
-  .sort();
-
-const files: string[] = [];
-const mainDirs: string[] = [];
-for (const dir of dirs) {
-  const main = join(COMPONENTS_DIR, dir, `${dir}.tsx`);
-  try {
-    readFileSync(main);
-    files.push(main);
-    mainDirs.push(dir);
-  } catch {
-    // 没有同名主文件的目录跳过。
-  }
-}
+// 收集组件源文件:每个目录下的**全部** .tsx(主文件在前),而非只有同名主文件 ——
+// 公开子部件常写在别的文件里(Form/Field.tsx、Form/Form.parts.tsx)。取舍与排序理由见该模块。
+const { files, mainDirs } = collectComponentFiles(COMPONENTS_DIR);
 
 // —— 共享 TS 程序:供 @param 抽取与 *Options 抽取复用(避免建两次 program)。
 const program = ts.createProgram(files, {
@@ -75,14 +59,50 @@ const paramDocs = extractParamDocs(program, checker, files);
 
 const docs = parser.parse(files);
 
+// —— 跨文件同名 displayName ——
+// 扫描扩到目录内全部 .tsx 后,目录私有的实现件可能与另一个公开组件重名
+// (DatePicker 内部的日历面板同样叫 `Calendar`,与公开的 Calendar 组件撞键)。
+// 撞键会被下方 `concat` 静默合并成一张混着两个组件参数的表,故:登记在册的文件整份不参与 props.json,
+// 未登记的重名一律硬失败。登记的是「被忽略的文件」而非「胜出者」,判定与遍历顺序无关。
+const IGNORED_DOCS: Record<string, string[]> = {
+  // DatePicker 的内嵌日历面板(私有实现,不从包导出);公开的日历是 components/Calendar。
+  Calendar: ['packages/react/src/components/DatePicker/Calendar.tsx'],
+};
+
+// 组件目录名(`.../components/<Dir>/<file>` → `<Dir>`);不在组件目录下的返回 null。
+const componentDirOf = (file: string): string | null =>
+  /(?:^|\/)components\/([^/]+)\//.exec(file.replace(/\\/g, '/'))?.[1] ?? null;
+
 // displayName → PropRow[](同名多导出合并)。
 const out: Record<string, PropRow[]> = {};
+// displayName → 首次产出它的文件(跨文件撞键判定用)。
+const owners: Record<string, string> = {};
+const collisions: string[] = [];
 // 被 rows.length === 0 丢掉的「命名空间子组件」(displayName 形如 'Menu.Trigger')。
 const droppedNamespaced: string[] = [];
+// 「继承自其它组件」而未重复列出的 props(见下方过滤),仅作一行提示,便于发现新增的跨组件继承。
+const inheritedNotes: string[] = [];
 for (const doc of docs) {
   const filePath = (doc as { filePath?: string }).filePath ?? '';
+  // react-docgen 回传的 filePath 时而绝对时而相对(同名 basename 的第二个文件走绝对路径),
+  // 统一成「仓库根为起点的 posix 相对路径」再做登记 / 比对。
+  const relPath = relative(process.cwd(), filePath).replace(/\\/g, '/');
+  if (IGNORED_DOCS[doc.displayName]?.includes(relPath)) continue;
+
   const fileParams = paramDocs[filePath] ?? {};
-  const rows: PropRow[] = Object.values(doc.props).map((p) => {
+  // 继承自**别的组件**的 props 不重复列出:Form.Submit / Form.Reset 原样透传 Button 的全部 props,
+  // 铺进表里既是 Button 文档的复制品,又因 JSDoc 归属前缀写不进 Button 源码而无法标明出处
+  // (alsoProps 是扁平合并,并进 Form 后会被读成 Form 自己的参数)。改由子部件自己的 JSDoc 一句话指向 Button。
+  // 原生透传(parent 在 node_modules)不走这条:它们已由 native 标记 + meta.spread 的「...props」行概括。
+  const docDir = componentDirOf(relPath);
+  const ownProps = Object.values(doc.props).filter((p) => {
+    const parentFile = p.parent?.fileName;
+    if (!parentFile || parentFile.includes('node_modules')) return true;
+    if (componentDirOf(parentFile) === docDir) return true;
+    inheritedNotes.push(`${doc.displayName} ← ${p.parent?.name}.${p.name}`);
+    return false;
+  });
+  const rows: PropRow[] = ownProps.map((p) => {
     // enum 优先用 raw 联合字符串;否则拼字面量;再否则用 name。
     const t = p.type as { name?: string; raw?: string; value?: { value: string }[] };
     let typeStr = t.name ?? 'unknown';
@@ -118,6 +138,13 @@ for (const doc of docs) {
     if (doc.displayName.includes('.')) droppedNamespaced.push(doc.displayName);
     continue;
   }
+  // 撞键登记只对「真的会写进 props.json 的 doc」做:0 行的幽灵 doc 本就整条丢弃
+  // (Menu 家族四个文件各产出一条 0 行的 `MenuItem` 类型 doc),拿来报错纯属误伤。
+  const prevOwner = owners[doc.displayName];
+  if (prevOwner && prevOwner !== relPath) {
+    collisions.push(`${doc.displayName}(${prevOwner} 与 ${relPath})`);
+  }
+  owners[doc.displayName] ??= relPath;
   // 同 displayName 合并(如 RadioGroup + Radio 各自一条 displayName,这里按名分别存)。
   out[doc.displayName] = (out[doc.displayName] ?? []).concat(rows);
 }
@@ -169,6 +196,16 @@ function extractOptionInterfaces(filePaths: string[]): Record<string, PropRow[]>
 
 for (const [name, rows] of Object.entries(extractOptionInterfaces(files))) {
   out[name] = rows;
+}
+
+// —— 守卫③:跨文件同名 displayName 必须显式登记 ——
+// 两份不同的组件文档合进同一个键(concat)后,展示站 / docs 会把它们的参数混列成一张表,
+// 且没有任何一条既有守卫看得见(键存在、行数也非零)。这里在合并阶段就拦下。
+if (collisions.length) {
+  console.error(
+    `✖ 以下 displayName 由多个文件同时产出,会被合并成一张混着两个组件参数的表:${collisions.join('、')}\n  若其中一份是目录私有实现件,请登记进 extract-props.ts 的 IGNORED_DOCS;否则改名。`,
+  );
+  process.exit(1);
 }
 
 // —— 守卫①:每个组件目录必须产出「与目录同名的主 displayName」且 props 非空,否则报错 ——
@@ -235,4 +272,9 @@ if (process.argv.includes('--check')) {
   console.log(
     `已写入 ${OUT}:${names.length} 个组件,共 ${Object.values(out).reduce((s, r) => s + r.length, 0)} 行 props`,
   );
+  if (inheritedNotes.length) {
+    console.log(
+      `ℹ 继承自其它组件的 ${inheritedNotes.length} 个 prop 未重复列出(由子部件自己的 JSDoc 指向来源组件):${inheritedNotes.join('、')}`,
+    );
+  }
 }
