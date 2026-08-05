@@ -395,3 +395,121 @@ describe('原生控件 UA 默认值契约(库不得依赖宿主 CSS reset)', () 
     expect(bad).toEqual([]);
   });
 });
+
+/* —— 孤儿 CSS 类契约:CSS 里写了、库却从不渲染的类 = 永不生效的死规则 ——
+ * 事故原型:FloatButton 的 `.ms-float-button-group__group-trigger` —— TSX 渲染的其实是
+ * `ms-float-button__group-trigger`(block 名多写了一层 `-group`),整条规则从未生效。后果不是
+ * 「少了点样式」:触发钮的 `order: 2` 退回初始值 0,排到了子项面板**前面**,speed-dial 四个
+ * direction 的展开方向**全部倒置**,贴锚点边的还从触发钮变成了子项面板(位置随子项数量漂移)。
+ * 类名拼错既不报错也不告警,CSS 那段代码看着一切正常,jsdom 更是连 CSS 都不解析。
+ *
+ * 判据:全库 CSS 选择器里出现的每个 `.ms-*` 类,都要在仓库源码 / 文档里找得到渲染方。证据两种:
+ *   ① 精确字面量 —— `'ms-tabs__tab'`、`class="ms-card"`;
+ *   ② 模板前缀 —— `ms-tabs--${variant}` / `ms-tone-${tone}` 这类拼接,取被 `${` 截断的字面
+ *      前缀做前缀匹配。前缀必须以 `-` / `_` 收尾(BEM 的天然断点)且 `ms-` 之后还有 ≥2 字符,
+ *      否则放行面宽到能废掉整条红线 —— 仓库里真有裸 `ms-` 前缀的写法:upload demo 的
+ *      `` `ms-${file.name}` ``(拼的是**文件名**)和 scripts/new-component.ts 的代码生成模板
+ *      `` `.ms-${kebab}` ``。放它们进来,1344 个类会被一次性全部放行,红线只剩个绿勾。
+ *      收窄的代价是漏识别的动态类名会**误报**成孤儿 —— 误报有人看,假绿没人看,这个方向是对的。
+ *
+ * 两处刻意排除,都是「同形但不是使用证据」:
+ *   - `--ms-*` 自定义属性与类名同形,`--ms-space-3` 不是 `.ms-space-3` 的渲染方(负向后顾排除);
+ *   - `*.test.*` / `*.spec.*`:测试里断言类名不等于组件渲染它,而且不排除的话,本文件注释里
+ *     随手提一句类名就会把它「洗白」成有证据 —— 红线给自己发豁免,最典型的假绿。
+ *
+ * 豁免:确实要留给使用方自己挂的纯 hook 类,在规则里加一行 `--ms-contract-css-only: <理由>;`
+ *      —— 与第 3 条红线同源,用声明而不是注释(注释里提一句类名就能静默关掉检查)。 */
+
+const repoRoot = process.cwd();
+/** 会渲染 / 记录类名的地方:发布包、展示站、样板站、文档、注册表、生成器。 */
+const CONSUMER_DIRS = ['packages', 'playground', 'apps', 'docs', 'registry', 'scripts'];
+const CONSUMER_EXTS = [
+  '.ts',
+  '.tsx',
+  '.js',
+  '.jsx',
+  '.mjs',
+  '.cjs',
+  '.vue',
+  '.md',
+  '.html',
+  '.json',
+];
+const SKIP_DIRS = new Set(['node_modules', 'dist', 'coverage', '.git', '.claude', '.turbo']);
+const IS_TEST_FILE = /\.(test|spec)\.[jt]sx?$/;
+
+function collectConsumer(dir: string, out: string[] = []): string[] {
+  let entries: string[];
+  try {
+    entries = readdirSync(dir);
+  } catch {
+    return out; // 目录不存在(如未生成 docs)不该让红线炸,只是证据面小一点
+  }
+  for (const entry of entries) {
+    if (SKIP_DIRS.has(entry)) continue;
+    const full = join(dir, entry);
+    if (statSync(full).isDirectory()) collectConsumer(full, out);
+    else if (CONSUMER_EXTS.some((ext) => entry.endsWith(ext)) && !IS_TEST_FILE.test(entry)) {
+      out.push(full);
+    }
+  }
+  return out;
+}
+
+const consumerFiles = CONSUMER_DIRS.flatMap((d) => collectConsumer(join(repoRoot, d)));
+
+/** 类名字面量。负向后顾把 `--ms-x`(自定义属性)挡在外面。 */
+const CLASS_TOKEN = /(?<![\w-])ms-[\w-]+/g;
+/** 被 `${` 截断的模板前缀:`` `ms-tabs--${variant}` `` → `ms-tabs--`。 */
+const CLASS_PREFIX = /(?<![\w-])(ms-[\w-]*)(?=\$\{)/g;
+/** 够窄才配当证据:`ms-` 之后 ≥2 字符,且停在 `-` / `_` 这种 BEM 断点上。 */
+const USABLE_PREFIX = /^ms-[\w-]{2,}[-_]$/;
+
+const exactClassTokens = new Set<string>();
+const classPrefixes = new Set<string>();
+for (const file of consumerFiles) {
+  const text = readFileSync(file, 'utf8');
+  for (const m of text.matchAll(CLASS_TOKEN)) exactClassTokens.add(m[0]);
+  for (const m of text.matchAll(CLASS_PREFIX)) {
+    const prefix = m[1] ?? '';
+    if (USABLE_PREFIX.test(prefix)) classPrefixes.add(prefix);
+  }
+}
+
+/** CSS 里定义的每个 ms-* 类 → 首次出现处;带 `--ms-contract-css-only` 的规则登记为豁免。 */
+const cssClassSites = new Map<string, string>();
+const cssOnlyClasses = new Set<string>();
+for (const file of cssFiles) {
+  for (const rule of parseCssRules(readFileSync(file, 'utf8'))) {
+    const exempt = rule.decls.some((d) => d.prop === '--ms-contract-css-only');
+    for (const branch of rule.branches) {
+      for (const m of branch.matchAll(/\.(ms-[\w-]+)/g)) {
+        const cls = m[1] ?? '';
+        if (exempt) cssOnlyClasses.add(cls);
+        if (!cssClassSites.has(cls)) cssClassSites.set(cls, `${shortName(file)}:${rule.line}`);
+      }
+    }
+  }
+}
+
+describe('孤儿 CSS 类契约(CSS 里写了、库却从不渲染 = 永不生效的死规则)', () => {
+  it('扫到了 CSS 类与消费方文件(任一侧塌了,整条红线就是假绿)', () => {
+    expect(cssClassSites.size).toBeGreaterThan(1000);
+    expect(consumerFiles.length).toBeGreaterThan(500);
+    expect(exactClassTokens.size).toBeGreaterThan(1000);
+  });
+
+  it('每个 ms-* 类都有渲染方(找不到 = 类名拼错或规则已废弃,样式静默消失)', () => {
+    const orphans: string[] = [];
+    for (const [cls, where] of cssClassSites) {
+      if (cssOnlyClasses.has(cls)) continue;
+      if (exactClassTokens.has(cls)) continue;
+      if ([...classPrefixes].some((p) => cls.startsWith(p))) continue;
+      orphans.push(`${where}: .${cls} —— 全仓 TSX / TS / 文档里都找不到这个类名`);
+    }
+    /* 修法三选一:① 类名拼错 —— 对齐 TSX 实际渲染的那个(改 CSS 侧,别改 TSX:TSX 里的类名
+     *   已随包发布,是使用方能写覆盖样式的公开契约);② 规则已废弃 —— 连注释一起删掉;
+     *   ③ 类名是动态拼的但前缀太宽没被识别 —— 把拼接前缀收窄到 `ms-<组件>-` 这种粒度。 */
+    expect(orphans).toEqual([]);
+  });
+});
