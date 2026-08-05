@@ -1,5 +1,54 @@
 # @magic-scope/react
 
+## 0.2.2
+
+### Patch Changes
+
+- cb5b0d6: 修复 Divider / Tabs / Anchor 三处连接件几何缺陷,并清掉 Form 一段永不生效的死 CSS
+
+  2026-08-04 修 Timeline 连线时做过一次全库连接件普查,这次把剩余项逐个在真浏览器里复现后清掉。三个 bug 同源:**「线」或「指示器」的某一条轴依赖了父级,而父级不一定给得出**。
+
+  **Divider `orientation="vertical"` 在多数父级里一条线都画不出来。** `.ms-divider--vertical` 用 `block-size: 100%` 撑高。百分比块高要父级块高确定才解析得出,父级 auto 高时退化成 `auto` —— 而渲染的是 `<hr>`(void 元素,永远没有子内容),于是块高 0,0 高度的边框一个像素都不画。更坑的是 `100%` 是 definite cross size,会**压制 flex 的 stretch**,所以「父级写 `align-items: stretch`」也救不回来。真浏览器实测六种父级(普通块级流 / flex+stretch / flex+center / flex 定高 / inline-flex 工具条 / grid 行),修前只有「祖先带确定高度」的两种画得出线,其余四种高度全是 0。现改为 `block-size: auto` + `align-self: stretch` + `min-block-size` 地板,六种父级全部正常。
+
+  - 新增可覆写自定义属性 `--ms-divider-min-length`(默认 `1em`):竖线在「父级撑不出高度」时的地板长度,典型场景是行内文字之间的分隔。
+  - 行为变化:在 grid 等父级里,竖线高度从百分比的循环解析结果改为跟随实际行高(实测 90px → 22.5px,后者才是该行真实内容高)。
+
+  **Tabs `variant="pill"` 的指示条两轴恒偏 4px。** `--ms-tabs-ind-pos` 是 JS 量的 `offsetLeft` / `offsetTop`,基准是 tablist 的 **padding box**;而指示器在位移轴上没写 `inset`,元素停在**静态位置**,静态位置落在 tablist 的 **content box**。pill 变体的 tablist 有 `padding: var(--ms-space-1)`,于是这段 padding 被算了两次 —— 实测横排 `deltaX`、竖排 `deltaY` 恒为 `+4.00px`。四个变体一并补上显式 `inset`(underline 变体眼下 tablist 无 padding 才没显形,但经 `classNames.list` 加 padding 立刻同病)。
+
+  **Anchor 墨条基准脆弱,消费方一给根加内边距就整体错位。** `.ms-anchor__ink` 锚了内联轴却没锚块轴,而块轴正是它 translate 的那一轴。实测给根加 `padding-block-start: 20px` 墨条偏 +20px、加 `border-block-start: 6px` 偏 +6px。CSS 补 `inset-block-start: 0` 之外,JS 侧的 `linkRect.top - navRect.top` 也减掉了 `nav.clientTop`,把基准从 border box 换算到 padding box —— 只改 CSS 的话 border 那种仍会偏。
+
+  **Form 删掉 `.ms-form__list` / `.ms-form__list-item` 两条死规则。** `Form.List` 是纯 render-prop(`<>{children(api)}</>`),不产出任何 DOM,库里没有任何元素带得上这两个类,全仓 grep 零命中。不给它加容器 `div`,因为那会给所有消费方凭空多一层 DOM。
+
+  **新增两条全库 CSS 静态契约**(`css-contract.test.ts`,共 8 条):零宽细线盒必须有不依赖父级的块轴地板(百分比高、`align-self: stretch` 都不算数);绝对定位沿某轴 translate 位移时该轴必须显式锚 `inset`。两条都按「注入红线声称守护的那个回归」逐变体验证过会红(共 11 个变体:原样回退 / 假修复 / 改 `auto` / 置零 / 搬到兄弟规则 / 换等价写法),全库 94 个 CSS 零误报。
+
+- 3bafaa2: 修 FloatButton.Group 触发钮的死 CSS(展开方向倒置)+ 新增「孤儿 CSS 类」全库红线
+
+  **FloatButton.Group 四个 direction 的展开方向全部倒置。** `FloatButton.css` 里给触发钮定位的
+  规则写成了 `.ms-float-button-group__group-trigger`,而 TSX 渲染的类名是
+  `ms-float-button__group-trigger`(block 名多写了一层 `-group`),整条规则从未生效。后果不是
+  「少了点样式」:触发钮的 `order: 2` 退回初始值 0,排到了子项面板**前面** —— `up` 的子项往下弹、
+  `down` 往上弹、`left`/`right` 同样反向,而且贴锚点边的从触发钮变成了子项面板(触发钮位置随子项
+  数量漂移)。真浏览器实测:修前 `order=0` / `flex-shrink=1`、触发钮在列表上方;修后 `order=2` /
+  `flex-shrink=0`,四个方向的触发钮都精确贴住各自的锚点边。
+
+  修的是 CSS 选择器而非 TSX 类名 —— `ms-float-button__group-trigger` 已随包发布,是使用方写覆盖
+  样式的公开类名契约,动它会破坏下游;而错拼的那个从未出现在任何渲染输出里,不属于契约。
+
+  **新增全库红线「孤儿 CSS 类」**(`css-contract.test.ts`):CSS 选择器里出现的每个 `.ms-*` 类,
+  都必须在仓库源码 / 文档里找得到渲染方。类名拼错既不报错也不告警,jsdom 更是连 CSS 都不解析,
+  只能静态兜。使用证据支持模板拼接(`ms-tabs--${variant}` 按前缀放行,前缀需窄到 `ms-<组件>-`
+  粒度);确实要留给使用方自己挂的钩子类,用 `--ms-contract-css-only` 声明豁免。
+
+  顺带删掉 `Form.css` 里 `.ms-form__list` / `.ms-form__list-item` 两条同类死规则(Form.List 是
+  纯 render-prop,不产出任何 DOM,没有元素带得上这两个类)—— 与 PR #68 是同一处改动,两边内容
+  逐字一致。
+
+- 318588d: Form 的 5 个公开子部件补齐 props 文档:`Form.Field` / `Form.Submit` / `Form.Reset` / `Form.List` / `Form.ErrorSummary` 此前在 `props.json` 与文档站里连键都没有(props 抽取器只读组件目录下的同名主文件,写在 `Field.tsx` / `Form.parts.tsx` 里的子部件根本没进解析范围)。
+
+  - `Form.Submit` / `Form.Reset` 改用导出的具名接口 `FormSubmitProps` / `FormResetProps`(此前直接用 `ButtonProps`),自有 prop 逐条补 JSDoc;两者仍原样透传 Button 的全部 props。
+  - `Field` / `FormList` 由函数声明改为 `const`(函数声明会被提升,react-docgen 认不出紧随其后的 `displayName` 赋值,键会退化成 `Field` / `FormList` 而不是 `Form.Field` / `Form.List`);运行时行为与类型不变。
+  - 子部件 props 的说明统一带 `Form.X:` 归属前缀,合并进 Form 参数表后仍能看出出处。
+
 ## 0.2.1
 
 ### Patch Changes

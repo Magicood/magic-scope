@@ -1,5 +1,14 @@
 # @magic-scope/demo-shop
 
+## 0.0.3
+
+### Patch Changes
+
+- Updated dependencies [cb5b0d6]
+- Updated dependencies [3bafaa2]
+- Updated dependencies [318588d]
+  - @magic-scope/react@0.2.2
+
 ## 0.0.2
 
 ### Patch Changes
