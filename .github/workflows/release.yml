@@ -19,16 +19,21 @@ jobs:
     name: Version PR / Publish
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: 22
+          # 显式指定 pnpm 缓存。setup-node v6 起「自动缓存」只认 npm,
+          # 本仓 packageManager 是 pnpm,不写这行就不会缓存。
           cache: pnpm
+          # setup-node v7 起不再注入占位 NODE_AUTH_TOKEN(旧版会写
+          # XXXXX-XXXXX-XXXXX-XXXXX 污染 .npmrc),对下面的 OIDC 发布只有好处;
+          # 走回退方案 B(NPM_TOKEN)时仍会正常读取显式设置的 NODE_AUTH_TOKEN。
           registry-url: https://registry.npmjs.org
 
       - name: Install
