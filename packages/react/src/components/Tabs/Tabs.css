@@ -105,9 +105,16 @@
   opacity: 1;
 }
 
+/* 位移轴上的 inset 必须显式写 0,不能省着走静态位置:
+ * --ms-tabs-ind-pos 是 JS 的 offsetLeft / offsetTop,基准是 list 的 **padding box**;
+ * 而省掉 inset 时元素停在**静态位置**,静态位置落在 list 的 **content box** ——
+ * 两者差一个 list 的 padding。pill 变体的 list 有 padding: var(--ms-space-1),
+ * 实测滑块两轴恒偏 +4px(padding 双算);underline 变体只是眼下 list 无 padding 才没显形。 */
+
 /* underline:滑块 = 底部主色条 + 发光,沿横轴平移 */
 .ms-tabs--underline .ms-tabs__indicator {
   inset-block-end: -1px;
+  inset-inline-start: 0;
   inline-size: var(--ms-tabs-ind-size, 0px);
   block-size: 2px;
   border-radius: var(--ms-radius-full);
@@ -116,6 +123,8 @@
 }
 .ms-tabs--underline.ms-tabs--vertical .ms-tabs__indicator {
   inset-block-end: auto;
+  inset-block-start: 0;
+  inset-inline-start: auto;
   inset-inline-end: -1px;
   inline-size: 2px;
   block-size: var(--ms-tabs-ind-size, 0px);
@@ -125,6 +134,7 @@
 /* pill:滑块 = 实底胶囊,落在选中项下方,沿横轴平移 */
 .ms-tabs--pill .ms-tabs__indicator {
   inset-block: var(--ms-space-1);
+  inset-inline-start: 0;
   inline-size: var(--ms-tabs-ind-size, 0px);
   border-radius: var(--ms-radius-full);
   background-color: var(--ms-c);
@@ -132,6 +142,7 @@
 }
 .ms-tabs--pill.ms-tabs--vertical .ms-tabs__indicator {
   inset-block: auto;
+  inset-block-start: 0;
   inset-inline: var(--ms-space-1);
   block-size: var(--ms-tabs-ind-size, 0px);
   inline-size: auto;

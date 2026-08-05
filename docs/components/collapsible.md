@@ -29,6 +29,8 @@
 | 事件 | 签名 | 说明 |
 | --- | --- | --- |
 | `onOpenChange` | `(open: boolean) => void` | 展开/收起变化回调(受控 / 非受控均触发)。<br>· `open` — 变化后的目标展开态:true 为展开,false 为收起。 |
+| `onKeyDown` | `(event: KeyboardEvent<HTMLButtonElement>) => void` | 键盘事件外抛/可拦截(原生 button 已处理 Enter/Space,此处仅用于自定义键)。<br>· `event` — 触发按钮的原生键盘事件。 |
+| `onClick` | `(event: MouseEvent<HTMLButtonElement, MouseEvent>) => void` | 点击切换前触发(在内部 toggle 之前调用);在回调内 preventDefault 可阻断内部切换。<br>· `event` — 该次点击的原生鼠标事件。 |
 
 ## 溯源
 

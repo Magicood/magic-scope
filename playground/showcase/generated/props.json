@@ -28327,6 +28327,928 @@
       "native": false
     }
   ],
+  "Form.Field": [
+    {
+      "name": "name",
+      "type": "string",
+      "default": "—",
+      "description": "Form.Field:字段路径(支持 a.b / items.0.x;类型安全的命令式 API 见 useForm 返回值)。",
+      "required": true,
+      "native": false
+    },
+    {
+      "name": "label",
+      "type": "ReactNode",
+      "default": "—",
+      "description": "Form.Field:标签。",
+      "required": false,
+      "native": false
+    },
+    {
+      "name": "rule",
+      "type": "Rule<unknown, Record<string, unknown>>",
+      "default": "—",
+      "description": "Form.Field:字段级规则(与 Form/useForm 的 rules、schema 可叠加)。",
+      "required": false,
+      "native": false
+    },
+    {
+      "name": "required",
+      "type": "boolean",
+      "default": "—",
+      "description": "Form.Field:是否必填(落 Label 标记 + aria-required;Standard Schema 无法跨厂商内省,故以显式为准)。不传时从 `rule.required` 派生。",
+      "required": false,
+      "native": false
+    },
+    {
+      "name": "help",
+      "type": "ReactNode",
+      "default": "—",
+      "description": "Form.Field:帮助文字(控件下方,aria-describedby 关联)。",
+      "required": false,
+      "native": false
+    },
+    {
+      "name": "control",
+      "type": "\"input\" | \"select\" | \"textarea\" | \"switch\" | \"radioGroup\" | \"checkbox\" | \"slider\" | \"numberInput\" | \"checkboxGroup\" | \"rate\" | \"segmented\"",
+      "default": "—",
+      "description": "Form.Field:显式指定控件适配器种类(异形 / 包了一层的控件用)。",
+      "required": false,
+      "native": false
+    },
+    {
+      "name": "classNames",
+      "type": "FieldClassNames",
+      "default": "—",
+      "description": "Form.Field:各部件(item / label / control / error / help)细粒度 className。",
+      "required": false,
+      "native": false
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "default": "—",
+      "description": "Form.Field:根项 className。",
+      "required": false,
+      "native": false
+    },
+    {
+      "name": "children",
+      "type": "ReactNode | ((field: FieldRenderProps, state: FieldState) => ReactNode)",
+      "default": "—",
+      "description": "Form.Field:子节点 —— 登记控件直接子(`<Form.Field><Input/></Form.Field>`,自动注入 value/onChange/a11y)\n或 render-prop(`<Form.Field>{(field, state) => …}</Form.Field>`,首选、对自定义控件最友好)。",
+      "required": true,
+      "native": false
+    }
+  ],
+  "Form.Submit": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "default": "—",
+      "description": "Form.Submit:强制 loading 态。不传时随表单 `isSubmitting` 自动置位(提交中转圈并禁用)。",
+      "required": false,
+      "native": false
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "default": "—",
+      "description": "Form.Submit:按钮内容(如「提交」)。",
+      "required": false,
+      "native": false
+    },
+    {
+      "name": "onCopy",
+      "type": "ClipboardEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onCut",
+      "type": "ClipboardEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onPaste",
+      "type": "ClipboardEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onCompositionEnd",
+      "type": "CompositionEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onCompositionStart",
+      "type": "CompositionEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onCompositionUpdate",
+      "type": "CompositionEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onFocus",
+      "type": "FocusEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onBlur",
+      "type": "FocusEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onChange",
+      "type": "ChangeEventHandler<HTMLDivElement, Element>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onBeforeInput",
+      "type": "InputEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onInput",
+      "type": "InputEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onReset",
+      "type": "ReactEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onSubmit",
+      "type": "SubmitEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onInvalid",
+      "type": "ReactEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onKeyDown",
+      "type": "KeyboardEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onKeyPress",
+      "type": "KeyboardEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onKeyUp",
+      "type": "KeyboardEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onClick",
+      "type": "MouseEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onContextMenu",
+      "type": "MouseEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onDoubleClick",
+      "type": "MouseEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onDrag",
+      "type": "DragEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onDragEnd",
+      "type": "DragEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onDragEnter",
+      "type": "DragEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onDragLeave",
+      "type": "DragEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onDragOver",
+      "type": "DragEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onDragStart",
+      "type": "DragEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onDrop",
+      "type": "DragEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onMouseDown",
+      "type": "MouseEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onMouseEnter",
+      "type": "MouseEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onMouseLeave",
+      "type": "MouseEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onMouseMove",
+      "type": "MouseEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onMouseOut",
+      "type": "MouseEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onMouseOver",
+      "type": "MouseEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onMouseUp",
+      "type": "MouseEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onSelect",
+      "type": "ReactEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onTouchCancel",
+      "type": "TouchEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onTouchEnd",
+      "type": "TouchEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onTouchMove",
+      "type": "TouchEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onTouchStart",
+      "type": "TouchEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onPointerDown",
+      "type": "PointerEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onPointerMove",
+      "type": "PointerEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onPointerUp",
+      "type": "PointerEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onPointerCancel",
+      "type": "PointerEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onPointerEnter",
+      "type": "PointerEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onPointerLeave",
+      "type": "PointerEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onPointerOver",
+      "type": "PointerEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onPointerOut",
+      "type": "PointerEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onScroll",
+      "type": "UIEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onWheel",
+      "type": "WheelEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    }
+  ],
+  "Form.Reset": [
+    {
+      "name": "onClick",
+      "type": "MouseEventHandler<HTMLButtonElement>",
+      "default": "—",
+      "description": "Form.Reset:点击回调。先于重置执行,调 `preventDefault()` 可拦下这次重置。",
+      "required": false,
+      "native": false
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "default": "—",
+      "description": "Form.Reset:按钮内容(如「重置」)。",
+      "required": false,
+      "native": false
+    },
+    {
+      "name": "onCopy",
+      "type": "ClipboardEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onCut",
+      "type": "ClipboardEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onPaste",
+      "type": "ClipboardEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onCompositionEnd",
+      "type": "CompositionEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onCompositionStart",
+      "type": "CompositionEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onCompositionUpdate",
+      "type": "CompositionEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onFocus",
+      "type": "FocusEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onBlur",
+      "type": "FocusEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onChange",
+      "type": "ChangeEventHandler<HTMLDivElement, Element>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onBeforeInput",
+      "type": "InputEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onInput",
+      "type": "InputEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onReset",
+      "type": "ReactEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onSubmit",
+      "type": "SubmitEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onInvalid",
+      "type": "ReactEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onKeyDown",
+      "type": "KeyboardEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onKeyPress",
+      "type": "KeyboardEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onKeyUp",
+      "type": "KeyboardEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onContextMenu",
+      "type": "MouseEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onDoubleClick",
+      "type": "MouseEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onDrag",
+      "type": "DragEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onDragEnd",
+      "type": "DragEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onDragEnter",
+      "type": "DragEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onDragLeave",
+      "type": "DragEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onDragOver",
+      "type": "DragEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onDragStart",
+      "type": "DragEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onDrop",
+      "type": "DragEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onMouseDown",
+      "type": "MouseEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onMouseEnter",
+      "type": "MouseEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onMouseLeave",
+      "type": "MouseEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onMouseMove",
+      "type": "MouseEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onMouseOut",
+      "type": "MouseEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onMouseOver",
+      "type": "MouseEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onMouseUp",
+      "type": "MouseEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onSelect",
+      "type": "ReactEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onTouchCancel",
+      "type": "TouchEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onTouchEnd",
+      "type": "TouchEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onTouchMove",
+      "type": "TouchEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onTouchStart",
+      "type": "TouchEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onPointerDown",
+      "type": "PointerEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onPointerMove",
+      "type": "PointerEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onPointerUp",
+      "type": "PointerEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onPointerCancel",
+      "type": "PointerEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onPointerEnter",
+      "type": "PointerEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onPointerLeave",
+      "type": "PointerEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onPointerOver",
+      "type": "PointerEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onPointerOut",
+      "type": "PointerEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onScroll",
+      "type": "UIEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    },
+    {
+      "name": "onWheel",
+      "type": "WheelEventHandler<HTMLDivElement>",
+      "default": "—",
+      "description": "",
+      "required": false,
+      "native": true
+    }
+  ],
+  "Form.List": [
+    {
+      "name": "name",
+      "type": "string",
+      "default": "—",
+      "description": "Form.List:数组字段路径(行内字段以此为前缀,如 `items.0.name`)。",
+      "required": true,
+      "native": false
+    },
+    {
+      "name": "children",
+      "type": "(api: FormListApi) => ReactNode",
+      "default": "—",
+      "description": "Form.List:渲染函数,拿到稳定 id 列表与 append / remove / move API。",
+      "required": true,
+      "native": false
+    }
+  ],
+  "Form.ErrorSummary": [
+    {
+      "name": "title",
+      "type": "ReactNode",
+      "default": "—",
+      "description": "Form.ErrorSummary:标题(不传用 i18n 默认「表单有 N 处错误」)。",
+      "required": false,
+      "native": false
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "default": "—",
+      "description": "Form.ErrorSummary:根 className。",
+      "required": false,
+      "native": false
+    }
+  ],
   "Grid.Item": [
     {
       "name": "colSpan",

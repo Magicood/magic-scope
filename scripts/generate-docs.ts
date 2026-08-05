@@ -122,12 +122,20 @@ function getRows(meta: ComponentMeta): PropRow[] {
     // 却会因为并入 Menu.Trigger 而显示 `children *`)。来源已写在说明里,这里只清掉必填标记。
     merged.push(...(PROPS[a] ?? []).map((r) => (r.required ? { ...r, required: false } : r)));
   }
-  const seen = new Set<string>();
+  // 多接口合并会有重名(如 ConfirmOptions/PromptOptions 都有 title),按名去重保留首个。
+  // 例外:原生透传行(native)不得顶掉子部件自己的同名 prop —— 原生行两张表都不渲染
+  // (props 表滤掉事件、事件表滤掉 native),留着它等于让真有文档的那行凭空消失
+  // (Form.Reset 的 onClick、Collapsible.Trigger 的 onClick / onKeyDown 都曾如此)。
+  const at = new Map<string, number>();
   const rows: PropRow[] = [];
   for (const r of merged) {
-    if (seen.has(r.name)) continue;
-    seen.add(r.name);
-    rows.push(r);
+    const i = at.get(r.name);
+    if (i === undefined) {
+      at.set(r.name, rows.length);
+      rows.push(r);
+    } else if (rows[i]?.native && !r.native) {
+      rows[i] = r;
+    }
   }
   if (meta.spread) {
     rows.push({
