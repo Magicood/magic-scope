@@ -17,17 +17,19 @@ jobs:
     name: Lint · Typecheck · Test · Build · Publint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0 # changeset 守卫需与 base 比对
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: 22
+          # 显式指定 pnpm 缓存。setup-node v6 起「自动缓存」只认 npm,
+          # 本仓 packageManager 是 pnpm,不写这行就不会缓存。
           cache: pnpm
 
       - name: Install
