@@ -207,7 +207,9 @@ export const Anchor = forwardRef<HTMLElement, AnchorProps>(
       }
       const navRect = nav.getBoundingClientRect();
       const linkRect = link.getBoundingClientRect();
-      setInk({ top: linkRect.top - navRect.top, height: linkRect.height });
+      // 墨条按 inset-block-start: 0 定位 —— 基准是 nav 的 **padding box**,而 rect 是 border box,
+      // 故要减掉块起始侧的边框宽度(clientTop),否则消费方给 nav 加 border 就整体错位。
+      setInk({ top: linkRect.top - navRect.top - nav.clientTop, height: linkRect.height });
     }, [activeKey, showInk, items, size]);
 
     // 点击锚点:阻断默认跳转,平滑滚到目标(尊重 reduced-motion / data-ms-motion=off)

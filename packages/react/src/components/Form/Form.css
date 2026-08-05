@@ -135,17 +135,11 @@
   }
 }
 
-/* ── 动态数组 ── */
-.ms-form__list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--ms-space-3);
-}
-.ms-form__list-item {
-  display: flex;
-  gap: var(--ms-space-2);
-  align-items: flex-start;
-}
+/* ── 动态数组 ──
+ * 这里曾有 .ms-form__list / .ms-form__list-item 两条规则,但 Form.List 是**纯 render-prop**
+ * (`<>{children(api)}</>`,不产出任何 DOM),库里没有任何元素带得上这两个类 —— 全仓 grep 零命中,
+ * 属永不生效的死规则,已删。行容器的排版由使用方自己的标签决定,这也是 render-prop 的本意;
+ * 若日后要让 Form.List 自带容器,那是**行为变更**(会给所有消费方凭空多一层 DOM),须走 changeset。 */
 
 /* ── 错误汇总 ── */
 .ms-form__error-summary {
