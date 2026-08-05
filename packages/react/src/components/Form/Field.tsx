@@ -132,26 +132,28 @@ export interface FieldClassNames {
   help?: string;
 }
 
+// 说明一律带 `Form.Field:` 归属前缀:这些 prop 会被并进 Form 的参数表(展示站 / docs 的 alsoProps
+// 是扁平合并、不标出处),没有前缀会被读成 Form 根自己的参数。
 export interface FieldProps {
-  /** 字段路径(支持 a.b / items.0.x;类型安全的命令式 API 见 useForm 返回值)。 */
+  /** Form.Field:字段路径(支持 a.b / items.0.x;类型安全的命令式 API 见 useForm 返回值)。 */
   name: string;
-  /** 标签。 */
+  /** Form.Field:标签。 */
   label?: ReactNode;
-  /** 字段级规则(与 Form/useForm 的 rules、schema 可叠加)。 */
+  /** Form.Field:字段级规则(与 Form/useForm 的 rules、schema 可叠加)。 */
   rule?: Rule;
-  /** 是否必填(落 Label 标记 + aria-required;Standard Schema 无法跨厂商内省,故以显式为准)。 */
+  /** Form.Field:是否必填(落 Label 标记 + aria-required;Standard Schema 无法跨厂商内省,故以显式为准)。不传时从 `rule.required` 派生。 */
   required?: boolean;
-  /** 帮助文字(控件下方,aria-describedby 关联)。 */
+  /** Form.Field:帮助文字(控件下方,aria-describedby 关联)。 */
   help?: ReactNode;
-  /** 显式指定控件适配器种类(异形 / 包了一层的控件用)。 */
+  /** Form.Field:显式指定控件适配器种类(异形 / 包了一层的控件用)。 */
   control?: ControlKind;
-  /** 各部件细粒度 className。 */
+  /** Form.Field:各部件(item / label / control / error / help)细粒度 className。 */
   classNames?: FieldClassNames;
-  /** 根项 className。 */
+  /** Form.Field:根项 className。 */
   className?: string;
   /**
-   * 子节点:登记控件直接子(<Field><Input/></Field>,自动注入)
-   * 或 render-prop(<Field>{(field, state) => …}</Field>,首选、对自定义控件最友好)。
+   * Form.Field:子节点 —— 登记控件直接子(`<Form.Field><Input/></Form.Field>`,自动注入 value/onChange/a11y)
+   * 或 render-prop(`<Form.Field>{(field, state) => …}</Form.Field>`,首选、对自定义控件最友好)。
    */
   children: ReactNode | ((field: FieldRenderProps, state: FieldState) => ReactNode);
 }
@@ -161,8 +163,12 @@ export interface FieldProps {
  * 连好 a11y(id / aria-describedby / aria-invalid / aria-required),按子控件 displayName 或显式
  * control 选适配器注入(value 由 store 接管、on* 与用户 compose)。校验失败态经 ms-tone-danger 发光、
  * 错误文案 role=alert 滑入。样式见 Form.css。
+ *
+ * 写成 `const` 而非 `function` 声明是抽取器的硬要求:react-docgen 认 `X.displayName = '…'` 时要求该
+ * 赋值语句的前一个流程节点就是同名声明,函数声明会被提升、对不上,displayName 便退化成局部名
+ * `Field`(props.json 里键就成了 `Field` 而非 `Form.Field`,展示站 / docs 的 alsoProps 全找不到)。
  */
-export function Field({
+export const Field = ({
   name,
   label,
   rule,
@@ -172,7 +178,7 @@ export function Field({
   classNames,
   className,
   children,
-}: FieldProps): ReactElement {
+}: FieldProps): ReactElement => {
   const ctx = useFormContext();
   const t = useMessages();
   const { store, disabled: formDisabled, classNames: formCns } = ctx;
@@ -306,5 +312,5 @@ export function Field({
       </div>
     </div>
   );
-}
+};
 Field.displayName = 'Form.Field';
