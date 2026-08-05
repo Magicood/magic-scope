@@ -1,4 +1,4 @@
-import type { ReactElement, ReactNode } from 'react';
+import type { MouseEventHandler, ReactElement, ReactNode } from 'react';
 import { forwardRef, useRef, useSyncExternalStore } from 'react';
 import { useMessages } from '../../i18n';
 import { Button, type ButtonProps } from '../Button';
@@ -12,15 +12,43 @@ function useFormState(): FormMeta {
   return useSyncExternalStore(store.subscribe, store.getFormMeta, store.getFormMeta);
 }
 
-/** Form.Submit —— 提交按钮,type=submit,自动随 isSubmitting loading/禁用。复用 Button 全部能力。 */
-export const Submit = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
+// —— 各子部件的 props 一律用「导出的具名接口 + 每个 prop 一条 JSDoc」——
+// 抽取器只收有归属的自有 prop:内联类型 / 无注释的 children 会被 react-docgen 剔掉,该子部件抽出 0 行
+// 便整条丢弃(props.json 里连键都没有)。说明带 `Form.X:` 前缀是因为它们会被并进 Form 的参数表
+// (alsoProps 扁平合并、不标出处),没有前缀会被读成 Form 根自己的参数。
+//
+// Submit / Reset 继承自 Button 的那批 prop(variant / tone / size / leftIcon …)刻意不重复列出:
+// 抽取器按「跨组件目录继承」过滤掉了,它们的权威文档在 Button 页,这里只写自己改写过的那几个。
+
+export interface FormSubmitProps extends ButtonProps {
+  /** Form.Submit:强制 loading 态。不传时随表单 `isSubmitting` 自动置位(提交中转圈并禁用)。 */
+  loading?: boolean;
+  /** Form.Submit:按钮内容(如「提交」)。 */
+  children?: ReactNode;
+}
+
+/**
+ * Form.Submit —— 提交按钮,固定 `type="submit"`,自动随 isSubmitting loading / 禁用。
+ * 其余 props 与 Button 完全一致(variant / tone / size / leftIcon …),原样透传,见 Button 文档。
+ */
+export const Submit = forwardRef<HTMLButtonElement, FormSubmitProps>((props, ref) => {
   const { isSubmitting } = useFormState();
   return <Button ref={ref} {...props} type="submit" loading={isSubmitting || !!props.loading} />;
 });
 Submit.displayName = 'Form.Submit';
 
-/** Form.Reset —— 重置按钮,调 store.reset(回默认值)。type=button(不走原生 reset,store 是真相源)。 */
-export const Reset = forwardRef<HTMLButtonElement, ButtonProps>(({ onClick, ...props }, ref) => {
+export interface FormResetProps extends ButtonProps {
+  /** Form.Reset:点击回调。先于重置执行,调 `preventDefault()` 可拦下这次重置。 */
+  onClick?: MouseEventHandler<HTMLButtonElement>;
+  /** Form.Reset:按钮内容(如「重置」)。 */
+  children?: ReactNode;
+}
+
+/**
+ * Form.Reset —— 重置按钮,调 store.reset(回默认值)。`type="button"`(不走原生 reset,store 是真相源),
+ * 默认 `variant="soft"`。其余 props 与 Button 完全一致,原样透传,见 Button 文档。
+ */
+export const Reset = forwardRef<HTMLButtonElement, FormResetProps>(({ onClick, ...props }, ref) => {
   const { store } = useFormContext();
   return (
     <Button
@@ -50,17 +78,20 @@ export interface FormListApi {
 }
 
 export interface FormListProps {
-  /** 数组字段路径。 */
+  /** Form.List:数组字段路径(行内字段以此为前缀,如 `items.0.name`)。 */
   name: string;
-  /** 渲染函数:拿到稳定 id 列表与增删移动 API。 */
+  /** Form.List:渲染函数,拿到稳定 id 列表与 append / remove / move API。 */
   children: (api: FormListApi) => ReactNode;
 }
 
 /**
  * Form.List —— 动态字段数组。基于 path 前缀 `items.0.x`,每行持稳定 id(增删移动时 id 跟随,
  * 避免 store 切片订阅与 DOM 错位)。值仍存 store(唯一真相源)。
+ *
+ * 与 Field 同因写成 `const` 而非 `function` 声明:函数声明会被提升,react-docgen 认不出紧随其后的
+ * `.displayName` 赋值,键会退化成局部名 `FormList` 而不是 `Form.List`。
  */
-export function FormList({ name, children }: FormListProps): ReactElement {
+export const FormList = ({ name, children }: FormListProps): ReactElement => {
   const { store } = useFormContext();
   const value = useWatch(name);
   const arr: unknown[] = Array.isArray(value) ? value : [];
@@ -101,13 +132,13 @@ export function FormList({ name, children }: FormListProps): ReactElement {
   };
 
   return <>{children(api)}</>;
-}
+};
 FormList.displayName = 'Form.List';
 
 export interface FormErrorSummaryProps {
-  /** 标题(不传用 i18n 默认「表单有 N 处错误」)。 */
+  /** Form.ErrorSummary:标题(不传用 i18n 默认「表单有 N 处错误」)。 */
   title?: ReactNode;
-  /** 根 className。 */
+  /** Form.ErrorSummary:根 className。 */
   className?: string;
 }
 

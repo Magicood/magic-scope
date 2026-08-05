@@ -22,9 +22,14 @@
   border-radius: var(--ms-radius-full);
 }
 
-/* —— 墨条指示器:绝对定位,变量驱动平移 + 高度;tone 染色 + 发光 —— */
+/* —— 墨条指示器:绝对定位,变量驱动平移 + 高度;tone 染色 + 发光 ——
+ * 块轴必须显式写 inset-block-start: 0,不能省着走静态位置:--ms-anchor-ink-y 由 JS 按
+ * 「链接相对 nav 的 **padding box**」算出,而静态位置落在 nav 的 **content box** ——
+ * 消费方一给根加 padding-block-start / border-block-start,两个基准就差开、墨条整体下移
+ * (实测 padding-block-start: 20px → 偏 +20px;border-block-start: 6px → 偏 +6px)。 */
 .ms-anchor__ink {
   position: absolute;
+  inset-block-start: 0;
   inset-inline-start: 0;
   inline-size: 2px;
   block-size: var(--ms-anchor-ink-h, 0);

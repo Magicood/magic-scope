@@ -179,8 +179,11 @@
   gap: var(--ms-space-3);
 }
 
-/* 触发钮恒在「锚点」侧(贴右下),子项往展开方向弹 */
-.ms-float-button-group__group-trigger {
+/* 触发钮恒在「锚点」侧(贴右下),子项往展开方向弹。
+ * 类名的 block 是 `ms-float-button`(触发钮本身就是一枚 FloatButton),不是 `ms-float-button-group`
+ * —— 与 TSX 渲染的类名严格对齐,别写成 .ms-float-button-group__group-trigger(那样整条规则不生效,
+ * order 退回 0 → 触发钮排到子项面板前面,所有 direction 的展开方向都会倒过来)。 */
+.ms-float-button__group-trigger {
   order: 2;
   flex: 0 0 auto;
 }

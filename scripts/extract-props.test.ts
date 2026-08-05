@@ -1,15 +1,18 @@
 /**
- * extract-props 的纯逻辑红线(scripts/lib/props-doc.ts)。
- * 这套抽取脚本长期零测试覆盖,两类回归都曾静默发生并写进已提交的 props.json:
+ * extract-props 的纯逻辑红线(scripts/lib/props-doc.ts + scripts/lib/component-sources.ts)。
+ * 这套抽取脚本长期零测试覆盖,三类回归都曾静默发生并写进已提交的 props.json:
  *   1. @param 只按 prop 名建索引 → 同文件里不同接口的同名事件互相覆盖(跨接口串味);
- *   2. 说明清洗一刀切截断块级标签 → 只有 @deprecated 的 prop 说明列整个变空。
- * 这里用最小 fixture 把两条都钉住。
+ *   2. 说明清洗一刀切截断块级标签 → 只有 @deprecated 的 prop 说明列整个变空;
+ *   3. 只把 `<Dir>/<Dir>.tsx` 送进 parser → 写在别的文件里的公开子部件(Form.Field / Form.Submit …)
+ *      连键都进不了 props.json,而两条运行时守卫都看不见。
+ * 这里用最小 fixture 把三条都钉住。
  */
-import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import ts from 'typescript';
 import { afterAll, describe, expect, it } from 'vitest';
+import { collectComponentFiles } from './lib/component-sources';
 import { cleanDescription, extractParamDocs } from './lib/props-doc';
 
 // 同一文件里三个声明:两个接口各自声明同名事件 onChange(参数含义完全不同),
@@ -109,5 +112,57 @@ describe('cleanDescription:@deprecated 正文不再被整块丢弃', () => {
 
   it('无 @deprecated 时行为不变:仍截到第一个块级标签', () => {
     expect(cleanDescription('选中变化回调。\n@param value 新值。')).toBe('选中变化回调。');
+  });
+});
+
+describe('collectComponentFiles:子部件写在非同名文件里也要进扫描范围', () => {
+  // 仿真实结构:Form 的公开子部件散在 Field.tsx / Form.parts.tsx,只读同名主文件会整体漏掉。
+  const root = mkdtempSync(join(tmpdir(), 'ms-component-sources-'));
+  const write = (rel: string) => {
+    const abs = join(root, rel);
+    mkdirSync(join(abs, '..'), { recursive: true });
+    writeFileSync(abs, '', 'utf8');
+  };
+  write('Form/Form.tsx');
+  write('Form/Field.tsx');
+  write('Form/Form.parts.tsx');
+  write('Form/Form.test.tsx');
+  write('Form/logic.ts');
+  write('Form/Form.css');
+  write('Button/Button.tsx');
+  const { files, mainDirs } = collectComponentFiles(root);
+  const rel = files.map((f) => f.slice(root.length + 1).replace(/\\/g, '/'));
+
+  afterAll(() => {
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  it('同目录下的非同名 .tsx 一并送进 parser(Form.Field / Form.Submit 的键就靠这条)', () => {
+    expect(rel).toContain('Form/Field.tsx');
+    expect(rel).toContain('Form/Form.parts.tsx');
+  });
+
+  it('排除测试件与非 .tsx 实现件', () => {
+    expect(rel).not.toContain('Form/Form.test.tsx');
+    expect(rel).not.toContain('Form/logic.ts');
+    expect(rel).not.toContain('Form/Form.css');
+  });
+
+  it('主文件排在本目录最前(跨文件同名 displayName 以主文件那份为准)', () => {
+    expect(rel.filter((f) => f.startsWith('Form/'))).toEqual([
+      'Form/Form.tsx',
+      'Form/Field.tsx',
+      'Form/Form.parts.tsx',
+    ]);
+  });
+
+  it('目录与目录内文件均按名排序(产物已提交,键序不得随文件系统变)', () => {
+    expect(rel).toEqual([
+      'Button/Button.tsx',
+      'Form/Form.tsx',
+      'Form/Field.tsx',
+      'Form/Form.parts.tsx',
+    ]);
+    expect(mainDirs).toEqual(['Button', 'Form']);
   });
 });

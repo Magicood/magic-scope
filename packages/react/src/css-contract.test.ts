@@ -1,9 +1,9 @@
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { parseCssRules, targetCompound } from './testing/cssRules';
+import { type CssRule as ParsedCssRule, parseCssRules, targetCompound } from './testing/cssRules';
 
-/* —— 全库 CSS 静态契约:六类真实事故的回归红线(jsdom 不解析 CSS,静态扫源文件)。 ——
+/* —— 全库 CSS 静态契约:八类真实事故的回归红线(jsdom 不解析 CSS,静态扫源文件)。 ——
  * 1) position-area 非法关键字:裸 `span-inline` / `span-block` 不在语法里(整跨轴是 `span-all`),
  *    浏览器会把整条声明作废 → 浮层落到 (0,0) 左上角(Tooltip/Popover/HoverCard 曾全中招)。
  * 2) 自定义属性自引用:`--_x: var(--src, var(--_x))` 是循环依赖 → guaranteed-invalid →
@@ -21,7 +21,15 @@ import { parseCssRules, targetCompound } from './testing/cssRules';
  * 字符串里的 `}`、原生嵌套三处静默失效,红线漏报比没有红线更糟。
  * 6) 竖线盒块轴坍缩:只在内联轴给了尺寸的盒子,却靠内联轴边框画竖线,而全文件没有任何一条声明
  *    能给它块轴高度 —— 空元素放进 align-items: center 的 flex 父级不会被拉伸,块高 = 0,
- *    0 高度的边框一个像素都不画(Tree 的 showLine 曾整个 prop 零像素,实测缩进盒 22x0)。 */
+ *    0 高度的边框一个像素都不画(Tree 的 showLine 曾整个 prop 零像素,实测缩进盒 22x0)。
+ * 7) 竖线盒把百分比块高当唯一高度来源:`block-size: 100%` 要父级块高确定才解析得出,父级 auto 高
+ *    (普通块级流 / auto 高 flex 行)时退化成 auto ⇒ 空盒块高 0;更坑的是百分比是 definite
+ *    cross size,会**压制 flex 的 stretch**,连 align-items: stretch 都救不回来
+ *    (Divider 的 orientation="vertical" 实测六种父级只有「祖先定高」那两种画得出线)。
+ * 8) 绝对定位靠 translate 沿某轴位移,却不锚该轴的 inset:元素落在**静态位置**,而静态位置随父级
+ *    padding / border 浮动,JS 喂进来的偏移量(offsetLeft / rect 差)基准却是 padding box ⇒
+ *    父级一有内边距就整体错位(Tabs 的 pill 指示条实测两轴恒偏 +4px = list 的 padding 双算;
+ *    Anchor 墨条同型潜伏,消费方给根加 padding / border 即错位)。 */
 
 /* 扫 packages/react/src 下**全部** .css:靠手工维护 extraFiles 会让新增的顶层样式表默认漏检。 */
 const srcDir = join(process.cwd(), 'packages/react/src');
@@ -55,6 +63,112 @@ const BLOCK_EXTENT =
 const isZeroLength = (value: string): boolean => /^0([a-z%]*)$/.test(value.trim());
 const paintsLine = (value: string): boolean =>
   !/\bnone\b/.test(value) && !/^0\b/.test(value.trim());
+
+/* —— 第 7 条红线的工具 —— */
+
+/** 块轴尺寸属性 */
+const BLOCK_SIZE_PROP = /^(block-size|height)$/;
+/** 内联轴尺寸「退化成一条线」的签名 —— 盒子本身零宽,可见的只有那条边框(Divider 竖线即此形态)。
+ *  刻意不认 `inline-size: 100%` 之类:那是正常面板,边框只是装饰性描边(Drawer 面板会误报)。 */
+const isDegenerateInline = (prop: string, value: string): boolean =>
+  /^(inline-size|width)$/.test(prop) && isZeroLength(value);
+/** 百分比长度:`100%` / `calc(100% - 2px)` 都算(只要出现百分比就依赖父级确定高度) */
+const hasPercent = (value: string): boolean => /\d%/.test(value);
+/** 真正「不依赖父级」的块轴地板。
+ *  **不含 align-self / aspect-ratio**:两者都会被同时存在的 block-size 压制 ——
+ *  `block-size: 100%` 是 definite cross size,写了 align-self: stretch 也不会被拉伸,
+ *  把它当豁免就等于给「加了 stretch 就算修好了」这种假修复开后门(实测 stretch 救不回来)。 */
+const BLOCK_FLOOR = /^(min-block-size|min-height)$/;
+/** 自带确定高度(非百分比、非 auto、非零)也算站得住 */
+const isDefiniteBlockSize = (value: string): boolean => {
+  const v = value.trim();
+  return v !== 'auto' && !hasPercent(v) && !isZeroLength(v);
+};
+
+/* —— 第 8 条红线的工具 —— */
+
+/** 位置锚点(**不含**尺寸属性:block-size 能防塌陷,但决定不了元素落在哪) */
+const BLOCK_INSETS = new Set([
+  'inset',
+  'inset-block',
+  'inset-block-start',
+  'inset-block-end',
+  'top',
+  'bottom',
+]);
+const INLINE_INSETS = new Set([
+  'inset',
+  'inset-inline',
+  'inset-inline-start',
+  'inset-inline-end',
+  'left',
+  'right',
+]);
+
+/** 只认「外部(JS)喂进来的位移量」= 值里带 var()。
+ *  字面量 `translate: -50% -50%` 是拿自身尺寸做的**居中**惯用法,没有外部基准、不可能与锚点错位
+ *  (ColorPicker 的 thumb、Checkbox 的触控热区都是这一类,拦了纯属误报)。 */
+const movesAxis = (component: string | undefined): boolean =>
+  component !== undefined && /\bvar\(/.test(component);
+
+/** 拆函数实参(顶层逗号切分,不进嵌套括号)。 */
+const fnArgs = (value: string, start: number): string[] => {
+  const args: string[] = [];
+  let depth = 0;
+  let cur = '';
+  for (let i = start; i < value.length; i++) {
+    const ch = value[i];
+    if (ch === '(') depth++;
+    else if (ch === ')') {
+      if (depth === 0) break;
+      depth--;
+    }
+    if (ch === ',' && depth === 0) {
+      args.push(cur);
+      cur = '';
+    } else cur += ch;
+  }
+  args.push(cur);
+  return args.map((a) => a.trim());
+};
+
+/** 一条声明沿哪条**物理**轴产生了位移(transform 的各 translate* 函数 + 独立 translate 属性)。 */
+function translatedAxes(prop: string, value: string): { x: boolean; y: boolean } {
+  const axes = { x: false, y: false };
+  if (prop === 'translate') {
+    // `translate: <x> [<y> [<z>]]`,顶层空白切分(不切 calc(…) / var(…) 里的空格)
+    const parts: string[] = [];
+    let depth = 0;
+    let cur = '';
+    for (const ch of value) {
+      if (ch === '(') depth++;
+      else if (ch === ')') depth--;
+      if (/\s/.test(ch) && depth === 0) {
+        if (cur) parts.push(cur);
+        cur = '';
+      } else cur += ch;
+    }
+    if (cur) parts.push(cur);
+    if (movesAxis(parts[0])) axes.x = true;
+    if (movesAxis(parts[1])) axes.y = true;
+    return axes;
+  }
+  if (prop !== 'transform') return axes;
+  for (const m of value.matchAll(/(^|[^-\w])translate(x|y|3d)?\(/gi)) {
+    const kind = (m[2] ?? '').toLowerCase();
+    const args = fnArgs(value, (m.index ?? 0) + m[0].length);
+    if (kind === 'x') {
+      if (movesAxis(args[0])) axes.x = true;
+    } else if (kind === 'y') {
+      if (movesAxis(args[0])) axes.y = true;
+    } else {
+      // translate(x[, y]) / translate3d(x, y, z):省略的 y 默认 0
+      if (movesAxis(args[0])) axes.x = true;
+      if (movesAxis(args[1])) axes.y = true;
+    }
+  }
+  return axes;
+}
 
 /** 声明 + 它所在规则的行号(报错要指到具体那一行)。 */
 interface LocatedDecl {
@@ -110,25 +224,11 @@ describe('CSS 静态契约(全组件)', () => {
      *      ② 同一目标元素在**本文件其它规则**里锚了块轴(基础规则 + 修饰规则是本库主流写法,
      *         如 .ms-tour__card 的 inset-block-start 写在 .ms-tour--bottom 那些修饰规则里);
      *      ③ 确实要停在静态块位置的,在规则里加一行声明 `--ms-contract-static-block: <理由>;`
-     *         —— 用声明而不是注释,注释里随口提一句 position-area 就能静默关掉检查。 */
-    const BLOCK_ANCHORS = new Set([
-      'inset',
-      'inset-block',
-      'inset-block-start',
-      'inset-block-end',
-      'top',
-      'bottom',
-      'block-size',
-      'height',
-    ]);
-    const INLINE_ANCHORS = new Set([
-      'inset',
-      'inset-inline',
-      'inset-inline-start',
-      'inset-inline-end',
-      'left',
-      'right',
-    ]);
+     *         —— 用声明而不是注释,注释里随口提一句 position-area 就能静默关掉检查。
+     * 与第 8 条的 *_INSETS 刻意不共用:这条防的是「块轴塌成内容高」,写死高度就能防住,
+     * 故 block-size / height 在这里算合格锚点;第 8 条防的是「落错位置」,尺寸不管用。 */
+    const BLOCK_ANCHORS = new Set([...BLOCK_INSETS, 'block-size', 'height']);
+    const INLINE_ANCHORS = INLINE_INSETS;
     const bad: string[] = [];
     for (const file of cssFiles) {
       const rules = parseCssRules(readFileSync(file, 'utf8'));
@@ -215,10 +315,9 @@ describe('CSS 静态契约(全组件)', () => {
   });
 
   /* 已知盲区(刻意不拦,免得误报压过价值):
-   * - `block-size: 100%` 打在 auto 高父级上同样解析成 0(Divider 竖线即属此类),但百分比高度在
-   *   父级有确定高度时完全合法,静态判不出父级,拦了就是大面积误报;
-   * - 背景渐变画的竖线不在此列 —— 是否需要块轴高度取决于 background-size,静态同样判不准。
-   * 这条红线只守「内联轴边框画竖线」这一种,也就是 Tree showLine 踩到的那一种。 */
+   * 背景渐变画的竖线不在此列 —— 是否需要块轴高度取决于 background-size,静态判不准。
+   * 这条红线只守「内联轴边框画竖线」这一种,也就是 Tree showLine 踩到的那一种;
+   * 「块高只由百分比提供」那一种由下一条(第 7 条)单独守。 */
   it('靠内联轴边框画竖线的盒子必须有块轴高度(空盒块高 0,边框零像素)', () => {
     const bad: string[] = [];
     for (const file of cssFiles) {
@@ -230,6 +329,102 @@ describe('CSS 静态契约(全组件)', () => {
         bad.push(
           `${shortName(file)}:${hairline.line}: ${key} 只有内联轴尺寸,块轴撑不起来 → ${hairline.prop} 零像素(补 align-self: stretch 或显式 block-size)`,
         );
+      }
+    }
+    expect(bad).toEqual([]);
+  });
+
+  it('零宽细线盒必须有不依赖父级的块轴地板(百分比高与 align-self: stretch 都靠不住)', () => {
+    /* 与上一条同源、互补:上一条守「一整类竖轨盒有没有块轴高度」,这一条只盯**零宽细线盒**
+     * (inline-size: 0 + 内联轴边框 —— 盒子本身没有内容,能看见的就那一条边框),对它要求更硬:
+     * 高度必须来自**元素自己**,不能寄望父级。三种「看着像修好了、实则没修」的写法都拦:
+     * ① `block-size: 100%` —— 百分比要父级块高确定才解析得出,父级 auto 高时退化成 auto ⇒ 0 高;
+     * ② `block-size: 100%` + `align-self: stretch` —— 百分比是 definite cross size,**压制
+     *    stretch**,加了也白加(实测六种父级仍只有祖先定高的画得出线);
+     * ③ `block-size: auto` + `align-self: stretch` 但没地板 —— 有 flex/grid 行时对,
+     *    可纯行内流(`左<hr>右` 这种最常见的行内分隔)里没得 stretch,仍是 0 高。
+     * 合格写法 = min-block-size / min-height 地板,或一个确定长度的 block-size。
+     * 签名收得紧(零宽 + 内联轴边框 + 非绝对定位),换来全库零误报:
+     * - `inline-size: 100%` 的面板不算(边框只是装饰描边,否则 Drawer 面板会误报);
+     * - 绝对 / 固定定位不算(包含块尺寸恒确定,百分比一定解析得出)。 */
+    const bad: string[] = [];
+    for (const file of cssFiles) {
+      for (const [key, decls] of unionDeclsByTarget(readFileSync(file, 'utf8'))) {
+        const hairline = decls.find((d) => INLINE_HAIRLINE.test(d.prop) && paintsLine(d.value));
+        if (!hairline) continue;
+        if (!decls.some((d) => isDegenerateInline(d.prop, d.value))) continue;
+        if (decls.some((d) => d.prop === 'position' && /absolute|fixed/.test(d.value))) continue;
+        if (decls.some((d) => BLOCK_FLOOR.test(d.prop) && !isZeroLength(d.value))) continue;
+        if (decls.some((d) => BLOCK_SIZE_PROP.test(d.prop) && isDefiniteBlockSize(d.value))) {
+          continue;
+        }
+        const height = decls.find((d) => BLOCK_SIZE_PROP.test(d.prop));
+        bad.push(
+          `${shortName(file)}:${height?.line ?? hairline.line}: ${key} 是零宽细线盒,块高${
+            height ? `只有 ${height.prop}: ${height.value}` : '压根没写'
+          } —— 百分比要父级定高才解析得出、且会压制 flex stretch;auto + stretch 在纯行内流里同样是 0(补 min-block-size 地板)`,
+        );
+      }
+    }
+    expect(bad).toEqual([]);
+  });
+
+  it('绝对定位沿某轴 translate 位移时,该轴必须显式锚 inset(否则落在随父级 padding 浮动的静态位置)', () => {
+    /* JS 驱动的指示器一律是「abspos + 变量喂位移量」。位移量的基准是 offsetLeft / rect 差,
+     * 也就是**包含块的 padding box**;而该轴不写 inset 时元素停在**静态位置**,
+     * 静态位置又落在父级的 **content box** ——两者差着父级的 padding(+ border),于是恒定错位。
+     * 判据按**声明该位移的那条规则自身**(或同选择器 / 该目标的基础规则)是否锚了同轴,
+     * 不做「同目标跨规则合并」——否则竖排变体的 inset-inline 会把横排变体的缺口盖掉(实测会漏报)。
+     * 豁免:确实要停在静态位置的,在规则里加一行 `--ms-contract-static-translate: <理由>;`。 */
+    const bad: string[] = [];
+    for (const file of cssFiles) {
+      const rules = parseCssRules(readFileSync(file, 'utf8'));
+      /** 该目标的「基础规则」(选择器就是目标复合体本身)里锚过的轴 —— 这类规则必然一起生效 */
+      const baseAnchors = new Map<string, Set<string>>();
+      /** 同一条选择器分支(含祖先段)锚过的轴 */
+      const branchAnchors = new Map<string, Set<string>>();
+      const anchoredProps = (rule: ParsedCssRule): string[] =>
+        rule.decls.filter((d) => d.value.trim() !== 'auto').map((d) => d.prop);
+      for (const rule of rules) {
+        for (const branch of rule.branches) {
+          const props = anchoredProps(rule);
+          const into = (map: Map<string, Set<string>>, key: string) => {
+            const set = map.get(key) ?? new Set<string>();
+            for (const p of props) set.add(p);
+            map.set(key, set);
+          };
+          into(branchAnchors, branch);
+          if (branch === targetCompound(branch)) into(baseAnchors, branch);
+        }
+      }
+      // position: absolute 可能写在基础规则里、位移写在修饰规则里 → 按目标合并「是否绝对定位」
+      const absolute = new Set<string>();
+      for (const rule of rules) {
+        if (rule.decls.find((d) => d.prop === 'position')?.value !== 'absolute') continue;
+        for (const branch of rule.branches) absolute.add(targetCompound(branch));
+      }
+      for (const rule of rules) {
+        if (rule.decls.some((d) => d.prop === '--ms-contract-static-translate')) continue;
+        for (const decl of rule.decls) {
+          const axes = translatedAxes(decl.prop, decl.value);
+          if (!axes.x && !axes.y) continue;
+          for (const branch of rule.branches) {
+            const target = targetCompound(branch);
+            if (!absolute.has(target)) continue;
+            const seen = new Set([
+              ...(branchAnchors.get(branch) ?? []),
+              ...(baseAnchors.get(target) ?? []),
+            ]);
+            if (axes.x && ![...seen].some((p) => INLINE_INSETS.has(p))) {
+              bad.push(
+                `${shortName(file)}:${rule.line}: ${branch} 沿内联轴位移却没锚 inset-inline-*`,
+              );
+            }
+            if (axes.y && ![...seen].some((p) => BLOCK_INSETS.has(p))) {
+              bad.push(`${shortName(file)}:${rule.line}: ${branch} 沿块轴位移却没锚 inset-block-*`);
+            }
+          }
+        }
       }
     }
     expect(bad).toEqual([]);
@@ -393,5 +588,123 @@ describe('原生控件 UA 默认值契约(库不得依赖宿主 CSS reset)', () 
     // 修法:在该类的基态规则里补上(库内约定写法:background: transparent / border: none /
     // font: inherit / color: inherit)。切勿指望使用方页面自带 reset。
     expect(bad).toEqual([]);
+  });
+});
+
+/* —— 孤儿 CSS 类契约:CSS 里写了、库却从不渲染的类 = 永不生效的死规则 ——
+ * 事故原型:FloatButton 的 `.ms-float-button-group__group-trigger` —— TSX 渲染的其实是
+ * `ms-float-button__group-trigger`(block 名多写了一层 `-group`),整条规则从未生效。后果不是
+ * 「少了点样式」:触发钮的 `order: 2` 退回初始值 0,排到了子项面板**前面**,speed-dial 四个
+ * direction 的展开方向**全部倒置**,贴锚点边的还从触发钮变成了子项面板(位置随子项数量漂移)。
+ * 类名拼错既不报错也不告警,CSS 那段代码看着一切正常,jsdom 更是连 CSS 都不解析。
+ *
+ * 判据:全库 CSS 选择器里出现的每个 `.ms-*` 类,都要在仓库源码 / 文档里找得到渲染方。证据两种:
+ *   ① 精确字面量 —— `'ms-tabs__tab'`、`class="ms-card"`;
+ *   ② 模板前缀 —— `ms-tabs--${variant}` / `ms-tone-${tone}` 这类拼接,取被 `${` 截断的字面
+ *      前缀做前缀匹配。前缀必须以 `-` / `_` 收尾(BEM 的天然断点)且 `ms-` 之后还有 ≥2 字符,
+ *      否则放行面宽到能废掉整条红线 —— 仓库里真有裸 `ms-` 前缀的写法:upload demo 的
+ *      `` `ms-${file.name}` ``(拼的是**文件名**)和 scripts/new-component.ts 的代码生成模板
+ *      `` `.ms-${kebab}` ``。放它们进来,1344 个类会被一次性全部放行,红线只剩个绿勾。
+ *      收窄的代价是漏识别的动态类名会**误报**成孤儿 —— 误报有人看,假绿没人看,这个方向是对的。
+ *
+ * 两处刻意排除,都是「同形但不是使用证据」:
+ *   - `--ms-*` 自定义属性与类名同形,`--ms-space-3` 不是 `.ms-space-3` 的渲染方(负向后顾排除);
+ *   - `*.test.*` / `*.spec.*`:测试里断言类名不等于组件渲染它,而且不排除的话,本文件注释里
+ *     随手提一句类名就会把它「洗白」成有证据 —— 红线给自己发豁免,最典型的假绿。
+ *
+ * 豁免:确实要留给使用方自己挂的纯 hook 类,在规则里加一行 `--ms-contract-css-only: <理由>;`
+ *      —— 与第 3 条红线同源,用声明而不是注释(注释里提一句类名就能静默关掉检查)。 */
+
+const repoRoot = process.cwd();
+/** 会渲染 / 记录类名的地方:发布包、展示站、样板站、文档、注册表、生成器。 */
+const CONSUMER_DIRS = ['packages', 'playground', 'apps', 'docs', 'registry', 'scripts'];
+const CONSUMER_EXTS = [
+  '.ts',
+  '.tsx',
+  '.js',
+  '.jsx',
+  '.mjs',
+  '.cjs',
+  '.vue',
+  '.md',
+  '.html',
+  '.json',
+];
+const SKIP_DIRS = new Set(['node_modules', 'dist', 'coverage', '.git', '.claude', '.turbo']);
+const IS_TEST_FILE = /\.(test|spec)\.[jt]sx?$/;
+
+function collectConsumer(dir: string, out: string[] = []): string[] {
+  let entries: string[];
+  try {
+    entries = readdirSync(dir);
+  } catch {
+    return out; // 目录不存在(如未生成 docs)不该让红线炸,只是证据面小一点
+  }
+  for (const entry of entries) {
+    if (SKIP_DIRS.has(entry)) continue;
+    const full = join(dir, entry);
+    if (statSync(full).isDirectory()) collectConsumer(full, out);
+    else if (CONSUMER_EXTS.some((ext) => entry.endsWith(ext)) && !IS_TEST_FILE.test(entry)) {
+      out.push(full);
+    }
+  }
+  return out;
+}
+
+const consumerFiles = CONSUMER_DIRS.flatMap((d) => collectConsumer(join(repoRoot, d)));
+
+/** 类名字面量。负向后顾把 `--ms-x`(自定义属性)挡在外面。 */
+const CLASS_TOKEN = /(?<![\w-])ms-[\w-]+/g;
+/** 被 `${` 截断的模板前缀:`` `ms-tabs--${variant}` `` → `ms-tabs--`。 */
+const CLASS_PREFIX = /(?<![\w-])(ms-[\w-]*)(?=\$\{)/g;
+/** 够窄才配当证据:`ms-` 之后 ≥2 字符,且停在 `-` / `_` 这种 BEM 断点上。 */
+const USABLE_PREFIX = /^ms-[\w-]{2,}[-_]$/;
+
+const exactClassTokens = new Set<string>();
+const classPrefixes = new Set<string>();
+for (const file of consumerFiles) {
+  const text = readFileSync(file, 'utf8');
+  for (const m of text.matchAll(CLASS_TOKEN)) exactClassTokens.add(m[0]);
+  for (const m of text.matchAll(CLASS_PREFIX)) {
+    const prefix = m[1] ?? '';
+    if (USABLE_PREFIX.test(prefix)) classPrefixes.add(prefix);
+  }
+}
+
+/** CSS 里定义的每个 ms-* 类 → 首次出现处;带 `--ms-contract-css-only` 的规则登记为豁免。 */
+const cssClassSites = new Map<string, string>();
+const cssOnlyClasses = new Set<string>();
+for (const file of cssFiles) {
+  for (const rule of parseCssRules(readFileSync(file, 'utf8'))) {
+    const exempt = rule.decls.some((d) => d.prop === '--ms-contract-css-only');
+    for (const branch of rule.branches) {
+      for (const m of branch.matchAll(/\.(ms-[\w-]+)/g)) {
+        const cls = m[1] ?? '';
+        if (exempt) cssOnlyClasses.add(cls);
+        if (!cssClassSites.has(cls)) cssClassSites.set(cls, `${shortName(file)}:${rule.line}`);
+      }
+    }
+  }
+}
+
+describe('孤儿 CSS 类契约(CSS 里写了、库却从不渲染 = 永不生效的死规则)', () => {
+  it('扫到了 CSS 类与消费方文件(任一侧塌了,整条红线就是假绿)', () => {
+    expect(cssClassSites.size).toBeGreaterThan(1000);
+    expect(consumerFiles.length).toBeGreaterThan(500);
+    expect(exactClassTokens.size).toBeGreaterThan(1000);
+  });
+
+  it('每个 ms-* 类都有渲染方(找不到 = 类名拼错或规则已废弃,样式静默消失)', () => {
+    const orphans: string[] = [];
+    for (const [cls, where] of cssClassSites) {
+      if (cssOnlyClasses.has(cls)) continue;
+      if (exactClassTokens.has(cls)) continue;
+      if ([...classPrefixes].some((p) => cls.startsWith(p))) continue;
+      orphans.push(`${where}: .${cls} —— 全仓 TSX / TS / 文档里都找不到这个类名`);
+    }
+    /* 修法三选一:① 类名拼错 —— 对齐 TSX 实际渲染的那个(改 CSS 侧,别改 TSX:TSX 里的类名
+     *   已随包发布,是使用方能写覆盖样式的公开契约);② 规则已废弃 —— 连注释一起删掉;
+     *   ③ 类名是动态拼的但前缀太宽没被识别 —— 把拼接前缀收窄到 `ms-<组件>-` 这种粒度。 */
+    expect(orphans).toEqual([]);
   });
 });

@@ -14,6 +14,8 @@
 
 配合 useForm(命令式 FieldPath 类型安全)与 Form.Field/Submit/Reset/List/ErrorSummary 子部件使用。
 
+Form.List 取 name(数组字段路径)+ render-prop children(api),api 给出稳定 id 的 fields 列表与 append / remove / move;与 Form.Field 的同名参数含义不同,下表按 Field 口径列出。
+
 ## 参数 Props
 
 自动抽取自真实 TS 类型(`scripts/extract-props.ts`),与源码永不漂移。
@@ -29,6 +31,16 @@
 | `as` | `ElementType` | — | 多态根标签(默认 'form')。与 asChild 互斥。 |
 | `asChild` | `boolean` | `false` | 渲染为子元素(Radix Slot;把 form 行为合并到子)。 |
 | `ref` | `Ref<HTMLFormElement>` | — |  |
+| `name` | `string` | — | Form.Field:字段路径(支持 a.b / items.0.x;类型安全的命令式 API 见 useForm 返回值)。 |
+| `label` | `ReactNode` | — | Form.Field:标签。 |
+| `rule` | `Rule<unknown, Record<string, unknown>>` | — | Form.Field:字段级规则(与 Form/useForm 的 rules、schema 可叠加)。 |
+| `required` | `boolean` | — | Form.Field:是否必填(落 Label 标记 + aria-required;Standard Schema 无法跨厂商内省,故以显式为准)。不传时从 `rule.required` 派生。 |
+| `help` | `ReactNode` | — | Form.Field:帮助文字(控件下方,aria-describedby 关联)。 |
+| `control` | `"input" \| "select" \| "textarea" \| "switch" \| "radioGroup" \| "checkbox" \| "slider" \| "numberInput" \| "checkboxGroup" \| "rate" \| "segmented"` | — | Form.Field:显式指定控件适配器种类(异形 / 包了一层的控件用)。 |
+| `className` | `string` | — | Form.Field:根项 className。 |
+| `children` | `ReactNode \| ((field: FieldRenderProps, state: FieldState) => ReactNode)` | — | Form.Field:子节点 —— 登记控件直接子(`<Form.Field><Input/></Form.Field>`,自动注入 value/onChange/a11y)<br>或 render-prop(`<Form.Field>{(field, state) => …}</Form.Field>`,首选、对自定义控件最友好)。 |
+| `loading` | `boolean` | — | Form.Submit:强制 loading 态。不传时随表单 `isSubmitting` 自动置位(提交中转圈并禁用)。 |
+| `title` | `ReactNode` | — | Form.ErrorSummary:标题(不传用 i18n 默认「表单有 N 处错误」)。 |
 | `...props` | `ComponentPropsWithoutRef<'form'>` | — | 透传原生 form 属性(className / style / aria-&#42; / 事件等)。 |
 
 ## 事件 Events
@@ -37,6 +49,7 @@
 | --- | --- | --- |
 | `onSubmit` | `(values: T) => void \| Promise<void>` | 校验全过的提交回调。<br>· `values` — 通过校验的整表值(类型化;若挂 schema 则为其 Output) |
 | `onInvalid` | `(errors: Record<string, { message: string; }>) => void` | 校验未过的回调。<br>· `errors` — 各字段错误表(path → { message }),提交时聚焦首个错误字段 |
+| `onClick` | `MouseEventHandler<HTMLButtonElement>` | Form.Reset:点击回调。先于重置执行,调 `preventDefault()` 可拦下这次重置。 |
 
 此外透传原生 `<form>` 的全部标准事件(onClick / onFocus / onKeyDown …),与自有事件按 compose 合并、互不覆盖。
 
