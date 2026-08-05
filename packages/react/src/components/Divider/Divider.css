@@ -8,6 +8,8 @@
   /* 兜底:thickness / spacing 未注入时的默认值 */
   --ms-divider-thickness: 1px;
   --ms-divider-spacing: 0px;
+  /* 竖线在「父级撑不出高度」时的地板长度(行内文字间的分隔典型形态);消费方可覆盖 */
+  --ms-divider-min-length: 1em;
   border: 0;
   margin: 0;
   transition:
@@ -40,10 +42,16 @@
   background-size: 100% var(--ms-divider-thickness);
 }
 
-/* —— vertical:行内,贴满高度,起始侧边框成线 —— */
+/* —— vertical:行内,贴满高度,起始侧边框成线 ——
+ * 高度**不能**写 block-size: 100%:百分比块高要父级有确定高度才解析得出,父级 auto 高时退化成
+ * auto ⇒ <hr> 是空元素(void,永无子内容)⇒ 块高 0 ⇒ 0 高度的边框一个像素都不画,整条线消失。
+ * 且 100% 是 definite cross size,会**压制 flex 的 stretch**,连 align-items: stretch 都救不回来。
+ * 正确形态三件套:auto 高 + align-self: stretch(有 flex/grid 行就贴满)+ min 地板(纯行内流兜底)。 */
 .ms-divider--vertical {
   display: inline-block;
-  block-size: 100%;
+  block-size: auto;
+  align-self: stretch;
+  min-block-size: var(--ms-divider-min-length);
   inline-size: 0;
   vertical-align: middle;
   border-inline-start: var(--ms-divider-thickness) solid var(--ms-divider-color);
