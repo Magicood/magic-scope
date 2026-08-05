@@ -5,10 +5,17 @@ name: Deploy Pages
 #   /docs/       VitePress 文档站
 #   /vela/       Vela SaaS 营销样板站(apps/demo)
 #   /shop/       Arden 双面电商样板站(apps/shop:买家店面 + /admin 商家控制台)
+#
+# 【触发链】CI 绿了才部署 —— 不再各自监听 push: main。
+# 事故(2026-08-04):pages.yml 与 ci.yml 各自独立 `on: push: main`,互不知情。
+# PR #45/#50 合并后 main 的 CI 变红(跨 PR 语义冲突),Pages 照样把红版本部署上线。
+# 那次红的只是 typecheck、产物能跑,但机制上等于「破的东西自动上线」,故改为 workflow_run 串联。
 on:
-  push:
-    branches: [main]
-  workflow_dispatch:
+  workflow_run:
+    workflows: ["CI"] # 必须与 ci.yml 的 `name:` 完全一致,改名要同步改这里
+    types: [completed]
+    branches: [main] # 过滤 workflow_run 的 head_branch:PR 的 CI 不会触发部署
+  workflow_dispatch: # 手动重新部署的逃生口(如只想重发一次产物,不必空推 main)
 
 permissions:
   contents: read
@@ -22,8 +29,28 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # CI 没绿就不部署。手动触发(workflow_dispatch)绕过该门控,由人自行担保。
+    # 额外要求 workflow_run.event == 'push':只认「推进 main 后跑的那次 CI」,
+    # 排除 fork 里同样叫 main 的分支发 PR 时,其 CI 绿了也把 Pages 顶上线。
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'push')
     steps:
+      # workflow_run 触发时 checkout 默认拿的是默认分支最新 commit,而不是触发那次 CI 的 commit ——
+      # 不显式指定 head_sha,部署的版本会和 CI 验过的版本对不上(尤其两次 push 挨得近时)。
+      # workflow_dispatch 下 workflow_run 上下文为空,回落到本次运行的 github.sha。
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+
+      - name: 部署溯源(核对:此 SHA 必须 == CI 验过的那个)
+        run: |
+          echo "触发事件      : ${{ github.event_name }}"
+          echo "CI run        : ${{ github.event.workflow_run.html_url || '(手动触发,无关联 CI)' }}"
+          echo "CI 结论       : ${{ github.event.workflow_run.conclusion || 'n/a' }}"
+          echo "期望部署 SHA  : ${{ github.event.workflow_run.head_sha || github.sha }}"
+          echo "实际检出 SHA  : $(git rev-parse HEAD)"
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
